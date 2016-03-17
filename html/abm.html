@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<head>
+	<title>Administracion de usuarios</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="style.css" />
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+</head>
+
+<body onload="initUI()">
+	<nav id="tabBox">
+		<button type="button" id="personasTabButton" onclick="ui.activatePersonasTab()">Personas</button>
+		<button type="button" id="usuariosTabButton" onclick="ui.activateUsuariosTab()">Usuarios</button>
+		<button type="button" id="rolesTabButton" onclick="ui.activateRolesTab()">Roles</button>
+	</nav>
+	<section id="entitylist">
+		<table id="personasTable" caption="Administrar personas">
+			<thead><tr>
+				<th>ID</th>
+				<th>Apellido</th>
+				<th>Nombres</th>
+				<th>Tipo Doc.</th>
+				<th>Nro. Doc.</th>
+				<th>Fecha nacimiento</th>
+				<th>Domicilio</th>
+				<th>Telefono</th>
+				<th>Estado</th>
+			</tr></thead>
+			<tbody>
+			</tbody>
+		</table>
+
+		<table id="usuariosTable">
+			<thead><tr>
+				<th>ID</th>
+				<th>Nombre usuario</th>
+				<th>E-Mail</th>
+				<th>Estado</th>
+			</tr></thead>
+			<tbody>
+			</tbody>
+		</table>
+
+		<table id="rolesTable">
+			<thead><tr>
+				<th>ID</th>
+				<th>Nombre Rol</th>
+				<th>Nombre amigalble</th>
+				<th>Estado</th>
+			</tr></thead>
+			<tbody>
+			</tbody>
+		</table>
+
+	</section>
+	<div class="buttonBox">
+		<button type="button" id="newButton" onclick="ui.newButtonPressed()">Nuevo</button>
+		<button type="button" id="editButton" onclick="ui.editButtonPressed()">Modificar</button>
+		<button type="button" id="deleteButton" onclick="ui.deleteButtonPressed()">Eliminar</button>
+	</div>
+
+	<section class="formSection" id="formPersona">
+		
+		<form>
+			<h2>Persona</h2>
+			<label for="id">ID</label><input type="number" name="id"><br />
+			<label for="apellidos">Apellido</label><input type="text" name="apellidos"><br />
+			<label for="nombres">Nombre</label><input type="text" name="nombres"><br />
+			<label for="tipo_doc">Tipo de documento</label>
+				<select name="tipo_doc">
+					<option>DNI</option>
+					<option>LE</option>
+					<option>LC</option>
+				</select><br />
+			<label for="nro_doc">Numero de documento</label><input type="number" name="nro_doc"><br />
+			<label for="fecha_nacimiento">Fecha de nacimiento</label><input type="date" name="fecha_nacimiento"><br />
+			<label for="domicilio"></label>Domicilio<input type="text" name="domicilio"><br />
+			<label for="telefono"></label>Telefono<input type="text" name="telefono"><br />
+			<label for="descripcion"></label>Descripcion<textarea name="descripcion"></textarea><br />
+			<label for="Estado"></label>Activo<input type="checkbox" name="estado"><br />
+		</form>
+		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+	</section>
+
+	<section class="formSection" id="formUsuario">
+		<form>
+			<h2>Usuario</h2>
+			<label for="id">ID</label><input type="number" name="id"><br />
+			<label for="persona">Persona</label><input type="text" name="persona"><button type="button">Elegir</button><br />
+			<label for="nombre_usuario">Nombre de Usuario</label><input type="text" name="nombre_usuario"><br />
+			<label for="password">Contraseña</label><input type="password" name="password"><br />
+			<label for="email"></label>E-Mail<input type="text" name="email"><br />
+			<label for="descripcion">Descripcion</label><textarea name="descripcion"></textarea><br />
+			<label for="estado">Activo</label><input type="checkbox" name=""><br />
+		</form>
+		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+	</section>
+
+	<section class="formSection" id="formRol">
+		<h1>Formulario de rol</h1>
+		<form id="">
+			<h2>Usuario</h2>
+			<label for="id">ID</label><input type="number" name="id"><br />
+			<label for="nombre_rol">Nombre de Rol</label><input type="text" name="nombre_rol"><button type="button">Elegir</button><br />
+			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
+			<label for="estado"></label>Estado<input type="text" name="estado"><br />
+			<h3>Permisos</h3>
+			<button type="button">Agregar Permiso</button>
+			<button type="button">Eliminar Permiso</button>
+
+		</form>
+		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+	</section>
+</body>

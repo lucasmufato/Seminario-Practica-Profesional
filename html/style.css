@@ -1,0 +1,36 @@
+#entitylist {
+	border: 1px solid black;
+	min-height: 300px;
+}
+
+#entitylist table {
+	border: 1px solid black;
+}
+
+#entitylist table th {
+	border: 1px solid black;
+}
+
+#personasTable {
+	display: block;
+}
+
+#usuariosTable {
+	display: none;
+}
+#rolesTable {
+	display: none;
+}
+
+.formSection {
+	display: none;
+	position: fixed;
+	top: 0px;
+	border: 1px solid black;
+	padding: 24px;
+	background: #eee;	
+}
+
+tr.selectedRow {
+	background: #cff
+}
