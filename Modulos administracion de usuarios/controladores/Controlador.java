@@ -24,7 +24,9 @@ public class Controlador {
 	
 	private BaseDatos basedatos;
 	
-	public boolean Guardar(JSONObject datos, int tipo_entidad){
+	public boolean Guardar(JSONObject datos, int tipo_entidad){ // metodo que trata de guardar o modificar datos en la BD, necesita todos
+																//los datos de cada clase, por que usa el ID como dice ahi abajo
+		
 		//si lo que se quiere es crear una entidad nueva, el id se envia con valor -1
 		// si se quiere modificar, el id debe ser positivo>0
 		boolean bandera=false;
@@ -63,6 +65,11 @@ public class Controlador {
 	}
 	
 	public boolean Eliminar(int tipo_entidad, int clave_primaria_tabla){
+		
+		//este metodo solo necesita el nro que identifica a la clase, y la clave primaria de la entidad a dar de baja.
+		//si la entidad ya estaba dada de baja devuelve true igual, solo devolveria false cuando explota de alguna forma.
+		//dar de baja significa cambiar el atributo estado y ponerlo en 0
+		
 		boolean bandera=false;
 		switch(tipo_entidad){
 		case PERSONA:
@@ -92,6 +99,10 @@ public class Controlador {
 	}
 	
 	public boolean Dar_alta(int tipo_entidad, int clave_primaria_tabla){
+		
+		//este metodo funciona exactamente igual que dar de baja nada mas que en ves de poner el estado en 0, lo pone en 1
+		//si el estado ya estaba en 1, devuelve true igual
+		
 		boolean bandera=false;
 		switch(tipo_entidad){
 		case PERSONA:
@@ -119,7 +130,13 @@ public class Controlador {
 		return bandera;
 	}
 	
-	public JSONObject[] Select(int tipo_entidad){ //este seria un select all from tipo_entidad
+	public JSONObject[] Select(int tipo_entidad){ 
+		//este metodo hace un select * from tabla, recibe un nro que se mapea para ver q entidad es la q se quiere mostrar, y carga
+		//todos los datos en un arreglo indefinido de objetos JSON. 
+		
+		//POR AHI TE RESULTE INTERESANTE SABER QUE EL METODO TOSTRING DE JSON DEVUELVE EL JSON BIEN FORMADO DE LA MANERA
+		// {NOMBRE: PEPE, EDAD: 23, ETC: ETC}
+		
 		JSONObject[] datos_a_devolver=null;
 		switch(tipo_entidad){
 		case PERSONA:
