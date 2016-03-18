@@ -57,6 +57,26 @@ public abstract class BaseDatos {
 		return true;
 	}
 	
+	public static boolean QueryEliminar(String query){
+		boolean bandera=false;
+		try {
+			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			System.out.println("me pude conectar a la BD: "+nombre_BD);
+			System.out.println(query);
+			Statement cmd = conexion.createStatement();
+			cmd.executeUpdate(query);
+			System.out.println("se elimino la tupla bien");
+			bandera=true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return bandera;
+		
+	}
+	
 	public static boolean QueryDarAlta(String tabla, String campo, int clave_primaria_tabla) {
 		String query="UPDATE "+tabla+" SET ESTADO=1 WHERE "+campo+"="+clave_primaria_tabla+";";
 		boolean bandera=false;

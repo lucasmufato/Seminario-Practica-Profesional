@@ -21,7 +21,7 @@ public class Usuario extends BaseDatos {
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 	protected static String vector_atributos[]={"id_usuario","id_persona","nombre_usuario","password","email","descripcion","estado"};
 	protected static int cantidad_atributos=7;
-	protected static String tabla ="usuario";
+	protected static String tabla ="USUARIO";
 	protected static String campo_pk = "id_usuario";
 	
 	public static JSONObject[] Select(){

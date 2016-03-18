@@ -25,7 +25,7 @@ public class Persona extends BaseDatos {
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 		protected static String vector_atributos[]={"id_persona","nombres","apellidos","tipo_doc","nro_doc","fecha_nacimiento","domicilio","telefono","descripcion","estado"};
 		protected static int cantidad_atributos=10;
-		protected static String tabla ="persona";
+		protected static String tabla ="PERSONA";
 		protected static String campo_pk = "id_persona";
 	
 	public static JSONObject[] Select(){
