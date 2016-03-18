@@ -19,7 +19,7 @@ public class Rol_Usuario extends BaseDatos {  //EL NOMBRE DE LA TABLA EN LA BASE
 		return null;
 	}
 	
-	public Rol_Usuario (JSONObject[] rol_usuario){
+	public Rol_Usuario (JSONObject rol_usuario){
 		
 	}
 	

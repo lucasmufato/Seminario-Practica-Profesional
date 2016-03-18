@@ -1,12 +1,10 @@
 package modelo;
 
-import java.util.Hashtable;
-
 import org.json.simple.JSONObject;
 
 import java.sql.*;
 
-public class BaseDatos {
+public abstract class BaseDatos {
 	
 	//atributos para la conexion a la BD
 	protected static String usuario_BD="root";
@@ -26,7 +24,7 @@ public class BaseDatos {
 	}
 	
 	public boolean guardar(){
-		
+		System.out.println("guardar de la superclase BaseDatos");
 		return true;
 	}
 	
@@ -35,9 +33,49 @@ public class BaseDatos {
 		return true;
 	}
 	
+	protected static boolean QueryEliminar(String tabla, String campo, int clave_primaria_tabla ){
+		String query="UPDATE "+tabla+" SET ESTADO=0 WHERE "+campo+"="+clave_primaria_tabla+";";
+		boolean bandera=false;
+		try {
+			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			System.out.println("me pude conectar a la BD: "+nombre_BD);
+			System.out.println(query);
+			Statement cmd = conexion.createStatement();
+			cmd.executeUpdate(query);
+			System.out.println("la eliminacion fue un exito");
+			bandera=true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return bandera;
+	}
+	
 	public static boolean Dar_alta(int clave_primaria_tabla){
 		System.out.println("Dar_Arta de la superclase BaseDatos");
 		return true;
+	}
+	
+	public static boolean QueryDarAlta(String tabla, String campo, int clave_primaria_tabla) {
+		String query="UPDATE "+tabla+" SET ESTADO=1 WHERE "+campo+"="+clave_primaria_tabla+";";
+		boolean bandera=false;
+		try {
+			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			System.out.println("me pude conectar a la BD: "+nombre_BD);
+			System.out.println(query);
+			Statement cmd = conexion.createStatement();
+			cmd.executeUpdate(query);
+			System.out.println("la dada de alta fue un exito");
+			bandera=true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return bandera;
+		
 	}
 	
 	protected boolean Conectarse_BD(){
@@ -46,15 +84,14 @@ public class BaseDatos {
 		    Class.forName("com.mysql.jdbc.Driver").newInstance();
 		    System.out.println("Obtuve bien la instacia del driver");
 		} catch (Exception e) {
-			System.out.println("error al conectarse con la BD");
+			System.out.println("error al obtener driver");
 		    System.out.println(e.toString());
 		}
 		
 		try {
-			String datosBD= "jdbc:mysql://"+this.IP_BD+"/"+this.nombre_BD;
-			//String user_password="user="+this.usuario_BD+"password="+contraseña_BD;
-			conexion = DriverManager.getConnection(datosBD,this.usuario_BD, this.contraseña_BD);
-			System.out.println("me pude conectar a la BD: "+this.nombre_BD);
+			String datosBD= "jdbc:mysql://"+BaseDatos.IP_BD+"/"+BaseDatos.nombre_BD;
+			conexion = DriverManager.getConnection(datosBD,BaseDatos.usuario_BD, BaseDatos.contraseña_BD);
+			System.out.println("me pude conectar a la BD: "+BaseDatos.nombre_BD);
 		} catch (SQLException ex) {
 			System.out.println("no se pudo conectar");
 		    System.out.println("SQLException: " + ex.getMessage());
@@ -77,10 +114,8 @@ public class BaseDatos {
 	}
 	
 	protected boolean EnviarQuery(String query){
-		ResultSet rs = null;
 		try {
 			Statement cmd = conexion.createStatement();
-			//rs = cmd.executeQuery(query);
 			cmd.executeUpdate(query);
 			System.out.println("el query salio bien! :D");
 		} catch (SQLException e) {
@@ -115,7 +150,7 @@ public class BaseDatos {
 		return rs;
 	}
 	
-	protected boolean idExistente(String tabla, String campo, int id){
+	protected static boolean idExistente(String tabla, String campo, int id){
 		boolean existe = false;
 		ResultSet rs;
 		String consulta = "SELECT * FROM " + tabla + " WHERE " + tabla +"."+ campo + " = " + id;

@@ -18,33 +18,62 @@ public class Prueba extends BaseDatos {
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 	protected static String vector_atributos[]={"idprueba","palabra","estado"};
 	protected static int cantidad_atributos=3;
+	protected static String tabla ="prueba";
+	protected static String campo_pk = "idprueba";
 	
 	public static void main(String[] args) {
-		Prueba p = new Prueba();
 		
-		//Prueba.Select(); PARTE DE LUZ
-				String query="";
-				p.mandar_query(query);
+		//aca les dejo una muestra de como funciona la clase completa
+		//esto mismo tendria q ser mitad copaido a las otras clases y q tengan la misma funcionalidad
 		
-		/*
-		String query="INSERT INTO prueba(palabra,estado) VALUES('primer',1)";
-		p.mandar_query(query);
-		query="INSERT INTO prueba(palabra,estado) VALUES('segundo',1)";
-		p.mandar_query(query);
-		query="INSERT INTO prueba(palabra,estado) VALUES('tercer',1)";
-		p.mandar_query(query);
-		*/
+		//creo una nueva fila en la BD
+		System.out.println("VOY A GUARDA ESTA INSTANCIA");
 		
-		/*
-		JSONObject[] j=Prueba.Select1();
+		BaseDatos p = new Prueba(-1,"nueva linea",1);
+		p.guardar();
+		
+		System.out.println("");
+		System.out.println("INSTANCIA GUARDADA");
+		System.out.println("---------------------------------------------");
+		System.out.println("");
+		//modifico una creada, en realidad yo tengo como 8 filas
+		System.out.println("MODIFICO UNA DATO EN LA BD");
+		
+		p= new Prueba(3,"modifico otra linea",0);
+		p.guardar();
+		
+		//la doy de alta y de baja
+		System.out.println("");
+		System.out.println("----------------------------------------------");
+		System.out.println("DOY DE ALTA");
+		
+		Prueba.Dar_alta(3);
+		
+		System.out.println("----------------------------------------------");
+		System.out.println("DOY DE BAJA");
+		
+		Prueba.Eliminar(3);
+		
+		System.out.println("");
+		System.out.println("MUESTRO COMO SE LEE EL SELECT");
+		// metodo ver como quedo el JSON despues del metodo select
+		 
+		JSONObject[] j=Prueba.Select();
 		for(int i=0; i<j.length;i++){
 			for(int w=0;w<cantidad_atributos;w++){
-				System.out.println(vector_atributos[w]+" "+j[i].get(vector_atributos[w]));
+				System.out.println(vector_atributos[w]+" "+j[i].get(vector_atributos[w])); //MUESTRO EL PAR NOMBRE ATRIBUTO Y VALOR
 			}
 			System.out.println("el json tiene la forma:");
-			System.out.println(j[i].toString());
+			System.out.println(j[i].toString());  //MUESTRO COMO QUEDO EL JSON ENTERO
+			System.out.println("");
 		}
-		*/
+		
+	}
+	
+	public Prueba (JSONObject json){
+		this.idprueba=(int) json.get("idprueba");
+		this.palabra =(String) json.get("palabra");
+		this.estado = (int) json.get("estado");
 	}
 	
 	public static JSONObject[] Select(){		
@@ -60,7 +89,7 @@ public class Prueba extends BaseDatos {
 			    // Move to beginning
 			    r.beforeFirst();   
 			}
-			System.out.println("columnas: "+rows);
+			//System.out.println("columnas: "+rows);
 			json= new JSONObject[rows];
 			
 			int j=0;
@@ -87,39 +116,57 @@ public class Prueba extends BaseDatos {
 		return json;
 	}
 	
-	public Prueba(){
-		
-	}
-	
-	public Prueba (JSONObject[] usuario){
-		
-	}
-	
-	//este metodo es inventado para probar nomas
-	public void mandar_query(String query){
-		this.Conectarse_BD();
-		//this.EnviarQuery(query);
-		//System.out.println("Llamando a guardar");
-				System.out.println(this.guardar());
-		this.Desconectarse_BD();
+	public Prueba(int id, String p, int e) {
+		this.idprueba=id;
+		this.palabra=p;
+		this.estado=e;
 	}
 	
 	@Override
 	public boolean guardar(){
-		boolean bandera;
-		String p = "prueba";
-		String c = "idPrueba";
-		int identificador = 92;
-		bandera = idExistente(p, c, identificador);
+		boolean bandera=false;	
+		
+		//creo un pedaso del codigo automaticamente con la informacion en el vector_atributos
+		String values="(";
+		for(int i=1;i<cantidad_atributos-1;i++){
+			values=values+vector_atributos[i]+",";
+		}
+		values=values+vector_atributos[cantidad_atributos-1]+")";
+		
+		//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
+		String query="";
+		if(this.idprueba==-1){
+			query="INSERT INTO PRUEBA "+values+"VALUES ('"+this.palabra+"',"+this.estado+");";
+			
+		}else{
+			query="UPDATE PRUEBA SET "
+					+"palabra = '"+this.palabra+"',"
+							+ "estado= "+this.estado+" WHERE idprueba="+this.idprueba+";";
+		}
+		this.Conectarse_BD();
+		bandera=this.EnviarQuery(query);
+		this.Desconectarse_BD();
 		return bandera;
 	}
 	
 	public static boolean  Eliminar(int clave_primaria_tabla){
-		return true;
+		boolean bandera=false;
+		bandera = BaseDatos.idExistente(tabla, campo_pk, clave_primaria_tabla);
+			if(bandera){
+				bandera=BaseDatos.QueryEliminar(tabla,campo_pk,clave_primaria_tabla);
+			}
+		
+		return bandera;
 	}
 	
 	public static boolean   Dar_alta(int clave_primaria_tabla){
-		return true;
+		boolean bandera=false;
+		bandera = BaseDatos.idExistente(tabla, campo_pk, clave_primaria_tabla);
+			if(bandera){
+				bandera=BaseDatos.QueryDarAlta(tabla,campo_pk,clave_primaria_tabla);
+			}
+		
+		return bandera;
 	}
 	
 }

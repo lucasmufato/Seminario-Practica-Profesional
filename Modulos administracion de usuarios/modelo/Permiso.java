@@ -19,7 +19,7 @@ public class Permiso extends BaseDatos {
 		return null;
 	}
 	
-	public Permiso(JSONObject[] permiso){
+	public Permiso(JSONObject permiso){
 		
 	}
 	

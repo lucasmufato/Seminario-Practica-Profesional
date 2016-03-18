@@ -20,7 +20,7 @@ public class Rol extends BaseDatos {
 		return null;
 	}
 	
-	public Rol(JSONObject[] rol){
+	public Rol(JSONObject rol){
 		
 	}
 	

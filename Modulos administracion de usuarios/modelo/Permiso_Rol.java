@@ -19,7 +19,7 @@ public class Permiso_Rol extends BaseDatos {
 		return null;
 	}
 	
-	public Permiso_Rol (JSONObject[] permiso_rol){
+	public Permiso_Rol (JSONObject permiso_rol){
 		
 	}
 	

@@ -1,7 +1,5 @@
 package controladores;
 
-import java.util.Hashtable;
-
 import org.json.simple.JSONObject;
 
 import modelo.BaseDatos;
@@ -15,7 +13,7 @@ import pruebas.Prueba;
 
 public class Controlador {
 	
-	private final int NULO=-1;
+	//private final int NULO=-1;
 	private final int PERSONA=1;
 	private final int USUARIO=2;
 	private final int ROL=3;
@@ -26,7 +24,7 @@ public class Controlador {
 	
 	private BaseDatos basedatos;
 	
-	public boolean Guardar(JSONObject[] datos, int tipo_entidad){
+	public boolean Guardar(JSONObject datos, int tipo_entidad){
 		//si lo que se quiere es crear una entidad nueva, el id se envia con valor -1
 		// si se quiere modificar, el id debe ser positivo>0
 		boolean bandera=false;

@@ -26,7 +26,7 @@ public class Usuario extends BaseDatos {
 		
 	}
 	
-	public Usuario (JSONObject[] usuario){
+	public Usuario (JSONObject usuario){
 		
 	}
 	
