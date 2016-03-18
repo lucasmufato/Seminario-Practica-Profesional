@@ -16,29 +16,32 @@ public class Persona extends BaseDatos {
 	protected String apellidos;
 	protected int tipo_doc;
 	protected long nro_doc;
-	protected Date fecha_nacimiento;
+	protected String fecha_nacimiento;
 	protected String domicilio;
 	protected String telefono;
 	protected String descripcion;
-	protected boolean estado;
+	protected int estado;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
-		protected static String vector_atributos[]={"id","nombres","apellidos","tipo_doc","nro_doc","fecha_nacimiento","domicilio","telefono","descripcion","estado"};
+		protected static String vector_atributos[]={"id_persona","nombres","apellidos","tipo_doc","nro_doc","fecha_nacimiento","domicilio","telefono","descripcion","estado"};
 		protected static int cantidad_atributos=10;
+		protected static String tabla ="persona";
+		protected static String campo_pk = "id_persona";
 	
 	public static JSONObject[] Select(){
-		String consulta="SELECT * FROM persona";
+		String consulta="SELECT * FROM "+tabla;
 		JSONObject[] json=null;
-		ResultSet r= Prueba.RealizarConsulta(consulta);
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
 		int i=0;
 		int rows=0;
 		try {
 			
-			if (r.last()) { //voy al final de las filas, obtengo el nro de la ultima y vuelvo al principio
+			if (r.last()) { //cuento la cantidad de filas del resultado
 			    rows = r.getRow();
+			    // Move to beginning
 			    r.beforeFirst();   
 			}
-			System.out.println("columnas: "+rows);
+			//System.out.println("columnas: "+rows);
 			json= new JSONObject[rows];
 			
 			int j=0;
@@ -65,33 +68,82 @@ public class Persona extends BaseDatos {
 		return json;
 	}
 	
-	public Persona(JSONObject persona){
+	public Persona(JSONObject json){ 
+		this.id=(int)json.get("id_persona");
+		this.nombres=(String)json.get("nombres");
+		this.apellidos=(String)json.get("apellidos");
+		this.descripcion=(String)json.get("descripcion");
+		this.domicilio=(String)json.get("domicilio");
+		this.estado=(int)json.get("estado");
+		this.fecha_nacimiento=(String)json.get("fecha_nacimiento");
+		this.nro_doc=(int)json.get("nro_doc");
+		this.tipo_doc=(int)json.get("tipo_doc");
+		this.telefono=(String)json.get("telefono");
 		
 	}
 	
+	public Persona(){
+		this.id=2;
+		this.nombres="pablo";
+		this.apellidos="cabrera";
+		this.descripcion="voy a tener el id=2";
+		this.domicilio="cardales";
+		this.estado=1;
+		this.fecha_nacimiento="current_date()";
+		this.nro_doc=33333333;
+		this.tipo_doc=1;
+		this.telefono="33333";
+	}
 	@Override
 	public boolean guardar(){
-		boolean bandera=false;
-		String p = "persona";
-		String c = "id_persona";
-		int desplazamiento_en_vector_atributos=0;
-		if(this.id==-1){
-			desplazamiento_en_vector_atributos++; //si es un create no debo enviar el id en el sql
-		}
+boolean bandera=false;	
+		
+		//creo un pedaso del codigo automaticamente con la informacion en el vector_atributos
 		String values="(";
-		for(int i=desplazamiento_en_vector_atributos;i<cantidad_atributos-1;i++){
-			values=values+"'"+vector_atributos[i]+"',";
+		for(int i=1;i<cantidad_atributos-1;i++){
+			values=values+vector_atributos[i]+",";
 		}
-		values=values+"'"+vector_atributos[cantidad_atributos-1]+"')";
+		values=values+vector_atributos[cantidad_atributos-1]+")";
+		
+		//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
+		String query="";
+		if(this.id==-1){
+			query="INSERT INTO "+tabla+values+"VALUES ('"+this.nombres+"','"+this.apellidos+"','"+this.tipo_doc+"','"+
+					this.nro_doc+"',"+this.fecha_nacimiento+",'"+this.domicilio+"','"+this.telefono
+					+"','"+this.descripcion+"','"+this.estado+"');";
+			
+		}else{
+			query="UPDATE "+tabla+" SET "
+					+"nombres = '"+this.nombres+"',"+ "apellidos= '"+this.apellidos+"',"
+					+"tipo_doc = '"+this.tipo_doc+"',"+"nro_doc = '"+this.nro_doc+"',"
+					+"fecha_nacimiento = "+this.fecha_nacimiento+","+"domicilio = '"+this.domicilio+"',"
+					+"telefono = '"+this.telefono+"',"+"descripcion = '"+this.descripcion+"',"
+					+"estado = '"+this.estado+"' WHERE id_persona="+this.id+";";
+		}
+		this.Conectarse_BD();
+		bandera=this.EnviarQuery(query);
+		this.Desconectarse_BD();
 		return bandera;
 	}
 	
 	public static boolean  Eliminar(int clave_primaria_tabla){
-		return true;
+		boolean bandera=false;
+		bandera = BaseDatos.idExistente(tabla, campo_pk, clave_primaria_tabla);
+			if(bandera){
+				bandera=BaseDatos.QueryEliminar(tabla,campo_pk,clave_primaria_tabla);
+			}
+		
+		return bandera;
 	}
 	
 	public static boolean  Dar_alta(int clave_primaria_tabla){
-		return true;
+		boolean bandera=false;
+		bandera = BaseDatos.idExistente(tabla, campo_pk, clave_primaria_tabla);
+			if(bandera){
+				bandera=BaseDatos.QueryDarAlta(tabla,campo_pk,clave_primaria_tabla);
+			}
+		
+		return bandera;
 	}
 
 }
