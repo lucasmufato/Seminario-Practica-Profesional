@@ -31,24 +31,31 @@ public class Controlador {
 		switch(tipo_entidad){
 		case PERSONA:
 			basedatos = new Persona(datos);
+			bandera=basedatos.guardar();
 			break;
 		case USUARIO:
 			basedatos = new Usuario(datos);
+			bandera=basedatos.guardar();
 			break;
 		case ROL:
 			basedatos = new Rol(datos);
+			bandera=basedatos.guardar();
 			break;
 		case PERMISO:
 			basedatos = new Permiso(datos);
+			bandera=basedatos.guardar();
 			break;
 		case PERMISO_ROL:
 			basedatos = new Permiso_Rol(datos);
+			bandera=basedatos.guardar();
 			break;
 		case ROL_USUARIO:
 			basedatos = new Rol_Usuario(datos);
+			bandera=basedatos.guardar();
 			break;
 		case PRUEBA:
 			basedatos = new Prueba(datos);
+			bandera=basedatos.guardar();
 			break;
 		}
 		basedatos.guardar();
