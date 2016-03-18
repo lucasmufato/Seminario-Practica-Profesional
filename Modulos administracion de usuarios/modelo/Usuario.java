@@ -16,7 +16,7 @@ public class Usuario extends BaseDatos {
 	protected String password;
 	protected String email;
 	protected String descripcion;
-	protected boolean estado;	
+	protected int estado;	
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 	protected static String vector_atributos[]={"id_usuario","id_persona","nombre_usuario","password","email","descripcion","estado"};
@@ -65,13 +65,13 @@ public class Usuario extends BaseDatos {
 	}
 	
 	public Usuario(){
-		this.id=1;
+		this.id=2;
 		this.id_persona= 1;
-		this.nombre= "user_lucas";
-		this.password= "maximo";
-		this.email= "l.mufato@gmail.com";
-		this.descripcion= "programando";
-		this.estado= true;
+		this.nombre= "user_update";
+		this.password= "up";
+		this.email= "up@gmail.com";
+		this.descripcion= "update";
+		this.estado= 1;
 	}
 	
 	public Usuario (JSONObject json){
@@ -81,7 +81,7 @@ public class Usuario extends BaseDatos {
 		this.password= (String) json.get("password");
 		this.email= (String) json.get("email");
 		this.descripcion= (String) json.get("descripcion");
-		this.estado= (boolean) json.get("estado");
+		this.estado= (int) json.get("estado");
 	}
 	
 	
@@ -101,13 +101,13 @@ public class Usuario extends BaseDatos {
 		//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
 		String query="";
 		if(this.id==-1){
-			query="INSERT INTO "+tabla+values+"VALUES ('"+this.id_persona+"',"+this.nombre+"´,"+this.password+"´,"+this.email
-					+"´,"+this.descripcion+"´,"+this.estado+");";
+			query="INSERT INTO "+tabla+values+"VALUES ('"+this.id_persona+"','"+this.nombre+"','"+this.password+"','"+this.email
+					+"','"+this.descripcion+"','"+this.estado+"');";
 			
 		}else{
 			query="UPDATE "+tabla+" SET "
 					+"id_persona = '"+this.id_persona+"',"
-							+ "nombre_usuario= "+this.nombre+"password = '"+this.password+"',"
+							+ "nombre_usuario= '"+this.nombre+"' ,password = '"+this.password+"',"
 							+"email = '"+this.email+"',"+"descripcion = '"+this.descripcion+"',"
 							+"estado = '"+this.estado+"'"+" WHERE id_usuario="+this.id+";";
 		}
