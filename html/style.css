@@ -1,14 +1,42 @@
-#entitylist {
+body {
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+#tabBox button {
+	font-size: 90%;
+	font-weight: bold;
+	padding: 5px;
 	border: 1px solid black;
-	min-height: 300px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom: none;
+	background: white;
+	color: black;
+}
+
+#entitylist {
+	min-height: 200px;
 }
 
 #entitylist table {
-	border: 1px solid black;
+	text-align: center;
 }
 
 #entitylist table th {
-	border: 1px solid black;
+	background: #ddd;
+	border-bottom: 1px solid gray;
+}
+
+.buttonBox button, .formSection button {
+	font-size: 90%;
+	font-weight: bold;
+	border: 1px solid #026;
+	margin: 4px;
+	background: #35d;
+	color: white;
+	border-radius: 4px;
+	padding: 6px;
 }
 
 #personasTable {
@@ -18,19 +46,37 @@
 #usuariosTable {
 	display: none;
 }
+
 #rolesTable {
 	display: none;
+}
+
+.formSection h2 {
+	background: #44f;
+	color: white;
+	text-align: center;
 }
 
 .formSection {
 	display: none;
 	position: fixed;
-	top: 0px;
+	top: 12px;
 	border: 1px solid black;
+	border-radius: 4px;
 	padding: 24px;
 	background: #eee;	
+	text-align: right;
 }
 
+
 tr.selectedRow {
-	background: #cff
+	background: #24b;
+	color: white;
+}
+
+input[type=text],input[type=number],input[type=password],input[type=date], textarea  {
+	background: white;
+	color: #222;
+	border: 1px solid gray;
+	border-radius: 3px;
 }

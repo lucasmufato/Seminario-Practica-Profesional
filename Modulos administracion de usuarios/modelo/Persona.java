@@ -69,15 +69,15 @@ public class Persona extends BaseDatos {
 	}
 	
 	public Persona(JSONObject json){ 
-		this.id=(int)json.get("id_persona");
+		this.id=Integer.parseInt(json.get("id_persona").toString());
 		this.nombres=(String)json.get("nombres");
 		this.apellidos=(String)json.get("apellidos");
 		this.descripcion=(String)json.get("descripcion");
 		this.domicilio=(String)json.get("domicilio");
-		this.estado=(int)json.get("estado");
+		this.estado=Integer.parseInt(json.get("estado").toString());
 		this.fecha_nacimiento=(String)json.get("fecha_nacimiento");
-		this.nro_doc=(int)json.get("nro_doc");
-		this.tipo_doc=(int)json.get("tipo_doc");
+		this.nro_doc=Integer.parseInt(json.get("nro_doc").toString());
+		this.tipo_doc=Integer.parseInt(json.get("tipo_doc").toString());
 		this.telefono=(String)json.get("telefono");
 		
 	}

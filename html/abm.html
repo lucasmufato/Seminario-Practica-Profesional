@@ -62,38 +62,59 @@
 	<section class="formSection" id="formPersona">
 		
 		<form>
-			<h2>Persona</h2>
-			<label for="id">ID</label><input type="number" name="id"><br />
+			<h2 id="formPersonaTitle">Persona</h2>
+			<label for="id" id="personaIdLabel">ID</label><input type="number" disabled name="id"><br />
 			<label for="apellidos">Apellido</label><input type="text" name="apellidos"><br />
 			<label for="nombres">Nombre</label><input type="text" name="nombres"><br />
 			<label for="tipo_doc">Tipo de documento</label>
 				<select name="tipo_doc">
-					<option>DNI</option>
-					<option>LE</option>
-					<option>LC</option>
+					<option value="1">DNI</option>
+					<option value="2">LE</option>
+					<option value="3">LC</option>
 				</select><br />
-			<label for="nro_doc">Numero de documento</label><input type="number" name="nro_doc"><br />
-			<label for="fecha_nacimiento">Fecha de nacimiento</label><input type="date" name="fecha_nacimiento"><br />
-			<label for="domicilio"></label>Domicilio<input type="text" name="domicilio"><br />
-			<label for="telefono"></label>Telefono<input type="text" name="telefono"><br />
-			<label for="descripcion"></label>Descripcion<textarea name="descripcion"></textarea><br />
-			<label for="Estado"></label>Activo<input type="checkbox" name="estado"><br />
+			<label for="nro_doc">Numero de documento</label>
+			<input type="number" name="nro_doc"><br />
+			<label for="fecha_nacimiento">Fecha de nacimiento</label>
+			<input type="date" name="fecha_nacimiento"><br />
+			<label for="domicilio">Domicilio</label>
+			<input type="text" name="domicilio"><br />
+			<label for="telefono">Telefono</label>
+			<input type="text"  name="telefono"><br />
+			<label for="descripcion">Descripcion</label>
+			<textarea  name="descripcion"></textarea><br />
+			<label for="Estado">Estado</label>
+			<select name="estado">
+				<option value="1">Activo</option>
+				<option value="0">Inactivo</option>
+			</select><br />
 		</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+		<button type="button" onclick="ui.sendPersonaForm()">Enviar</button>
 	</section>
 
 	<section class="formSection" id="formUsuario">
-		<form>
+		<form name="usuario">
 			<h2>Usuario</h2>
-			<label for="id">ID</label><input type="number" name="id"><br />
-			<label for="persona">Persona</label><input type="text" name="persona"><button type="button">Elegir</button><br />
-			<label for="nombre_usuario">Nombre de Usuario</label><input type="text" name="nombre_usuario"><br />
-			<label for="password">Contraseña</label><input type="password" name="password"><br />
-			<label for="email"></label>E-Mail<input type="text" name="email"><br />
-			<label for="descripcion">Descripcion</label><textarea name="descripcion"></textarea><br />
-			<label for="estado">Activo</label><input type="checkbox" name=""><br />
+			<label for="id">ID</label>
+			<input type="number" id="usuarioIdInput" name="id"><br />
+			<label for="persona">Persona</label>
+			<input type="text" name="id_persona"><button type="button">Elegir</button><br />
+			<label for="nombre_usuario">Nombre de Usuario</label>
+			<input type="text" name="nombre_usuario"><br />
+			<label for="password">Contraseña</label>
+			<input type="password" name="password"><br />
+			<label for="email">E-Mail</label>
+			<input type="text" name="email"><br />
+			<label for="descripcion">Descripcion</label>
+			<textarea name="descripcion" ></textarea><br />
+			<label for="estado">Activo</label>
+			<select name="estado">
+				<option value="1">Activo</option>
+				<option value="0">Inactivo</option>
+			</select><br />
 		</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+		<!--<button type="button" onclick="ui.sendUsuarioForm()">Enviar</button>-->
 	</section>
 
 	<section class="formSection" id="formRol">
@@ -110,5 +131,6 @@
 
 		</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+		<!--<button type="button" onclick="ui.sendRolForm()">Enviar</button>-->
 	</section>
 </body>
