@@ -109,14 +109,14 @@ boolean bandera=false;
 		String query="";
 		if(this.id==-1){
 			query="INSERT INTO "+tabla+values+"VALUES ('"+this.nombres+"','"+this.apellidos+"','"+this.tipo_doc+"','"+
-					this.nro_doc+"',"+this.fecha_nacimiento+",'"+this.domicilio+"','"+this.telefono
+					this.nro_doc+"','"+this.fecha_nacimiento+"','"+this.domicilio+"','"+this.telefono
 					+"','"+this.descripcion+"','"+this.estado+"');";
 			
 		}else{
 			query="UPDATE "+tabla+" SET "
 					+"nombres = '"+this.nombres+"',"+ "apellidos= '"+this.apellidos+"',"
 					+"tipo_doc = '"+this.tipo_doc+"',"+"nro_doc = '"+this.nro_doc+"',"
-					+"fecha_nacimiento = "+this.fecha_nacimiento+","+"domicilio = '"+this.domicilio+"',"
+					+"fecha_nacimiento = '"+this.fecha_nacimiento+"',"+"domicilio = '"+this.domicilio+"',"
 					+"telefono = '"+this.telefono+"',"+"descripcion = '"+this.descripcion+"',"
 					+"estado = '"+this.estado+"' WHERE id_persona="+this.id+";";
 		}

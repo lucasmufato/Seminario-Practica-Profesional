@@ -117,7 +117,7 @@ public class ControladorServlet extends HttpServlet {
 		roles = new JSONArray ();
 		if(in != null) {
 			for (int i = 0; i< in.length; i++) {
-				id = in[i].get("id_usuario");
+				id = in[i].get("id_rol");
 				in[i].put("id", id);
 				roles.add(in[i]);
 			}
@@ -130,15 +130,15 @@ public class ControladorServlet extends HttpServlet {
 		Persona persona;
 
 		recibida = new JSONObject();
-		recibida.put("id_persona", request.getParameter("id_persona"));
+		recibida.put("id_persona", Integer.parseInt(request.getParameter("id_persona")));
 		recibida.put("nombres", request.getParameter("nombres"));
 		recibida.put("apellidos", request.getParameter("apellidos"));
 		recibida.put("descripcion", request.getParameter("descripcion"));
 		recibida.put("domicilio", request.getParameter("domicilio"));
-		recibida.put("estado", request.getParameter("estado"));
+		recibida.put("estado", Integer.parseInt(request.getParameter("estado")));
 		recibida.put("fecha_nacimiento", request.getParameter("fecha_nacimiento"));
-		recibida.put("nro_doc", request.getParameter("nro_doc"));
-		recibida.put("tipo_doc", request.getParameter("tipo_doc"));
+		recibida.put("nro_doc", Integer.parseInt(request.getParameter("nro_doc")));
+		recibida.put("tipo_doc", Integer.parseInt(request.getParameter("tipo_doc")));
 		recibida.put("telefono", request.getParameter("telefono"));
 
 		persona = new Persona (recibida);

@@ -8,7 +8,7 @@ public abstract class BaseDatos {
 	
 	//atributos para la conexion a la BD
 	protected static String usuario_BD="root";
-	protected static String contraseña_BD="root";
+	protected static String contrasena_BD="root";
 	protected static String IP_BD="localhost";
 	protected static int puerto_BD=3306;
 	protected static String nombre_BD="seminario";
@@ -38,7 +38,7 @@ public abstract class BaseDatos {
 		boolean bandera=false;
 		try {
 			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
-			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contrasena_BD);
 			System.out.println("me pude conectar a la BD: "+nombre_BD);
 			System.out.println(query);
 			Statement cmd = conexion.createStatement();
@@ -61,7 +61,7 @@ public abstract class BaseDatos {
 		boolean bandera=false;
 		try {
 			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
-			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contrasena_BD);
 			System.out.println("me pude conectar a la BD: "+nombre_BD);
 			System.out.println(query);
 			Statement cmd = conexion.createStatement();
@@ -82,7 +82,7 @@ public abstract class BaseDatos {
 		boolean bandera=false;
 		try {
 			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
-			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contrasena_BD);
 			System.out.println("me pude conectar a la BD: "+nombre_BD);
 			System.out.println(query);
 			Statement cmd = conexion.createStatement();
@@ -110,7 +110,7 @@ public abstract class BaseDatos {
 		
 		try {
 			String datosBD= "jdbc:mysql://"+BaseDatos.IP_BD+"/"+BaseDatos.nombre_BD;
-			conexion = DriverManager.getConnection(datosBD,BaseDatos.usuario_BD, BaseDatos.contraseña_BD);
+			conexion = DriverManager.getConnection(datosBD,BaseDatos.usuario_BD, BaseDatos.contrasena_BD);
 			System.out.println("me pude conectar a la BD: "+BaseDatos.nombre_BD);
 		} catch (SQLException ex) {
 			System.out.println("no se pudo conectar");
@@ -134,17 +134,19 @@ public abstract class BaseDatos {
 	}
 	
 	protected boolean EnviarQuery(String query){
+		boolean exito=false;
 		try {
 			Statement cmd = conexion.createStatement();
 			cmd.executeUpdate(query);
 			System.out.println("el query salio bien! :D");
+			exito=true;
 		} catch (SQLException e) {
 			System.out.println("Error al enviar query:");
 			System.out.println(query);
 			e.printStackTrace();
 		}
 		
-		return false;
+		return exito;
 	}
 
 	protected static ResultSet RealizarConsulta(String consulta){
@@ -152,7 +154,7 @@ public abstract class BaseDatos {
 		
 		try {
 			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
-			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contraseña_BD);
+			Connection conexion = DriverManager.getConnection(datosBD,usuario_BD, contrasena_BD);
 			System.out.println("me pude conectar a la BD: "+nombre_BD);
 
 			Statement cmd = conexion.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

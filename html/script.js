@@ -143,7 +143,7 @@ ui.showNewRolForm = function () {
 	$('#formRol input[name=id]').show();
 	$('#formRol label[for=id]').show();
 	$('#formRol input[name=id]').val(-1);
-	$('#formRol inputl[name=nombre_rol]').val('');
+	$('#formRol inputl[name=nombre]').val('');
 	$('#formRol inputl[name=nombre_amigable]').val('');
 	$('#formRol inputl[name=estado]').val(1);
 };
@@ -165,7 +165,7 @@ ui.showEditPersonaForm = function () {
 	$('#formPersona input[name=domicilio]').val(selected.domicilio);
 	$('#formPersona input[name=telefono]').val(selected.telefono);
 	$('#formPersona textarea[name=descripcion]').val(selected.descripcion);
-	$('#formPersona select[name=estado]').val(selected.estado);
+	$('#formPersona select[name=estado]').val((selected.estado)?'1':'0');
 };
 
 ui.showEditUsuarioForm = function() {
@@ -175,11 +175,12 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=id]').hide();
 	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val(selected.id);
+	$('#formUsuario input[name=id_persona]').val(selected.id);
 	$('#formUsuario input[name=nombre_usuario]').val(selected.nombre_usuario);
 	$('#formUsuario input[name=password]').val(selected.password);
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
-	$('#formUsuario select[name=estado]').val(selected.estado);
+	$('#formUsuario select[name=estado]').val((selected.estado)?'1':'0');
 }
 
 ui.showEditRolForm = function() {
@@ -188,10 +189,10 @@ ui.showEditRolForm = function() {
 	$('#formRol').show();
 	$('#formRol input[name=id]').show();
 	$('#formRol label[for=id]').show();
-	$('#formRol input[name=id]').val(-1);
-	$('#formRol input[name=nombre_rol]').val('');
-	$('#formRol input[name=nombre_amigable]').val('');
-	$('#formRol selected[name=estado]').val('');
+	$('#formRol input[name=id]').val(selected.id);
+	$('#formRol input[name=nombre]').val(selected.nombre);
+	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
+	$('#formRol selected[name=estado]').val((selected.estado)?'1':'0');
 }
 
 ui.closeForms = function () {
@@ -253,7 +254,7 @@ ui.updateRolesTable = function () {
 	data.roles.forEach(function (elem) {
 		tr = document.createElement ('TR');
 		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.nombre_rol));
+		tr.appendChild (aux.td (elem.nombre));
 		tr.appendChild (aux.td (elem.nombre_amigable));
 		tr.appendChild (aux.td (elem.estado));
 		var thistr = tr;
