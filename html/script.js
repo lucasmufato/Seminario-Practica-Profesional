@@ -48,6 +48,29 @@ ui.sendPersonaForm = function () {
 	aux.sendForm(sendData)
 }
 
+ui.requestPersonaDeletion = function() {
+	var sendData = {};
+	sendData.entity = 'persona';
+	sendData.id = ui.selectedId;
+	sendData.action = 'delete';
+	aux.sendForm(sendData);
+}
+
+ui.requestUsuarioDeletion = function() {
+	var sendData = {};
+	sendData.entity = 'usuario';
+	sendData.id = ui.selectedId;
+	sendData.action = 'delete';
+	aux.sendForm(sendData);
+}
+
+ui.requestRolDeletion = function() {
+	var sendData = {};
+	sendData.entity = 'rol';
+	sendData.id = ui.selectedId;
+	sendData.action = 'delete';
+	aux.sendForm(sendData);
+}
 
 initUI = function() {
 	data.loadData();
@@ -106,6 +129,17 @@ ui.editButtonPressed = function () {
 };
 
 ui.deleteButtonPressed = function () {
+	switch (ui.currentTab) {
+		case 'personas':
+			ui.requestPersonaDeletion();
+			break;
+		case 'usuarios':
+			ui.requestUsuarioDeletion();
+			break;
+		case 'roles':
+			ui.requestRolDeletion();
+			break;
+	}
 };
 
 ui.showNewPersonaForm = function () {
@@ -212,12 +246,12 @@ ui.updatePersonasTable = function () {
 		tr.appendChild (aux.td (elem.id));
 		tr.appendChild (aux.td (elem.apellidos));
 		tr.appendChild (aux.td (elem.nombres));
-		tr.appendChild (aux.td (elem.tipo_doc));
+		tr.appendChild (aux.td (aux.tipoDoc(elem.tipo_doc)));
 		tr.appendChild (aux.td (elem.nro_doc));
 		tr.appendChild (aux.td (elem.fecha_nacimiento));
 		tr.appendChild (aux.td (elem.domicilio));
 		tr.appendChild (aux.td (elem.telefono));
-		tr.appendChild (aux.td (elem.estado));
+		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -237,7 +271,7 @@ ui.updateUsuariosTable = function () {
 		tr.appendChild (aux.td (elem.id));
 		tr.appendChild (aux.td (elem.nombre_usuario));
 		tr.appendChild (aux.td (elem.email));
-		tr.appendChild (aux.td (elem.estado));
+		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -256,7 +290,7 @@ ui.updateRolesTable = function () {
 		tr.appendChild (aux.td (elem.id));
 		tr.appendChild (aux.td (elem.nombre));
 		tr.appendChild (aux.td (elem.nombre_amigable));
-		tr.appendChild (aux.td (elem.estado));
+		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -300,6 +334,19 @@ aux.td = function (text){
 	var td = document.createElement('TD');
 	td.appendChild(document.createTextNode(text));
 	return td;
+}
+
+aux.tipoDoc = function(number) {
+	switch (number) {
+		case 1:
+			return 'DNI';
+		case 2:
+			return 'LE';
+		case 3:
+			return 'LC';
+		default:
+			return number;
+	}
 }
 
 aux.clearSelectedRow = function (tbody) {

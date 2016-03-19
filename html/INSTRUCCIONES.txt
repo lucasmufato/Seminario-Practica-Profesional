@@ -6,7 +6,7 @@ Dentro del directorio del sitio es necesario que existan los siguientes archivos
 [...]/WEB-INF/ directorio que va a contener los otros archivos
 [...]/WEB-INF/web.xml Archivo de configuracion
 [...]/WEB-INF/lib/ directorio para librerias .jar (**)
-[...]/WEB-INF/clases/ directorio para .class compilados. Debe respetar el arbol de paquetes
+[...]/WEB-INF/classes/ directorio para .class compilados. Debe respetar el arbol de paquetes
 
 
 NOTAS:

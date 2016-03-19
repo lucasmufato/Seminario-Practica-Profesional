@@ -35,18 +35,31 @@ public class ControladorServlet extends HttpServlet {
 		String action, entity;
 		JSONObject jsonResponse;
 		boolean rst = false;
+		int id;
 
 		PrintWriter writer = response.getWriter();
 
 		action = request.getParameter("action");
 		entity = request.getParameter("entity");
 
-		if (entity.equals("persona")) {
-			rst = updatePersona(request);
-		} else if (entity.equals("usuario")) {
-			rst = updateUsuario(request);
-		} else if (entity.equals("rol")) {
-			rst = updateRol(request);
+		if (action.equals("new") ||action.equals("edit")){
+			if (entity.equals("persona")) {
+				rst = updatePersona(request);
+			} else if (entity.equals("usuario")) {
+				rst = updateUsuario(request);
+			} else if (entity.equals("rol")) {
+				rst = updateRol(request);
+			}
+		} else if (action.equals("delete")) {
+			id = Integer.parseInt(request.getParameter("id"));
+
+			if (entity.equals("persona")) {
+				rst = Persona.Eliminar(id);
+			} else if (entity.equals("usuario")) {
+				rst = Usuario.Eliminar(id);
+			} else if (entity.equals("rol")) {
+				rst = Rol.Eliminar(id);
+			}
 		}
 
 
