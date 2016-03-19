@@ -48,6 +48,20 @@ ui.sendPersonaForm = function () {
 	aux.sendForm(sendData)
 }
 
+ui.sendUsuarioForm = function() {
+	var sendData = {};
+	sendData.entity = 'usuario';
+	sendData.action = (sendData.id == -1)? 'new': 'edit';
+	sendData.id_usuario = $('#formUsuario input[name=id]').val();
+	sendData.id_persona = $('#formUsuario input[name=id_persona]').val();
+	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val();
+	sendData.password = $('#formUsuario input[name=password]').val();
+	sendData.email = $('#formUsuario input[name=email]').val();
+	sendData.descripcion = $('#formUsuario textarea[name=descripcion]').val();
+	sendData.estado = $('#formUsuario select[name=estado]').val();
+	aux.sendForm(sendData)
+}
+
 ui.requestPersonaDeletion = function() {
 	var sendData = {};
 	sendData.entity = 'persona';
@@ -288,7 +302,7 @@ ui.updateRolesTable = function () {
 	data.roles.forEach(function (elem) {
 		tr = document.createElement ('TR');
 		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.nombre));
+		tr.appendChild (aux.td (elem.nombre_usuario));
 		tr.appendChild (aux.td (elem.nombre_amigable));
 		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
 		var thistr = tr;

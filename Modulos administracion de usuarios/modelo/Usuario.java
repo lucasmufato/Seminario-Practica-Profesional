@@ -77,7 +77,7 @@ public class Usuario extends BaseDatos {
 	public Usuario (JSONObject json){
 		this.id=(int) json.get("id_usuario");
 		this.id_persona= (int) json.get("id_persona");
-		this.nombre= (String) json.get("nombre_persona");
+		this.nombre= (String) json.get("nombre_usuario");
 		this.password= (String) json.get("password");
 		this.email= (String) json.get("email");
 		this.descripcion= (String) json.get("descripcion");
