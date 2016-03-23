@@ -83,7 +83,6 @@ public class Prueba extends BaseDatos {
 		int i=0;
 		int rows=0;
 		try {
-			
 			if (r.last()) { //cuento la cantidad de filas del resultado
 			    rows = r.getRow();
 			    // Move to beginning
