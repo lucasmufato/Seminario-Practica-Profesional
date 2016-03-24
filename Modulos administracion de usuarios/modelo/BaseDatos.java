@@ -113,7 +113,7 @@ public abstract class BaseDatos {
 			conexion = DriverManager.getConnection(datosBD,BaseDatos.usuario_BD, BaseDatos.contrasena_BD);
 			System.out.println("me pude conectar a la BD: "+BaseDatos.nombre_BD);
 		} catch (SQLException ex) {
-			System.out.println("no se pudo conectar");
+			System.out.println("no se pudo conectar a "+BaseDatos.nombre_BD+" con el usuario "+BaseDatos.usuario_BD+" y contrasena "+BaseDatos.contrasena_BD);
 		    System.out.println("SQLException: " + ex.getMessage());
 		}
 		
