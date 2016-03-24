@@ -159,7 +159,21 @@ public class ControladorServlet extends HttpServlet {
 	}
 
 	private boolean updateUsuario (HttpServletRequest request) {
-		return true;
+		JSONObject recibido;
+		Usuario usuario;
+
+		recibido=new JSONObject();
+
+		recibido.put("id_usuario", Integer.parseInt(request.getParameter("id_usuario")));
+		recibido.put("id_persona", Integer.parseInt(request.getParameter("id_persona")));
+		recibido.put("nombre_usuario", request.getParameter("nombre_usuario"));
+		recibido.put("password", request.getParameter("password"));
+		recibido.put("email", request.getParameter("email"));
+		recibido.put("descripcion", request.getParameter("descripcion"));
+		recibido.put("estado", Integer.parseInt(request.getParameter("estado")));
+
+		usuario = new Usuario (recibido);
+		return usuario.guardar();
 	}
 
 	private boolean updateRol (HttpServletRequest request) {
