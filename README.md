@@ -2,3 +2,43 @@
 Programa de Viajes Compartidos
 
 esta es la rama master
+
+## INSTRUCCIONES
+
+Para hacer funcionar la interfaz web es necesario instalar Tomcat 8.
+
+El directorio del sitio web *(1)* es donde deben estar los archivos HTML, CSS y javascript 
+
+Dentro del directorio del sitio es necesario que existan los siguientes archivos:  
+
+*   [...]/WEB-INF/ directorio que va a contener los otros archivos
+
+*   [...]/WEB-INF/web.xml Archivo de configuracion
+
+*   [...]/WEB-INF/lib/ directorio para librerias .jar *(2)*
+
+*   [...]/WEB-INF/classes/ directorio para .class compilados. Debe respetar el arbol de paquetes
+
+
+*(1)*: En Debian el directorio del sitio es /var/lib/tomcat8/webapps/ROOT  
+*(2)*: En lib tuve que poner los archivos json-simple-1.1.1.jar y mysql-connector-java-5.1.32.jar
+
+
+
+## NOTAS SOBRE EL CODIGO:
+
+### Clase ControladorServlet
+
+La clase ControladorServlet recibe peticiones HTTP como entrada y devuelve información en formato JSON.
+
+Si se solicita el recurso mediante el comando GET de HTTP, devolvera información completa sobre Personas, Usuarios, Roles, Permisos y sus relaciones. Implementado en ControladorServlet.doGet()
+
+Mediante el comando POST de HTTP puede solicitarse una operacion de alta/baja/modificación de dichas entidades. Implementado en ControladorServlet.doPost()
+
+Toda peticion POST requiere dos parámetros obligatorios:  
+	action: 'new', 'edit' o 'delete'  
+	entity: 'persona', 'usuario', 'rol' ...  
+
+Además, deberá incluir los campos necesarios para los atributos de la entidad en cuestión (nombre,  etc).  
+Para las eliminaciones (action='delete') sólo es necesario el campo id.  
+Para las altas (action='new') el campo id debe ser -1.  
