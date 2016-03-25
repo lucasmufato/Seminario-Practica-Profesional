@@ -73,6 +73,7 @@ ui.sendRolForm = function() {
 	sendData.id_rol = $('#formRol input[name=id]').val();
 	sendData.nombre = $('#formRol input[name=nombre]').val();
 	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val();
+	sendData.descripcion= $('#formRol textarea[name=descripcion]').val()
 	sendData.estado = $('#formRol select[name=estado]').val();
 	aux.sendForm(sendData);
 
@@ -210,6 +211,7 @@ ui.showNewRolForm = function () {
 	$('#formRol input[name=id]').val(-1);
 	$('#formRol input[name=nombre]').val('');
 	$('#formRol input[name=nombre_amigable]').val('');
+	$('#formRol textarea[name=descripcion]').val('');
 	$('#formRol input[name=estado]').val(1);
 };
 
@@ -257,6 +259,7 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=id]').val(selected.id);
 	$('#formRol input[name=nombre]').val(selected.nombre);
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
+	$('#formRol textarea[name=descripcion]').val(selected.descripcion);
 	$('#formRol select[name=estado]').val((selected.estado)?'1':'0');
 }
 
