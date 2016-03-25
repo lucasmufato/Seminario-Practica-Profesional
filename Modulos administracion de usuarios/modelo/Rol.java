@@ -126,4 +126,49 @@ public class Rol extends BaseDatos {
 		
 		return bandera;
 	}
+	public boolean AsignarPermiso(int permiso_id){
+		boolean bandera=false;
+		
+		//creo un JSON para enviarle los datos a la clase Rol_Usuario mediante el constructor con JSON
+		JSONObject json= new JSONObject();
+		json.put("id_permiso", permiso_id );
+		json.put("id_rol", this.id);
+		Permiso_Rol pr= new Permiso_Rol(json);
+		bandera=pr.guardar();
+		//uso este ultimo metodo para reusar codigo, q ya los tenia hechos
+		
+		return bandera;
+	}
+	
+	public boolean QuitarPermiso(int permiso_id){
+		boolean bandera=false;
+		
+		Permiso_Rol.Eliminar(permiso_id, this.id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
+		
+		return bandera;
+	}
+	
+	public static boolean AsignarPermiso(int permiso_id, int rol_id){
+		boolean bandera=false;
+		
+		//creo un JSON para enviarle los datos a la clase Rol_Usuario mediante el constructor con JSON
+		JSONObject json= new JSONObject();
+		json.put("id_permiso", permiso_id );
+		json.put("id_rol", rol_id);
+		Permiso_Rol pr= new Permiso_Rol(json);
+		bandera=pr.guardar();
+
+		//uso este ultimo metodo para reusar codigo, q ya los tenia hechos
+		
+		return bandera;
+	}
+	
+	public static boolean QuitarPermiso(int permiso_id, int rol_id){
+		boolean bandera=false;
+		
+		Permiso_Rol.Eliminar(permiso_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
+		
+		return bandera;
+	}
+	
 }

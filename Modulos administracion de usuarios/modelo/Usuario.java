@@ -136,6 +136,48 @@ public class Usuario extends BaseDatos {
 		
 		return bandera;
 	}
+
+	public boolean AsignarRol(int rol_id){
+		boolean bandera=false;
+		
+		//creo un JSON para enviarle los datos a la clase Rol_Usuario mediante el constructor con JSON
+		JSONObject json= new JSONObject();
+		json.put("id_usuario", this.id);
+		json.put("id_rol", rol_id);
+		Rol_Usuario ru= new Rol_Usuario(json);
+		bandera=ru.guardar();
+		//uso este ultimo metodo para reusar codigo, q ya los tenia hechos
+		
+		return bandera;
+	}
 	
+	public boolean QuitarRol(int rol_id){
+		boolean bandera=false;
+		
+		Rol_Usuario.Eliminar(this.id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
+		
+		return bandera;
+	}
 	
+	public static boolean AsignarRol(int rol_id, int usuario_id){
+		boolean bandera=false;
+		
+		//creo un JSON para enviarle los datos a la clase Rol_Usuario mediante el constructor con JSON
+		JSONObject json= new JSONObject();
+		json.put("id_usuario", usuario_id);
+		json.put("id_rol", rol_id);
+		Rol_Usuario ru= new Rol_Usuario(json);
+		bandera=ru.guardar();
+		//uso este ultimo metodo para reusar codigo, q ya los tenia hechos
+		
+		return bandera;
+	}
+	
+	public static boolean QuitarRol(int rol_id, int usuario_id){
+		boolean bandera=false;
+		
+		Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
+		
+		return bandera;
+	}
 }
