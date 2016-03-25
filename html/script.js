@@ -66,6 +66,19 @@ ui.sendUsuarioForm = function() {
 	$('#formUsuario').hide();
 }
 
+ui.sendRolForm = function() {
+	var sendData = {};
+	sendData.entity = 'rol';
+	sendData.action = (sendData.id == -1)? 'new': 'edit';
+	sendData.id_rol = $('#formRol input[name=id]').val();
+	sendData.nombre = $('#formRol input[name=nombre]').val();
+	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val();
+	sendData.estado = $('#formRol select[name=estado]').val();
+	aux.sendForm(sendData);
+
+	$('#formRol').hide();
+}
+
 ui.requestPersonaDeletion = function() {
 	var sendData = {};
 	sendData.entity = 'persona';
@@ -192,12 +205,12 @@ ui.showNewUsuarioForm = function () {
 
 ui.showNewRolForm = function () {
 	$('#formRol').show();
-	$('#formRol input[name=id]').show();
-	$('#formRol label[for=id]').show();
+	$('#formRol input[name=id]').hide();
+	$('#formRol label[for=id]').hide();
 	$('#formRol input[name=id]').val(-1);
-	$('#formRol inputl[name=nombre]').val('');
-	$('#formRol inputl[name=nombre_amigable]').val('');
-	$('#formRol inputl[name=estado]').val(1);
+	$('#formRol input[name=nombre]').val('');
+	$('#formRol input[name=nombre_amigable]').val('');
+	$('#formRol input[name=estado]').val(1);
 };
 
 ui.showEditPersonaForm = function () {
@@ -244,7 +257,7 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=id]').val(selected.id);
 	$('#formRol input[name=nombre]').val(selected.nombre);
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
-	$('#formRol selected[name=estado]').val((selected.estado)?'1':'0');
+	$('#formRol select[name=estado]').val((selected.estado)?'1':'0');
 }
 
 ui.closeForms = function () {

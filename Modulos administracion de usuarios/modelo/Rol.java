@@ -60,11 +60,11 @@ public class Rol extends BaseDatos {
 	}
 	
 	public Rol(JSONObject json){
-		this.id=(int)json.get("id_rol");
+		this.id=Integer.parseInt(json.get("id_rol").toString());
 		this.nombre=(String)json.get("nombre");
 		this.nombre_amigable=(String)json.get("nombre_amigable");
 		this.descripcion=(String)json.get("descripcion");
-		this.estado=(int)json.get("estado");
+		this.estado=Integer.parseInt(json.get("estado").toString());
 		
 		
 	}
@@ -98,7 +98,7 @@ public class Rol extends BaseDatos {
 				query="UPDATE "+tabla+" SET "
 						+"nombre = '"+this.nombre+"',"
 						+"nombre_amigable = '"+this.nombre_amigable+"',"
-						+"descripcion = "+this.descripcion+"',"
+						+"descripcion = '"+this.descripcion+"',"
 						+"estado = '"+this.estado+"' WHERE id_rol="+this.id+";";
 			}
 			this.Conectarse_BD();

@@ -143,7 +143,11 @@ public class ControladorServlet extends HttpServlet {
 		Persona persona;
 
 		recibida = new JSONObject();
-		recibida.put("id_persona", Integer.parseInt(request.getParameter("id_persona")));
+		if (request.getParameter("action").equals("new")) {
+			recibida.put ("id_persona", -1);
+		} else {
+			recibida.put("id_persona", Integer.parseInt(request.getParameter("id_persona")));
+		}
 		recibida.put("nombres", request.getParameter("nombres"));
 		recibida.put("apellidos", request.getParameter("apellidos"));
 		recibida.put("descripcion", request.getParameter("descripcion"));
@@ -164,7 +168,11 @@ public class ControladorServlet extends HttpServlet {
 
 		recibido=new JSONObject();
 
-		recibido.put("id_usuario", Integer.parseInt(request.getParameter("id_usuario")));
+		if (request.getParameter("action").equals("new")) {
+			recibido.put ("id_usuario", -1);
+		} else {
+			recibido.put("id_usuario", Integer.parseInt(request.getParameter("id_usuario")));
+		}
 		recibido.put("id_persona", Integer.parseInt(request.getParameter("id_persona")));
 		recibido.put("nombre_usuario", request.getParameter("nombre_usuario"));
 		recibido.put("password", request.getParameter("password"));
@@ -177,6 +185,21 @@ public class ControladorServlet extends HttpServlet {
 	}
 
 	private boolean updateRol (HttpServletRequest request) {
-		return true;
+		JSONObject recibido;
+		Rol rol;
+
+		recibido = new JSONObject();
+		if (request.getParameter("action").equals("new")) {
+			recibido.put ("id_rol", -1);
+		} else {
+			recibido.put ("id_rol", Integer.parseInt (request.getParameter("id_rol")));
+		}
+		recibido.put ("nombre", request.getParameter("nombre"));
+		recibido.put ("nombre_amigable", request.getParameter("nombre_amigable"));
+		recibido.put ("descripcion", request.getParameter("descripcion"));
+		recibido.put ("estado", Integer.parseInt(request.getParameter("estado")));
+
+		rol = new Rol(recibido);
+		return rol.guardar();
 	}
 }
