@@ -154,9 +154,7 @@ public class Usuario extends BaseDatos {
 	public boolean QuitarRol(int rol_id){
 		boolean bandera=false;
 		
-		Rol_Usuario.Eliminar(this.id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
-		
-		return bandera;
+		return Rol_Usuario.Eliminar(this.id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
 	
 	public static boolean AsignarRol(int rol_id, int usuario_id){
@@ -176,8 +174,6 @@ public class Usuario extends BaseDatos {
 	public static boolean QuitarRol(int rol_id, int usuario_id){
 		boolean bandera=false;
 		
-		Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
-		
-		return bandera;
+		return Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
 }

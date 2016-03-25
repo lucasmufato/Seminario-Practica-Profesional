@@ -143,9 +143,7 @@ public class Rol extends BaseDatos {
 	public boolean QuitarPermiso(int permiso_id){
 		boolean bandera=false;
 		
-		Permiso_Rol.Eliminar(permiso_id, this.id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
-		
-		return bandera;
+		return Permiso_Rol.Eliminar(permiso_id, this.id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
 	
 	public static boolean AsignarPermiso(int permiso_id, int rol_id){
@@ -166,9 +164,7 @@ public class Rol extends BaseDatos {
 	public static boolean QuitarPermiso(int permiso_id, int rol_id){
 		boolean bandera=false;
 		
-		Permiso_Rol.Eliminar(permiso_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
-		
-		return bandera;
+		return Permiso_Rol.Eliminar(permiso_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
 	
 }
