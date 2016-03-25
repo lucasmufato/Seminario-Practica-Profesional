@@ -46,6 +46,8 @@ ui.sendPersonaForm = function () {
 	sendData.estado= $('#formPersona select[name=estado]').val()
 
 	aux.sendForm(sendData)
+
+	$('#formPersona').hide();
 }
 
 ui.sendUsuarioForm = function() {
@@ -60,6 +62,8 @@ ui.sendUsuarioForm = function() {
 	sendData.descripcion = $('#formUsuario textarea[name=descripcion]').val();
 	sendData.estado = $('#formUsuario select[name=estado]').val();
 	aux.sendForm(sendData)
+
+	$('#formUsuario').hide();
 }
 
 ui.requestPersonaDeletion = function() {
@@ -382,7 +386,7 @@ aux.sendForm = function (sendData) {
 		success: function (jsonData) {
 			DEBUGresponse = jsonData;
 			if (jsonData.result) {
-				document.location.reload();
+				data.loadData ();
 			} else {
 				window.alert ("Ocurrio un error");
 			}
