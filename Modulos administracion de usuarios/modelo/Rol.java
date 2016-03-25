@@ -129,7 +129,7 @@ public class Rol extends BaseDatos {
 	public boolean AsignarPermiso(int permiso_id){
 		boolean bandera=false;
 		
-		//creo un JSON para enviarle los datos a la clase Rol_Usuario mediante el constructor con JSON
+		//creo un JSON para enviarle los datos a la clase Permiso_Rol mediante el constructor con JSON
 		JSONObject json= new JSONObject();
 		json.put("id_permiso", permiso_id );
 		json.put("id_rol", this.id);
@@ -151,7 +151,7 @@ public class Rol extends BaseDatos {
 	public static boolean AsignarPermiso(int permiso_id, int rol_id){
 		boolean bandera=false;
 		
-		//creo un JSON para enviarle los datos a la clase Rol_Usuario mediante el constructor con JSON
+		//creo un JSON para enviarle los datos a la clase Permiso_Rol mediante el constructor con JSON
 		JSONObject json= new JSONObject();
 		json.put("id_permiso", permiso_id );
 		json.put("id_rol", rol_id);
