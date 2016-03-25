@@ -306,7 +306,7 @@ ui.updateRolesTable = function () {
 	data.roles.forEach(function (elem) {
 		tr = document.createElement ('TR');
 		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.nombre_usuario));
+		tr.appendChild (aux.td (elem.nombre));
 		tr.appendChild (aux.td (elem.nombre_amigable));
 		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
 		var thistr = tr;
