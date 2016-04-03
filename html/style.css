@@ -28,6 +28,7 @@ body {
 	border-bottom: 1px solid gray;
 }
 
+
 .buttonBox button, .formSection button {
 	font-size: 90%;
 	font-weight: bold;
@@ -37,6 +38,24 @@ body {
 	color: white;
 	border-radius: 4px;
 	padding: 6px;
+}
+
+.formSection button.saveButton {
+	background: #0a2;
+	border: 1px solid #062;
+}
+
+.formSection button.closeButton {
+	background-color: #333;
+	border: 1px solid #666;
+}
+
+.verticalButtonBox {
+	display: inline-block;
+}
+
+.verticalButtonBox button {
+	display: block;
 }
 
 #personasTable {
@@ -51,7 +70,7 @@ body {
 	display: none;
 }
 
-.formSection h2 {
+.formSection h2, .formSection h3 {
 	background: #44f;
 	color: white;
 	text-align: center;
