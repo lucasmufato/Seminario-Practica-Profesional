@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Hashtable;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import pruebas.Prueba;
 
@@ -21,6 +22,7 @@ public class Persona extends BaseDatos {
 	protected String telefono;
 	protected String descripcion;
 	protected int estado;
+	protected JSONArray usuarios;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 		protected static String vector_atributos[]={"id_persona","nombres","apellidos","tipo_doc","nro_doc","fecha_nacimiento","domicilio","telefono","descripcion","estado"};
@@ -55,6 +57,7 @@ public class Persona extends BaseDatos {
 					json[j].put(vector_atributos[i], r.getObject(vector_atributos[i]));
 					i++;
 				}
+				json[j].put ("usuarios", Persona.ListaIdUsuarios((Integer)r.getObject("id_persona")));
 				//cuando lei todos las columnas de ese renglon paso al siguiente, pasando tambien al siguiente json
 				j++;
 				i=0;
@@ -79,6 +82,7 @@ public class Persona extends BaseDatos {
 		this.nro_doc=Integer.parseInt(json.get("nro_doc").toString());
 		this.tipo_doc=Integer.parseInt(json.get("tipo_doc").toString());
 		this.telefono=(String)json.get("telefono");
+		this.usuarios=(JSONArray)json.get("usuarios");
 		
 	}
 	
@@ -144,6 +148,22 @@ boolean bandera=false;
 			}
 		
 		return bandera;
+	}
+
+	private static JSONArray ListaIdUsuarios(int id) {
+		JSONArray lista = new JSONArray();
+		String consulta="SELECT id_usuario FROM USUARIO WHERE id_persona= "+id;
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			while (r.next()) {
+				lista.add(r.getInt(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al realizar el select para id_usuarios relacionados con persona");
+			e.printStackTrace();
+		}
+
+		return lista;
 	}
 
 }

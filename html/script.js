@@ -22,6 +22,7 @@ data.loadData = function() {
 			ui.updatePersonasTable();
 			ui.updateUsuariosTable();
 			ui.updateRolesTable();
+			ui.updatePersonasSelect();
 		},
 		error: function (er1, err2, err3) {
 			window.alert (err3);
@@ -29,6 +30,22 @@ data.loadData = function() {
 		}
 	});
 }
+
+Array.prototype.getById = function (id) {
+	var pos = 0;
+	var found = null;
+	var retval = null;
+	while (found == null && pos < this.length) {
+		if (this[pos].id == id) {
+			retval = this[pos];
+		}
+		pos++;
+	}
+	return retval;
+}
+
+data.usuarios.getById = data.personas.getById;
+data.roles.getById = data.personas.getById;
 
 ui.sendPersonaForm = function () {
 	var sendData = {};
@@ -174,6 +191,21 @@ ui.deleteButtonPressed = function () {
 	}
 };
 
+ui.updatePersonasSelect = function() {
+	var select = $('#formUsuario select[name=id_persona]')[0];
+	var newOpt;
+
+	select.textContent = '';
+	data.personas.forEach (function (persona) {
+		if (persona.estado) {
+			newOpt = document.createElement ('OPTION');
+			newOpt.value = persona.id
+			newOpt.textContent = persona.nombres;
+			select.appendChild (newOpt);
+		}
+	});
+}
+
 ui.showNewPersonaForm = function () {
 	$('#formPersona input[name=id]').hide()
 	$('#formPersona label[for=id]').hide()
@@ -189,6 +221,7 @@ ui.showNewPersonaForm = function () {
 	$('#formPersona input[name=telefono]').val('');
 	$('#formPersona textarea[name=descripcion]').val('');
 	$('#formPersona select[name=estado]').val(1);
+	$('#formPersonaUsuario select[name=usuarios]').html('');
 };
 
 ui.showNewUsuarioForm = function () {
@@ -233,6 +266,19 @@ ui.showEditPersonaForm = function () {
 	$('#formPersona input[name=telefono]').val(selected.telefono);
 	$('#formPersona textarea[name=descripcion]').val(selected.descripcion);
 	$('#formPersona select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formPersonaUsuario select[name=usuarios]').html('');
+
+	var newOption;
+	var usuario;
+	var usuariosSelect = $('#formPersonaUsuario select[name=usuarios]')[0];
+
+	data.personas.getById (selected.id).usuarios.forEach(function (idUsuario) {
+		usuario = data.usuarios.getById(idUsuario);
+		newOption = document.createElement ('OPTION');
+		newOption.value = idUsuario;
+		newOption.textContent = usuario.nombre_usuario;
+		usuariosSelect.appendChild (newOption);
+	});
 };
 
 ui.showEditUsuarioForm = function() {
@@ -242,7 +288,7 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=id]').hide();
 	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val(selected.id);
-	$('#formUsuario input[name=id_persona]').val(selected.id);
+	$('#formUsuario select[name=id_persona]').val(selected.id_persona);
 	$('#formUsuario input[name=nombre_usuario]').val(selected.nombre_usuario);
 	$('#formUsuario input[name=password]').val(selected.password);
 	$('#formUsuario input[name=email]').val(selected.email);

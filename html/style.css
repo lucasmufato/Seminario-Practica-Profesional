@@ -87,6 +87,10 @@ body {
 	text-align: right;
 }
 
+#formPersonaUsuario select {
+	width: 100%;
+}
+
 
 tr.selectedRow {
 	background: #24b;
