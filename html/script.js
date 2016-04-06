@@ -26,7 +26,7 @@ data.loadData = function() {
 		},
 		error: function (er1, err2, err3) {
 			window.alert (err3);
-			DEBUGerror = er1;
+			document.body.innerHTML = er1;
 		}
 	});
 }
@@ -43,9 +43,6 @@ Array.prototype.getById = function (id) {
 	}
 	return retval;
 }
-
-data.usuarios.getById = data.personas.getById;
-data.roles.getById = data.personas.getById;
 
 ui.sendPersonaForm = function () {
 	var sendData = {};
