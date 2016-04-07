@@ -197,7 +197,7 @@ ui.updatePersonasSelect = function() {
 		if (persona.estado) {
 			newOpt = document.createElement ('OPTION');
 			newOpt.value = persona.id
-			newOpt.textContent = persona.nombres;
+			newOpt.textContent = persona.nombres+' '+persona.apellidos;
 			select.appendChild (newOpt);
 		}
 	});
@@ -232,6 +232,18 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario input[name=email]').val('');
 	$('#formUsuario textarea[name=descripcion]').val('');
 	$('#formUsuario select[name=estado]').val(1);
+	$('#formUsuarioRol select[name=roles_asignados]').html('');
+	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
+
+	var newOption;
+	var noAsignados =  $('#formUsuarioRol select[name=roles_no_asignados]')[0];
+
+	data.roles.forEach(function (rol) {
+		newOption = document.createElement ('OPTION');
+		newOption.value = rol.id;
+		newOption.textContent = rol.nombre_amigable;
+		noAsignados.appendChild (newOption);
+	});
 };
 
 ui.showNewRolForm = function () {
@@ -291,6 +303,26 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
 	$('#formUsuario select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formUsuarioRol select[name=roles_asignados]').html('');
+	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
+
+	var newOption;
+	var usuario;
+	var asignados =  $('#formUsuarioRol select[name=roles_asignados]')[0];
+	var noAsignados =  $('#formUsuarioRol select[name=roles_no_asignados]')[0];
+
+	usuario = data.usuarios.getById(selected.id);
+	data.roles.forEach(function (rol) {
+		newOption = document.createElement ('OPTION');
+		newOption.value = rol.id;
+		newOption.textContent = rol.nombre_amigable;
+		if (usuario.roles.includes(rol.id)) {
+			asignados.appendChild (newOption);
+		} else {
+			noAsignados.appendChild (newOption);
+		}
+	});
+
 }
 
 ui.showEditRolForm = function() {
