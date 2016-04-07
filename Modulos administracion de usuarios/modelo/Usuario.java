@@ -176,4 +176,16 @@ public class Usuario extends BaseDatos {
 		
 		return Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
+	
+	public static String GetPasswordByUsuario(String nombreUsuario){
+		String consulta = "SELECT password FROM USUARIO WHERE nombre_usuario = "+nombreUsuario;
+		ResultSet r = BaseDatos.RealizarConsulta(consulta);
+		String pass=null;
+		try {
+			pass = r.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pass;
+	}
 }

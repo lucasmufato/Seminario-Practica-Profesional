@@ -9,6 +9,7 @@ import javax.servlet.http.*;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
+import modelo.BaseDatos;
 import modelo.Usuario;
 
 
@@ -25,9 +26,10 @@ public class ControladorLogin extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("En doPost de ControladorLogin!");
-		String user = request.getParameter("usuario");
-		String pass = request.getParameter("contrasena");
-		if (user.equals("a") && pass.equals("a")) {
+		String userIngresado = request.getParameter("usuario");
+		String passIngresada = request.getParameter("contrasena");
+		String pass = Usuario.GetPasswordByUsuario(userIngresado);
+		if (pass != null && pass.equals(passIngresada)) {
 			response(response, "login ok");
 		} else {
 			response(response, "invalid login");
