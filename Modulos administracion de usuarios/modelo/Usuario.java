@@ -180,7 +180,6 @@ public class Usuario extends BaseDatos {
 		
 		return Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
-<<<<<<< HEAD
 	
 	public static boolean isUsuarioPass(String nombre, String pass){
 		String consulta = "SELECT * FROM usuario WHERE nombre_usuario= '"+nombre+"' and password='"+pass+"'";
@@ -194,7 +193,7 @@ public class Usuario extends BaseDatos {
 			e.printStackTrace();
 		}
 		return false;
-=======
+	}
 
 	private static JSONArray ListaIdRoles(int id) {
 		JSONArray lista = new JSONArray();
@@ -210,6 +209,5 @@ public class Usuario extends BaseDatos {
 		}
 
 		return lista;
->>>>>>> 72c8e89464b26d0567fcf041dcb20607f868d129
 	}
 }
