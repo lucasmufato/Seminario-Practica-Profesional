@@ -60,6 +60,9 @@ public class ControladorServlet extends HttpServlet {
 			} else if (entity.equals("rol")) {
 				rst = Rol.Eliminar(id);
 			}
+		} else if (action.equals("assignRoles") && entity.equals("usuario")) {
+			/* No implementado aun */
+			rst=true;
 		}
 
 

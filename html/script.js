@@ -25,8 +25,8 @@ data.loadData = function() {
 			ui.updatePersonasSelect();
 		},
 		error: function (er1, err2, err3) {
+			document.body.innerHTML = er1.responseText;
 			window.alert (err3);
-			DEBUGerror = er1;
 		}
 	});
 }
@@ -44,9 +44,6 @@ Array.prototype.getById = function (id) {
 	return retval;
 }
 
-data.usuarios.getById = data.personas.getById;
-data.roles.getById = data.personas.getById;
-
 ui.sendPersonaForm = function () {
 	var sendData = {};
 	sendData.entity = 'persona';
@@ -62,7 +59,7 @@ ui.sendPersonaForm = function () {
 	sendData.descripcion= $('#formPersona textarea[name=descripcion]').val()
 	sendData.estado= $('#formPersona select[name=estado]').val()
 
-	aux.sendForm(sendData)
+	aux.sendForm(sendData, data.loadData)
 
 	$('#formPersona').hide();
 }
@@ -72,13 +69,13 @@ ui.sendUsuarioForm = function() {
 	sendData.entity = 'usuario';
 	sendData.action = (sendData.id == -1)? 'new': 'edit';
 	sendData.id_usuario = $('#formUsuario input[name=id]').val();
-	sendData.id_persona = $('#formUsuario input[name=id_persona]').val();
+	sendData.id_persona = $('#formUsuario select[name=id_persona]').val();
 	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val();
 	sendData.password = $('#formUsuario input[name=password]').val();
 	sendData.email = $('#formUsuario input[name=email]').val();
 	sendData.descripcion = $('#formUsuario textarea[name=descripcion]').val();
 	sendData.estado = $('#formUsuario select[name=estado]').val();
-	aux.sendForm(sendData)
+	aux.sendForm(sendData, data.loadData)
 
 	$('#formUsuario').hide();
 }
@@ -92,7 +89,7 @@ ui.sendRolForm = function() {
 	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val();
 	sendData.descripcion= $('#formRol textarea[name=descripcion]').val()
 	sendData.estado = $('#formRol select[name=estado]').val();
-	aux.sendForm(sendData);
+	aux.sendForm(sendData, data.loadData);
 
 	$('#formRol').hide();
 }
@@ -102,7 +99,7 @@ ui.requestPersonaDeletion = function() {
 	sendData.entity = 'persona';
 	sendData.id = ui.selectedId;
 	sendData.action = 'delete';
-	aux.sendForm(sendData);
+	aux.sendForm(sendData, data.loadData);
 }
 
 ui.requestUsuarioDeletion = function() {
@@ -110,7 +107,7 @@ ui.requestUsuarioDeletion = function() {
 	sendData.entity = 'usuario';
 	sendData.id = ui.selectedId;
 	sendData.action = 'delete';
-	aux.sendForm(sendData);
+	aux.sendForm(sendData, data.loadData);
 }
 
 ui.requestRolDeletion = function() {
@@ -118,7 +115,7 @@ ui.requestRolDeletion = function() {
 	sendData.entity = 'rol';
 	sendData.id = ui.selectedId;
 	sendData.action = 'delete';
-	aux.sendForm(sendData);
+	aux.sendForm(sendData, data.loadData);
 }
 
 initUI = function() {
@@ -200,7 +197,7 @@ ui.updatePersonasSelect = function() {
 		if (persona.estado) {
 			newOpt = document.createElement ('OPTION');
 			newOpt.value = persona.id
-			newOpt.textContent = persona.nombres;
+			newOpt.textContent = persona.nombres+' '+persona.apellidos;
 			select.appendChild (newOpt);
 		}
 	});
@@ -235,6 +232,18 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario input[name=email]').val('');
 	$('#formUsuario textarea[name=descripcion]').val('');
 	$('#formUsuario select[name=estado]').val(1);
+	$('#formUsuarioRol select[name=roles_asignados]').html('');
+	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
+
+	var newOption;
+	var noAsignados =  $('#formUsuarioRol select[name=roles_no_asignados]')[0];
+
+	data.roles.forEach(function (rol) {
+		newOption = document.createElement ('OPTION');
+		newOption.value = rol.id;
+		newOption.textContent = rol.nombre_amigable;
+		noAsignados.appendChild (newOption);
+	});
 };
 
 ui.showNewRolForm = function () {
@@ -294,6 +303,26 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
 	$('#formUsuario select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formUsuarioRol select[name=roles_asignados]').html('');
+	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
+
+	var newOption;
+	var usuario;
+	var asignados =  $('#formUsuarioRol select[name=roles_asignados]')[0];
+	var noAsignados =  $('#formUsuarioRol select[name=roles_no_asignados]')[0];
+
+	usuario = data.usuarios.getById(selected.id);
+	data.roles.forEach(function (rol) {
+		newOption = document.createElement ('OPTION');
+		newOption.value = rol.id;
+		newOption.textContent = rol.nombre_amigable;
+		if (usuario.roles.includes(rol.id)) {
+			asignados.appendChild (newOption);
+		} else {
+			noAsignados.appendChild (newOption);
+		}
+	});
+
 }
 
 ui.showEditRolForm = function() {
@@ -408,6 +437,21 @@ ui.getSelectedElement = function() {
 	return elem;
 }
 
+ui.assignRolUsuario = function () {
+	$('#formUsuario input[name=id]').val();
+	var sendData = {
+		entity: 'usuario',
+		action: 'assignRoles',
+		id: $('#formUsuario input[name=id]').val(),
+		roles: $('#formUsuarioRol select[name=roles_no_asignados]').val()
+	};
+
+	var onsuccess = function (data) {
+		/* No implementado aun */
+	};
+	aux.sendForm (sendData, onsuccess);
+}
+
 /* Funciones auxiliares */
 aux = {};
 aux.td = function (text){
@@ -439,7 +483,7 @@ aux.clearSelectedRow = function (tbody) {
 	}
 }
 
-aux.sendForm = function (sendData) {
+aux.sendForm = function (sendData, onsuccess) {
 	$.ajax({
 		url: '/users',
 		method: 'POST',
@@ -448,14 +492,14 @@ aux.sendForm = function (sendData) {
 		success: function (jsonData) {
 			DEBUGresponse = jsonData;
 			if (jsonData.result) {
-				data.loadData ();
+				onsuccess (jsonData);
 			} else {
 				window.alert ("Ocurrio un error");
 			}
 		},
 		error: function (er1, err2, err3) {
+			document.body.innerHTML = er1.responseText;
 			window.alert (err3);
-			DEBUGerror = er1;
 		}
 	});
 }

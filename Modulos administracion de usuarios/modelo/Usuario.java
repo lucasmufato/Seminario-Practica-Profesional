@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import pruebas.Prueba;
 
@@ -17,6 +18,7 @@ public class Usuario extends BaseDatos {
 	protected String email;
 	protected String descripcion;
 	protected int estado;	
+	protected JSONArray roles;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 	protected static String vector_atributos[]={"id_usuario","id_persona","nombre_usuario","password","email","descripcion","estado"};
@@ -51,6 +53,7 @@ public class Usuario extends BaseDatos {
 					json[j].put(vector_atributos[i], r.getObject(vector_atributos[i]));
 					i++;
 				}
+				json[j].put ("roles", Usuario.ListaIdRoles((Integer)r.getObject("id_usuario")));
 				//cuando lei todos las columnas de ese renglon paso al siguiente, pasando tambien al siguiente json
 				j++;
 				i=0;
@@ -82,6 +85,7 @@ public class Usuario extends BaseDatos {
 		this.email= (String) json.get("email");
 		this.descripcion= (String) json.get("descripcion");
 		this.estado= (int) json.get("estado");
+		this.roles= (JSONArray)json.get("roles");
 	}
 	
 	
@@ -176,6 +180,7 @@ public class Usuario extends BaseDatos {
 		
 		return Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
+<<<<<<< HEAD
 	
 	public static boolean isUsuarioPass(String nombre, String pass){
 		String consulta = "SELECT * FROM usuario WHERE nombre_usuario= '"+nombre+"' and password='"+pass+"'";
@@ -189,5 +194,22 @@ public class Usuario extends BaseDatos {
 			e.printStackTrace();
 		}
 		return false;
+=======
+
+	private static JSONArray ListaIdRoles(int id) {
+		JSONArray lista = new JSONArray();
+		String consulta = "SELECT id_rol FROM USUARIO_ROL WHERE id_usuario="+id;
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			while (r.next()) {
+				lista.add(r.getInt(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al realizar el select para id_roles relacionados con usuario "+id);
+			e.printStackTrace();
+		}
+
+		return lista;
+>>>>>>> 72c8e89464b26d0567fcf041dcb20607f868d129
 	}
 }
