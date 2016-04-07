@@ -21,18 +21,25 @@ public class ControladorLogin extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter writer = response.getWriter();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (Exception e) {
+			writer.println("No se pudo abrir el driver de la base de datos");
+			writer.println(e.getMessage());
+		}
+		
 		System.out.println("En doPost de ControladorLogin!");
-		String userIngresado = request.getParameter("usuario");
-		String passIngresada = request.getParameter("contrasena");
-		String pass = Usuario.GetPasswordByUsuario(userIngresado);
-		if (pass != null && pass.equals(passIngresada)) {
+		String user = request.getParameter("usuario");
+		String pass = request.getParameter("contrasena");
+		if (Usuario.isUsuarioPass(user,pass)) {
 			response(response, "login ok");
 		} else {
-			response(response, "invalid login");
+			response(response, "login invalido");
 		}
 	}
 
@@ -45,7 +52,7 @@ public class ControladorLogin extends HttpServlet {
 		PrintWriter out = resp.getWriter();
 		out.println("<html>");
 		out.println("<body>");
-		out.println("<t1>" + msg + "</t1>");
+		out.println("<p>" + msg + "</p>");
 		out.println("</body>");
 		out.println("</html>");
 	}

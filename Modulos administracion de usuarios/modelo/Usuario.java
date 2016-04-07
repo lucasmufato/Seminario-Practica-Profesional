@@ -177,15 +177,17 @@ public class Usuario extends BaseDatos {
 		return Rol_Usuario.Eliminar(usuario_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
 	
-	public static String GetPasswordByUsuario(String nombreUsuario){
-		String consulta = "SELECT password FROM USUARIO WHERE nombre_usuario = "+nombreUsuario;
+	public static boolean isUsuarioPass(String nombre, String pass){
+		String consulta = "SELECT * FROM usuario WHERE nombre_usuario= '"+nombre+"' and password='"+pass+"'";
 		ResultSet r = BaseDatos.RealizarConsulta(consulta);
-		String pass=null;
 		try {
-			pass = r.getString(1);
+			if (r.next()){
+				return true;
+			}
 		} catch (SQLException e) {
+			System.out.println("Error al realizar login en clase Usuario");
 			e.printStackTrace();
 		}
-		return pass;
+		return false;
 	}
 }
