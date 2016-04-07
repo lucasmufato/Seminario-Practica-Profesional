@@ -120,25 +120,17 @@
 				<option value="0">Inactivo</option>
 			</select><br />
 		</form>
-		<h3>Roles del usuario</h3>
-			<form id="formUsuarioRol">
-				<select multiple name="roles_asignados">
-					<option>Rol 1</option>
-					<option>Rol 2</option>
-					<option>Rol 3</option>
-					<option>Rol 4</option>
-				</select>
-				<div class="verticalButtonBox">
-					<button type="button" >Asignar</button>
-					<button type="button" >Quitar</button>
-				</div>
-				<select multiple name="roles_no_asignados">
-					<option>Rol 5</option>
-					<option>Rol 6</option>
-					<option>Rol 7</option>
-					<option>Rol 8</option>
-				</select>
-			</form>
+		<form id="formUsuarioRol">
+			<h3>Roles del usuario</h3>
+			<select multiple name="roles_asignados">
+			</select>
+			<div class="verticalButtonBox">
+				<button type="button" onclick="ui.assignRolUsuario()">← Asignar</button>
+				<button type="button" onclick="ui.removeRolUsuario()" >Quitar →</button>
+			</div>
+			<select multiple name="roles_no_asignados">
+			</select>
+		</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
 	</section>
