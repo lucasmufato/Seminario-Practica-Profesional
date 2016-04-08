@@ -2,11 +2,10 @@
 
 $(document).ready(function(){
   console.log("entro a scriptLogin.js");
+  //pregunto si esta logueado
   if (getCookie("nombre_usuario") != ""){
-	$("#loginLink").hide();
-  }else{
-	$("#logoutLink").hide();
-  };
+	window.location.replace("home.html");
+  }
 })
 
 function getCookie(nombreCookie) {

@@ -51,8 +51,6 @@ public class ControladorLogin extends HttpServlet {
 		if (accion.equals("login")){
 			if (getCookieUsuario(request) == null){//pregunto si esta logueado
 				login(request,response);
-			}else{
-				response(response,"ya esta logueado");
 			}
 		}
 
@@ -78,23 +76,21 @@ public class ControladorLogin extends HttpServlet {
 		if (Usuario.isUsuarioPass(user,pass)) {
 			//agrego cookie
 			response.addCookie(setearCookie(user));
-			// if rol=admin then
-			//response.sendRedirect("abm.html");
-			// if rol=usuario
-			response.sendRedirect("index.html");
-			//response.sendRedirect("testCookie.jsp"); // un jsp que hice para ver detalle de cookies
-			
-		} else {
-			response(response, "login invalido");
-		}
-		
+			/*
+			 * Usuario logueado:
+			 * si solo puede acceder al sistema estando logueado
+			 * entonces siempre redirijo a la misma web: la home.
+			 * segun CU46 - Ir al home
+			 */
+			response.sendRedirect("home.html"); //UI - Funciones del sistema
+		} 		
 	}
 
 	public void destroy()
 	{
 	}
 
-	private void response(HttpServletResponse resp, String msg)
+	private void mostrarRapido(HttpServletResponse resp, String msg)
 			throws IOException {
 		PrintWriter out = resp.getWriter();
 		out.println("<html>");
@@ -106,7 +102,7 @@ public class ControladorLogin extends HttpServlet {
 	
 	private Cookie setearCookie(String user){
 		Cookie cookie = new Cookie("nombre_usuario",user);//Seteo cookie con parametros: nombre y valor
-		cookie.setMaxAge(60*60); // tiempo de vida de cookie = 1 hora
+		cookie.setMaxAge(60*60*24*365); // tiempo de vida de cookie en segundos
 		return cookie;
 	}
 	
