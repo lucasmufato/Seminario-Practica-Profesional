@@ -503,3 +503,10 @@ aux.sendForm = function (sendData, onsuccess) {
 		}
 	});
 }
+
+/* Para navegadores viejos */
+if (Array.prototype.includes == undefined) {
+	Array.prototype.includes = function (item) {
+		return this.indexOf(item) != -1;
+	}
+}

@@ -33,9 +33,7 @@ public class ControladorServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action, entity;
-		JSONObject jsonResponse;
-		boolean rst = false;
-		int id;
+		JSONObject out = null;
 
 		PrintWriter writer = response.getWriter();
 
@@ -44,32 +42,32 @@ public class ControladorServlet extends HttpServlet {
 
 		if (action.equals("new") ||action.equals("edit")){
 			if (entity.equals("persona")) {
-				rst = updatePersona(request);
+				out = updatePersona(request);
 			} else if (entity.equals("usuario")) {
-				rst = updateUsuario(request);
+				out = updateUsuario(request);
 			} else if (entity.equals("rol")) {
-				rst = updateRol(request);
+				out = updateRol(request);
 			}
 		} else if (action.equals("delete")) {
-			id = Integer.parseInt(request.getParameter("id"));
-
 			if (entity.equals("persona")) {
-				rst = Persona.Eliminar(id);
+				out = deletePersona(request);
 			} else if (entity.equals("usuario")) {
-				rst = Usuario.Eliminar(id);
+				out = deleteUsuario(request);
 			} else if (entity.equals("rol")) {
-				rst = Rol.Eliminar(id);
+				out = deleteRol(request);
 			}
 		} else if (action.equals("assignRoles") && entity.equals("usuario")) {
 			/* No implementado aun */
-			rst=true;
 		}
 
+		if (out == null) {
+			out = new JSONObject();
+			out.put ("result", false);
+		}
 
-		jsonResponse = new JSONObject();
-		jsonResponse.put("result", rst?1:0);
-		
-		writer.println(jsonResponse);
+		out.put("action", action);
+		out.put("entity", entity);
+		writer.println (out);
 	}
 
 	public void destroy()
@@ -141,11 +139,13 @@ public class ControladorServlet extends HttpServlet {
 		return roles;
 	}
 
-	private boolean updatePersona (HttpServletRequest request) {
-		JSONObject recibida;
+	private JSONObject updatePersona (HttpServletRequest request) {
+		JSONObject recibida, salida;
 		Persona persona;
 
 		recibida = new JSONObject();
+		salida = new JSONObject();
+
 		if (request.getParameter("action").equals("new")) {
 			recibida.put ("id_persona", -1);
 		} else {
@@ -162,14 +162,17 @@ public class ControladorServlet extends HttpServlet {
 		recibida.put("telefono", request.getParameter("telefono"));
 
 		persona = new Persona (recibida);
-		return persona.guardar();
+		salida.put ("result", persona.guardar());
+		/* TODO: Agregar los datos guardados en la base de datos */
+		return salida;
 	}
 
-	private boolean updateUsuario (HttpServletRequest request) {
-		JSONObject recibido;
+	private JSONObject updateUsuario (HttpServletRequest request) {
+		JSONObject recibido, salida;
 		Usuario usuario;
 
-		recibido=new JSONObject();
+		recibido = new JSONObject();
+		salida = new JSONObject();
 
 		if (request.getParameter("action").equals("new")) {
 			recibido.put ("id_usuario", -1);
@@ -184,14 +187,18 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put("estado", Integer.parseInt(request.getParameter("estado")));
 
 		usuario = new Usuario (recibido);
-		return usuario.guardar();
+		salida.put ("result", usuario.guardar());
+		/* TODO: Agregar los datos guardados en la base de datos */
+		return salida;
 	}
 
-	private boolean updateRol (HttpServletRequest request) {
-		JSONObject recibido;
+	private JSONObject updateRol (HttpServletRequest request) {
+		JSONObject recibido, salida;
 		Rol rol;
 
 		recibido = new JSONObject();
+		salida = new JSONObject();
+
 		if (request.getParameter("action").equals("new")) {
 			recibido.put ("id_rol", -1);
 		} else {
@@ -203,6 +210,29 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put ("estado", Integer.parseInt(request.getParameter("estado")));
 
 		rol = new Rol(recibido);
-		return rol.guardar();
+		salida.put("result", rol.guardar());
+		/* TODO: Agregar los datos guardados en la base de datos */
+		return salida;
+	}
+
+	private JSONObject deletePersona (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id = Integer.parseInt (request.getParameter("id"));
+		salida.put ("result", Persona.Eliminar(id));
+		return salida;
+	}
+
+	private JSONObject deleteUsuario (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id = Integer.parseInt (request.getParameter("id"));
+		salida.put ("result", Usuario.Eliminar(id));
+		return salida;
+	}
+
+	private JSONObject deleteRol (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id = Integer.parseInt (request.getParameter("id"));
+		salida.put ("result", Rol.Eliminar(id));
+		return salida;
 	}
 }
