@@ -70,6 +70,10 @@ body {
 	display: none;
 }
 
+#permisosTable {
+	display: none;
+}
+
 .formSection h2, .formSection h3 {
 	background: #44f;
 	color: white;

@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import modelo.Persona;
 import modelo.Usuario;
 import modelo.Rol;
+import modelo.Permiso;
 
 public class ControladorServlet extends HttpServlet {
 
@@ -83,6 +84,7 @@ public class ControladorServlet extends HttpServlet {
 		resultado.put("personas", this.getPersonas());
 		resultado.put("usuarios", this.getUsuarios());
 		resultado.put("roles", this.getRoles());
+		resultado.put("permisos", this.getPermisos());
 
 		writer.println(resultado);
 	}
@@ -139,6 +141,23 @@ public class ControladorServlet extends HttpServlet {
 			}
 		}
 		return roles;
+	}
+
+	private JSONArray getPermisos() {
+		JSONArray permisos;
+		JSONObject[] in;
+		Object id;
+
+		in=Permiso.Select();
+		permisos = new JSONArray ();
+		if(in != null) {
+			for (int i = 0; i< in.length; i++) {
+				id = in[i].get("id_permiso");
+				in[i].put("id", id);
+				permisos.add(in[i]);
+			}
+		}
+		return permisos;
 	}
 
 	private JSONObject updatePersona (HttpServletRequest request) {
