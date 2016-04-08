@@ -22,9 +22,25 @@ public class ControladorLogin extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("En doGet de ControladorLogin");
+
+		// Cuando se desloguea
+		Cookie[] cookie = request.getCookies();
+		if (cookie != null){
+			for (Cookie c: cookie){
+				if (c.getName().equals("nombre_usuario")){
+					c.setMaxAge(0); //elimino cookie
+					response.addCookie(c); //quito cookie de la response
+				}
+			}
+		}
+		response.sendRedirect("index.html");
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		System.out.println("En doPost de ControladorLogin!");
+		
+		// Setear driver
 		PrintWriter writer = response.getWriter();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -33,18 +49,32 @@ public class ControladorLogin extends HttpServlet {
 			writer.println(e.getMessage());
 		}
 		
-		System.out.println("En doPost de ControladorLogin!");
+		String accion = request.getParameter("accion");
+		
+		if (accion.equals("login")){
+			login(request,response);
+		}
+
+	}
+
+	private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Parametros del formulario
 		String user = request.getParameter("usuario");
 		String pass = request.getParameter("contrasena");
+		
 		if (Usuario.isUsuarioPass(user,pass)) {
 			//agrego cookie
 			response.addCookie(setearCookie(user));
 			// if rol=admin then
 			//response.sendRedirect("abm.html");
-			response.sendRedirect("testCookie.jsp"); // un jsp que hice para ver detalle de cookies
+			// if rol=usuario
+			response.sendRedirect("index.html");
+			//response.sendRedirect("testCookie.jsp"); // un jsp que hice para ver detalle de cookies
+			
 		} else {
 			response(response, "login invalido");
 		}
+		
 	}
 
 	public void destroy()
@@ -66,4 +96,5 @@ public class ControladorLogin extends HttpServlet {
 		cookie.setMaxAge(60*60); // tiempo de vida de cookie = 1 hora
 		return cookie;
 	}
+	
 }
