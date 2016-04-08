@@ -182,7 +182,7 @@ public class Usuario extends BaseDatos {
 	}
 	
 	public static boolean isUsuarioPass(String nombre, String pass){
-		String consulta = "SELECT * FROM usuario WHERE nombre_usuario= '"+nombre+"' and password='"+pass+"'";
+		String consulta = "SELECT * FROM USUARIO WHERE nombre_usuario= '"+nombre+"' and password='"+pass+"'";
 		ResultSet r = BaseDatos.RealizarConsulta(consulta);
 		try {
 			if (r.next()){
