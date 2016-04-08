@@ -24,14 +24,11 @@ public class ControladorLogin extends HttpServlet {
 		System.out.println("En doGet de ControladorLogin");
 
 		// Cuando se desloguea
-		Cookie[] cookie = request.getCookies();
-		if (cookie != null){
-			for (Cookie c: cookie){
-				if (c.getName().equals("nombre_usuario")){
-					c.setMaxAge(0); //elimino cookie
-					response.addCookie(c); //quito cookie de la response
-				}
-			}
+		Cookie c = getCookieUsuario(request);
+		if (c!=null){
+			//borro cookie
+			c.setMaxAge(0);
+			response.addCookie(c); 
 		}
 		response.sendRedirect("index.html");
 	}
@@ -52,9 +49,25 @@ public class ControladorLogin extends HttpServlet {
 		String accion = request.getParameter("accion");
 		
 		if (accion.equals("login")){
-			login(request,response);
+			if (getCookieUsuario(request) == null){//pregunto si esta logueado
+				login(request,response);
+			}else{
+				response(response,"ya esta logueado");
+			}
 		}
 
+	}
+
+	private Cookie getCookieUsuario(HttpServletRequest request) {
+		Cookie[] cookie = request.getCookies();
+		if (cookie != null){
+			for (Cookie c: cookie){
+				if (c.getName().equals("nombre_usuario")){
+					return c;
+				}
+			}
+		}
+		return null;
 	}
 
 	private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
