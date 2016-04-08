@@ -21,7 +21,7 @@ public class ControladorLogin extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		System.out.println("En doGet de ControladorLogin");
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,7 +37,11 @@ public class ControladorLogin extends HttpServlet {
 		String user = request.getParameter("usuario");
 		String pass = request.getParameter("contrasena");
 		if (Usuario.isUsuarioPass(user,pass)) {
-			response(response, "login ok");
+			//agrego cookie
+			response.addCookie(setearCookie(user));
+			// if rol=admin then
+			//response.sendRedirect("abm.html");
+			response.sendRedirect("testCookie.jsp"); // un jsp que hice para ver detalle de cookies
 		} else {
 			response(response, "login invalido");
 		}
@@ -55,5 +59,11 @@ public class ControladorLogin extends HttpServlet {
 		out.println("<p>" + msg + "</p>");
 		out.println("</body>");
 		out.println("</html>");
+	}
+	
+	private Cookie setearCookie(String user){
+		Cookie cookie = new Cookie("nombre_usuario",user);//Seteo cookie con parametros: nombre y valor
+		cookie.setMaxAge(60*60); // tiempo de vida de cookie = 1 hora
+		return cookie;
 	}
 }
