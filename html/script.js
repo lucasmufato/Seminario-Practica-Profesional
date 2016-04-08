@@ -50,7 +50,7 @@ ui.sendPersonaForm = function () {
 	var sendData = {};
 	sendData.entity = 'persona';
 	sendData.id_persona = $('#formPersona input[name=id]').val() ;
-	sendData.action = (sendData.id == -1)? 'new': 'edit';
+	sendData.action = (sendData.id_persona == -1)? 'new': 'edit';
 	sendData.apellidos = $('#formPersona input[name=apellidos]').val()
 	sendData.nombres= $('#formPersona input[name=nombres]').val()
 	sendData.tipo_doc= $('#formPersona select[name=tipo_doc]').val()
@@ -69,8 +69,8 @@ ui.sendPersonaForm = function () {
 ui.sendUsuarioForm = function() {
 	var sendData = {};
 	sendData.entity = 'usuario';
-	sendData.action = (sendData.id == -1)? 'new': 'edit';
 	sendData.id_usuario = $('#formUsuario input[name=id]').val();
+	sendData.action = (sendData.id_usuario == -1)? 'new': 'edit';
 	sendData.id_persona = $('#formUsuario select[name=id_persona]').val();
 	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val();
 	sendData.password = $('#formUsuario input[name=password]').val();
@@ -85,8 +85,8 @@ ui.sendUsuarioForm = function() {
 ui.sendRolForm = function() {
 	var sendData = {};
 	sendData.entity = 'rol';
-	sendData.action = (sendData.id == -1)? 'new': 'edit';
 	sendData.id_rol = $('#formRol input[name=id]').val();
+	sendData.action = (sendData.id_rol == -1)? 'new': 'edit';
 	sendData.nombre = $('#formRol input[name=nombre]').val();
 	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val();
 	sendData.descripcion= $('#formRol textarea[name=descripcion]').val()
@@ -96,6 +96,19 @@ ui.sendRolForm = function() {
 	$('#formRol').hide();
 }
 
+ui.sendPermisoForm = function() {
+	var sendData = {};
+	sendData.entity = 'permiso';
+	sendData.id_permiso = $('#formPermiso input[name=id]').val();
+	sendData.action = (sendData.id_permiso == -1)? 'new': 'edit';
+	sendData.nombre_permiso = $('#formPermiso input[name=nombre_permiso]').val();
+	sendData.funcionalidad= $('#formPermiso input[name=funcionalidad]').val()
+	sendData.descripcion= $('#formPermiso textarea[name=descripcion]').val()
+	sendData.estado = $('#formPermiso select[name=estado]').val();
+	aux.sendForm(sendData, data.loadData);
+
+	$('#formPermiso').hide();
+}
 ui.requestPersonaDeletion = function() {
 	var sendData = {};
 	sendData.entity = 'persona';
@@ -286,6 +299,8 @@ ui.showNewPermisoForm = function () {
 	$('#formPermiso label[for=id]').hide();
 	$('#formPermiso input[name=id]').val(-1);
 	$('#formPermiso input[name=nombre_permiso]').val('');
+	$('#formPermiso input[name=funcionalidad]').val('');
+	$('#formPermiso textarea[name=descripcion]').val('');
 	$('#formPermiso input[name=estado]').val(1);
 };;
 
@@ -379,6 +394,8 @@ ui.showEditPermisoForm = function() {
 	$('#formPermiso label[for=id]').show();
 	$('#formPermiso input[name=id]').val(selected.id);
 	$('#formPermiso input[name=nombre_permiso]').val(selected.nombre_permiso);
+	$('#formPermiso input[name=funcionalidad]').val(selected.funcionalidad);
+	$('#formPermiso textarea[name=descripcion]').val(selected.descripcion);
 	$('#formPermiso select[name=estado]').val((selected.estado)?'1':'0');
 }
 

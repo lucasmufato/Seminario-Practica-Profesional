@@ -9,10 +9,13 @@ public class Permiso extends BaseDatos {
 	
 	protected int id;
 	protected String nombre_permiso;
+	protected String funcionalidad;
+	protected String descripcion;
+	protected int estado;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
-		protected static String vector_atributos[]={"id_permiso","nombre_permiso"};
-		protected static int cantidad_atributos=2;
+		protected static String vector_atributos[]={"id_permiso","nombre_permiso", "funcionalidad", "descripcion", "estado"};
+		protected static int cantidad_atributos=5;
 		protected static String tabla ="PERMISO";
 		protected static String campo_pk = "id_permiso";
 	
@@ -59,6 +62,9 @@ public class Permiso extends BaseDatos {
 	public Permiso(JSONObject json){
 		this.id = (int) json.get("id_permiso");
 		this.nombre_permiso = (String) json.get("nombre_permiso");
+		this.funcionalidad = (String) json.get("funcionalidad");
+		this.descripcion = (String) json.get("descripcion");
+		this.estado = (int) json.get("estado");
 	}
 	
 	public Permiso(){
@@ -80,12 +86,20 @@ boolean bandera=false;
 		//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
 		String query="";
 		if(this.id==-1){
-			query="INSERT INTO "+tabla+values+"VALUES ('"+this.nombre_permiso+"');";
+			query="INSERT INTO "+tabla+values+" VALUES ("
+			+"'"+this.nombre_permiso+"'"
+			+", '"+this.funcionalidad+"'"
+			+", '"+this.descripcion+"'"
+			+", "+this.estado
+			+");";
 			
 		}else{
 			query="UPDATE "+tabla+" SET "
 					+"nombre_permiso = '"+this.nombre_permiso+"'"
-					+" WHERE id_persona="+this.id+";";
+					+", funcionalidad = '"+this.funcionalidad+"'"
+					+", descripcion = '"+this.descripcion+"'"
+					+", estado = "+this.estado+""
+					+" WHERE id_permiso="+this.id+";";
 		}
 		this.Conectarse_BD();
 		bandera=this.EnviarQuery(query);
