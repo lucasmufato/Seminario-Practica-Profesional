@@ -56,8 +56,10 @@ public class ControladorServlet extends HttpServlet {
 			} else if (entity.equals("rol")) {
 				out = deleteRol(request);
 			}
-		} else if (action.equals("assignRoles") && entity.equals("usuario")) {
-			/* No implementado aun */
+		} else if (action.equals("assignRol") && entity.equals("usuario")) {
+			out = assignRol(request);
+		} else if (action.equals("removeRol") && entity.equals("usuario")) {
+			out = removeRol(request);
 		}
 
 		if (out == null) {
@@ -235,4 +237,26 @@ public class ControladorServlet extends HttpServlet {
 		salida.put ("result", Rol.Eliminar(id));
 		return salida;
 	}
+
+	private JSONObject assignRol (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id_usuario = Integer.parseInt (request.getParameter("id_usuario"));
+		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
+		salida.put ("id_usuario", id_usuario);
+		salida.put ("id_rol", id_rol);
+		salida.put ("result", Usuario.AsignarRol(id_rol, id_usuario));
+		
+		return salida;
+	}
+
+	private JSONObject removeRol (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id_usuario = Integer.parseInt (request.getParameter("id_usuario"));
+		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
+		salida.put ("id_usuario", id_usuario);
+		salida.put ("id_rol", id_rol);
+		salida.put ("result", Usuario.QuitarRol(id_rol, id_usuario));
+		
+		return salida;
+	}	
 }

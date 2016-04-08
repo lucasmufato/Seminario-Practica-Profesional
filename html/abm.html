@@ -90,7 +90,7 @@
 		</form>
 		<h3>Usuarios de la persona</h3>
 			<form id="formPersonaUsuario">
-				<select multiple name="usuarios">
+				<select size="6" name="usuarios">
 				</select>
 			</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
@@ -122,13 +122,13 @@
 		</form>
 		<form id="formUsuarioRol">
 			<h3>Roles del usuario</h3>
-			<select multiple name="roles_asignados">
+			<select size="6" name="roles_asignados">
 			</select>
 			<div class="verticalButtonBox">
 				<button type="button" onclick="ui.assignRolUsuario()">← Asignar</button>
 				<button type="button" onclick="ui.removeRolUsuario()" >Quitar →</button>
 			</div>
-			<select multiple name="roles_no_asignados">
+			<select size="6" name="roles_no_asignados">
 			</select>
 		</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
@@ -149,7 +149,7 @@
 			</select><br />
 			<h3>Permisos del rol</h3>
 			<form id="formUsuarioRol">
-				<select multiple name="roles_asignados">
+				<select size="6" name="roles_asignados">
 					<option>Permiso 1</option>
 					<option>Permiso 2</option>
 					<option>Permiso 3</option>
@@ -159,7 +159,7 @@
 					<button type="button" >Asignar</button>
 					<button type="button" >Quitar</button>
 				</div>
-				<select multiple name="roles_no_asignados">
+				<select size="6" name="roles_no_asignados">
 					<option>Permiso 5</option>
 					<option>Permiso 6</option>
 					<option>Permiso 7</option>

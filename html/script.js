@@ -232,6 +232,7 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario input[name=email]').val('');
 	$('#formUsuario textarea[name=descripcion]').val('');
 	$('#formUsuario select[name=estado]').val(1);
+	$('#formUsuarioRol').hide();
 	$('#formUsuarioRol select[name=roles_asignados]').html('');
 	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
 
@@ -303,6 +304,7 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
 	$('#formUsuario select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formUsuarioRol').show();
 	$('#formUsuarioRol select[name=roles_asignados]').html('');
 	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
 
@@ -438,20 +440,44 @@ ui.getSelectedElement = function() {
 }
 
 ui.assignRolUsuario = function () {
-	$('#formUsuario input[name=id]').val();
 	var sendData = {
 		entity: 'usuario',
-		action: 'assignRoles',
-		id: $('#formUsuario input[name=id]').val(),
-		roles: $('#formUsuarioRol select[name=roles_no_asignados]').val()
+		action: 'assignRol',
+		id_usuario: $('#formUsuario input[name=id]').val(),
+		id_rol: $('#formUsuarioRol select[name=roles_no_asignados]').val()
 	};
 
-	var onsuccess = function (data) {
-		/* No implementado aun */
+	var onsuccess = function (jsonData) {
+		data.usuarios.getById(jsonData.id_usuario).roles.push(jsonData.id_rol);
+
+		if ($('#formUsuario input[name=id]').val() == jsonData.id_usuario) {
+			$('#formUsuarioRol select[name=roles_no_asignados] option[value='+jsonData.id_rol+']')
+				.detach()
+				.appendTo('#formUsuarioRol select[name=roles_asignados]');
+		}
 	};
 	aux.sendForm (sendData, onsuccess);
 }
 
+ui.removeRolUsuario = function () {
+	var sendData = {
+		entity: 'usuario',
+		action: 'removeRol',
+		id_usuario: $('#formUsuario input[name=id]').val(),
+		id_rol: $('#formUsuarioRol select[name=roles_asignados]').val()
+	};
+
+	var onsuccess = function (jsonData) {
+		data.usuarios.getById(jsonData.id_usuario).roles.removeElement(jsonData.id_rol);
+
+		if ($('#formUsuario input[name=id]').val() == jsonData.id_usuario) {
+			$('#formUsuarioRol select[name=roles_asignados] option[value='+jsonData.id_rol+']')
+				.detach()
+				.appendTo('#formUsuarioRol select[name=roles_no_asignados]');
+		}
+	};
+	aux.sendForm (sendData, onsuccess);
+}
 /* Funciones auxiliares */
 aux = {};
 aux.td = function (text){
@@ -502,6 +528,14 @@ aux.sendForm = function (sendData, onsuccess) {
 			window.alert (err3);
 		}
 	});
+}
+
+Array.prototype.removeElement = function(item) {
+	var pos = this.indexOf (item);
+	if (pos != -1) {
+		this.splice(pos, 1);
+	}
+	return (pos != -1)? item: null;
 }
 
 /* Para navegadores viejos */
