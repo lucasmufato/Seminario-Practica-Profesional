@@ -5,10 +5,13 @@ CREATE TABLE PERSONA (
 	tipo_doc SMALLINT NOT NULL,
 	nro_doc BIGINT NOT NULL,
 	fecha_nacimiento DATE NOT NULL,
+	sexo CHAR(1) NOT NULL,
+	foto VARCHAR(120),
 	domicilio VARCHAR(120) NOT NULL,
 	telefono VARCHAR(16) NOT NULL,
 	descripcion TEXT,
-	estado BOOLEAN NOT NULL,
+	estado CHAR(1) NOT NULL,
+	foto_registro VARCHAR(120),
 
 	PRIMARY KEY (id_persona)
 );
@@ -20,7 +23,7 @@ CREATE TABLE USUARIO (
 	password VARCHAR(32) NOT NULL,
 	email VARCHAR(40) NOT NULL,
 	descripcion TEXT,
-	estado BOOLEAN NOT NULL,
+	estado CHAR(1) NOT NULL, // PODRIA SER DEL TIPO: A=ACTIVO, B=BAJA, S=SUSPENDIDO, ETC
 
 	PRIMARY KEY (id_usuario),
 	FOREIGN KEY (id_persona) REFERENCES PERSONA (id_persona)
@@ -31,7 +34,7 @@ CREATE TABLE ROL (
 	nombre VARCHAR(30) NOT NULL,
 	nombre_amigable VARCHAR(30) NOT NULL,
 	descripcion TEXT,
-	estado BOOLEAN NOT NULL,
+	estado CHAR(1) NOT NULL,
 
 	PRIMARY KEY (id_rol)
 );
@@ -39,7 +42,8 @@ CREATE TABLE ROL (
 CREATE TABLE USUARIO_ROL (
 	id_usuario INTEGER NOT NULL,
 	id_rol INTEGER NOT NULL,
-
+	fecha_modificacion DATE NOT NULL,
+	
 	PRIMARY KEY (id_usuario, id_rol),
 	FOREIGN KEY (id_usuario) REFERENCES USUARIO (id_usuario),
 	FOREIGN KEY (id_rol) REFERENCES ROL (id_rol)
@@ -59,7 +63,7 @@ CREATE TABLE PERMISO (
 CREATE TABLE PERMISO_ROL (
 	id_permiso INTEGER NOT NULL,
 	id_rol INTEGER NOT NULL,
-	fecha_modificacion DATE,
+	fecha_modificacion DATE NOT NULL,
 
 	PRIMARY KEY(id_permiso,id_rol),
 	FOREIGN KEY (id_permiso) REFERENCES PERMISO(id_permiso),
