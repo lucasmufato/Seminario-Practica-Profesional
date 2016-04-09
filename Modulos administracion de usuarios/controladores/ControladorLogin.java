@@ -77,12 +77,9 @@ public class ControladorLogin extends HttpServlet {
 			//agrego cookie
 			response.addCookie(setearCookie(user));
 			/*
-			 * Usuario logueado:
-			 * si solo puede acceder al sistema estando logueado
-			 * entonces siempre redirijo a la misma web: la home.
-			 * segun CU46 - Ir al home
+			 * Usuario logueado se redirecciona al index 
 			 */
-			response.sendRedirect("home.html"); //UI - Funciones del sistema
+			response.sendRedirect("index.html"); //UI - Funciones del sistema
 		} 		
 	}
 

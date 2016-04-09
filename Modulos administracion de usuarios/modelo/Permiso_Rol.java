@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Permiso_Rol extends BaseDatos {
@@ -101,4 +102,21 @@ public class Permiso_Rol extends BaseDatos {
 	public static boolean   Dar_alta(int clave_primaria_tabla){
 		return true;
 	}
+	
+	public static JSONArray ListaIdPermisos(int idRol) {
+		JSONArray lista = new JSONArray();
+		String consulta = "SELECT id_permiso FROM PERMISO_ROL WHERE id_rol="+idRol;
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			while (r.next()) {
+				lista.add(r.getInt(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al realizar el select para permisos relacionados con rol "+idRol);
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+	
 }

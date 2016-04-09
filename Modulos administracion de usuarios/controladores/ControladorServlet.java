@@ -60,6 +60,8 @@ public class ControladorServlet extends HttpServlet {
 			out = assignRol(request);
 		} else if (action.equals("removeRol") && entity.equals("usuario")) {
 			out = removeRol(request);
+		} else if (action.equals("login") && entity.equals("usuario")){
+			out = getPermisosUsuario(request);
 		}
 
 		if (out == null) {
@@ -257,6 +259,14 @@ public class ControladorServlet extends HttpServlet {
 		salida.put ("id_rol", id_rol);
 		salida.put ("result", Usuario.QuitarRol(id_rol, id_usuario));
 		
+		return salida;
+	}	
+	
+	private JSONObject getPermisosUsuario (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		String nombre_usuario = request.getParameter("nombre_usuario");
+		salida.put ("nombre_usuario", nombre_usuario);
+		salida.put ("result", Usuario.getNombrePermisosUsuario(nombre_usuario));
 		return salida;
 	}	
 }

@@ -166,5 +166,19 @@ public class Rol extends BaseDatos {
 		
 		return Permiso_Rol.Eliminar(permiso_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
 	}
+
+	public static String GetNombrePorId(int id) {
+		String consulta = "SELECT nombre FROM ROL WHERE id_rol="+id;
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			if (r.next()) {
+				return r.getString(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al obtener nombre del rol con id: "+id);
+			e.printStackTrace();
+		}
+		return "";
+	}
 	
 }

@@ -2,7 +2,9 @@ package modelo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -194,7 +196,29 @@ public class Usuario extends BaseDatos {
 		}
 		return false;
 	}
-
+	
+	public static JSONArray getNombrePermisosUsuario(String nombre_usuario) {
+		JSONArray listaIdPermisos = new JSONArray();
+		JSONArray listaRoles = ListaIdRoles(nombre_usuario);
+		for (int i=0; i<listaRoles.size(); i++){
+			// tomo permisos de cada rol
+			JSONArray listaPermisosRol = Permiso_Rol.ListaIdPermisos((Integer)listaRoles.get(i));
+			for (int j=0; j<listaPermisosRol.size(); j++){
+				//Me fijo de no repetir permisos
+				if (!listaIdPermisos.contains(listaPermisosRol.get(j))){
+					//Agrego permisos
+					listaIdPermisos.add(listaPermisosRol.get(j));
+				}
+			}
+		}
+		// Tomo el nombre de cada id permiso
+		JSONArray listaPermisos = new JSONArray();
+		for (int i=0; i<listaIdPermisos.size(); i++){
+			listaPermisos.add(Rol.GetNombrePorId((Integer)listaIdPermisos.get(i)));
+		}
+		return listaPermisos;
+	}
+	
 	private static JSONArray ListaIdRoles(int id) {
 		JSONArray lista = new JSONArray();
 		String consulta = "SELECT id_rol FROM USUARIO_ROL WHERE id_usuario="+id;
@@ -207,7 +231,21 @@ public class Usuario extends BaseDatos {
 			System.out.println("Error al realizar el select para id_roles relacionados con usuario "+id);
 			e.printStackTrace();
 		}
-
 		return lista;
 	}
+	
+	private static JSONArray ListaIdRoles(String nombre) {
+		JSONArray lista = new JSONArray();
+		String consulta = "SELECT id_rol FROM USUARIO_ROL WHERE nombre_usuario='"+nombre+"'";
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			while (r.next()) {
+				lista.add(r.getInt(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al realizar el select para id_roles relacionados con usuario "+nombre);
+			e.printStackTrace();
+		}
+		return lista;
+	}	
 }
