@@ -23,6 +23,7 @@
 				<th>Tipo Doc.</th>
 				<th>Nro. Doc.</th>
 				<th>Fecha nacimiento</th>
+				<th>Sexo</th>
 				<th>Domicilio</th>
 				<th>Telefono</th>
 				<th>Estado</th>
@@ -46,7 +47,7 @@
 			<thead><tr>
 				<th>ID</th>
 				<th>Nombre Rol</th>
-				<th>Nombre amigalble</th>
+				<th>Nombre amigable</th>
 				<th>Estado</th>
 			</tr></thead>
 			<tbody>
@@ -75,6 +76,9 @@
 		
 		<form>
 			<h2 id="formPersonaTitle">Persona</h2>
+			<!-- Las fotos no estan habilitadas todavia -->
+			<input type="hidden" name="foto" value="">
+			<input type="hidden" name="foto_registro" value="">
 			<label for="id" id="personaIdLabel">ID</label><input type="number" disabled name="id"><br />
 			<label for="apellidos">Apellido</label><input type="text" name="apellidos"><br />
 			<label for="nombres">Nombre</label><input type="text" name="nombres"><br />
@@ -90,14 +94,19 @@
 			<input type="date" name="fecha_nacimiento"><br />
 			<label for="domicilio">Domicilio</label>
 			<input type="text" name="domicilio"><br />
+			<select name="sexo">
+				<option value="M">Masculino</option>
+				<option value="F">Femenino</option>
+				<option value="O">Otro</option>
+			</select><br />
 			<label for="telefono">Telefono</label>
 			<input type="text"  name="telefono"><br />
 			<label for="descripcion">Descripcion</label>
 			<textarea  name="descripcion"></textarea><br />
 			<label for="Estado">Estado</label>
 			<select name="estado">
-				<option value="1">Activo</option>
-				<option value="0">Inactivo</option>
+				<option value="A">Activo</option>
+				<option value="B">Inactivo</option>
 			</select><br />
 		</form>
 		<h3>Usuarios de la persona</h3>
@@ -128,8 +137,9 @@
 			<textarea name="descripcion" ></textarea><br />
 			<label for="estado">Activo</label>
 			<select name="estado">
-				<option value="1">Activo</option>
-				<option value="0">Inactivo</option>
+				<option value="A">Activo</option>
+				<option value="B">Inactivo</option>
+				<option value="S">Suspendido</option>
 			</select><br />
 		</form>
 		<form id="formUsuarioRol">
@@ -150,14 +160,15 @@
 	<section class="formSection" id="formRol">
 		<form>
 	<h2>Rol</h2>
-			<label for="id">ID</label><input type="number" name="id"><br />
-			<label for="nombre">Nombre de Rol</label><input type="text" name="nombre"><br>			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
+			<label for="id">ID</label><input type="number" name="id" disabled><br />
+			<label for="nombre_rol">Nombre de Rol</label><input type="text" name="nombre_rol"><br>
+			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
 			<label for="descripcion">Descripcion</label>
 			<textarea name="descripcion" ></textarea><br />
 			<label for="estado">Estado</label>
 			<select name="estado">
-				<option value="1">Activo</option>
-				<option value="0">Inactivo</option>
+				<option value="A">Activo</option>
+				<option value="B">Inactivo</option>
 			</select><br />
 		</form>
 		<form id="formRolPermiso">
@@ -189,8 +200,8 @@
 			<textarea name="descripcion"></textarea><br>
 			<label for="estado">Estado</label>
 			<select name="estado">
-				<option value="1">Activo</option>
-				<option value="0">Inactivo</option>
+				<option value="A">Activo</option>
+				<option value="B">Inactivo</option>
 			</select><br />
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>

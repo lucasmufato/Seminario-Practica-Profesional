@@ -11,7 +11,7 @@ public class Permiso extends BaseDatos {
 	protected String nombre_permiso;
 	protected String funcionalidad;
 	protected String descripcion;
-	protected int estado;
+	protected char estado;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 		protected static String vector_atributos[]={"id_permiso","nombre_permiso", "funcionalidad", "descripcion", "estado"};
@@ -64,7 +64,7 @@ public class Permiso extends BaseDatos {
 		this.nombre_permiso = (String) json.get("nombre_permiso");
 		this.funcionalidad = (String) json.get("funcionalidad");
 		this.descripcion = (String) json.get("descripcion");
-		this.estado = (int) json.get("estado");
+		this.estado = json.get("estado").toString().charAt(0);
 	}
 	
 	public Permiso(){
@@ -90,7 +90,7 @@ boolean bandera=false;
 			+"'"+this.nombre_permiso+"'"
 			+", '"+this.funcionalidad+"'"
 			+", '"+this.descripcion+"'"
-			+", "+this.estado
+			+", '"+this.estado+"'"
 			+");";
 			
 		}else{
@@ -98,7 +98,7 @@ boolean bandera=false;
 					+"nombre_permiso = '"+this.nombre_permiso+"'"
 					+", funcionalidad = '"+this.funcionalidad+"'"
 					+", descripcion = '"+this.descripcion+"'"
-					+", estado = "+this.estado+""
+					+", estado = '"+this.estado+"'"
 					+" WHERE id_permiso="+this.id+";";
 		}
 		this.Conectarse_BD();
