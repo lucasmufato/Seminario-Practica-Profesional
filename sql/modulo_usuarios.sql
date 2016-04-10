@@ -55,7 +55,7 @@ CREATE TABLE PERMISO (
 	nombre_permiso VARCHAR (50) NOT NULL,
 	funcionalidad VARCHAR(200),
 	descripcion TEXT,
-	estado BOOLEAN,
+	estado CHAR(1) NOT NULL,
 
 	PRIMARY KEY (id_permiso)
 );
