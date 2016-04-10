@@ -12,6 +12,7 @@
 		<button type="button" id="personasTabButton" onclick="ui.activatePersonasTab()">Personas</button>
 		<button type="button" id="usuariosTabButton" onclick="ui.activateUsuariosTab()">Usuarios</button>
 		<button type="button" id="rolesTabButton" onclick="ui.activateRolesTab()">Roles</button>
+		<button type="button" id="permisosTabButton" onclick="ui.activatePermisosTab()">Permisos</button>
 	</nav>
 	<section id="entitylist">
 		<table id="personasTable" caption="Administrar personas">
@@ -51,6 +52,17 @@
 			<tbody>
 			</tbody>
 		</table>
+
+		<table id="permisosTable">
+			<thead><tr>
+				<th>ID</th>
+				<th>Nombre Permiso</th>
+				<th>Estado</th>
+			</tr></thead>
+			<tbody>
+			</tbody>
+		</table>
+
 
 	</section>
 	<div class="buttonBox">
@@ -136,7 +148,7 @@
 	</section>
 
 	<section class="formSection" id="formRol">
-		<form id="">
+		<form>
 	<h2>Rol</h2>
 			<label for="id">ID</label><input type="number" name="id"><br />
 			<label for="nombre">Nombre de Rol</label><input type="text" name="nombre"><br>			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
@@ -147,28 +159,41 @@
 				<option value="1">Activo</option>
 				<option value="0">Inactivo</option>
 			</select><br />
-			<h3>Permisos del rol</h3>
-			<form id="formUsuarioRol">
-				<select size="6" name="roles_asignados">
-					<option>Permiso 1</option>
-					<option>Permiso 2</option>
-					<option>Permiso 3</option>
-					<option>Permiso 4</option>
-				</select>
-				<div class="verticalButtonBox">
-					<button type="button" >Asignar</button>
-					<button type="button" >Quitar</button>
-				</div>
-				<select size="6" name="roles_no_asignados">
-					<option>Permiso 5</option>
-					<option>Permiso 6</option>
-					<option>Permiso 7</option>
-					<option>Permiso 8</option>
-				</select>
-			</form>
-
 		</form>
+		<form id="formRolPermiso">
+			<h3>Permisos del rol</h3>
+			<select size="6" name="permisos_asignados">
+			</select>
+			<div class="verticalButtonBox">
+				<button type="button" onclick="ui.assignPermisoRol()">← Asignar</button>
+				<button type="button" onclick="ui.revokePermisoRol()">Quitar →</button>
+			</div>
+			<select size="6" name="permisos_no_asignados">
+			</select>
+		</form>
+
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
+	</section>
+
+	<section class="formSection" id="formPermiso">
+		<form>
+			<h2>Permiso</h2>
+			<label for="id">ID</label>
+			<input type="number" name="id"><br />
+			<label for="nombre_permiso">Nombre del permiso</label>
+			<input type="text" name="nombre_permiso"><br>
+			<label for="funcionalidad">Funcionalidad</label>
+			<input type="text" name="funcionalidad"><br>
+			<label for="descripcion">Descripcion</label>
+			<textarea name="descripcion"></textarea><br>
+			<label for="estado">Estado</label>
+			<select name="estado">
+				<option value="1">Activo</option>
+				<option value="0">Inactivo</option>
+			</select><br />
+		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+		<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>
+		</form>
 	</section>
 </body>

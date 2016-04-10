@@ -19,9 +19,11 @@ data.loadData = function() {
 			data.personas = jsonData.personas;
 			data.usuarios = jsonData.usuarios;
 			data.roles = jsonData.roles;
+			data.permisos = jsonData.permisos;
 			ui.updatePersonasTable();
 			ui.updateUsuariosTable();
 			ui.updateRolesTable();
+			ui.updatePermisosTable();
 			ui.updatePersonasSelect();
 		},
 		error: function (er1, err2, err3) {
@@ -48,7 +50,7 @@ ui.sendPersonaForm = function () {
 	var sendData = {};
 	sendData.entity = 'persona';
 	sendData.id_persona = $('#formPersona input[name=id]').val() ;
-	sendData.action = (sendData.id == -1)? 'new': 'edit';
+	sendData.action = (sendData.id_persona == -1)? 'new': 'edit';
 	sendData.apellidos = $('#formPersona input[name=apellidos]').val()
 	sendData.nombres= $('#formPersona input[name=nombres]').val()
 	sendData.tipo_doc= $('#formPersona select[name=tipo_doc]').val()
@@ -67,8 +69,8 @@ ui.sendPersonaForm = function () {
 ui.sendUsuarioForm = function() {
 	var sendData = {};
 	sendData.entity = 'usuario';
-	sendData.action = (sendData.id == -1)? 'new': 'edit';
 	sendData.id_usuario = $('#formUsuario input[name=id]').val();
+	sendData.action = (sendData.id_usuario == -1)? 'new': 'edit';
 	sendData.id_persona = $('#formUsuario select[name=id_persona]').val();
 	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val();
 	sendData.password = $('#formUsuario input[name=password]').val();
@@ -83,8 +85,8 @@ ui.sendUsuarioForm = function() {
 ui.sendRolForm = function() {
 	var sendData = {};
 	sendData.entity = 'rol';
-	sendData.action = (sendData.id == -1)? 'new': 'edit';
 	sendData.id_rol = $('#formRol input[name=id]').val();
+	sendData.action = (sendData.id_rol == -1)? 'new': 'edit';
 	sendData.nombre = $('#formRol input[name=nombre]').val();
 	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val();
 	sendData.descripcion= $('#formRol textarea[name=descripcion]').val()
@@ -94,6 +96,19 @@ ui.sendRolForm = function() {
 	$('#formRol').hide();
 }
 
+ui.sendPermisoForm = function() {
+	var sendData = {};
+	sendData.entity = 'permiso';
+	sendData.id_permiso = $('#formPermiso input[name=id]').val();
+	sendData.action = (sendData.id_permiso == -1)? 'new': 'edit';
+	sendData.nombre_permiso = $('#formPermiso input[name=nombre_permiso]').val();
+	sendData.funcionalidad= $('#formPermiso input[name=funcionalidad]').val()
+	sendData.descripcion= $('#formPermiso textarea[name=descripcion]').val()
+	sendData.estado = $('#formPermiso select[name=estado]').val();
+	aux.sendForm(sendData, data.loadData);
+
+	$('#formPermiso').hide();
+}
 ui.requestPersonaDeletion = function() {
 	var sendData = {};
 	sendData.entity = 'persona';
@@ -118,6 +133,14 @@ ui.requestRolDeletion = function() {
 	aux.sendForm(sendData, data.loadData);
 }
 
+ui.requestPermisoDeletion = function() {
+	var sendData = {};
+	sendData.entity = 'permiso';
+	sendData.id = ui.selectedId;
+	sendData.action = 'delete';
+	aux.sendForm(sendData, data.loadData);
+}
+
 initUI = function() {
 	data.loadData();
 };
@@ -126,24 +149,27 @@ initUI = function() {
 
 ui.activatePersonasTab = function () {
 	ui.currentTab = 'personas';
-	$('#usuariosTable').hide();
-	$('#rolesTable').hide();
+	ui.hideTables();
 	$('#personasTable').show();
 };
 
 
 ui.activateUsuariosTab = function () {
 	ui.currentTab = 'usuarios';
+	ui.hideTables();
 	$('#usuariosTable').show();
-	$('#rolesTable').hide();
-	$('#personasTable').hide();
-}
+};
 
 ui.activateRolesTab = function () {
 	ui.currentTab = 'roles';
-	$('#usuariosTable').hide();
+	ui.hideTables();
 	$('#rolesTable').show();
-	$('#personasTable').hide();
+};
+
+ui.activatePermisosTab = function () {
+	ui.currentTab = 'permisos';
+	ui.hideTables();
+	$('#permisosTable').show();
 };
 
 ui.newButtonPressed = function () {
@@ -156,6 +182,9 @@ ui.newButtonPressed = function () {
 			break;
 		case 'roles':
 			ui.showNewRolForm();
+			break;
+		case 'permisos':
+			ui.showNewPermisoForm();
 			break;
 	}
 };
@@ -171,6 +200,9 @@ ui.editButtonPressed = function () {
 		case 'roles':
 			ui.showEditRolForm();
 			break;
+		case 'permisos':
+			ui.showEditPermisoForm();
+			break;
 	}
 };
 
@@ -184,6 +216,9 @@ ui.deleteButtonPressed = function () {
 			break;
 		case 'roles':
 			ui.requestRolDeletion();
+			break;
+		case 'permisos':
+			ui.requestPermisoDeletion();
 			break;
 	}
 };
@@ -256,7 +291,19 @@ ui.showNewRolForm = function () {
 	$('#formRol input[name=nombre_amigable]').val('');
 	$('#formRol textarea[name=descripcion]').val('');
 	$('#formRol input[name=estado]').val(1);
-};
+	$('#formRolPermiso').hide();
+}
+
+ui.showNewPermisoForm = function () {
+	$('#formPermiso').show();
+	$('#formPermiso input[name=id]').hide();
+	$('#formPermiso label[for=id]').hide();
+	$('#formPermiso input[name=id]').val(-1);
+	$('#formPermiso input[name=nombre_permiso]').val('');
+	$('#formPermiso input[name=funcionalidad]').val('');
+	$('#formPermiso textarea[name=descripcion]').val('');
+	$('#formPermiso input[name=estado]').val(1);
+};;
 
 ui.showEditPersonaForm = function () {
 	var selected = ui.getSelectedElement();
@@ -338,12 +385,53 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
 	$('#formRol textarea[name=descripcion]').val(selected.descripcion);
 	$('#formRol select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formRolPermiso').show();
+	$('#formRolPermiso select[name=permisos_asignados]').html('');
+	$('#formRolPermiso select[name=permisos_no_asignados]').html('');
+
+	var newOption;
+	var rol;
+	var asignados =  $('#formRolPermiso select[name=permisos_asignados]')[0];
+	var noAsignados =  $('#formRolPermiso select[name=permisos_no_asignados]')[0];
+
+	rol = data.roles.getById(selected.id);
+	data.permisos.forEach(function (permiso) {
+		newOption = document.createElement ('OPTION');
+		newOption.value = permiso.id;
+		newOption.textContent = permiso.nombre_permiso;
+		if (rol.permisos.includes(permiso.id)) {
+			asignados.appendChild (newOption);
+		} else {
+			noAsignados.appendChild (newOption);
+		}
+	});
+}
+
+ui.showEditPermisoForm = function() {
+	var selected = ui.getSelectedElement();
+	if (selected == null) return;
+	$('#formPermiso').show();
+	$('#formPermiso input[name=id]').show();
+	$('#formPermiso label[for=id]').show();
+	$('#formPermiso input[name=id]').val(selected.id);
+	$('#formPermiso input[name=nombre_permiso]').val(selected.nombre_permiso);
+	$('#formPermiso input[name=funcionalidad]').val(selected.funcionalidad);
+	$('#formPermiso textarea[name=descripcion]').val(selected.descripcion);
+	$('#formPermiso select[name=estado]').val((selected.estado)?'1':'0');
+}
+
+ui.hideTables = function () {
+	$('#personasTable').hide();
+	$('#usuariosTable').hide();
+	$('#rolesTable').hide();
+	$('#permisosTable').hide();
 }
 
 ui.closeForms = function () {
 	$('#formPersona').hide();
 	$('#formUsuario').hide();
 	$('#formRol').hide();
+	$('#formPermiso').hide();
 }
 
 
@@ -412,6 +500,24 @@ ui.updateRolesTable = function () {
 	});
 }
 
+ui.updatePermisosTable = function () {
+	var tbody = $('#permisosTable tbody')[0];
+	tbody.innerHTML = '';
+	data.permisos.forEach(function (elem) {
+		tr = document.createElement ('TR');
+		tr.appendChild (aux.td (elem.id));
+		tr.appendChild (aux.td (elem.nombre_permiso));
+		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
+		var thistr = tr;
+		tr.onclick = function () {
+			ui.selectedId = elem.id;
+			aux.clearSelectedRow (tbody);
+			thistr.className='selectedRow';
+		}
+		tbody.appendChild(tr);
+	});
+}
+
 ui.getSelectedElement = function() {
 	var elem, list, index, found;
 	index = 0;
@@ -426,6 +532,9 @@ ui.getSelectedElement = function() {
 			break;
 		case 'roles':
 			list = data.roles;
+			break;
+		case 'permisos':
+			list = data.permisos;
 			break;
 	}
 	while (!found & index < list.length) {
@@ -478,6 +587,46 @@ ui.removeRolUsuario = function () {
 	};
 	aux.sendForm (sendData, onsuccess);
 }
+
+ui.assignPermisoRol = function () {
+	var sendData = {
+		entity: 'rol',
+		action: 'assignPermiso',
+		id_rol: $('#formRol input[name=id]').val(),
+		id_permiso: $('#formRolPermiso select[name=permisos_no_asignados]').val()
+	};
+
+	var onsuccess = function (jsonData) {
+		data.roles.getById(jsonData.id_rol).permisos.push(jsonData.id_permiso);
+
+		if ($('#formRol input[name=id]').val() == jsonData.id_rol) {
+			$('#formRolPermiso select[name=permisos_no_asignados] option[value='+jsonData.id_permiso+']')
+				.detach()
+				.appendTo('#formRolPermiso select[name=permisos_asignados]');
+		}
+	};
+	aux.sendForm (sendData, onsuccess);
+}
+ui.revokePermisoRol = function () {
+	var sendData = {
+		entity: 'rol',
+		action: 'revokePermiso',
+		id_rol: $('#formRol input[name=id]').val(),
+		id_permiso: $('#formRolPermiso select[name=permisos_asignados]').val()
+	};
+
+	var onsuccess = function (jsonData) {
+		data.roles.getById(jsonData.id_rol).permisos.removeElement(jsonData.id_permiso);
+
+		if ($('#formRol input[name=id]').val() == jsonData.id_rol) {
+			$('#formRolPermiso select[name=permisos_asignados] option[value='+jsonData.id_permiso+']')
+				.detach()
+				.appendTo('#formRolPermiso select[name=permisos_no_asignados]');
+		}
+	};
+	aux.sendForm (sendData, onsuccess);
+}
+
 /* Funciones auxiliares */
 aux = {};
 aux.td = function (text){

@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import modelo.Persona;
 import modelo.Usuario;
 import modelo.Rol;
+import modelo.Permiso;
 
 public class ControladorServlet extends HttpServlet {
 
@@ -47,6 +48,8 @@ public class ControladorServlet extends HttpServlet {
 				out = updateUsuario(request);
 			} else if (entity.equals("rol")) {
 				out = updateRol(request);
+			} else if (entity.equals("permiso")) {
+				out = updatePermiso(request);
 			}
 		} else if (action.equals("delete")) {
 			if (entity.equals("persona")) {
@@ -55,11 +58,17 @@ public class ControladorServlet extends HttpServlet {
 				out = deleteUsuario(request);
 			} else if (entity.equals("rol")) {
 				out = deleteRol(request);
+			} else if (entity.equals("permiso")) {
+				out = deletePermiso(request);
 			}
 		} else if (action.equals("assignRol") && entity.equals("usuario")) {
 			out = assignRol(request);
 		} else if (action.equals("removeRol") && entity.equals("usuario")) {
 			out = removeRol(request);
+		} else if (action.equals("assignPermiso") && entity.equals("rol")) {
+			out = assignPermiso(request);
+		} else if (action.equals("revokePermiso") && entity.equals("rol")) {
+			out = revokePermiso(request);
 		} else if (action.equals("login") && entity.equals("usuario")){
 			System.out.println("en action login de controladorServlet");
 			/*
@@ -77,6 +86,7 @@ public class ControladorServlet extends HttpServlet {
 			
 			out = getPermisosUsuario(request);
 		}
+		
 
 		if (out == null) {
 			out = new JSONObject();
@@ -100,6 +110,7 @@ public class ControladorServlet extends HttpServlet {
 		resultado.put("personas", this.getPersonas());
 		resultado.put("usuarios", this.getUsuarios());
 		resultado.put("roles", this.getRoles());
+		resultado.put("permisos", this.getPermisos());
 
 		writer.println(resultado);
 	}
@@ -156,6 +167,23 @@ public class ControladorServlet extends HttpServlet {
 			}
 		}
 		return roles;
+	}
+
+	private JSONArray getPermisos() {
+		JSONArray permisos;
+		JSONObject[] in;
+		Object id;
+
+		in=Permiso.Select();
+		permisos = new JSONArray ();
+		if(in != null) {
+			for (int i = 0; i< in.length; i++) {
+				id = in[i].get("id_permiso");
+				in[i].put("id", id);
+				permisos.add(in[i]);
+			}
+		}
+		return permisos;
 	}
 
 	private JSONObject updatePersona (HttpServletRequest request) {
@@ -234,6 +262,29 @@ public class ControladorServlet extends HttpServlet {
 		return salida;
 	}
 
+	private JSONObject updatePermiso (HttpServletRequest request) {
+		JSONObject recibido, salida;
+		Permiso permiso;
+
+		recibido = new JSONObject();
+		salida = new JSONObject();
+
+		if (request.getParameter("action").equals("new")) {
+			recibido.put ("id_permiso", -1);
+		} else {
+			recibido.put ("id_permiso", Integer.parseInt (request.getParameter("id_permiso")));
+		}
+		recibido.put ("nombre_permiso", request.getParameter("nombre_permiso"));
+		recibido.put ("funcionalidad", request.getParameter("funcionalidad"));
+		recibido.put ("descripcion", request.getParameter("descripcion"));
+		recibido.put ("estado", Integer.parseInt(request.getParameter("estado")));
+
+		permiso = new Permiso(recibido);
+		salida.put("result", permiso.guardar());
+		/* TODO: Agregar los datos guardados en la base de datos */
+		return salida;
+	}
+
 	private JSONObject deletePersona (HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
@@ -252,6 +303,13 @@ public class ControladorServlet extends HttpServlet {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
 		salida.put ("result", Rol.Eliminar(id));
+		return salida;
+	}
+
+	private JSONObject deletePermiso (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id = Integer.parseInt (request.getParameter("id"));
+		salida.put ("result", Permiso.Eliminar(id));
 		return salida;
 	}
 
@@ -285,4 +343,26 @@ public class ControladorServlet extends HttpServlet {
 		salida.put ("result", permisos);
 		return salida;
 	}	
+
+	private JSONObject assignPermiso (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
+		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
+		salida.put ("id_rol", id_rol);
+		salida.put ("id_permiso", id_permiso);
+		salida.put ("result", Rol.AsignarPermiso(id_permiso, id_rol));
+		
+		return salida;
+	}
+
+	private JSONObject revokePermiso (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
+		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
+		salida.put ("id_rol", id_rol);
+		salida.put ("id_permiso", id_permiso);
+		salida.put ("result", Rol.QuitarPermiso(id_permiso, id_rol));
+		
+		return salida;
+	}
 }

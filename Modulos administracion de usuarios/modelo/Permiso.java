@@ -8,13 +8,14 @@ import org.json.simple.JSONObject;
 public class Permiso extends BaseDatos {
 	
 	protected int id;
-	protected String recurso;
-	protected int lectura;
-	protected int escritura;
+	protected String nombre_permiso;
+	protected String funcionalidad;
+	protected String descripcion;
+	protected int estado;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
-		protected static String vector_atributos[]={"id_permiso","recurso","lectura","escritura"};
-		protected static int cantidad_atributos=4;
+		protected static String vector_atributos[]={"id_permiso","nombre_permiso", "funcionalidad", "descripcion", "estado"};
+		protected static int cantidad_atributos=5;
 		protected static String tabla ="PERMISO";
 		protected static String campo_pk = "id_permiso";
 	
@@ -60,16 +61,15 @@ public class Permiso extends BaseDatos {
 	
 	public Permiso(JSONObject json){
 		this.id = (int) json.get("id_permiso");
-		this.recurso = (String) json.get("recurso");
-		this.lectura = (int) json.get("lectura");
-		this.escritura = (int) json.get("escritura");
+		this.nombre_permiso = (String) json.get("nombre_permiso");
+		this.funcionalidad = (String) json.get("funcionalidad");
+		this.descripcion = (String) json.get("descripcion");
+		this.estado = (int) json.get("estado");
 	}
 	
 	public Permiso(){
 		this.id = -1;
-		this.recurso = "RECURSO";
-		this.lectura = 1;
-		this.escritura = 1;
+		this.nombre_permiso = "permiso";
 	}
 	
 	@Override
@@ -86,14 +86,20 @@ boolean bandera=false;
 		//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
 		String query="";
 		if(this.id==-1){
-			query="INSERT INTO "+tabla+values+"VALUES ('"+this.recurso+"','"+this.lectura+
-					"','"+this.escritura+"');";
+			query="INSERT INTO "+tabla+values+" VALUES ("
+			+"'"+this.nombre_permiso+"'"
+			+", '"+this.funcionalidad+"'"
+			+", '"+this.descripcion+"'"
+			+", "+this.estado
+			+");";
 			
 		}else{
 			query="UPDATE "+tabla+" SET "
-					+"recurso = '"+this.recurso+"',"
-					+"lectura = '"+this.lectura+"',"
-					+"escritura = "+this.escritura+"' WHERE id_persona="+this.id+";";
+					+"nombre_permiso = '"+this.nombre_permiso+"'"
+					+", funcionalidad = '"+this.funcionalidad+"'"
+					+", descripcion = '"+this.descripcion+"'"
+					+", estado = "+this.estado+""
+					+" WHERE id_permiso="+this.id+";";
 		}
 		this.Conectarse_BD();
 		bandera=this.EnviarQuery(query);
