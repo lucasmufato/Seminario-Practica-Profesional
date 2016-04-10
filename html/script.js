@@ -599,7 +599,7 @@ ui.assignPermisoRol = function () {
 	var onsuccess = function (jsonData) {
 		data.roles.getById(jsonData.id_rol).permisos.push(jsonData.id_permiso);
 
-		if ($('#formRol input[name=id]').val() == jsonData.id_usuario) {
+		if ($('#formRol input[name=id]').val() == jsonData.id_rol) {
 			$('#formRolPermiso select[name=permisos_no_asignados] option[value='+jsonData.id_permiso+']')
 				.detach()
 				.appendTo('#formRolPermiso select[name=permisos_asignados]');
@@ -618,7 +618,7 @@ ui.revokePermisoRol = function () {
 	var onsuccess = function (jsonData) {
 		data.roles.getById(jsonData.id_rol).permisos.removeElement(jsonData.id_permiso);
 
-		if ($('#formRol input[name=id]').val() == jsonData.id_usuario) {
+		if ($('#formRol input[name=id]').val() == jsonData.id_rol) {
 			$('#formRolPermiso select[name=permisos_asignados] option[value='+jsonData.id_permiso+']')
 				.detach()
 				.appendTo('#formRolPermiso select[name=permisos_no_asignados]');

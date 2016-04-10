@@ -61,7 +61,7 @@ public class Permiso_Rol extends BaseDatos {
 		}
 	
 	public Permiso_Rol (JSONObject json){
-		this.id_permiso=(int)json.get("id_usuario");
+		this.id_permiso=(int)json.get("id_permiso");
 		this.id_rol=(int)json.get("id_rol");
 		this.fecha_modificacion="current_date()";
 	}
