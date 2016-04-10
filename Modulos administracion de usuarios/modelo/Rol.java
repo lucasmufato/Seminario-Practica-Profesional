@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 public class Rol extends BaseDatos {
 	
@@ -12,6 +13,7 @@ public class Rol extends BaseDatos {
 	protected String nombre_amigable;
 	protected String descripcion;
 	protected int estado;	
+	protected JSONArray permisos; //Relacion N a M
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
 	protected static String vector_atributos[]={"id_rol","nombre","nombre_amigable","descripcion","estado"};
@@ -46,6 +48,7 @@ public class Rol extends BaseDatos {
 					json[j].put(vector_atributos[i], r.getObject(vector_atributos[i]));
 					i++;
 				}
+				json[j].put("permisos", Rol.ListaIdPermisos((Integer)r.getObject("id_rol")));
 				//cuando lei todos las columnas de ese renglon paso al siguiente, pasando tambien al siguiente json
 				j++;
 				i=0;
@@ -65,7 +68,7 @@ public class Rol extends BaseDatos {
 		this.nombre_amigable=(String)json.get("nombre_amigable");
 		this.descripcion=(String)json.get("descripcion");
 		this.estado=Integer.parseInt(json.get("estado").toString());
-		
+		this.permisos=(JSONArray)json.get("permisos");
 		
 	}
 	
@@ -165,6 +168,22 @@ public class Rol extends BaseDatos {
 		boolean bandera=false;
 		
 		return Permiso_Rol.Eliminar(permiso_id, rol_id);//uso este ultimo metodo para reusar codigo, q ya tambien lo tenia hecho
+	}
+
+	private static JSONArray ListaIdPermisos (int id) {
+	JSONArray lista = new JSONArray();
+	String consulta = "SELECT id_permiso FROM PERMISO_ROL WHERE id_rol="+id;
+	ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			while (r.next()) {
+				lista.add(r.getInt(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al realizar el select para id_permisos relacionados con rol "+id);
+			e.printStackTrace();
+		}
+
+		return lista;
 	}
 	
 }

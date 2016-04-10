@@ -291,6 +291,7 @@ ui.showNewRolForm = function () {
 	$('#formRol input[name=nombre_amigable]').val('');
 	$('#formRol textarea[name=descripcion]').val('');
 	$('#formRol input[name=estado]').val(1);
+	$('#formRolPermiso').hide();
 }
 
 ui.showNewPermisoForm = function () {
@@ -384,6 +385,26 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
 	$('#formRol textarea[name=descripcion]').val(selected.descripcion);
 	$('#formRol select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formRolPermiso').show();
+	$('#formRolPermiso select[name=permisos_asignados]').html('');
+	$('#formRolPermiso select[name=permisos_no_asignados]').html('');
+
+	var newOption;
+	var rol;
+	var asignados =  $('#formRolPermiso select[name=permisos_asignados]')[0];
+	var noAsignados =  $('#formRolPermiso select[name=permisos_no_asignados]')[0];
+
+	rol = data.roles.getById(selected.id);
+	data.permisos.forEach(function (permiso) {
+		newOption = document.createElement ('OPTION');
+		newOption.value = permiso.id;
+		newOption.textContent = permiso.nombre_permiso;
+		if (rol.permisos.includes(permiso.id)) {
+			asignados.appendChild (newOption);
+		} else {
+			noAsignados.appendChild (newOption);
+		}
+	});
 }
 
 ui.showEditPermisoForm = function() {
@@ -566,6 +587,46 @@ ui.removeRolUsuario = function () {
 	};
 	aux.sendForm (sendData, onsuccess);
 }
+
+ui.assignPermisoRol = function () {
+	var sendData = {
+		entity: 'rol',
+		action: 'assignPermiso',
+		id_rol: $('#formRol input[name=id]').val(),
+		id_permiso: $('#formRolPermiso select[name=permisos_no_asignados]').val()
+	};
+
+	var onsuccess = function (jsonData) {
+		data.roles.getById(jsonData.id_rol).permisos.push(jsonData.id_permiso);
+
+		if ($('#formRol input[name=id]').val() == jsonData.id_usuario) {
+			$('#formRolPermiso select[name=permisos_no_asignados] option[value='+jsonData.id_permiso+']')
+				.detach()
+				.appendTo('#formRolPermiso select[name=permisos_asignados]');
+		}
+	};
+	aux.sendForm (sendData, onsuccess);
+}
+ui.revokePermisoRol = function () {
+	var sendData = {
+		entity: 'rol',
+		action: 'revokePermiso',
+		id_rol: $('#formRol input[name=id]').val(),
+		id_permiso: $('#formRolPermiso select[name=permisos_asignados]').val()
+	};
+
+	var onsuccess = function (jsonData) {
+		data.roles.getById(jsonData.id_rol).permisos.removeElement(jsonData.id_permiso);
+
+		if ($('#formRol input[name=id]').val() == jsonData.id_usuario) {
+			$('#formRolPermiso select[name=permisos_asignados] option[value='+jsonData.id_permiso+']')
+				.detach()
+				.appendTo('#formRolPermiso select[name=permisos_no_asignados]');
+		}
+	};
+	aux.sendForm (sendData, onsuccess);
+}
+
 /* Funciones auxiliares */
 aux = {};
 aux.td = function (text){

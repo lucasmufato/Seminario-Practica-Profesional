@@ -65,6 +65,10 @@ public class ControladorServlet extends HttpServlet {
 			out = assignRol(request);
 		} else if (action.equals("removeRol") && entity.equals("usuario")) {
 			out = removeRol(request);
+		} else if (action.equals("assignPermiso") && entity.equals("rol")) {
+			out = assignPermiso(request);
+		} else if (action.equals("revokePermiso") && entity.equals("rol")) {
+			out = revokePermiso(request);
 		}
 
 		if (out == null) {
@@ -312,4 +316,26 @@ public class ControladorServlet extends HttpServlet {
 		
 		return salida;
 	}	
+
+	private JSONObject assignPermiso (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
+		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
+		salida.put ("id_rol", id_rol);
+		salida.put ("id_permiso", id_permiso);
+		salida.put ("result", Rol.AsignarPermiso(id_permiso, id_rol));
+		
+		return salida;
+	}
+
+	private JSONObject revokePermiso (HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
+		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
+		salida.put ("id_rol", id_rol);
+		salida.put ("id_permiso", id_permiso);
+		salida.put ("result", Rol.QuitarPermiso(id_permiso, id_rol));
+		
+		return salida;
+	}
 }

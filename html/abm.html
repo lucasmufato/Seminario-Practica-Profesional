@@ -148,7 +148,7 @@
 	</section>
 
 	<section class="formSection" id="formRol">
-		<form id="">
+		<form>
 	<h2>Rol</h2>
 			<label for="id">ID</label><input type="number" name="id"><br />
 			<label for="nombre">Nombre de Rol</label><input type="text" name="nombre"><br>			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
@@ -159,19 +159,19 @@
 				<option value="1">Activo</option>
 				<option value="0">Inactivo</option>
 			</select><br />
-			<h3>Permisos del rol</h3>
-			<form id="formUsuarioRol">
-				<select size="6" name="permisos_asignados">
-				</select>
-				<div class="verticalButtonBox">
-					<button type="button" >← Asignar</button>
-					<button type="button" >Quitar →</button>
-				</div>
-				<select size="6" name="permisos_no_asignados">
-				</select>
-			</form>
-
 		</form>
+		<form id="formRolPermiso">
+			<h3>Permisos del rol</h3>
+			<select size="6" name="permisos_asignados">
+			</select>
+			<div class="verticalButtonBox">
+				<button type="button" onclick="ui.assignPermisoRol()">← Asignar</button>
+				<button type="button" onclick="ui.revokePermisoRol()">Quitar →</button>
+			</div>
+			<select size="6" name="permisos_no_asignados">
+			</select>
+		</form>
+
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
 	</section>
