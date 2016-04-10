@@ -117,6 +117,4 @@ public class Permiso_Rol extends BaseDatos {
 		}
 		return lista;
 	}
-	
-	
 }

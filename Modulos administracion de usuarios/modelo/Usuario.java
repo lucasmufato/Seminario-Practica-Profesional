@@ -197,9 +197,11 @@ public class Usuario extends BaseDatos {
 		return false;
 	}
 	
-	public static JSONArray getNombrePermisosUsuario(String nombre_usuario) {
+	public static JSONArray GetNombrePermisosUsuario(String nombre_usuario) {
 		JSONArray listaIdPermisos = new JSONArray();
-		JSONArray listaRoles = ListaIdRoles(nombre_usuario);
+		// tomo el id del user.
+		int id_usuario = Usuario.GetIdPorNombre(nombre_usuario);
+		JSONArray listaRoles = ListaIdRoles(id_usuario);
 		for (int i=0; i<listaRoles.size(); i++){
 			// tomo permisos de cada rol
 			JSONArray listaPermisosRol = Permiso_Rol.ListaIdPermisos((Integer)listaRoles.get(i));
@@ -214,11 +216,25 @@ public class Usuario extends BaseDatos {
 		// Tomo el nombre de cada id permiso
 		JSONArray listaPermisos = new JSONArray();
 		for (int i=0; i<listaIdPermisos.size(); i++){
-			listaPermisos.add(Rol.GetNombrePorId((Integer)listaIdPermisos.get(i)));
+			listaPermisos.add(Permiso.GetPermisoPorId((Integer)listaIdPermisos.get(i)));
 		}
 		return listaPermisos;
 	}
 	
+	private static int GetIdPorNombre(String nombre_usuario) {
+		String consulta = "SELECT id_usuario from USUARIO where nombre_usuario='"+nombre_usuario+"'";
+		ResultSet r = BaseDatos.RealizarConsulta(consulta);
+		try {
+			if (r.next()){
+				return r.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al obtener id_usuario por nombre_usuario");
+			e.printStackTrace();
+		}
+		return -1; //no me gusta un carajo pero no se que poner.
+	}
+
 	private static JSONArray ListaIdRoles(int id) {
 		JSONArray lista = new JSONArray();
 		String consulta = "SELECT id_rol FROM USUARIO_ROL WHERE id_usuario="+id;
@@ -233,19 +249,4 @@ public class Usuario extends BaseDatos {
 		}
 		return lista;
 	}
-	
-	private static JSONArray ListaIdRoles(String nombre) {
-		JSONArray lista = new JSONArray();
-		String consulta = "SELECT id_rol FROM USUARIO_ROL WHERE nombre_usuario='"+nombre+"'";
-		ResultSet r= BaseDatos.RealizarConsulta(consulta);
-		try {
-			while (r.next()) {
-				lista.add(r.getInt(1));
-			}
-		} catch (SQLException e) {
-			System.out.println("Error al realizar el select para id_roles relacionados con usuario "+nombre);
-			e.printStackTrace();
-		}
-		return lista;
-	}	
 }

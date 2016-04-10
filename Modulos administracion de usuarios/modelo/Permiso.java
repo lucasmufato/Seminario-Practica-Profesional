@@ -121,4 +121,20 @@ boolean bandera=false;
 		return bandera;
 	}
 	
+	public static JSONObject GetPermisoPorId(int id) {
+		String consulta = "SELECT * FROM "+ tabla +" WHERE id_permiso="+id;
+		JSONObject json= new JSONObject();
+		ResultSet r= BaseDatos.RealizarConsulta(consulta);
+		try {
+			while (r.next()){
+				for (int i=0; i<cantidad_atributos;i++){
+					json.put(vector_atributos[i], r.getObject(vector_atributos[i]));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al obtener permisos por id");
+			e.printStackTrace();
+		}
+		return json;
+	}
 }

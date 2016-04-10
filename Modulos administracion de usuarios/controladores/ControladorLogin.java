@@ -76,10 +76,8 @@ public class ControladorLogin extends HttpServlet {
 		if (Usuario.isUsuarioPass(user,pass)) {
 			//agrego cookie
 			response.addCookie(setearCookie(user));
-			/*
-			 * Usuario logueado se redirecciona al index 
-			 */
-			response.sendRedirect("index.html"); //UI - Funciones del sistema
+			System.out.println("Usuario logueado");
+			response.sendRedirect("home.html"); 
 		} 		
 	}
 

@@ -1,16 +1,15 @@
 
-
 $(document).ready(function(){
-  console.log("entro a scriptLogin.js");
+  console.log("entro a home.js");
   //pregunto si esta logueado
   var nombreUsuario = getCookie("nombre_usuario");
   if (nombreUsuario != ""){
-	getRolesUsuarios(nombreUsuario);
+  	console.log("nombre usuario:", nombreUsuario);
+	getRolesUsuario(nombreUsuario);
   }
 })
 
 function getRolesUsuario (nombreUsuario) {
-	console.log("en getRolesUsuario, data:", nombreUsuario);
 	var sendData = {
 		entity: 'usuario',
 		action: 'login',
@@ -18,13 +17,13 @@ function getRolesUsuario (nombreUsuario) {
 	};
 	$.ajax({
 		url: '/users',
-		action: 'login',
 		method: 'POST',
 		data: sendData,
+		dataType: 'json',
 		success: function (jsonData) {
-			DEBUGresponse = jsonData;
+			DEBUGresponse = jsonData;// esta linea no se que hace, ante la duda la dejo.
 			if (jsonData.result) {
-				mostrarResultados(jsonData);
+				mostrarFunciones(jsonData);
 			} else {
 				window.alert ("Ocurrio un error");
 			}
@@ -36,10 +35,9 @@ function getRolesUsuario (nombreUsuario) {
 	});
 }
 
-function mostrarResultados(jsonData){
+function mostrarFunciones(jsonData){
 	console.log("en mostrar resultados, data:",jsonData);
-	//aca irian los if
-
+	//desde aca sigo mañana
 }
 
 function getCookie(nombreCookie) {

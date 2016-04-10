@@ -61,6 +61,20 @@ public class ControladorServlet extends HttpServlet {
 		} else if (action.equals("removeRol") && entity.equals("usuario")) {
 			out = removeRol(request);
 		} else if (action.equals("login") && entity.equals("usuario")){
+			System.out.println("en action login de controladorServlet");
+			/*
+			 * PABLO, ME TENES QUE DECIR COMO CARGAR ESTE DRIVER (llamar a doGet desde js? como?)
+			 * Y ASI NO TENER QUE COPYPASTEAR TAN NEGRO
+			 */
+			//MUGRE DESDE
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (Exception e) {
+				writer.println("No se pudo abrir el driver de la base de datos");
+				writer.println(e.getMessage());
+			}
+			//MUGRE HASTA
+			
 			out = getPermisosUsuario(request);
 		}
 
@@ -71,6 +85,7 @@ public class ControladorServlet extends HttpServlet {
 
 		out.put("action", action);
 		out.put("entity", entity);
+		System.out.println("Lo que mando al js: "+out);
 		writer.println (out);
 	}
 
@@ -262,11 +277,12 @@ public class ControladorServlet extends HttpServlet {
 		return salida;
 	}	
 	
-	private JSONObject getPermisosUsuario (HttpServletRequest request) {
-		JSONObject salida = new JSONObject ();
+	private JSONObject getPermisosUsuario (HttpServletRequest request) {		
+		JSONObject salida = new JSONObject ();		
 		String nombre_usuario = request.getParameter("nombre_usuario");
 		salida.put ("nombre_usuario", nombre_usuario);
-		salida.put ("result", Usuario.getNombrePermisosUsuario(nombre_usuario));
+		JSONArray permisos = Usuario.GetNombrePermisosUsuario(nombre_usuario);
+		salida.put ("result", permisos);
 		return salida;
 	}	
 }
