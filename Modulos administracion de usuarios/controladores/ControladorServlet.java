@@ -200,13 +200,16 @@ public class ControladorServlet extends HttpServlet {
 		}
 		recibida.put("nombres", request.getParameter("nombres"));
 		recibida.put("apellidos", request.getParameter("apellidos"));
-		recibida.put("descripcion", request.getParameter("descripcion"));
-		recibida.put("domicilio", request.getParameter("domicilio"));
-		recibida.put("estado", Integer.parseInt(request.getParameter("estado")));
-		recibida.put("fecha_nacimiento", request.getParameter("fecha_nacimiento"));
-		recibida.put("nro_doc", Integer.parseInt(request.getParameter("nro_doc")));
 		recibida.put("tipo_doc", Integer.parseInt(request.getParameter("tipo_doc")));
+		recibida.put("nro_doc", Integer.parseInt(request.getParameter("nro_doc")));
+		recibida.put("fecha_nacimiento", request.getParameter("fecha_nacimiento"));
+		recibida.put("sexo", request.getParameter("sexo"));
+		recibida.put("foto", request.getParameter("foto"));
+		recibida.put("domicilio", request.getParameter("domicilio"));
 		recibida.put("telefono", request.getParameter("telefono"));
+		recibida.put("descripcion", request.getParameter("descripcion"));
+		recibida.put("estado", request.getParameter("estado"));
+		recibida.put("foto", request.getParameter("foto_registro"));
 
 		persona = new Persona (recibida);
 		salida.put ("result", persona.guardar());
@@ -231,7 +234,7 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put("password", request.getParameter("password"));
 		recibido.put("email", request.getParameter("email"));
 		recibido.put("descripcion", request.getParameter("descripcion"));
-		recibido.put("estado", Integer.parseInt(request.getParameter("estado")));
+		recibido.put("estado", (request.getParameter("estado")));
 
 		usuario = new Usuario (recibido);
 		salida.put ("result", usuario.guardar());
@@ -251,10 +254,10 @@ public class ControladorServlet extends HttpServlet {
 		} else {
 			recibido.put ("id_rol", Integer.parseInt (request.getParameter("id_rol")));
 		}
-		recibido.put ("nombre", request.getParameter("nombre"));
+		recibido.put ("nombre_rol", request.getParameter("nombre_rol"));
 		recibido.put ("nombre_amigable", request.getParameter("nombre_amigable"));
 		recibido.put ("descripcion", request.getParameter("descripcion"));
-		recibido.put ("estado", Integer.parseInt(request.getParameter("estado")));
+		recibido.put ("estado",request.getParameter("estado"));
 
 		rol = new Rol(recibido);
 		salida.put("result", rol.guardar());
@@ -277,7 +280,7 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put ("nombre_permiso", request.getParameter("nombre_permiso"));
 		recibido.put ("funcionalidad", request.getParameter("funcionalidad"));
 		recibido.put ("descripcion", request.getParameter("descripcion"));
-		recibido.put ("estado", Integer.parseInt(request.getParameter("estado")));
+		recibido.put ("estado", request.getParameter("estado"));
 
 		permiso = new Permiso(recibido);
 		salida.put("result", permiso.guardar());

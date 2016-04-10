@@ -9,14 +9,14 @@ import org.json.simple.JSONArray;
 public class Rol extends BaseDatos {
 	
 	protected int id;
-	protected String nombre;
+	protected String nombre_rol;
 	protected String nombre_amigable;
 	protected String descripcion;
-	protected int estado;	
+	protected char estado;	
 	protected JSONArray permisos; //Relacion N a M
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
-	protected static String vector_atributos[]={"id_rol","nombre","nombre_amigable","descripcion","estado"};
+	protected static String vector_atributos[]={"id_rol","nombre_rol","nombre_amigable","descripcion","estado"};
 	protected static int cantidad_atributos=5;
 	protected static String tabla ="ROL";
 	protected static String campo_pk = "id_rol";
@@ -64,17 +64,17 @@ public class Rol extends BaseDatos {
 	
 	public Rol(JSONObject json){
 		this.id=Integer.parseInt(json.get("id_rol").toString());
-		this.nombre=(String)json.get("nombre");
+		this.nombre_rol=(String)json.get("nombre_rol");
 		this.nombre_amigable=(String)json.get("nombre_amigable");
 		this.descripcion=(String)json.get("descripcion");
-		this.estado=Integer.parseInt(json.get("estado").toString());
+		this.estado=json.get("estado").toString().charAt(0);
 		this.permisos=(JSONArray)json.get("permisos");
 		
 	}
 	
 	public Rol(){
 		this.id=-1;
-		this.nombre="prueba";
+		this.nombre_rol="prueba";
 		this.nombre_amigable="prueba";
 		this.descripcion="rol para probar";
 		this.estado=1;
@@ -94,12 +94,12 @@ public class Rol extends BaseDatos {
 			//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
 			String query="";
 			if(this.id==-1){
-				query="INSERT INTO "+tabla+values+"VALUES ('"+this.nombre+"','"+this.nombre_amigable+"','"+this.descripcion+"','"+
+				query="INSERT INTO "+tabla+values+"VALUES ('"+this.nombre_rol+"','"+this.nombre_amigable+"','"+this.descripcion+"','"+
 						this.estado+"');";
 				
 			}else{
 				query="UPDATE "+tabla+" SET "
-						+"nombre = '"+this.nombre+"',"
+						+"nombre_rol = '"+this.nombre_rol+"',"
 						+"nombre_amigable = '"+this.nombre_amigable+"',"
 						+"descripcion = '"+this.descripcion+"',"
 						+"estado = '"+this.estado+"' WHERE id_rol="+this.id+";";

@@ -18,15 +18,19 @@ public class Persona extends BaseDatos {
 	protected int tipo_doc;
 	protected long nro_doc;
 	protected String fecha_nacimiento;
+	protected char sexo;
 	protected String domicilio;
+	protected String foto;
 	protected String telefono;
 	protected String descripcion;
-	protected int estado;
+	protected char estado;
+	protected String foto_registro;
+
 	protected JSONArray usuarios;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
-		protected static String vector_atributos[]={"id_persona","nombres","apellidos","tipo_doc","nro_doc","fecha_nacimiento","domicilio","telefono","descripcion","estado"};
-		protected static int cantidad_atributos=10;
+		protected static String vector_atributos[]={"id_persona","nombres","apellidos","tipo_doc","nro_doc","fecha_nacimiento","sexo","foto","domicilio","telefono","descripcion","estado","foto_registro"};
+		protected static int cantidad_atributos=13;
 		protected static String tabla ="PERSONA";
 		protected static String campo_pk = "id_persona";
 	
@@ -75,28 +79,31 @@ public class Persona extends BaseDatos {
 		this.id=Integer.parseInt(json.get("id_persona").toString());
 		this.nombres=(String)json.get("nombres");
 		this.apellidos=(String)json.get("apellidos");
-		this.descripcion=(String)json.get("descripcion");
-		this.domicilio=(String)json.get("domicilio");
-		this.estado=Integer.parseInt(json.get("estado").toString());
-		this.fecha_nacimiento=(String)json.get("fecha_nacimiento");
-		this.nro_doc=Integer.parseInt(json.get("nro_doc").toString());
 		this.tipo_doc=Integer.parseInt(json.get("tipo_doc").toString());
+		this.nro_doc=Integer.parseInt(json.get("nro_doc").toString());
+		this.fecha_nacimiento=(String)json.get("fecha_nacimiento");
+		this.sexo=json.get("sexo").toString().charAt(0);
+		this.foto=(String)json.get("foto");
+		this.domicilio=(String)json.get("domicilio");
 		this.telefono=(String)json.get("telefono");
-		this.usuarios=(JSONArray)json.get("usuarios");
-		
+		this.descripcion=(String)json.get("descripcion");
+		this.estado=json.get("estado").toString().charAt(0);
+		this.foto_registro=(String)json.get("foto_registro");
 	}
 	
 	public Persona(){
-		this.id=2;
-		this.nombres="pablo";
-		this.apellidos="cabrera";
-		this.descripcion="voy a tener el id=2";
-		this.domicilio="cardales";
-		this.estado=1;
-		this.fecha_nacimiento="current_date()";
-		this.nro_doc=33333333;
+		this.id=-1;
+		this.nombres="";
+		this.apellidos="";
 		this.tipo_doc=1;
-		this.telefono="33333";
+		this.nro_doc=0;
+		this.fecha_nacimiento="current_date()";
+		this.sexo='O';
+		this.foto=null;
+		this.domicilio="";
+		this.telefono="";
+		this.descripcion=null;
+		this.estado='A';
 	}
 	@Override
 	public boolean guardar(){
@@ -112,17 +119,36 @@ boolean bandera=false;
 		//creo el query para ser enviado dependiendo si id de esta instacia es -1 para insert, u otro nro para update
 		String query="";
 		if(this.id==-1){
-			query="INSERT INTO "+tabla+values+"VALUES ('"+this.nombres+"','"+this.apellidos+"','"+this.tipo_doc+"','"+
-					this.nro_doc+"','"+this.fecha_nacimiento+"','"+this.domicilio+"','"+this.telefono
-					+"','"+this.descripcion+"','"+this.estado+"');";
+			query="INSERT INTO "+tabla+values+"VALUES ('"
+				+this.nombres+"','"
+				+this.apellidos+"','"
+				+this.tipo_doc+"','"
+				+this.nro_doc+"','"
+				+this.fecha_nacimiento+"','"
+				+this.sexo+"','"
+				+this.foto+"','"
+				+this.domicilio+"','"
+				+this.telefono+"','"
+				+this.descripcion+"','"
+				+this.estado+"','"
+				+this.foto_registro
+				+"');";
 			
 		}else{
 			query="UPDATE "+tabla+" SET "
-					+"nombres = '"+this.nombres+"',"+ "apellidos= '"+this.apellidos+"',"
-					+"tipo_doc = '"+this.tipo_doc+"',"+"nro_doc = '"+this.nro_doc+"',"
-					+"fecha_nacimiento = '"+this.fecha_nacimiento+"',"+"domicilio = '"+this.domicilio+"',"
-					+"telefono = '"+this.telefono+"',"+"descripcion = '"+this.descripcion+"',"
-					+"estado = '"+this.estado+"' WHERE id_persona="+this.id+";";
+					+"nombres = '"+this.nombres+"',"
+					+"apellidos= '"+this.apellidos+"',"
+					+"tipo_doc = '"+this.tipo_doc+"',"
+					+"nro_doc = '"+this.nro_doc+"',"
+					+"fecha_nacimiento = '"+this.fecha_nacimiento+"',"
+					+"sexo = '"+this.sexo+"',"
+					+"domicilio = '"+this.domicilio+"',"
+					+"foto = '"+this.foto+"',"
+					+"telefono = '"+this.telefono+"',"
+					+"descripcion = '"+this.descripcion+"',"
+					+"estado = '"+this.estado+"', "
+					+"foto_registro = '"+this.foto_registro+"' "
+					+"WHERE id_persona="+this.id+";";
 		}
 		this.Conectarse_BD();
 		bandera=this.EnviarQuery(query);

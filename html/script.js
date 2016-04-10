@@ -49,17 +49,20 @@ Array.prototype.getById = function (id) {
 ui.sendPersonaForm = function () {
 	var sendData = {};
 	sendData.entity = 'persona';
-	sendData.id_persona = $('#formPersona input[name=id]').val() ;
+	sendData.id_persona = $('#formPersona input[name=id]').val();
 	sendData.action = (sendData.id_persona == -1)? 'new': 'edit';
-	sendData.apellidos = $('#formPersona input[name=apellidos]').val()
-	sendData.nombres= $('#formPersona input[name=nombres]').val()
-	sendData.tipo_doc= $('#formPersona select[name=tipo_doc]').val()
-	sendData.nro_doc= $('#formPersona input[name=nro_doc]').val()
-	sendData.fecha_nacimiento= $('#formPersona input[name=fecha_nacimiento]').val()
-	sendData.domicilio= $('#formPersona input[name=domicilio]').val()
-	sendData.telefono= $('#formPersona input[name=telefono]').val()
-	sendData.descripcion= $('#formPersona textarea[name=descripcion]').val()
-	sendData.estado= $('#formPersona select[name=estado]').val()
+	sendData.apellidos = $('#formPersona input[name=apellidos]').val() || null;
+	sendData.nombres= $('#formPersona input[name=nombres]').val() || null;
+	sendData.tipo_doc= $('#formPersona select[name=tipo_doc]').val() || null;
+	sendData.nro_doc= $('#formPersona input[name=nro_doc]').val() || null;
+	sendData.fecha_nacimiento= $('#formPersona input[name=fecha_nacimiento]').val() || null;
+	sendData.sexo= $('#formPersona select[name=sexo]').val() || null;
+	sendData.domicilio= $('#formPersona input[name=domicilio]').val() || null;
+	sendData.foto= $('#formPersona input[name=foto]').val() || null;
+	sendData.telefono= $('#formPersona input[name=telefono]').val() || null;
+	sendData.descripcion= $('#formPersona textarea[name=descripcion]').val() || null;
+	sendData.estado= $('#formPersona select[name=estado]').val() || null;
+	sendData.foto_registro= $('#formPersona input[name=foto_registro]').val() || null;
 
 	aux.sendForm(sendData, data.loadData)
 
@@ -69,14 +72,14 @@ ui.sendPersonaForm = function () {
 ui.sendUsuarioForm = function() {
 	var sendData = {};
 	sendData.entity = 'usuario';
-	sendData.id_usuario = $('#formUsuario input[name=id]').val();
+	sendData.id_usuario = $('#formUsuario input[name=id]').val() || null;
 	sendData.action = (sendData.id_usuario == -1)? 'new': 'edit';
-	sendData.id_persona = $('#formUsuario select[name=id_persona]').val();
-	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val();
-	sendData.password = $('#formUsuario input[name=password]').val();
-	sendData.email = $('#formUsuario input[name=email]').val();
-	sendData.descripcion = $('#formUsuario textarea[name=descripcion]').val();
-	sendData.estado = $('#formUsuario select[name=estado]').val();
+	sendData.id_persona = $('#formUsuario select[name=id_persona]').val() || null;
+	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val() || null;
+	sendData.password = $('#formUsuario input[name=password]').val() || null;
+	sendData.email = $('#formUsuario input[name=email]').val() || null;
+	sendData.descripcion = $('#formUsuario textarea[name=descripcion]').val() || null;
+	sendData.estado = $('#formUsuario select[name=estado]').val() || null;
 	aux.sendForm(sendData, data.loadData)
 
 	$('#formUsuario').hide();
@@ -85,12 +88,12 @@ ui.sendUsuarioForm = function() {
 ui.sendRolForm = function() {
 	var sendData = {};
 	sendData.entity = 'rol';
-	sendData.id_rol = $('#formRol input[name=id]').val();
+	sendData.id_rol = $('#formRol input[name=id]').val() || null;
 	sendData.action = (sendData.id_rol == -1)? 'new': 'edit';
-	sendData.nombre = $('#formRol input[name=nombre]').val();
-	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val();
-	sendData.descripcion= $('#formRol textarea[name=descripcion]').val()
-	sendData.estado = $('#formRol select[name=estado]').val();
+	sendData.nombre_rol = $('#formRol input[name=nombre_rol]').val() || null;
+	sendData.nombre_amigable = $('#formRol input[name=nombre_amigable]').val() || null;
+	sendData.descripcion= $('#formRol textarea[name=descripcion]').val() || null;
+	sendData.estado = $('#formRol select[name=estado]').val() || null;
 	aux.sendForm(sendData, data.loadData);
 
 	$('#formRol').hide();
@@ -99,12 +102,12 @@ ui.sendRolForm = function() {
 ui.sendPermisoForm = function() {
 	var sendData = {};
 	sendData.entity = 'permiso';
-	sendData.id_permiso = $('#formPermiso input[name=id]').val();
+	sendData.id_permiso = $('#formPermiso input[name=id]').val() || null;
 	sendData.action = (sendData.id_permiso == -1)? 'new': 'edit';
-	sendData.nombre_permiso = $('#formPermiso input[name=nombre_permiso]').val();
-	sendData.funcionalidad= $('#formPermiso input[name=funcionalidad]').val()
-	sendData.descripcion= $('#formPermiso textarea[name=descripcion]').val()
-	sendData.estado = $('#formPermiso select[name=estado]').val();
+	sendData.nombre_permiso = $('#formPermiso input[name=nombre_permiso]').val() || null;
+	sendData.funcionalidad= $('#formPermiso input[name=funcionalidad]').val() || null;
+	sendData.descripcion= $('#formPermiso textarea[name=descripcion]').val() || null;
+	sendData.estado = $('#formPermiso select[name=estado]').val() || null;
 	aux.sendForm(sendData, data.loadData);
 
 	$('#formPermiso').hide();
@@ -229,12 +232,10 @@ ui.updatePersonasSelect = function() {
 
 	select.textContent = '';
 	data.personas.forEach (function (persona) {
-		if (persona.estado) {
-			newOpt = document.createElement ('OPTION');
-			newOpt.value = persona.id
-			newOpt.textContent = persona.nombres+' '+persona.apellidos;
-			select.appendChild (newOpt);
-		}
+		newOpt = document.createElement ('OPTION');
+		newOpt.value = persona.id
+		newOpt.textContent = persona.nombres+' '+persona.apellidos;
+		select.appendChild (newOpt);
 	});
 }
 
@@ -249,10 +250,13 @@ ui.showNewPersonaForm = function () {
 	$('#formPersona select[name=tipo_doc]').val(1);
 	$('#formPersona input[name=nro_doc]').val('');
 	$('#formPersona input[name=fecha_nacimiento]').val('1990-01-01');
+	$('#formPersona select[name=sexo]').val('M');
+	$('#formPersona input[name=foto]').val('');
 	$('#formPersona input[name=domicilio]').val('');
 	$('#formPersona input[name=telefono]').val('');
 	$('#formPersona textarea[name=descripcion]').val('');
-	$('#formPersona select[name=estado]').val(1);
+	$('#formPersona select[name=estado]').val('A');
+	$('#formPersona input[name=foto_registro]').val('');
 	$('#formPersonaUsuario select[name=usuarios]').html('');
 };
 
@@ -266,7 +270,7 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario input[name=password]').val('');
 	$('#formUsuario input[name=email]').val('');
 	$('#formUsuario textarea[name=descripcion]').val('');
-	$('#formUsuario select[name=estado]').val(1);
+	$('#formUsuario select[name=estado]').val('A');
 	$('#formUsuarioRol').hide();
 	$('#formUsuarioRol select[name=roles_asignados]').html('');
 	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
@@ -287,10 +291,10 @@ ui.showNewRolForm = function () {
 	$('#formRol input[name=id]').hide();
 	$('#formRol label[for=id]').hide();
 	$('#formRol input[name=id]').val(-1);
-	$('#formRol input[name=nombre]').val('');
+	$('#formRol input[name=nombre_rol]').val('');
 	$('#formRol input[name=nombre_amigable]').val('');
 	$('#formRol textarea[name=descripcion]').val('');
-	$('#formRol input[name=estado]').val(1);
+	$('#formRol input[name=estado]').val('A');
 	$('#formRolPermiso').hide();
 }
 
@@ -302,7 +306,7 @@ ui.showNewPermisoForm = function () {
 	$('#formPermiso input[name=nombre_permiso]').val('');
 	$('#formPermiso input[name=funcionalidad]').val('');
 	$('#formPermiso textarea[name=descripcion]').val('');
-	$('#formPermiso input[name=estado]').val(1);
+	$('#formPermiso input[name=estado]').val('A');
 };;
 
 ui.showEditPersonaForm = function () {
@@ -319,10 +323,13 @@ ui.showEditPersonaForm = function () {
 	$('#formPersona select[name=tipo_doc]').val(selected.tipo_doc);
 	$('#formPersona input[name=nro_doc]').val(selected.nro_doc);
 	$('#formPersona input[name=fecha_nacimiento]').val(selected.fecha_nacimiento);
+	$('#formPersona select[name=sexo]').val(selected.sexo);
+	$('#formPersona input[name=foto]').val(selected.foto);
 	$('#formPersona input[name=domicilio]').val(selected.domicilio);
 	$('#formPersona input[name=telefono]').val(selected.telefono);
 	$('#formPersona textarea[name=descripcion]').val(selected.descripcion);
-	$('#formPersona select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formPersona select[name=estado]').val(selected.estado);
+	$('#formPersona input[name=foto_registro]').val(selected.foto_registro);
 	$('#formPersonaUsuario select[name=usuarios]').html('');
 
 	var newOption;
@@ -350,7 +357,7 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=password]').val(selected.password);
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
-	$('#formUsuario select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formUsuario select[name=estado]').val((selected.estado));
 	$('#formUsuarioRol').show();
 	$('#formUsuarioRol select[name=roles_asignados]').html('');
 	$('#formUsuarioRol select[name=roles_no_asignados]').html('');
@@ -381,10 +388,10 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=id]').show();
 	$('#formRol label[for=id]').show();
 	$('#formRol input[name=id]').val(selected.id);
-	$('#formRol input[name=nombre]').val(selected.nombre);
+	$('#formRol input[name=nombre_rol]').val(selected.nombre_rol);
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
 	$('#formRol textarea[name=descripcion]').val(selected.descripcion);
-	$('#formRol select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formRol select[name=estado]').val((selected.estado));
 	$('#formRolPermiso').show();
 	$('#formRolPermiso select[name=permisos_asignados]').html('');
 	$('#formRolPermiso select[name=permisos_no_asignados]').html('');
@@ -417,7 +424,7 @@ ui.showEditPermisoForm = function() {
 	$('#formPermiso input[name=nombre_permiso]').val(selected.nombre_permiso);
 	$('#formPermiso input[name=funcionalidad]').val(selected.funcionalidad);
 	$('#formPermiso textarea[name=descripcion]').val(selected.descripcion);
-	$('#formPermiso select[name=estado]').val((selected.estado)?'1':'0');
+	$('#formPermiso select[name=estado]').val(selected.estado);
 }
 
 ui.hideTables = function () {
@@ -448,9 +455,10 @@ ui.updatePersonasTable = function () {
 		tr.appendChild (aux.td (aux.tipoDoc(elem.tipo_doc)));
 		tr.appendChild (aux.td (elem.nro_doc));
 		tr.appendChild (aux.td (elem.fecha_nacimiento));
+		tr.appendChild (aux.td (aux.sexoString(elem.sexo)));
 		tr.appendChild (aux.td (elem.domicilio));
 		tr.appendChild (aux.td (elem.telefono));
-		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
+		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -470,7 +478,7 @@ ui.updateUsuariosTable = function () {
 		tr.appendChild (aux.td (elem.id));
 		tr.appendChild (aux.td (elem.nombre_usuario));
 		tr.appendChild (aux.td (elem.email));
-		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
+		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -487,9 +495,9 @@ ui.updateRolesTable = function () {
 	data.roles.forEach(function (elem) {
 		tr = document.createElement ('TR');
 		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.nombre));
+		tr.appendChild (aux.td (elem.nombre_rol));
 		tr.appendChild (aux.td (elem.nombre_amigable));
-		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
+		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -507,7 +515,7 @@ ui.updatePermisosTable = function () {
 		tr = document.createElement ('TR');
 		tr.appendChild (aux.td (elem.id));
 		tr.appendChild (aux.td (elem.nombre_permiso));
-		tr.appendChild (aux.td (elem.estado? 'Activo': 'Inactivo'));
+		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 		var thistr = tr;
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
@@ -677,6 +685,28 @@ aux.sendForm = function (sendData, onsuccess) {
 			window.alert (err3);
 		}
 	});
+}
+
+aux.estadoString = function (caracter) {
+	switch (caracter) {
+		case 'A': return "Activo";
+		case 'B': return "Inactivo";
+		case 'S': return "Suspendido";
+		case '': return "No especificado";
+		case null: return "No especificado";
+		default: return "Desconocido";
+	}
+}
+
+aux.sexoString = function (caracter) {
+	switch (caracter) {
+		case 'F': return "Femenino";
+		case 'M': return "Masculino";
+		case 'O': return "Otro";
+		case '': return "No especificado";
+		case null: return "No especificado";
+		default: return "Desconocido";
+	}
 }
 
 Array.prototype.removeElement = function(item) {

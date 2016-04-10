@@ -24,7 +24,7 @@ CREATE TABLE USUARIO (
 	password VARCHAR(32) NOT NULL,
 	email VARCHAR(40) NOT NULL,
 	descripcion TEXT,
-	estado CHAR(1) NOT NULL, // PODRIA SER DEL TIPO: A=ACTIVO, B=BAJA, S=SUSPENDIDO, ETC
+	estado CHAR(1) NOT NULL, -- PODRIA SER DEL TIPO: A=ACTIVO, B=BAJA, S=SUSPENDIDO, ETC
 
 	PRIMARY KEY (id_usuario),
 	UNIQUE (nombre_usuario),
@@ -57,7 +57,7 @@ CREATE TABLE PERMISO (
 	nombre_permiso VARCHAR (50) NOT NULL,
 	funcionalidad VARCHAR(200),
 	descripcion TEXT,
-	estado BOOLEAN,
+	estado CHAR(1) NOT NULL,
 
 	PRIMARY KEY (id_permiso)
 );

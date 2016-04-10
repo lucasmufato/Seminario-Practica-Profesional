@@ -19,7 +19,7 @@ public class Usuario extends BaseDatos {
 	protected String password;
 	protected String email;
 	protected String descripcion;
-	protected int estado;	
+	protected char estado;	
 	protected JSONArray roles;
 	
 	//atributos de la clase para su funcionamiento y facilidad de codigo
@@ -76,7 +76,7 @@ public class Usuario extends BaseDatos {
 		this.password= "up";
 		this.email= "up@gmail.com";
 		this.descripcion= "update";
-		this.estado= 1;
+		this.estado= 'A';
 	}
 	
 	public Usuario (JSONObject json){
@@ -86,7 +86,7 @@ public class Usuario extends BaseDatos {
 		this.password= (String) json.get("password");
 		this.email= (String) json.get("email");
 		this.descripcion= (String) json.get("descripcion");
-		this.estado= (int) json.get("estado");
+		this.estado= json.get("estado").toString().charAt(0);
 		this.roles= (JSONArray)json.get("roles");
 	}
 	
