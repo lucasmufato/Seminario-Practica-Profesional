@@ -12,7 +12,8 @@ CREATE TABLE PERSONA (
 	descripcion TEXT,
 	estado CHAR(1) NOT NULL,
 	foto_registro VARCHAR(120),
-
+	
+	UNIQUE (tipo_doc,nro_doc),
 	PRIMARY KEY (id_persona)
 );
 
@@ -26,6 +27,7 @@ CREATE TABLE USUARIO (
 	estado CHAR(1) NOT NULL, // PODRIA SER DEL TIPO: A=ACTIVO, B=BAJA, S=SUSPENDIDO, ETC
 
 	PRIMARY KEY (id_usuario),
+	UNIQUE (nombre_usuario),
 	FOREIGN KEY (id_persona) REFERENCES PERSONA (id_persona)
 );
 
