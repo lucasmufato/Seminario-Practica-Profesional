@@ -1,13 +1,21 @@
 
 $(document).ready(function(){
   console.log("entro a home.js");
+  // escondo funcionalidades
+  esconder_funcionalidades();
   //pregunto si esta logueado
   var nombreUsuario = getCookie("nombre_usuario");
-  if (nombreUsuario != ""){
+  if (nombreUsuario == ""){
+    window.location.replace("index.html");
+  }else{
   	console.log("nombre usuario:", nombreUsuario);
 	getRolesUsuario(nombreUsuario);
   }
 })
+
+function esconder_funcionalidades(){
+  $("#adm_us").hide();
+}
 
 function getRolesUsuario (nombreUsuario) {
 	var sendData = {
@@ -37,7 +45,16 @@ function getRolesUsuario (nombreUsuario) {
 
 function mostrarFunciones(jsonData){
 	console.log("en mostrar resultados, data:",jsonData);
-	//desde aca sigo mañana
+	// no me anda la letra "t" ni la "igrega" , tampoco el bloq mashus, el borrar, tab ni shift   
+	if (jsonData.result){
+		var permiso=0;
+		for (permiso in jsonData.result){
+		var nombre_permiso = jsonData.result[permiso]["nombre_permiso"];
+		  if (nombre_permiso == "administrar_usuarios"){
+		    $("#adm_us").show();
+		  }
+		}
+	}
 }
 
 function getCookie(nombreCookie) {
