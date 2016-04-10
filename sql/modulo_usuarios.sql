@@ -31,7 +31,7 @@ CREATE TABLE USUARIO (
 
 CREATE TABLE ROL (
 	id_rol INTEGER NOT NULL AUTO_INCREMENT,
-	nombre VARCHAR(30) NOT NULL,
+	nombre_rol VARCHAR(30) NOT NULL,
 	nombre_amigable VARCHAR(30) NOT NULL,
 	descripcion TEXT,
 	estado CHAR(1) NOT NULL,
@@ -49,13 +49,13 @@ CREATE TABLE USUARIO_ROL (
 	FOREIGN KEY (id_rol) REFERENCES ROL (id_rol)
 );
 
-// LAS TABLAS DE ACA ABAJO FUERON MODIFICADAS
 
 CREATE TABLE PERMISO (
-	id_permiso INTEGER,
-	recurso VARCHAR(200),
-	lectura BOOLEAN,
-	escritura BOOLEAN,
+	id_permiso INTEGER AUTO_INCREMENT,
+	nombre_permiso VARCHAR (50) NOT NULL,
+	funcionalidad VARCHAR(200),
+	descripcion TEXT,
+	estado BOOLEAN,
 
 	PRIMARY KEY (id_permiso)
 );
