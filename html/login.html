@@ -3,21 +3,24 @@
   <head>
     <meta charset="UTF-8">
     <title>Login</title>    
-        <link rel="stylesheet" href="login.css">    
+        <link rel="stylesheet" href="login.css">   
+		<script type="text/javascript" src="jquery.js"></script>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+		<script type="text/javascript" src="login.js"></script>		
   </head>
 
   <body>
-	<form method="POST" action="login">
-	  <header>Login</header>
+	<form action="#">
+	  <header>Viajes Compartidos</header>
 	  <label for="usuario">Usuario <span>*</span></label>
 	  <input name="usuario"/>
-	  <div class="help">Mínimo 6 caracteres</div>
+	  <div class="msg_error" id="error_usuario">Minimo 6 caracteres</div>
 	  <label for="contrasena">Contraseña <span>*</span></label>
-	  <input name="contrasena" type="password"/>
-	  <div class="help">Usar mayúsculas y minúsculas</div>
+	  <input name="pass" type="password"/>
+	  <div class="msg_error" id="error_pass">Mínimo 6 caracteres</div>
 	  
 	  <input type="hidden" name="accion" value="login"/>
-	  <button>Login</button>
-	</form>    
+	  <button onClick="return validarDatos()">Ingresar</button>
+	</form>       
   </body>
 </html>

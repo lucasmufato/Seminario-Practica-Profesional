@@ -36,7 +36,8 @@ public class ControladorLogin extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("En doPost de ControladorLogin!");
-		
+		JSONObject out = null;
+
 		// Setear driver
 		PrintWriter writer = response.getWriter();
 		try {
@@ -47,12 +48,21 @@ public class ControladorLogin extends HttpServlet {
 		}
 		
 		String accion = request.getParameter("accion");
-		
+
 		if (accion.equals("login")){
 			if (getCookieUsuario(request) == null){//pregunto si esta logueado
-				login(request,response);
+				out = login(request,response);
 			}
 		}
+		
+		if (out == null) {
+			out = new JSONObject();
+			out.put ("result", false);
+		}
+		
+		out.put("action", accion);
+		System.out.println("Lo que mando al js: "+out);
+		writer.println (out);
 
 	}
 
@@ -68,17 +78,20 @@ public class ControladorLogin extends HttpServlet {
 		return null;
 	}
 
-	private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private JSONObject login(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Parametros del formulario
 		String user = request.getParameter("usuario");
-		String pass = request.getParameter("contrasena");
-		
+		String pass = request.getParameter("pass");
+		JSONObject salida = new JSONObject ();		
 		if (Usuario.isUsuarioPass(user,pass)) {
 			//agrego cookie
 			response.addCookie(setearCookie(user));
 			System.out.println("Usuario logueado");
-			response.sendRedirect("home.html"); 
-		} 		
+			salida.put ("result", true); 
+		}else{
+			salida.put("result", false);
+		}
+		return salida;
 	}
 
 	public void destroy()
