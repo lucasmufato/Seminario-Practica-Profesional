@@ -1,11 +1,13 @@
 
+
 $(document).ready(function(){
   console.log("entro a home.js");
   // escondo funcionalidades
-  esconder_funcionalidades();
+  esconderFuncionalidades();
   //pregunto si esta logueado
   var nombreUsuario = getCookie("nombre_usuario");
   if (nombreUsuario == ""){
+	//no esta logueado, vuelve al index
     window.location.replace("index.html");
   }else{
   	console.log("nombre usuario:", nombreUsuario);
@@ -13,8 +15,8 @@ $(document).ready(function(){
   }
 })
 
-function esconder_funcionalidades(){
-  $("#adm_us").hide();
+function esconderFuncionalidades(){
+  $("#mod_adm_us").hide();
 }
 
 function getRolesUsuario (nombreUsuario) {
@@ -44,15 +46,19 @@ function getRolesUsuario (nombreUsuario) {
 }
 
 function mostrarFunciones(jsonData){
-	console.log("en mostrar resultados, data:",jsonData);
-	// no me anda la letra "t" ni la "igrega" , tampoco el bloq mashus, el borrar, tab ni shift   
+	console.log("Permisos que me traje: ",jsonData.result);
 	if (jsonData.result){
 		var permiso=0;
 		for (permiso in jsonData.result){
-		var nombre_permiso = jsonData.result[permiso]["nombre_permiso"];
-		  if (nombre_permiso == "administrar_usuarios"){
-		    $("#adm_us").show();
-		  }
+			var nombrePermiso=jsonData.result[permiso]["nombre_permiso"];
+			var estadoPermiso=jsonData.result[permiso]["estado"];
+			if (nombrePermiso && estadoPermiso=="A"){
+				if (nombrePermiso == "administrar_usuarios"){
+					$("#mod_adm_us").show();
+				}else if (nombrePermiso=="otro permiso"){
+					//etc.
+				}
+			}
 		}
 	}
 }

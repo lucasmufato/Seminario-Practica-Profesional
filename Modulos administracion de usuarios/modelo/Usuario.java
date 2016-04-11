@@ -213,7 +213,7 @@ public class Usuario extends BaseDatos {
 				}
 			}
 		}
-		// Tomo el nombre de cada id permiso
+		// Tomo todos los datos de cada id permiso
 		JSONArray listaPermisos = new JSONArray();
 		for (int i=0; i<listaIdPermisos.size(); i++){
 			listaPermisos.add(Permiso.GetPermisoPorId((Integer)listaIdPermisos.get(i)));
