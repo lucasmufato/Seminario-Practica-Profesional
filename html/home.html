@@ -2,19 +2,38 @@
 <head>
 	<title>Viajes Compartidos</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" href="home.css" />
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="home.js"></script>
 </head>
 
 <body>
-	<nav>
-		<a href="login" id="logoutLink">Salir</a>
-	</nav>
+	<h1>Viajes Compartidos - Home</h1>
 	<header>
-		<h1>Viajes Compartidos - Home</h1>
-		<h3>Aqui funcionalidades segun rol</h3>
-		<div class="funcionalidades">
-		  <button type="button" id="mod_adm_us" onclick="window.location.replace('abm.html');">administrar usuarios</button>
-		</div>
+		<ul class="nav">
+			<li><a href="home.html">Home</a></li>
+			<li><a href="">Administrar</a>
+				<ul>
+					<li id="mod_adm_us"><a href="abm.html">Usuarios</a></li>
+					<li><a href="">Sponsors</a></li>
+				</ul>
+			<li><a href="">Viajar</a>
+				<ul>
+					<li><a href="">Unirse a viaje</a></li>
+					<li><a href="">Crear ruta</a></li>
+					<li><a href="">Mis viajes</a></li>
+					<li><a href="">Mis Vehiculos</a>
+						<ul>
+							<li><a href="">Submenu1</a></li>
+							<li><a href="">Submenu2</a></li>
+							<li><a href="">Submenu3</a></li>
+							<li><a href="">Submenu4</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li id="logout"><a href="login">Salir</a></li>
+		</ul>
 	</header>
+
 </body>	

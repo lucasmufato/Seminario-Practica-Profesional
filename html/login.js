@@ -24,6 +24,13 @@ $(document).ready(function(){
   });
 });
 
+$(document).keypress(function(e) {
+    if(e.which == 13) {//enter
+		validarUser();
+		validarPass();
+    }
+});
+
 function ocultarMensajes(){
   $(".msg_error").hide();
 }
