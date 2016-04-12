@@ -58,19 +58,19 @@ body {
 	display: block;
 }
 
-#personasTable {
+.tabSection {
+	display: none;
+}
+
+#personasTab {
 	display: block;
 }
 
-#usuariosTable {
+#rolesButton {
 	display: none;
 }
 
-#rolesTable {
-	display: none;
-}
-
-#permisosTable {
+#permisosButton {
 	display: none;
 }
 
@@ -94,7 +94,6 @@ body {
 #formPersonaUsuario select {
 	width: 100%;
 }
-
 
 tr.selectedRow {
 	background: #24b;

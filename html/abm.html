@@ -2,19 +2,19 @@
 <head>
 	<title>Administracion de usuarios</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="abm.css" />
 	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="script.js"></script>
+	<script type="text/javascript" src="abm.js"></script>
 </head>
 
 <body onload="initUI()">
 	<nav id="tabBox">
-		<button type="button" id="personasTabButton" onclick="ui.activatePersonasTab()">Personas</button>
-		<button type="button" id="usuariosTabButton" onclick="ui.activateUsuariosTab()">Usuarios</button>
-		<button type="button" id="rolesTabButton" onclick="ui.activateRolesTab()">Roles</button>
-		<button type="button" id="permisosTabButton" onclick="ui.activatePermisosTab()">Permisos</button>
+		<button type="button" id="personasTabButton" onclick="ui.activateTab('personas')">Personas</button>
+		<button type="button" id="usuariosTabButton" onclick="ui.activateTab('usuarios')">Usuarios</button>
+		<button type="button" id="rolesTabButton" onclick="ui.activateTab('roles')">Roles</button>
+		<button type="button" id="permisosTabButton" onclick="ui.activateTab('permisos')">Permisos</button>
 	</nav>
-	<section id="entitylist">
+	<section class="tabSection" id="personasTab">
 		<table id="personasTable" caption="Administrar personas">
 			<thead><tr>
 				<th>ID</th>
@@ -31,7 +31,9 @@
 			<tbody>
 			</tbody>
 		</table>
+	</section>
 
+	<section class="tabSection" id="usuariosTab">
 		<table id="usuariosTable">
 			<thead><tr>
 				<th>ID</th>
@@ -42,7 +44,9 @@
 			<tbody>
 			</tbody>
 		</table>
+	</section>
 
+	<section class="tabSection" id="rolesTab">
 		<table id="rolesTable">
 			<thead><tr>
 				<th>ID</th>
@@ -53,7 +57,9 @@
 			<tbody>
 			</tbody>
 		</table>
+	</section>
 
+	<section class="tabSection" id="permisosTab">
 		<table id="permisosTable">
 			<thead><tr>
 				<th>ID</th>
@@ -67,9 +73,11 @@
 
 	</section>
 	<div class="buttonBox">
-		<button type="button" id="newButton" onclick="ui.newButtonPressed()">Nuevo</button>
+		<button type="button" id="newButton" onclick="ui.newButtonPressed()">Agregar</button>
 		<button type="button" id="editButton" onclick="ui.editButtonPressed()">Modificar</button>
 		<button type="button" id="deleteButton" onclick="ui.deleteButtonPressed()">Eliminar</button>
+		<button type="button" id="rolesButton" onclick="ui.rolesButtonPressed()">Roles</button>
+		<button type="button" id="permisosButton" onclick="ui.permisosButtonPressed()">Permisos</button>
 	</div>
 
 	<section class="formSection" id="formPersona">
@@ -142,8 +150,15 @@
 				<option value="S">Suspendido</option>
 			</select><br />
 		</form>
-		<form id="formUsuarioRol">
-			<h3>Roles del usuario</h3>
+		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+		<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
+	</section>
+
+	<section class="formSection" id="formUsuarioRol">
+		<form>
+			<h2>Roles del usuario</h2>
+			<h3>NOMBRE DE USUARIO</h3><!-- Sera modificado desde javascript -->
+			<input type="hidden" name="id_usuario" value="">
 			<select size="6" name="roles_asignados">
 			</select>
 			<div class="verticalButtonBox">
@@ -154,7 +169,6 @@
 			</select>
 		</form>
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
-		<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
 	</section>
 
 	<section class="formSection" id="formRol">
@@ -171,8 +185,16 @@
 				<option value="B">Inactivo</option>
 			</select><br />
 		</form>
-		<form id="formRolPermiso">
-			<h3>Permisos del rol</h3>
+
+		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+		<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
+	</section>
+
+	<section class="formSection" id="formRolPermiso">
+		<form>
+			<h2>Permisos del rol</h2>
+			<h3>NOMBRE DE ROL</h3><!-- Sera modificado desde javascript -->
+			<input type="hidden" name="id_rol" value="">
 			<select size="6" name="permisos_asignados">
 			</select>
 			<div class="verticalButtonBox">
@@ -182,9 +204,7 @@
 			<select size="6" name="permisos_no_asignados">
 			</select>
 		</form>
-
 		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
-		<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
 	</section>
 
 	<section class="formSection" id="formPermiso">
