@@ -18,6 +18,17 @@ $(document).ready(function(){
   });
   inputUsuario.focusout(validarUser);
   inputPass.focusout(validarPass);
+  $("#ingresar").mouseover(function(){
+	validarUser();
+	validarPass();
+  });
+});
+
+$(document).keypress(function(e) {
+    if(e.which == 13) {//enter
+		validarUser();
+		validarPass();
+    }
 });
 
 function ocultarMensajes(){
@@ -39,14 +50,13 @@ var validarPass = function(){
   }
 };
 function validarDatos(){
-  var esUserPassValido = userValido && passValido;
-  if (!esUserPassValido) {
-      $(".msg_error").effect('shake', {distance:10},{ times:3 }, 600);
-	  return false;
-  } else{
-    enviarForm();
+	if (userValido && passValido) {
+		enviarForm();
+	}else {
+		if(!passValido) $("#error_pass").effect('shake', {distance:10},{ times:3 }, 600);
+		if(!userValido) $("#error_usuario").effect('shake', {distance:10},{ times:3 }, 600);
+	}
 	return false;
-  }
 }
 
 function enviarForm(){
