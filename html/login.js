@@ -79,7 +79,9 @@ function enviarForm(){
         if (jsonData.result) {
           window.location.replace("home.html");
         } else {
-          window.alert ("No existe usuario para la contraseña ingresada");
+		  $("#myModal").find(".modal-body").html(jsonData.msg);
+		  $("#myModal").modal();
+          //window.alert (jsonData.msg);
         }
       },
       error: function (er1, err2, err3) {

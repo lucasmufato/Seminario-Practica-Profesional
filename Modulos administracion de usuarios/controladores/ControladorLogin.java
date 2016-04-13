@@ -88,8 +88,10 @@ public class ControladorLogin extends HttpServlet {
 			response.addCookie(setearCookie(user));
 			System.out.println("Usuario logueado");
 			salida.put ("result", true); 
+			salida.put ("msg", "El usuario se ha logueado correctamente.");
 		}else{
 			salida.put("result", false);
+			salida.put ("msg", "<p>Usuario y contrase&ntilde;a incorrectas.</p><p>Vuelva a intentarlo.</p>");
 		}
 		return salida;
 	}
