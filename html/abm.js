@@ -156,9 +156,12 @@ initUI = function() {
 
 
 ui.activateTab = function (tab) {
+	var tabSelector = '#'+tab+'Tab';
 	ui.currentTab = tab;
 	ui.hideTabs();
-	$('#'+tab+'Tab').fadeIn();
+	aux.clearSelectedRow ($(tabSelector+' table tbody')[0]);
+
+	$(tabSelector).fadeIn();
 
 	if (tab == 'roles') {
 		$('#permisosButton').show();
@@ -171,6 +174,7 @@ ui.activateTab = function (tab) {
 	} else {
 		$('#rolesButton').hide();
 	}
+
 };
 
 ui.newButtonPressed = function () {
@@ -191,6 +195,7 @@ ui.newButtonPressed = function () {
 };
 
 ui.editButtonPressed = function () {
+	if (ui.selectedId == null) return;
 	switch (ui.currentTab) {
 		case 'personas':
 			ui.showEditPersonaForm();
@@ -208,6 +213,7 @@ ui.editButtonPressed = function () {
 };
 
 ui.deleteButtonPressed = function () {
+	if (ui.selectedId == null) return;
 	switch (ui.currentTab) {
 		case 'personas':
 			ui.requestPersonaDeletion();
@@ -458,8 +464,8 @@ ui.updatePersonasTable = function () {
 
 		var thistr = tr;
 		tr.onclick = function () {
-			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
+			ui.selectedId = elem.id;
 			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
@@ -485,8 +491,8 @@ ui.updateUsuariosTable = function () {
 
 		var thistr = tr;
 		tr.onclick = function () {
-			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
+			ui.selectedId = elem.id;
 			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
@@ -509,8 +515,8 @@ ui.updateRolesTable = function () {
 
 		var thistr = tr;
 		tr.onclick = function () {
-			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
+			ui.selectedId = elem.id;
 			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
@@ -533,8 +539,8 @@ ui.updatePermisosTable = function () {
 
 		var thistr = tr;
 		tr.onclick = function () {
-			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
+			ui.selectedId = elem.id;
 			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
@@ -579,6 +585,10 @@ ui.assignRolUsuario = function () {
 		id_rol: $('#formUsuarioRol select[name=roles_no_asignados]').val()
 	};
 
+	if (sendData.id_rol == null) {
+		return;
+	}
+
 	var onsuccess = function (jsonData) {
 		data.usuarios.getById(jsonData.id_usuario).roles.push(jsonData.id_rol);
 
@@ -598,6 +608,10 @@ ui.removeRolUsuario = function () {
 		id_usuario: $('#formUsuarioRol input[name=id_usuario]').val(),
 		id_rol: $('#formUsuarioRol select[name=roles_asignados]').val()
 	};
+
+	if (sendData.id_rol == null) {
+		return;
+	}
 
 	var onsuccess = function (jsonData) {
 		data.usuarios.getById(jsonData.id_usuario).roles.removeElement(jsonData.id_rol);
@@ -619,6 +633,10 @@ ui.assignPermisoRol = function () {
 		id_permiso: $('#formPermisoRol select[name=permisos_no_asignados]').val()
 	};
 
+	if (sendData.id_permiso == null) {
+		return;
+	}
+
 	var onsuccess = function (jsonData) {
 		data.roles.getById(jsonData.id_rol).permisos.push(jsonData.id_permiso);
 
@@ -637,6 +655,10 @@ ui.revokePermisoRol = function () {
 		id_rol: $('#formPermisoRol input[name=id_rol]').val(),
 		id_permiso: $('#formPermisoRol select[name=permisos_asignados]').val()
 	};
+
+	if (sendData.id_permiso == null) {
+		return;
+	}
 
 	var onsuccess = function (jsonData) {
 		data.roles.getById(jsonData.id_rol).permisos.removeElement(jsonData.id_permiso);
@@ -679,6 +701,7 @@ aux.clearSelectedRow = function (tbody) {
 		$(tbody.childNodes[i]).removeClass('info');
 		i++;
 	}
+	ui.selectedId = null;
 }
 
 aux.sendForm = function (sendData, onsuccess) {
