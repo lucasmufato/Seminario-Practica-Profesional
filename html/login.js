@@ -18,10 +18,6 @@ $(document).ready(function(){
   });
   inputUsuario.focusout(validarUser);
   inputPass.focusout(validarPass);
-  $("#ingresar").mouseover(function(){
-	validarUser();
-	validarPass();
-  });
 });
 
 $(document).keypress(function(e) {
@@ -79,7 +75,8 @@ function enviarForm(){
         if (jsonData.result) {
           window.location.replace("home.html");
         } else {
-          window.alert ("No existe usuario para la contraseña ingresada");
+		  $("#myModal").find(".modal-body").html(jsonData.msg);
+		  $("#myModal").modal();
         }
       },
       error: function (er1, err2, err3) {

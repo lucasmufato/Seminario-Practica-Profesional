@@ -71,18 +71,13 @@ public class ControladorServlet extends HttpServlet {
 			out = revokePermiso(request);
 		} else if (action.equals("login") && entity.equals("usuario")){
 			System.out.println("en action login de controladorServlet");
-			/*
-			 * PABLO, ME TENES QUE DECIR COMO CARGAR ESTE DRIVER (llamar a doGet desde js? como?)
-			 * Y ASI NO TENER QUE COPYPASTEAR TAN NEGRO
-			 */
-			//MUGRE DESDE
+
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 			} catch (Exception e) {
 				writer.println("No se pudo abrir el driver de la base de datos");
 				writer.println(e.getMessage());
 			}
-			//MUGRE HASTA
 			
 			out = getPermisosUsuario(request);
 		}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html >
   <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<!--Para testear sin tener que borrar la cache cada vez-->
 		<meta http-equiv="cache-control" content="max-age=0" />
 		<meta http-equiv="cache-control" content="no-cache" />
@@ -12,7 +12,6 @@
     <title>Login</title>    
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-		<link rel="stylesheet" href="abm.css" />
         <link rel="stylesheet" href="login.css">   
 		<script type="text/javascript" src="jquery.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -22,20 +21,44 @@
 
   <body>
 	<div class="container-fluid">
+	
 	<form action="#">
-		  <header>Viajes Compartidos</header>
-	  <div class="form-group">
-			<label for="usuario">Usuario <span>*</span></label>
-		 <div class="msg_error" id="error_usuario">Minimo 6 caracteres</div>
-			<input name="usuario" type="text" class="form-control" placeholder="Usuario"/>
-	  </div>
-	  <div class="form-group">
-		  <label for="contrasena">Contraseña <span>*</span></label>
-			  <div class="msg_error" id="error_pass">Mínimo 6 caracteres</div>
-		  <input name="pass" type="password" class="form-control" placeholder="Contraseña"/>
-	  </div>
-		  
-		  <button class="btn btn-primary btn-block" id="ingresar" onClick="return validarDatos()">Ingresar</button>
-		</form>       
+		<header>Viajes Compartidos</header>
+		<div class="panel_login">
+		  <div class="form-group">
+				<label for="usuario">Usuario <span>*</span></label>
+			 <div class="msg_error" id="error_usuario">Minimo 6 caracteres</div>
+				<input name="usuario" type="text" class="form-control" placeholder="Usuario"/>
+		  </div>
+		  <div class="form-group">
+			  <label for="contrasena">Contraseña <span>*</span></label>
+				  <div class="msg_error" id="error_pass">Mínimo 6 caracteres</div>
+			  <input name="pass" type="password" class="form-control" placeholder="Contraseña"/>
+		  </div>  
+			<button class="btn btn-success btn-block" id="ingresar" onClick="return validarDatos()">Ingresar</button>
+		</div>
+		<div class="registro">Nuevo en VC? <a href="#">Registrate!</a></p></div>
+	</form>     
+		
+		<!-- Mensaje error-->
+		<div id="myModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog modal-sm">
+			<!-- contenido-->
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Error en Login</h4>
+			  </div>
+			  <div class="modal-body">
+				<p></p>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+			  </div>
+			</div>
+
+		  </div>
+		</div>		
 	</div>
+  </body>
 </html>
