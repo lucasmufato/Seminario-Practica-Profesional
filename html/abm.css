@@ -99,7 +99,7 @@ body {
 	background: #eee;	
 	text-align: right;
 }
-*/
+
 
 .formSection {
 	position: fixed;
@@ -109,6 +109,7 @@ body {
 	right: 48px;
 	overflow: auto;
 }
+*/
 
 #formPersonaUsuario select {
 	width: 100%;

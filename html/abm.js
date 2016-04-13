@@ -147,13 +147,12 @@ ui.requestPermisoDeletion = function() {
 initUI = function() {
 	/* Bootstrap */
 	$('button').addClass('btn');
-	$('.buttonBox button').addClass('btn-primary');
-	$('table').addClass('table');
+	$('table').addClass('table table-hover table-responsive');
 	$('input').addClass('form-control');
 	$('textarea').addClass('form-control');
-	$('.formSection').addClass('panel panel-primary');
+	$('.formSection').addClass('modal-dialog');
 	$('.formSection h2').addClass('panel-header');
-	ui.closeForms();
+	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
 	data.loadData();
 };
 
@@ -162,16 +161,16 @@ initUI = function() {
 ui.activateTab = function (tab) {
 	ui.currentTab = tab;
 	ui.hideTabs();
-	$('#'+tab+'Tab').show();
+	$('#'+tab+'Tab').fadeIn();
 
 	if (tab == 'roles') {
-		$('#permisosButton').show();
+		$('#permisosButton').fadeIn();
 	} else {
 		$('#permisosButton').hide();
 	}
 
 	if (tab == 'usuarios') {
-		$('#rolesButton').show();
+		$('#rolesButton').fadeIn();
 	} else {
 		$('#rolesButton').hide();
 	}
@@ -257,7 +256,6 @@ ui.showNewPersonaForm = function () {
 	$('#formPersona input[name=id]').hide()
 	$('#formPersona label[for=id]').hide()
 	$('#formPersonaTitle').html('Nueva Persona');
-	$('#formPersona').show();
 	$('#formPersona input[name=id]').val('-1');
 	$('#formPersona input[name=apellidos]').val('');
 	$('#formPersona input[name=nombres]').val('');
@@ -272,10 +270,10 @@ ui.showNewPersonaForm = function () {
 	$('#formPersona select[name=estado]').val('A');
 	$('#formPersona input[name=foto_registro]').val('');
 	$('#formPersonaUsuario select[name=usuarios]').html('');
+	$('#modalPersona').modal('show');
 };
 
 ui.showNewUsuarioForm = function () {
-	$('#formUsuario').show();
 	$('#formUsuario input[name=id]').hide();
 	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val('-1');
@@ -285,10 +283,10 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario input[name=email]').val('');
 	$('#formUsuario textarea[name=descripcion]').val('');
 	$('#formUsuario select[name=estado]').val('A');
+	$('#modalUsuario').modal('show');
 };
 
 ui.showNewRolForm = function () {
-	$('#formRol').show();
 	$('#formRol input[name=id]').hide();
 	$('#formRol label[for=id]').hide();
 	$('#formRol input[name=id]').val(-1);
@@ -297,10 +295,10 @@ ui.showNewRolForm = function () {
 	$('#formRol textarea[name=descripcion]').val('');
 	$('#formRol input[name=estado]').val('A');
 	$('#formRolPermiso').hide();
+	$('#modalRol').modal('show');
 }
 
 ui.showNewPermisoForm = function () {
-	$('#formPermiso').show();
 	$('#formPermiso input[name=id]').hide();
 	$('#formPermiso label[for=id]').hide();
 	$('#formPermiso input[name=id]').val(-1);
@@ -308,13 +306,13 @@ ui.showNewPermisoForm = function () {
 	$('#formPermiso input[name=funcionalidad]').val('');
 	$('#formPermiso textarea[name=descripcion]').val('');
 	$('#formPermiso input[name=estado]').val('A');
+	$('#modalPermiso').modal('show');
 };;
 
 ui.showEditPersonaForm = function () {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
 	$('#formPersonaTitle').html('Modificar Persona');
-	$('#formPersona').show();
 	$('#formPersona input[name=id]').show();
 	$('#formPersona label[for=id]').show();
 	$('#formPersona input[name=id]').val(selected.id);
@@ -332,24 +330,12 @@ ui.showEditPersonaForm = function () {
 	$('#formPersona select[name=estado]').val(selected.estado);
 	$('#formPersona input[name=foto_registro]').val(selected.foto_registro);
 	$('#formPersonaUsuario select[name=usuarios]').html('');
-
-	var newOption;
-	var usuario;
-	var usuariosSelect = $('#formPersonaUsuario select[name=usuarios]')[0];
-
-	data.personas.getById (selected.id).usuarios.forEach(function (idUsuario) {
-		usuario = data.usuarios.getById(idUsuario);
-		newOption = document.createElement ('OPTION');
-		newOption.value = idUsuario;
-		newOption.textContent = usuario.nombre_usuario;
-		usuariosSelect.appendChild (newOption);
-	});
+	$('#modalPersona').modal('show');
 };
 
 ui.showEditUsuarioForm = function() {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
-	$('#formUsuario').show();
 	$('#formUsuario input[name=id]').hide();
 	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val(selected.id);
@@ -359,12 +345,12 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
 	$('#formUsuario select[name=estado]').val((selected.estado));
+	$('#modalUsuario').modal('show');
 }
 
 ui.showEditRolForm = function() {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
-	$('#formRol').show();
 	$('#formRol input[name=id]').show();
 	$('#formRol label[for=id]').show();
 	$('#formRol input[name=id]').val(selected.id);
@@ -372,12 +358,12 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
 	$('#formRol textarea[name=descripcion]').val(selected.descripcion);
 	$('#formRol select[name=estado]').val((selected.estado));
+	$('#modalRol').modal('show');
 }
 
 ui.showEditPermisoForm = function() {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
-	$('#formPermiso').show();
 	$('#formPermiso input[name=id]').show();
 	$('#formPermiso label[for=id]').show();
 	$('#formPermiso input[name=id]').val(selected.id);
@@ -385,12 +371,12 @@ ui.showEditPermisoForm = function() {
 	$('#formPermiso input[name=funcionalidad]').val(selected.funcionalidad);
 	$('#formPermiso textarea[name=descripcion]').val(selected.descripcion);
 	$('#formPermiso select[name=estado]').val(selected.estado);
+	$('#modalPermiso').modal('show');
 }
 
 ui.showUsuarioRolForm = function () {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
-	$('#formUsuarioRol').show();
 	$('#formUsuarioRol h3').text(selected.nombre_usuario);
 	$('#formUsuarioRol input[name=id_usuario]').val(selected.id);
 	$('#formUsuarioRol select[name=roles_asignados]').html('');
@@ -412,12 +398,13 @@ ui.showUsuarioRolForm = function () {
 			noAsignados.appendChild (newOption);
 		}
 	});
+
+	$('#modalUsuarioRol').modal('show');
 }
 
 ui.showRolPermisoForm = function () {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
-	$('#formRolPermiso').show();
 	$('#formRolPermiso h3').text(selected.nombre_rol);
 	$('#formRolPermiso input[name=id_rol]').val(selected.id);
 	$('#formRolPermiso select[name=permisos_asignados]').html('');
@@ -439,15 +426,12 @@ ui.showRolPermisoForm = function () {
 			noAsignados.appendChild (newOption);
 		}
 	});
+	$('#modalPermisoRol').modal('show');
 }
 
 ui.hideTabs = function () {
 	$('.tabSection').hide();
-}
-
-ui.closeForms = function () {
-	$('.formSection').hide();
-}
+} 
 
 
 ui.updatePersonasTable = function () {
@@ -471,7 +455,7 @@ ui.updatePersonasTable = function () {
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
-			thistr.className='selectedRow';
+			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
 	});
@@ -491,7 +475,7 @@ ui.updateUsuariosTable = function () {
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
-			thistr.className='selectedRow';
+			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
 	});
@@ -510,7 +494,7 @@ ui.updateRolesTable = function () {
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
-			thistr.className='selectedRow';
+			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
 	});
@@ -528,7 +512,7 @@ ui.updatePermisosTable = function () {
 		tr.onclick = function () {
 			ui.selectedId = elem.id;
 			aux.clearSelectedRow (tbody);
-			thistr.className='selectedRow';
+			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
 	});

@@ -12,10 +12,12 @@
 
 <body onload="initUI()">
 	<nav id="tabBox">
-		<button type="button" id="personasTabButton" onclick="ui.activateTab('personas')">Personas</button>
-		<button type="button" id="usuariosTabButton" onclick="ui.activateTab('usuarios')">Usuarios</button>
-		<button type="button" id="rolesTabButton" onclick="ui.activateTab('roles')">Roles</button>
-		<button type="button" id="permisosTabButton" onclick="ui.activateTab('permisos')">Permisos</button>
+		<ul class="nav nav-tabs">
+			<li class="active"><a id="personasTabButton" class="glyphicon glyphicon-user" onclick="ui.activateTab('personas')" data-toggle="tab">Personas</a>
+			<li><a id="usuariosTabButton" class="glyphicon glyphicon-user" onclick="ui.activateTab('usuarios')" data-toggle="tab">Usuarios</a>
+			<li><a id="rolesTabButton" class="glyphicon glyphicon-knight" onclick="ui.activateTab('roles')" data-toggle="tab">Roles</a>
+			<li><a id="permisosTabButton" class="glyphicon glyphicon-check" onclick="ui.activateTab('permisos')" data-toggle="tab">Permisos</a>
+		</ul>
 	</nav>
 	<section class="tabSection" id="personasTab">
 		<table id="personasTable" caption="Administrar personas">
@@ -76,15 +78,17 @@
 
 	</section>
 	<div class="buttonBox">
-		<button type="button" id="newButton" onclick="ui.newButtonPressed()">Agregar</button>
-		<button type="button" id="editButton" onclick="ui.editButtonPressed()">Modificar</button>
-		<button type="button" id="deleteButton" onclick="ui.deleteButtonPressed()">Eliminar</button>
-		<button type="button" id="rolesButton" onclick="ui.rolesButtonPressed()">Roles</button>
-		<button type="button" id="permisosButton" onclick="ui.permisosButtonPressed()">Permisos</button>
+		<button type="button" id="deleteButton" class="glyphicon glyphicon-trash btn-danger" onclick="ui.deleteButtonPressed()">Eliminar</button>
+		<button type="button" id="editButton" class="glyphicon glyphicon-edit btn-primary" onclick="ui.editButtonPressed()">Modificar</button>
+		<button type="button" id="rolesButton" class="glyphicon glyphicon-knight btn-primary" onclick="ui.rolesButtonPressed()">Roles</button>
+		<button type="button" id="permisosButton" class="glyphicon glyphicon-check btn-primary" onclick="ui.permisosButtonPressed()">Permisos</button>
+		<button type="button" id="newButton" class="glyphicon glyphicon-plus btn-success" onclick="ui.newButtonPressed()">Agregar</button>
+		&nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
 
+	<div id="modalPersona" class="modal fade"><div class="modal-dialog"><div class="modal-content">
 	<section class="formSection" id="formPersona">
-		
+		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
 		<h2 id="formPersonaTitle">Persona</h2>
 		<form>
 			<!-- Las fotos no estan habilitadas todavia -->
@@ -119,17 +123,14 @@
 				<option value="A">Activo</option>
 				<option value="B">Inactivo</option>
 			</select><br />
-			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 			<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
 		</form>
-		<h3>Usuarios de la persona</h3>
-			<form id="formPersonaUsuario">
-				<select size="6" name="usuarios">
-				</select>
-			</form>
 	</section>
+	</div></div></div>
 
+	<div id="modalUsuario" class="modal fade"><div class="modal-dialog"><div class="modal-content">
 	<section class="formSection" id="formUsuario">
+		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
 		<h2>Usuario</h2>
 		<form name="usuario">
 			<label for="id">ID</label>
@@ -153,12 +154,14 @@
 				<option value="S">Suspendido</option>
 			</select><br />
 			<button type="button" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
-			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 			<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
 		</form>
 	</section>
+	</div></div/></div>
 
+	<div id="modalUsuarioRol" class="modal fade"><div class="modal-dialog"><div class="modal-content">
 	<section class="formSection" id="formUsuarioRol">
+		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
 		<h2>Roles del usuario</h2>
 		<form>
 			<h3>NOMBRE DE USUARIO</h3><!-- Sera modificado desde javascript -->
@@ -171,13 +174,15 @@
 			</div>
 			<select size="6" name="roles_no_asignados">
 			</select>
-			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		</form>
 	</section>
+	</div></div/></div>
 
+	<div id="modalRol" class="modal fade"><div class="modal-dialog"><div class="modal-content">
 	<section class="formSection" id="formRol">
+		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
 		<form>
-	<h2>Rol</h2>
+			<h2>Rol</h2>
 			<label for="id">ID</label><input type="number" name="id" disabled><br />
 			<label for="nombre_rol">Nombre de Rol</label><input type="text" name="nombre_rol"><br>
 			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
@@ -189,13 +194,15 @@
 				<option value="B">Inactivo</option>
 			</select><br />
 			<button type="button" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
-			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 			<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
 		</form>
 
 	</section>
+	</div></div/></div>
 
+	<div id="modalPermisoRol" class="modal fade"><div class="modal-dialog"><div class="modal-content">
 	<section class="formSection" id="formRolPermiso">
+		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
 		<form>
 			<h2>Permisos del rol</h2>
 			<h3>NOMBRE DE ROL</h3><!-- Sera modificado desde javascript -->
@@ -208,11 +215,13 @@
 			</div>
 			<select size="6" name="permisos_no_asignados">
 			</select>
-			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		</form>
 	</section>
+	</div></div/></div>
 
+	<div id="modalPermiso" class="modal fade"><div class="modal-dialog"><div class="modal-content">
 	<section class="formSection" id="formPermiso">
+	<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
 		<form>
 			<h2>Permiso</h2>
 			<label for="id">ID</label>
@@ -228,8 +237,8 @@
 				<option value="A">Activo</option>
 				<option value="B">Inactivo</option>
 			</select><br />
-		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>
 		</form>
 	</section>
+	</div></div/></div>
 </body>
