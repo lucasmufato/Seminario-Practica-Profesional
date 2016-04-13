@@ -53,8 +53,12 @@ function validarDatos(){
 	if (userValido && passValido) {
 		enviarForm();
 	}else {
-		if(!passValido) $("#error_pass").effect('shake', {distance:10},{ times:3 }, 600);
-		if(!userValido) $("#error_usuario").effect('shake', {distance:10},{ times:3 }, 600);
+		if(!passValido) {
+			$("#error_pass").effect('shake', {distance:2},{ times:1 }, 500);
+		}
+		if(!userValido) {
+			$("#error_usuario").effect('shake', {distance:2},{ times:1 }, 500);
+		}
 	}
 	return false;
 }

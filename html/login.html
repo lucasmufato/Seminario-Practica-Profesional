@@ -10,23 +10,32 @@
 		<meta http-equiv="pragma" content="no-cache" />
 	<!--!-->
     <title>Login</title>    
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="abm.css" />
         <link rel="stylesheet" href="login.css">   
 		<script type="text/javascript" src="jquery.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
 		<script type="text/javascript" src="login.js"></script>		
   </head>
 
   <body>
+	<div class="container-fluid">
 	<form action="#">
-	  <header>Viajes Compartidos</header>
-	  <label for="usuario">Usuario <span>*</span></label>
-	  <input name="usuario" value=""/>
-	  <div class="msg_error" id="error_usuario">Minimo 6 caracteres</div>
-	  <label for="contrasena">Contraseña <span>*</span></label>
-	  <input name="pass" type="password" value=""/>
-	  <div class="msg_error" id="error_pass">Mínimo 6 caracteres</div>
-	  
-	  <button id="ingresar" onClick="return validarDatos()">Ingresar</button>
-	</form>       
-  </body>
+		  <header>Viajes Compartidos</header>
+	  <div class="form-group">
+			<label for="usuario">Usuario <span>*</span></label>
+		 <div class="msg_error" id="error_usuario">Minimo 6 caracteres</div>
+			<input name="usuario" type="text" class="form-control" placeholder="Usuario"/>
+	  </div>
+	  <div class="form-group">
+		  <label for="contrasena">Contraseña <span>*</span></label>
+			  <div class="msg_error" id="error_pass">Mínimo 6 caracteres</div>
+		  <input name="pass" type="password" class="form-control" placeholder="Contraseña"/>
+	  </div>
+		  
+		  <button class="btn btn-primary btn-block" id="ingresar" onClick="return validarDatos()">Ingresar</button>
+		</form>       
+	</div>
 </html>
