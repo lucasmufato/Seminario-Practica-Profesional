@@ -212,7 +212,13 @@ public class ControladorServlet extends HttpServlet {
 		recibida.put("foto", request.getParameter("foto_registro"));
 
 		persona = new Persona (recibida);
-		salida.put ("result", persona.guardar());
+		if (persona.guardar()) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se han guardado los datos de la persona");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido guardar los datos de la persona");
+		}
 		/* TODO: Agregar los datos guardados en la base de datos */
 		return salida;
 	}
@@ -237,7 +243,13 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put("estado", (request.getParameter("estado")));
 
 		usuario = new Usuario (recibido);
-		salida.put ("result", usuario.guardar());
+		if (usuario.guardar()) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha guardado los datos del usuario");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido guardar los datos del usuario");
+		}
 		/* TODO: Agregar los datos guardados en la base de datos */
 		return salida;
 	}
@@ -260,7 +272,13 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put ("estado",request.getParameter("estado"));
 
 		rol = new Rol(recibido);
-		salida.put("result", rol.guardar());
+		if (rol.guardar()){
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha guardado los datos del rol");
+		} else {
+			salida.put("result", false);
+			salida.put ("msg", "No se ha podido guardar los datos del rol");
+		}
 		/* TODO: Agregar los datos guardados en la base de datos */
 		return salida;
 	}
@@ -283,7 +301,13 @@ public class ControladorServlet extends HttpServlet {
 		recibido.put ("estado", request.getParameter("estado"));
 
 		permiso = new Permiso(recibido);
-		salida.put("result", permiso.guardar());
+		if (permiso.guardar()) {
+			salida.put("result", true);
+			salida.put ("msg", "Se ha guardado los datos del permiso");
+		} else {
+			salida.put("result", false);
+			salida.put ("msg", "No se ha podido guardar los datos del permiso");
+		}
 		/* TODO: Agregar los datos guardados en la base de datos */
 		return salida;
 	}
@@ -291,7 +315,13 @@ public class ControladorServlet extends HttpServlet {
 	private JSONObject deletePersona (HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
-		salida.put ("result", Persona.Eliminar(id));
+		if (Persona.Eliminar (id)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha eliminado la persona");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha eliminado la persona");
+		}
 		return salida;
 	}
 
@@ -305,14 +335,26 @@ public class ControladorServlet extends HttpServlet {
 	private JSONObject deleteRol (HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
-		salida.put ("result", Rol.Eliminar(id));
+		if (Rol.Eliminar(id)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha eliminado el rol");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido eliminar el rol");
+		}
 		return salida;
 	}
 
 	private JSONObject deletePermiso (HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
-		salida.put ("result", Permiso.Eliminar(id));
+		if (Permiso.Eliminar (id)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha eliminado el permiso");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido eliminado el permiso");
+		}
 		return salida;
 	}
 
@@ -322,7 +364,13 @@ public class ControladorServlet extends HttpServlet {
 		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
 		salida.put ("id_usuario", id_usuario);
 		salida.put ("id_rol", id_rol);
-		salida.put ("result", Usuario.AsignarRol(id_rol, id_usuario));
+		if (Usuario.AsignarRol(id_rol, id_usuario)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha asignado el rol al usuario");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido asignar el rol al usuario");
+		}
 		
 		return salida;
 	}
@@ -333,7 +381,13 @@ public class ControladorServlet extends HttpServlet {
 		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
 		salida.put ("id_usuario", id_usuario);
 		salida.put ("id_rol", id_rol);
-		salida.put ("result", Usuario.QuitarRol(id_rol, id_usuario));
+		if (Usuario.QuitarRol(id_rol, id_usuario)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha desasignado el rol al usuario");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido desasignar el rol al usuario");
+		} 
 		
 		return salida;
 	}	
@@ -353,7 +407,13 @@ public class ControladorServlet extends HttpServlet {
 		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
 		salida.put ("id_rol", id_rol);
 		salida.put ("id_permiso", id_permiso);
-		salida.put ("result", Rol.AsignarPermiso(id_permiso, id_rol));
+		if (Rol.AsignarPermiso(id_permiso, id_rol)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha asignado el permiso al rol");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido asignar el permiso al rol");
+		}
 		
 		return salida;
 	}
@@ -364,7 +424,13 @@ public class ControladorServlet extends HttpServlet {
 		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
 		salida.put ("id_rol", id_rol);
 		salida.put ("id_permiso", id_permiso);
-		salida.put ("result", Rol.QuitarPermiso(id_permiso, id_rol));
+		if(Rol.QuitarPermiso(id_permiso, id_rol)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha revocado el permiso al rol");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido revocar el permiso al rol");
+		}
 		
 		return salida;
 	}
