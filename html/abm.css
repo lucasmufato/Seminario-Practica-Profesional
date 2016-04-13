@@ -7,6 +7,10 @@ body {
 	min-height: 200px;
 }
 
+#tabBox a {
+	cursor: pointer;
+}
+
 .tabSection {
 	display: none;
 }
