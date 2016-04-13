@@ -18,10 +18,6 @@ $(document).ready(function(){
   });
   inputUsuario.focusout(validarUser);
   inputPass.focusout(validarPass);
-  $("#ingresar").mouseover(function(){
-	validarUser();
-	validarPass();
-  });
 });
 
 $(document).keypress(function(e) {
@@ -81,7 +77,6 @@ function enviarForm(){
         } else {
 		  $("#myModal").find(".modal-body").html(jsonData.msg);
 		  $("#myModal").modal();
-          //window.alert (jsonData.msg);
         }
       },
       error: function (er1, err2, err3) {

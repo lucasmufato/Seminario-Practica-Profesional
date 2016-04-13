@@ -91,7 +91,7 @@ public class ControladorLogin extends HttpServlet {
 			salida.put ("msg", "El usuario se ha logueado correctamente.");
 		}else{
 			salida.put("result", false);
-			salida.put ("msg", "<p>Usuario y contrase&ntilde;a incorrectas.</p><p>Vuelva a intentarlo.</p>");
+			salida.put ("msg", "<p>Usuario o contrase&ntilde;a incorrectas.</p>");
 		}
 		return salida;
 	}
