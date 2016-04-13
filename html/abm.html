@@ -11,6 +11,27 @@
 </head>
 
 <body onload="initUI()">
+
+
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Administración de usuarios</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login">Cerrar Sesión</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
 	<nav id="tabBox">
 		<ul class="nav nav-tabs">
 			<li class="active"><a id="personasTabButton" class="glyphicon glyphicon-user" onclick="ui.activateTab('personas')" data-toggle="tab">Personas</a>
@@ -19,6 +40,7 @@
 			<li><a id="permisosTabButton" class="glyphicon glyphicon-check" onclick="ui.activateTab('permisos')" data-toggle="tab">Permisos</a>
 		</ul>
 	</nav>
+
 	<section class="tabSection" id="personasTab">
 		<table id="personasTable" caption="Administrar personas">
 			<thead><tr>
@@ -68,6 +90,7 @@
 		<table id="permisosTable">
 			<thead><tr>
 				<th>ID</th>
+				<th>Funcionalidad</th>
 				<th>Nombre Permiso</th>
 				<th>Estado</th>
 			</tr></thead>
@@ -77,168 +100,313 @@
 
 
 	</section>
-	<div class="buttonBox">
-		<button type="button" id="deleteButton" class="glyphicon glyphicon-trash btn-danger" onclick="ui.deleteButtonPressed()">Eliminar</button>
-		<button type="button" id="editButton" class="glyphicon glyphicon-edit btn-primary" onclick="ui.editButtonPressed()">Modificar</button>
-		<button type="button" id="rolesButton" class="glyphicon glyphicon-knight btn-primary" onclick="ui.rolesButtonPressed()">Roles</button>
-		<button type="button" id="permisosButton" class="glyphicon glyphicon-check btn-primary" onclick="ui.permisosButtonPressed()">Permisos</button>
-		<button type="button" id="newButton" class="glyphicon glyphicon-plus btn-success" onclick="ui.newButtonPressed()">Agregar</button>
-		&nbsp;&nbsp;&nbsp;&nbsp;
+
+	<div class="text-center navbar-fixed-bottom navbar-default">
+		<div class="btn-group" style="margin: 12px">
+			<button type="button" id="deleteButton" class="glyphicon glyphicon-trash btn-danger btn-lg" onclick="ui.deleteButtonPressed()">Eliminar</button>
+			<button type="button" id="editButton" class="glyphicon glyphicon-pencil btn-primary btn-lg" onclick="ui.editButtonPressed()">Modificar</button>
+			<button type="button" id="rolesButton" class="glyphicon glyphicon-knight btn-primary btn-lg" onclick="ui.rolesButtonPressed()">Roles</button>
+			<button type="button" id="permisosButton" class="glyphicon glyphicon-check btn-primary btn-lg" onclick="ui.permisosButtonPressed()">Permisos</button>
+			<button type="button" id="newButton" class="glyphicon glyphicon-plus btn-success btn-lg" onclick="ui.newButtonPressed()">Agregar</button>
+		</div>
 	</div>
 
-	<div id="modalPersona" class="modal fade"><div class="modal-dialog"><div class="modal-content">
-	<section class="formSection" id="formPersona">
-		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
-		<h2 id="formPersonaTitle">Persona</h2>
-		<form>
-			<!-- Las fotos no estan habilitadas todavia -->
-			<input type="hidden" name="foto" value="">
-			<input type="hidden" name="foto_registro" value="">
-			<label for="id" id="personaIdLabel">ID</label><input type="number" disabled name="id"><br />
-			<label for="apellidos">Apellido</label><input type="text" name="apellidos"><br />
-			<label for="nombres">Nombre</label><input type="text" name="nombres"><br />
-			<label for="tipo_doc">Tipo de documento</label>
-				<select name="tipo_doc">
-					<option value="1">DNI</option>
-					<option value="2">LE</option>
-					<option value="3">LC</option>
-				</select><br />
-			<label for="nro_doc">Numero de documento</label>
-			<input type="number" name="nro_doc"><br />
-			<label for="fecha_nacimiento">Fecha de nacimiento</label>
-			<input type="date" name="fecha_nacimiento"><br />
-			<label for="domicilio">Domicilio</label>
-			<input type="text" name="domicilio"><br />
-			<select name="sexo">
-				<option value="M">Masculino</option>
-				<option value="F">Femenino</option>
-				<option value="O">Otro</option>
-			</select><br />
-			<label for="telefono">Telefono</label>
-			<input type="text"  name="telefono"><br />
-			<label for="descripcion">Descripcion</label>
-			<textarea  name="descripcion"></textarea><br />
-			<label for="Estado">Estado</label>
-			<select name="estado">
-				<option value="A">Activo</option>
-				<option value="B">Inactivo</option>
-			</select><br />
-			<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
-		</form>
-	</section>
-	</div></div></div>
+	<div id="modalPersona" class="modal fade">
+		<div class="modal-dialog" id="formPersona">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Persona')">&times;</button>
+					<h2 id="formPersonaTitle" class="modal-title">Persona</h2>
+				</div> <!-- .modal-header -->
+				<div class="modal-body">
+					<!-- Las fotos no estan habilitadas todavia -->
+					<input type="hidden" name="foto" value="">
+					<input type="hidden" name="foto_registro" value="">
 
-	<div id="modalUsuario" class="modal fade"><div class="modal-dialog"><div class="modal-content">
-	<section class="formSection" id="formUsuario">
-		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
-		<h2>Usuario</h2>
-		<form name="usuario">
-			<label for="id">ID</label>
-			<input type="number" id="usuarioIdInput" name="id"><br />
-			<label for="id_persona">Persona</label>
-			<select name="id_persona">
-			</select>
-			<br />
-			<label for="nombre_usuario">Nombre de Usuario</label>
-			<input type="text" name="nombre_usuario"><br />
-			<label for="password">Contraseña</label>
-			<input type="password" name="password"><br />
-			<label for="email">E-Mail</label>
-			<input type="text" name="email"><br />
-			<label for="descripcion">Descripcion</label>
-			<textarea name="descripcion" ></textarea><br />
-			<label for="estado">Activo</label>
-			<select name="estado">
-				<option value="A">Activo</option>
-				<option value="B">Inactivo</option>
-				<option value="S">Suspendido</option>
-			</select><br />
-			<button type="button" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
-			<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
-		</form>
-	</section>
-	</div></div/></div>
+					<div class="form-group">
+						<label for="id" id="personaIdLabel">ID</label>
+						<input type="number" disabled name="id">
+					</div><!-- .form-group -->
 
-	<div id="modalUsuarioRol" class="modal fade"><div class="modal-dialog"><div class="modal-content">
-	<section class="formSection" id="formUsuarioRol">
-		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
-		<h2>Roles del usuario</h2>
-		<form>
-			<h3>NOMBRE DE USUARIO</h3><!-- Sera modificado desde javascript -->
-			<input type="hidden" name="id_usuario" value="">
-			<select size="6" name="roles_asignados">
-			</select>
-			<div class="verticalButtonBox">
-				<button type="button" onclick="ui.assignRolUsuario()">← Asignar</button>
-				<button type="button" onclick="ui.removeRolUsuario()" >Quitar →</button>
-			</div>
-			<select size="6" name="roles_no_asignados">
-			</select>
-		</form>
-	</section>
-	</div></div/></div>
+					<div class="form-group">
+						<label for="apellidos">Apellido (*)</label>
+						<input type="text" name="apellidos">
+					</div><!-- .form-group -->
 
-	<div id="modalRol" class="modal fade"><div class="modal-dialog"><div class="modal-content">
-	<section class="formSection" id="formRol">
-		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
-		<form>
-			<h2>Rol</h2>
-			<label for="id">ID</label><input type="number" name="id" disabled><br />
-			<label for="nombre_rol">Nombre de Rol</label><input type="text" name="nombre_rol"><br>
-			<label for="nombre_amigable">Nombre Amigable</label><input type="text" name="nombre_amigable"><br />
-			<label for="descripcion">Descripcion</label>
-			<textarea name="descripcion" ></textarea><br />
-			<label for="estado">Estado</label>
-			<select name="estado">
-				<option value="A">Activo</option>
-				<option value="B">Inactivo</option>
-			</select><br />
-			<button type="button" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
-			<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
-		</form>
+					<div class="form-group">
+						<label for="nombres">Nombre (*)</label>
+						<input type="text" name="nombres">
+					</div><!-- .form-group -->
 
-	</section>
-	</div></div/></div>
+					<div class="form-group">
+					<label for="tipo_doc">Tipo de documento (*)</label>
+						<select name="tipo_doc">
+							<option value="1">DNI</option>
+							<option value="2">LE</option>
+							<option value="3">LC</option>
+						</select>
+					</div><!-- .form-group -->
 
-	<div id="modalPermisoRol" class="modal fade"><div class="modal-dialog"><div class="modal-content">
-	<section class="formSection" id="formRolPermiso">
-		<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
-		<form>
-			<h2>Permisos del rol</h2>
-			<h3>NOMBRE DE ROL</h3><!-- Sera modificado desde javascript -->
-			<input type="hidden" name="id_rol" value="">
-			<select size="6" name="permisos_asignados">
-			</select>
-			<div class="verticalButtonBox">
-				<button type="button" onclick="ui.assignPermisoRol()">← Asignar</button>
-				<button type="button" onclick="ui.revokePermisoRol()">Quitar →</button>
-			</div>
-			<select size="6" name="permisos_no_asignados">
-			</select>
-		</form>
-	</section>
-	</div></div/></div>
+					<div class="form-group">
+						<label for="nro_doc">Numero de documento (*)</label>
+						<input type="number" name="nro_doc">
+					</div><!-- .form-group -->
 
-	<div id="modalPermiso" class="modal fade"><div class="modal-dialog"><div class="modal-content">
-	<section class="formSection" id="formPermiso">
-	<button type="button" class="close" onclick="ui.closeForms()">Cerrar</button>
-		<form>
-			<h2>Permiso</h2>
-			<label for="id">ID</label>
-			<input type="number" name="id"><br />
-			<label for="nombre_permiso">Nombre del permiso</label>
-			<input type="text" name="nombre_permiso"><br>
-			<label for="funcionalidad">Funcionalidad</label>
-			<input type="text" name="funcionalidad"><br>
-			<label for="descripcion">Descripcion</label>
-			<textarea name="descripcion"></textarea><br>
-			<label for="estado">Estado</label>
-			<select name="estado">
-				<option value="A">Activo</option>
-				<option value="B">Inactivo</option>
-			</select><br />
-		<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>
-		</form>
-	</section>
-	</div></div/></div>
+					<div class="form-group">
+						<label for="fecha_nacimiento">Fecha de nacimiento (*)</label>
+						<input type="date" name="fecha_nacimiento">
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="domicilio">Domicilio (*)</label>
+						<input type="text" name="domicilio">
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="sexo">Sexo (*)</label>
+						<select name="sexo">
+							<option value="M">Masculino</option>
+							<option value="F">Femenino</option>
+							<option value="O">Otro</option>
+						</select>
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="telefono">Telefono (*)</label>
+						<input type="text"  name="telefono">
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="descripcion">Descripcion</label>
+						<textarea  name="descripcion"></textarea>
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="Estado">Estado (*)</label>
+						<select name="estado">
+							<option value="A">Activo</option>
+							<option value="B">Inactivo</option>
+						</select>
+					</div><!-- .form-group -->
+				</div><!-- .modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- modal -->
+
+	<div id="modalUsuario" class="modal fade">
+		<div class="modal-dialog" id="formUsuario">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Usuario')">&times;</button>
+					<h2 class="modal-title">Usuario</h2>
+				</div><!-- .modal-header -->
+				<div class="modal-body">
+
+					<div class="form-group">
+						<label for="id">ID</label>
+						<input type="number" id="usuarioIdInput" name="id">
+					</div><!-- .form-group -->
+	
+					<div class="form-group">
+						<label for="id_persona">Persona (*)</label>
+						<select name="id_persona">
+						</select>
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="nombre_usuario">Nombre de Usuario (*)</label>
+						<input type="text" name="nombre_usuario">
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="password">Contraseña (*)</label>
+						<input type="password" name="password">
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="email">E-Mail (*)</label>
+						<input type="text" name="email">
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="descripcion">Descripcion (*)</label>
+						<textarea name="descripcion" ></textarea>
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label for="estado">Activo</label>
+						<select name="estado">
+							<option value="A">Activo</option>
+							<option value="B">Inactivo</option>
+							<option value="S">Suspendido</option>
+						</select>
+					</div><!-- .form-group -->
+
+				</div><!-- .modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="btn-primary glyphicon glyphicon-knight" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
+					<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-content -->
+	</div><!-- .modal -->
+
+	<div id="modalUsuarioRol" class="modal fade">
+		<div class="modal-dialog" id="formUsuarioRol">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('UsuarioRol')">&times;</button>
+					<h2 class="modal-title">Roles del usuario</h2>
+					<h3 class="modal-title">NOMBRE DE USUARIO</h3><!-- Sera modificado desde javascript -->
+				</div><!-- .modal-header -->
+				<div class="modal-body">
+					<input type="hidden" name="id_usuario" value="">
+
+					<div class="col-md-4">
+						<select size="12" name="roles_asignados"></select>
+					</div>
+
+					<div class="btn-group-vertical col-md-4">
+						<button type="button" class="btn-primary glyphicon glyphicon-arrow-left" onclick="ui.assignRolUsuario()">Asignar</button>
+						<button type="button" class="btn-primary glyphicon glyphicon-arrow-right" onclick="ui.removeRolUsuario()" >Quitar</button>
+					</div>
+
+					<div class="col-md-4">
+						<select size="12" name="roles_no_asignados"></select>
+					</div>
+
+					<div style="visibility: hidden">.</div><!-- sin esto se ve mal el layout -->
+				</div><!-- .modal-body -->
+				<div class="modal-footer">
+						<button type="button" class="btn-success glyphicon glyphicon-ok" onclick="ui.closeModal('UsuarioRol')">Aceptar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+
+	<div id="modalRol" class="modal fade">
+		<div class="modal-dialog" id="formRol">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Rol')">&times;</button>
+					<h2 class="dialog-title">Rol</h2>
+				</div><!-- .modal-header -->
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="id">ID</label>
+						<input type="number" name="id" disabled>
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="nombre_rol">Nombre de Rol (*)</label>
+						<input type="text" name="nombre_rol">
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="nombre_amigable">Nombre Amigable (*)</label>
+						<input type="text" name="nombre_amigable">
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="descripcion">Descripcion</label>
+						<textarea name="descripcion" ></textarea>
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="estado">Estado (*)</label>
+						<select name="estado">
+							<option value="A">Activo</option>
+							<option value="B">Inactivo</option>
+						</select>
+					</div><!-- .form-group-->
+
+				</div><!-- .modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="btn-primary glyphicon glyphicon-check" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
+					<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+
+	<div id="modalPermisoRol" class="modal fade">
+		<div class="modal-dialog" id="formPermisoRol">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('PermisoRol')">&times;</button>
+					<h2 class="dialog-title">Permisos del rol</h2>
+					<h3 class="dialog-title">NOMBRE DE ROL</h3><!-- Sera modificado desde javascript -->
+				</div><!-- .modal-header -->
+				<div class="modal-body">
+					<input type="hidden" name="id_rol" value="">
+
+					<div class="col-md-4">
+						<select size="12" name="permisos_asignados">
+						</select>
+					</div>
+
+					<div class="btn-group-vertical col-md-4">
+						<button type="button" class="btn-primary glyphicon glyphicon-arrow-left" onclick="ui.assignPermisoRol()">Asignar</button>
+						<button type="button" class="btn-primary glyphicon glyphicon-arrow-right" onclick="ui.revokePermisoRol()">Quitar</button>
+					</div>
+
+					<div class="col-md-4">
+						<select size="12" name="permisos_no_asignados">
+						</select>
+					</div>
+					<div style="visibility: hidden">.</div><!-- sin esto se ve mal el layout -->
+				</div><!-- .modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+
+	<div id="modalPermiso" class="modal fade">
+		<div class="modal-dialog" id="formPermiso">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Permiso')">&times;</button>
+					<h2 class="dialog-title">Permiso</h2>
+				</div><!-- modal-header -->
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="id">ID</label>
+						<input type="number" name="id">
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="nombre_permiso">Nombre del permiso (*)</label>
+						<input type="text" name="nombre_permiso">
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="funcionalidad">Funcionalidad (*)</label>
+						<input type="text" name="funcionalidad">
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="descripcion">Descripcion</label>
+						<textarea name="descripcion"></textarea>
+					</div><!-- .form-group-->
+
+					<div class="form-group">
+						<label for="estado">Estado (*)</label>
+						<select name="estado">
+							<option value="A">Activo</option>
+							<option value="B">Inactivo</option>
+						</select>
+					</div><!-- .form-group-->
+				</div><!-- modal-body -->
+
+				<div class="modal-footer">
+					<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
 </body>
