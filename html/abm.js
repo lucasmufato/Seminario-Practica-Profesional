@@ -145,6 +145,15 @@ ui.requestPermisoDeletion = function() {
 }
 
 initUI = function() {
+	/* Bootstrap */
+	$('button').addClass('btn');
+	$('.buttonBox button').addClass('btn-primary');
+	$('table').addClass('table');
+	$('input').addClass('form-control');
+	$('textarea').addClass('form-control');
+	$('.formSection').addClass('panel panel-primary');
+	$('.formSection h2').addClass('panel-header');
+	ui.closeForms();
 	data.loadData();
 };
 
@@ -676,7 +685,7 @@ aux.sendForm = function (sendData, onsuccess) {
 			if (jsonData.result) {
 				onsuccess (jsonData);
 			} else {
-				window.alert ("Ocurrio un error");
+				window.alert (jsonData.msg);
 			}
 		},
 		error: function (er1, err2, err3) {

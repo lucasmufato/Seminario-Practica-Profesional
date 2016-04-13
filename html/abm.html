@@ -2,8 +2,11 @@
 <head>
 	<title>Administracion de usuarios</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="abm.css" />
 	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="abm.js"></script>
 </head>
 
@@ -82,8 +85,8 @@
 
 	<section class="formSection" id="formPersona">
 		
+		<h2 id="formPersonaTitle">Persona</h2>
 		<form>
-			<h2 id="formPersonaTitle">Persona</h2>
 			<!-- Las fotos no estan habilitadas todavia -->
 			<input type="hidden" name="foto" value="">
 			<input type="hidden" name="foto_registro" value="">
@@ -116,19 +119,19 @@
 				<option value="A">Activo</option>
 				<option value="B">Inactivo</option>
 			</select><br />
+			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+			<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
 		</form>
 		<h3>Usuarios de la persona</h3>
 			<form id="formPersonaUsuario">
 				<select size="6" name="usuarios">
 				</select>
 			</form>
-		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
-		<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
 	</section>
 
 	<section class="formSection" id="formUsuario">
+		<h2>Usuario</h2>
 		<form name="usuario">
-			<h2>Usuario</h2>
 			<label for="id">ID</label>
 			<input type="number" id="usuarioIdInput" name="id"><br />
 			<label for="id_persona">Persona</label>
@@ -149,15 +152,15 @@
 				<option value="B">Inactivo</option>
 				<option value="S">Suspendido</option>
 			</select><br />
+			<button type="button" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
+			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+			<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
 		</form>
-		<button type="button" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
-		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
-		<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
 	</section>
 
 	<section class="formSection" id="formUsuarioRol">
+		<h2>Roles del usuario</h2>
 		<form>
-			<h2>Roles del usuario</h2>
 			<h3>NOMBRE DE USUARIO</h3><!-- Sera modificado desde javascript -->
 			<input type="hidden" name="id_usuario" value="">
 			<select size="6" name="roles_asignados">
@@ -168,8 +171,8 @@
 			</div>
 			<select size="6" name="roles_no_asignados">
 			</select>
+			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		</form>
-		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 	</section>
 
 	<section class="formSection" id="formRol">
@@ -185,11 +188,11 @@
 				<option value="A">Activo</option>
 				<option value="B">Inactivo</option>
 			</select><br />
+			<button type="button" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
+			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
+			<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
 		</form>
 
-		<button type="button" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
-		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
-		<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
 	</section>
 
 	<section class="formSection" id="formRolPermiso">
@@ -205,8 +208,8 @@
 			</div>
 			<select size="6" name="permisos_no_asignados">
 			</select>
+			<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 		</form>
-		<button type="button" class="closeButton" onclick="ui.closeForms()">Cerrar</button>
 	</section>
 
 	<section class="formSection" id="formPermiso">
