@@ -200,8 +200,7 @@ public class Usuario extends BaseDatos {
 	public static JSONArray GetNombrePermisosUsuario(String nombre_usuario) {
 		JSONArray listaIdPermisos = new JSONArray();
 		// tomo el id del user.
-		int id_usuario = Usuario.GetIdPorNombre(nombre_usuario);
-		JSONArray listaRoles = ListaIdRoles(id_usuario);
+		JSONArray listaRoles = GetRolesPorNombre(nombre_usuario);
 		for (int i=0; i<listaRoles.size(); i++){
 			// tomo permisos de cada rol
 			JSONArray listaPermisosRol = Permiso_Rol.ListaIdPermisos((Integer)listaRoles.get(i));
@@ -248,5 +247,10 @@ public class Usuario extends BaseDatos {
 			e.printStackTrace();
 		}
 		return lista;
+	}
+
+	public static JSONArray GetRolesPorNombre(String nombreUsuario) {
+		int id_usuario = Usuario.GetIdPorNombre(nombreUsuario);
+		return ListaIdRoles(id_usuario);		
 	}
 }

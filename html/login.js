@@ -2,10 +2,9 @@ var userValido = false;
 var passValido = false;
 
 $(document).ready(function(){
-	if (getCookie()!="") {
+	if (getCookie("nombre_usuario")!="") {
 		return window.location.replace("home.html");
 	}
-
   ocultarMensajes();
   var inputUsuario = $("input[name=usuario]");
   var inputPass = $("input[name=pass]");

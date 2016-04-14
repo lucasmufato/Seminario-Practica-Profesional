@@ -29,8 +29,8 @@ public class ControladorServlet extends HttpServlet {
 			writer.println("No se pudo abrir el driver de la base de datos");
 			writer.println(e.getMessage());
 		}
-		if (!AccessManager.hasPermiso(request, "administrar_usuarios")){
-			System.out.println("entre ");
+		if (!AccessManager.HasPermiso(request, "administrar_usuarios")){
+			System.out.println("No tiene permiso para ingresar ");
 			response.sendRedirect("acceso_denegado.html");
 		}else{
 			response.setContentType("application/json");

@@ -77,4 +77,4 @@ INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUE
 UPDATE ROL SET id_rol=0 WHERE nombre_rol="super_usuario";
 
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado) VALUES (NULL, NULL, "administrador", "adminpass0", "admin@localhost", "Usuario administrador", "A");
-UPDATE USUARIO SET id_usuario=0 WHERE nombre_usuario="admin";
+UPDATE USUARIO SET id_usuario=0 WHERE nombre_usuario="administrador";
