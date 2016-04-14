@@ -13,7 +13,7 @@
 <body onload="initUI()">
 
 
-    <nav class="navbar navbar-inverse">
+<!--    <nav class="navbar navbar-inverse">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -28,9 +28,11 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/login">Cerrar Sesión</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
-    </nav>
+    </nav>-->
+
+	<a id="logoutButton" class="btn btn-danger glyphicon glyphicon-off" href="/login">Salir</a>
 
 	<nav id="tabBox">
 		<ul class="nav nav-tabs">
@@ -42,6 +44,54 @@
 	</nav>
 
 	<section class="tabSection" id="personasTab">
+		<form class="form-horizontal">
+			<header><h3 class="pull-center">Administración de Personas</h3></header>
+				
+			<!-- NOMBRE-->
+			<div class="form-group">
+				<label for="nombre" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Nombre:</label>
+				<div class="col-xs-3 col-sm-3 col-lg-2">
+					<input type="text" class="form-control" name="nombre" placeholder="Nombre"></input>
+				</div>
+				<label for="apellidos" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Apellidos:</label>
+				<div class="col-xs-3 col-sm-3 col-lg-2">
+					<input type="text" class="form-control" name="apellidos" placeholder="Apellidos"></input>
+				</div>
+			</div>
+
+			<!-- TIPO DE DOC-->
+			<div class="form-group">
+				<label for="option" class="control-label col-xs-2 col-md-2 col-xs-offset-1">Tipo de documento:</label>
+				<div class="col-xs-3 col-md-3 col-lg-2">
+					<select class="form-control" name="tipo_doc">
+						<option value="1">DNI</option>
+						<option value="2">LE</option>
+						<option value="3">LC</option>
+					</select>
+				</div>
+				<label for="nrodoc" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Número de documento:</label>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+					<input type="text" class="form-control" name="nro_doc" placeholder="Nro Documento"></input>
+				</div>
+			</div>	
+
+			<!-- ESTADO-->				
+			<div class="form-group">
+				<label for="option" class="control-label col-xs-2 col-xs-offset-1">Estado:</label>
+				<div class="col-xs-3 col-md-3 col-lg-2">
+					<select class="form-control" name="estado">
+						<option value="*">Todos</option>
+						<option value="A">Activo</option>
+						<option value="B">Inactivo</option>
+					</select>
+				</div>
+			<!-- BOTON  -->
+				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-2 col-md-offset-3">
+					<button class="btn btn-block btn-primary glyphicon glyphicon-search">Buscar</button>
+				</div>
+			</div>
+		</form>
+
 		<table id="personasTable" caption="Administrar personas">
 			<thead><tr>
 				<th>ID</th>
@@ -61,6 +111,47 @@
 	</section>
 
 	<section class="tabSection" id="usuariosTab">
+		<form class="form-horizontal">
+			<header><h3 class="pull-center">Administración de Usuarios</h3></header>
+				<div class="form-group">
+					<label for="nombre" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Nombre:</label>
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+						<input type="text" class="form-control col-sm-2" id="nombre" placeholder="Nombre"></input>
+					</div>
+					<label for="apellidos" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Apellidos:</label>
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+						<input type="text" class="form-control" id="apellidos" placeholder="Apellidos"></input>
+				    </div>
+				</div>
+			<div class="form-group">
+				<label for="option" class="control-label col-xs-2 col-md-2 col-xs-offset-1">Tipo de documento:</label>
+				<div class="col-xs-3 col-md-3 col-lg-2">
+					<select class="form-control" name="" id="option">
+						<option value="">DNI</option>
+						<option value="">LE</option>
+						<option value="">LC</option>
+					</select>
+				</div>
+				<label for="nrodoc" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Número de documento:</label>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+					<input type="text" class="form-control" id="nrodoc" placeholder="Nro Documento"></input>
+				</div>
+			</div>				
+			<div class="form-group">
+				<label for="option" class="control-label col-xs-2 col-md-2 col-xs-offset-1">Estado:</label>
+				<div class="col-xs-3 col-md-3 col-lg-2">
+					<select class="form-control" name="" id="option">
+						<option value="">Todos</option>
+						<option value="">Activo</option>
+						<option value="">Inactivo</option>
+					</select>
+				</div>
+				<div class="col-xs-3 col-md-3 col-lg-2 col-xs-offset-2 col-md-offset-2 col-lg-offset-3">
+					<button class="btn btn-primary btn-block glyphicon glyphicon-search">Buscar</button>
+				</div>
+			</div>
+		</form>		
+
 		<table id="usuariosTable">
 			<thead><tr>
 				<th>ID</th>
@@ -74,6 +165,23 @@
 	</section>
 
 	<section class="tabSection" id="rolesTab">
+
+		<form class="form-horizontal">
+			<header><h3 class="pull-center">Administración de Roles</h3></header>
+				
+			<!-- NOMBRE-->
+			<div class="form-group">
+				<label for="nombre-amigable" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Nombre amigable:</label>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+					<input type="text" class="form-control" id="nombre-amigable" placeholder="Nombre amigable"></input>
+				</div>
+			<!-- BOTON -->
+				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-2 col-md-offset-3">
+					<button class="btn btn-primary btn-block glyphicon glyphicon-search">Buscar</button>
+				</div>
+			</div> 
+		</form>
+
 		<table id="rolesTable">
 			<thead><tr>
 				<th>ID</th>
@@ -87,6 +195,7 @@
 	</section>
 
 	<section class="tabSection" id="permisosTab">
+		<header><h3 class="pull-center">Administración de Permisos</h3></header>
 		<table id="permisosTable">
 			<thead><tr>
 				<th>ID</th>
@@ -112,7 +221,7 @@
 	</div>
 
 	<div id="modalPersona" class="modal fade">
-		<div class="modal-dialog" id="formPersona">
+		<div class="modal-dialog modal-lg" id="formPersona">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" onclick="ui.closeModal('Persona')">&times;</button>
@@ -197,7 +306,7 @@
 	</div><!-- modal -->
 
 	<div id="modalUsuario" class="modal fade">
-		<div class="modal-dialog" id="formUsuario">
+		<div class="modal-dialog modal-lg" id="formUsuario">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" onclick="ui.closeModal('Usuario')">&times;</button>
