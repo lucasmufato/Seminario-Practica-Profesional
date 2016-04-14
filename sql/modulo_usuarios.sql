@@ -76,5 +76,5 @@ CREATE TABLE PERMISO_ROL (
 INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (NULL, "super_usuario", "Super Usuario", "Este usuario tiene todos los privilegios", "A");
 UPDATE ROL SET id_rol=0 WHERE nombre_rol="super_usuario";
 
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado) VALUES (NULL, NULL, "admin", "adminpass0", "admin@localhost", "Usuario administrador", "A");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado) VALUES (NULL, NULL, "administrador", "adminpass0", "admin@localhost", "Usuario administrador", "A");
 UPDATE USUARIO SET id_usuario=0 WHERE nombre_usuario="admin";
