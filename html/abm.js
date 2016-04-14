@@ -161,7 +161,7 @@ ui.activateTab = function (tab) {
 	ui.hideTabs();
 	aux.clearSelectedRow ($(tabSelector+' table tbody')[0]);
 
-	$(tabSelector).fadeIn();
+	$(tabSelector).slideDown();
 
 	if (tab == 'roles') {
 		$('#permisosButton').show();

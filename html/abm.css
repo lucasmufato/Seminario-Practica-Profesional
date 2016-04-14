@@ -3,6 +3,12 @@ body {
 	font-size: 12px;
 }
 
+#logoutButton {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+}
+
 #entitylist {
 	min-height: 200px;
 }
@@ -11,9 +17,38 @@ body {
 	cursor: pointer;
 }
 
+.nav-tabs li.active a, .nav-tabs li.active a:hover {
+	background-color: #303F9F;
+	color: white;
+}
+
 .tabSection {
 	display: none;
+	border-bottom: 1.47px solid #DDD;
 }
+
+
+.tabSection form {
+	background-color: #ecf0f1;
+}
+
+.tabSection header {
+	background-color: #303F9F;
+	color: white;
+	margin-bottom: 1%;
+	margin-top: 0px;
+}
+
+.tabSection header h3 {
+	text-align: center;
+	padding: 0.5em;
+	margin-top: 1px;
+}
+
+.tabSection .form-horizontal {
+	padding-bottom: 0.5%;
+}
+
 
 #personasTab {
 	display: block;
@@ -25,12 +60,5 @@ body {
 
 #permisosButton {
 	display: none;
-}
-
-input[type=text],input[type=number],input[type=password],input[type=date], textarea  {
-	background: white;
-	color: #222;
-	border: 1px solid gray;
-	border-radius: 3px;
 }
 
