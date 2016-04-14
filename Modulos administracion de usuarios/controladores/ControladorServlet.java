@@ -1,9 +1,12 @@
 package controladores;
 import java.io.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+
 import modelo.Persona;
 import modelo.Usuario;
 import modelo.Rol;
@@ -17,9 +20,8 @@ public class ControladorServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		JSONObject[] resultado;
+		
 		PrintWriter writer = response.getWriter();
-
 		/* Asegurate de iniciar el driver de base de datos */
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -27,9 +29,13 @@ public class ControladorServlet extends HttpServlet {
 			writer.println("No se pudo abrir el driver de la base de datos");
 			writer.println(e.getMessage());
 		}
-
-		response.setContentType("application/json");
-		this.printDbData(writer);
+		if (!AccessManager.hasPermiso(request, "administrar_usuarios")){
+			System.out.println("entre ");
+			response.sendRedirect("acceso_denegado.html");
+		}else{
+			response.setContentType("application/json");
+			this.printDbData(writer);
+		}
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
