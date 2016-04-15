@@ -270,8 +270,6 @@ ui.updatePersonasSelect = function() {
 }
 
 ui.showNewPersonaForm = function () {
-	$('#formPersona input[name=id]').hide()
-	$('#formPersona label[for=id]').hide()
 	$('#formPersonaTitle').html('Nueva Persona');
 	$('#formPersona input[name=id]').val('-1');
 	$('#formPersona input[name=apellidos]').val('');
@@ -291,8 +289,6 @@ ui.showNewPersonaForm = function () {
 };
 
 ui.showNewUsuarioForm = function () {
-	$('#formUsuario input[name=id]').hide();
-	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val('-1');
 	$('#formUsuario input[name=id_persona]').val('');
 	$('#formUsuario input[name=nombre_usuario]').val('');
@@ -304,8 +300,6 @@ ui.showNewUsuarioForm = function () {
 };
 
 ui.showNewRolForm = function () {
-	$('#formRol input[name=id]').hide();
-	$('#formRol label[for=id]').hide();
 	$('#formRol input[name=id]').val(-1);
 	$('#formRol input[name=nombre_rol]').val('');
 	$('#formRol input[name=nombre_amigable]').val('');
@@ -316,8 +310,6 @@ ui.showNewRolForm = function () {
 }
 
 ui.showNewPermisoForm = function () {
-	$('#formPermiso input[name=id]').hide();
-	$('#formPermiso label[for=id]').hide();
 	$('#formPermiso input[name=id]').val(-1);
 	$('#formPermiso input[name=nombre_permiso]').val('');
 	$('#formPermiso input[name=funcionalidad]').val('');
@@ -330,8 +322,6 @@ ui.showEditPersonaForm = function () {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
 	$('#formPersonaTitle').html('Modificar Persona');
-	$('#formPersona input[name=id]').show();
-	$('#formPersona label[for=id]').show();
 	$('#formPersona input[name=id]').val(selected.id);
 	$('#formPersona input[name=id_persona]').val(selected.id_persona);
 	$('#formPersona input[name=apellidos]').val(selected.apellidos);
@@ -357,8 +347,6 @@ ui.showEditUsuarioForm = function() {
 		aux.deniedMessage("No se permite modificar los datos del usuario Administrador. Este siempre tendra el rol de Super Usuario.");
 		return;
 	}
-	$('#formUsuario input[name=id]').hide();
-	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val(selected.id);
 	$('#formUsuario select[name=id_persona]').val(selected.id_persona);
 	$('#formUsuario input[name=nombre_usuario]').val(selected.nombre_usuario);
@@ -376,8 +364,6 @@ ui.showEditRolForm = function() {
 		aux.deniedMessage("No se permite modificar los datos del rol Super Usuario. Este siempre tendra acceso total a las funcionalidades del sistema.");
 		return;
 	}
-	$('#formRol input[name=id]').show();
-	$('#formRol label[for=id]').show();
 	$('#formRol input[name=id]').val(selected.id);
 	$('#formRol input[name=nombre_rol]').val(selected.nombre_rol);
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
@@ -389,8 +375,6 @@ ui.showEditRolForm = function() {
 ui.showEditPermisoForm = function() {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
-	$('#formPermiso input[name=id]').show();
-	$('#formPermiso label[for=id]').show();
 	$('#formPermiso input[name=id]').val(selected.id);
 	$('#formPermiso input[name=nombre_permiso]').val(selected.nombre_permiso);
 	$('#formPermiso input[name=funcionalidad]').val(selected.funcionalidad);

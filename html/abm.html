@@ -211,13 +211,9 @@
 				<div class="modal-body">
 					<form class="form-horizontal col-md-12">
 					<!-- Las fotos no estan habilitadas todavia -->
+					<input type="hidden" name="id">
 					<input type="hidden" name="foto" value="">
 					<input type="hidden" name="foto_registro" value="">
-
-					<div class="form-group col-md-12">
-						<label for="id" id="personaIdLabel" class="col-md-2">ID</label>
-						<div class="col-md-4"><input type="number" disabled name="id"></div>
-					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="apellidos" class="col-md-4">Apellido (*)</label>
@@ -297,45 +293,58 @@
 				</div><!-- .modal-header -->
 				<div class="modal-body">
 
-					<div class="form-group">
-						<label for="id">ID</label>
-						<input type="number" id="usuarioIdInput" name="id">
-					</div><!-- .form-group -->
-	
-					<div class="form-group">
-						<label for="id_persona">Persona (*)</label>
-						<select name="id_persona">
-						</select>
+					<form class="form-horizontal col-md-12">
+
+					<input type="hidden" id="usuarioIdInput" name="id">
+
+					<div class="form-group col-md-6">
+						<label for="nombre_usuario" class="col-md-4">Nombre de Usuario (*)</label>
+						<div class="col-md-8">
+							<input type="text" name="nombre_usuario">
+						</div>
 					</div><!-- .form-group -->
 
-					<div class="form-group">
-						<label for="nombre_usuario">Nombre de Usuario (*)</label>
-						<input type="text" name="nombre_usuario">
+					<div class="form-group col-md-6">
+						<label for="password" class="col-md-4">Contraseña (*)</label>
+						<div class="col-md-8">
+							<input type="password" name="password">
+						</div>
 					</div><!-- .form-group -->
 
-					<div class="form-group">
-						<label for="password">Contraseña (*)</label>
-						<input type="password" name="password">
+					<div class="form-group col-md-6">
+						<label for="id_persona" class="col-md-4">Persona (*)</label>
+						<div class="col-md-8">
+							<select name="id_persona">
+							</select>
+						</div>
 					</div><!-- .form-group -->
 
-					<div class="form-group">
-						<label for="email">E-Mail (*)</label>
-						<input type="text" name="email">
+					<div class="form-group col-md-6">
+						<label for="email" class="col-md-4">E-Mail (*)</label>
+						<div class="col-md-8">
+							<input type="text" name="email">
+						</div>
 					</div><!-- .form-group -->
 
-					<div class="form-group">
-						<label for="descripcion">Descripcion (*)</label>
-						<textarea name="descripcion" ></textarea>
+					<div class="form-group col-md-12">
+						<label for="descripcion" class="col-md-2">Descripcion (*)</label>
+						<div class="col-md-10">
+							<textarea name="descripcion" ></textarea>
+						</div>
 					</div><!-- .form-group -->
 
-					<div class="form-group">
-						<label for="estado">Activo</label>
-						<select name="estado">
-							<option value="A">Activo</option>
-							<option value="B">Inactivo</option>
-							<option value="S">Suspendido</option>
-						</select>
+					<div class="form-group col-md-6">
+						<label for="estado" class="col-md-4">Estado</label>
+						<div class="col-md-8">
+							<select name="estado">
+								<option value="A">Activo</option>
+								<option value="B">Inactivo</option>
+								<option value="S">Suspendido</option>
+							</select>
+						</div>
 					</div><!-- .form-group -->
+
+					</form>
 
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
@@ -380,41 +389,48 @@
 	</div><!-- .modal -->
 
 	<div id="modalRol" class="modal fade">
-		<div class="modal-dialog" id="formRol">
+		<div class="modal-dialog modal-lg" id="formRol">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" onclick="ui.closeModal('Rol')">&times;</button>
 					<h2 class="dialog-title">Rol</h2>
 				</div><!-- .modal-header -->
 				<div class="modal-body">
-					<div class="form-group">
-						<label for="id">ID</label>
-						<input type="number" name="id" disabled>
+					<form class="form-horizontal">
+					<input type="hidden" name="id">
+
+					<div class="form-group col-md-6">
+						<label for="nombre_rol" class="col-md-4">Nombre de Rol (*)</label>
+						<div class="col-md-8">
+							<input type="text" name="nombre_rol">
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="nombre_rol">Nombre de Rol (*)</label>
-						<input type="text" name="nombre_rol">
+					<div class="form-group col-md-6">
+						<label for="nombre_amigable" class="col-md-4">Nombre Amigable (*)</label>
+						<div class="col-md-8">
+							<input type="text" name="nombre_amigable">
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="nombre_amigable">Nombre Amigable (*)</label>
-						<input type="text" name="nombre_amigable">
+					<div class="form-group col-md-12">
+						<label for="descripcion" class="col-md-2">Descripcion</label>
+						<div class="col-md-10">
+							<textarea name="descripcion" ></textarea>
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="descripcion">Descripcion</label>
-						<textarea name="descripcion" ></textarea>
+					<div class="form-group col-md-6">
+						<label for="estado" class="col-md-4">Estado (*)</label>
+						<div class="col-md-8">
+							<select name="estado">
+								<option value="A">Activo</option>
+								<option value="B">Inactivo</option>
+							</select>
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="estado">Estado (*)</label>
-						<select name="estado">
-							<option value="A">Activo</option>
-							<option value="B">Inactivo</option>
-						</select>
-					</div><!-- .form-group-->
-
+					</form>
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
 					<button type="button" class="btn-primary glyphicon glyphicon-check" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
@@ -459,40 +475,48 @@
 	</div><!-- .modal -->
 
 	<div id="modalPermiso" class="modal fade">
-		<div class="modal-dialog" id="formPermiso">
+		<div class="modal-dialog modal-lg" id="formPermiso">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" onclick="ui.closeModal('Permiso')">&times;</button>
 					<h2 class="dialog-title">Permiso</h2>
 				</div><!-- modal-header -->
 				<div class="modal-body">
-					<div class="form-group">
-						<label for="id">ID</label>
-						<input type="number" name="id">
+					<form class="form-horizontal">
+
+					<input type="hidden" name="id">
+
+					<div class="form-group col-md-6">
+						<label for="nombre_permiso" class="col-md-4">Nombre del permiso (*)</label>
+						<div class="col-md-8">
+							<input type="text" name="nombre_permiso">
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="nombre_permiso">Nombre del permiso (*)</label>
-						<input type="text" name="nombre_permiso">
+					<div class="form-group col-md-6">
+						<label for="funcionalidad" class="col-md-4">Funcionalidad (*)</label>
+						<div class="col-md-8">
+							<input type="text" name="funcionalidad">
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="funcionalidad">Funcionalidad (*)</label>
-						<input type="text" name="funcionalidad">
+					<div class="form-group col-md-12">
+						<label for="descripcion" class="col-md-2">Descripcion</label>
+						<div class="col-md-10">
+							<textarea name="descripcion"></textarea>
+						</div>
 					</div><!-- .form-group-->
 
-					<div class="form-group">
-						<label for="descripcion">Descripcion</label>
-						<textarea name="descripcion"></textarea>
+					<div class="form-group col-md-6">
+						<label for="estado" class="col-md-4">Estado (*)</label>
+						<div class="col-md-8">
+							<select name="estado">
+								<option value="A">Activo</option>
+								<option value="B">Inactivo</option>
+							</select>
+						</div>
 					</div><!-- .form-group-->
-
-					<div class="form-group">
-						<label for="estado">Estado (*)</label>
-						<select name="estado">
-							<option value="A">Activo</option>
-							<option value="B">Inactivo</option>
-						</select>
-					</div><!-- .form-group-->
+					</form>
 				</div><!-- modal-body -->
 
 				<div class="modal-footer">
