@@ -16,7 +16,10 @@ $(document).ready(function(){
 })
 
 function esconderFuncionalidades(){
-  $("#mod_adm_us").hide();
+    $("#administracion_usuarios").hide();
+  $("#gestion_viajes").hide();
+  $("#gestion_vehiculos").hide();
+  $("#gestion_puntos").hide();
 }
 
 function getRolesUsuario (nombreUsuario) {
@@ -54,9 +57,13 @@ function mostrarFunciones(jsonData){
 			var estadoPermiso=jsonData.result[permiso]["estado"];
 			if (nombrePermiso && estadoPermiso=="A"){
 				if (nombrePermiso == "administrar_usuarios"){
-					$("#mod_adm_us").show();
-				}else if (nombrePermiso=="otro permiso"){
-					//etc.
+					$("#administracion_usuarios").show();
+				}else if (nombrePermiso=="gestion_viajes"){
+					$("#gestion_viajes").show();
+				}else if (nombrePermiso=="gestion_vehiculos"){
+					$("#gestion_vehiculos").show();
+				}else if (nombrePermiso=="gestion_puntos"){
+					$("#gestion_puntos").show();
 				}
 			}
 		}

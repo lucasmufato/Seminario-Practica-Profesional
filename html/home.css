@@ -1,0 +1,46 @@
+body{
+	 --background-image: url("https://images7.alphacoders.com/601/601969.jpg");
+	 background-image: url("img/home/fondo1.jpg");
+	 background-size: cover;
+}
+.panel_func{
+  text-align: center;
+  margin: 0px auto;
+}
+.funcionalidad{
+  display: inline-block;  
+  width:200px;
+  margin: 1% 1% 1% 1%;
+  --background-color:#101010;
+  --padding-bottom:1%;
+    box-shadow: 0 0 10px #1a0d00; 
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.funcionalidad img{
+  width: 200px; 
+  height: 200px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  --border-bottom: groove 10px #101010;
+  --border-style:solid;
+  --border-width:1px;
+}
+.funcionalidad p{
+  --background-color:#303F9F;
+  background-color:#331a00;
+  color:#ffe6cc;
+  margin-bottom:0;
+  padding: 5% 5% 5% 5%;
+  --border:inherit;
+  text-align:center;
+  padding: auto;
+}
+ a {
+  text-decoration:none;
+}
+.funcionalidad:hover { 
+  -moz-box-shadow: 0 0 10px #ccc; 
+  -webkit-box-shadow: 0 0 10px #ccc; 
+  box-shadow: 0 0 10px #804000; 
+}
