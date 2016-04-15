@@ -29,11 +29,12 @@ public class ControladorServlet extends HttpServlet {
 			writer.println("No se pudo abrir el driver de la base de datos");
 			writer.println(e.getMessage());
 		}
+
+		response.setContentType("application/json");
+
 		if (!AccessManager.HasPermiso(request, "administrar_usuarios")){
-			System.out.println("No tiene permiso para ingresar ");
-			response.sendRedirect("acceso_denegado.html");
+			this.printDeniedRedirect(writer);
 		}else{
-			response.setContentType("application/json");
 			this.printDbData(writer);
 		}
 	}
@@ -112,6 +113,17 @@ public class ControladorServlet extends HttpServlet {
 		resultado.put("usuarios", this.getUsuarios());
 		resultado.put("roles", this.getRoles());
 		resultado.put("permisos", this.getPermisos());
+		resultado.put("result", true);
+
+		writer.println(resultado);
+	}
+
+	private void printDeniedRedirect (PrintWriter writer) {
+		JSONObject resultado;
+
+		resultado = new JSONObject();
+		resultado.put("result", false);
+		resultado.put("redirect", "acceso_denegado.html");
 
 		writer.println(resultado);
 	}
@@ -341,14 +353,26 @@ public class ControladorServlet extends HttpServlet {
 	private JSONObject deleteUsuario (HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
-		salida.put ("result", Usuario.Eliminar(id));
+		if (id == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite eliminar al usuario Administrador");
+		} else if (Usuario.Eliminar(id)) {
+			salida.put ("result", true);
+			salida.put ("msg", "Se ha eliminado el usuario");
+		} else {
+			salida.put ("result", false);
+			salida.put ("msg", "No se ha podido eliminar el usuario");
+		}
 		return salida;
 	}
 
 	private JSONObject deleteRol (HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
-		if (Rol.Eliminar(id)) {
+		if (id == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite eliminar al rol Super Usuario");
+		} else if (Rol.Eliminar(id)) {
 			salida.put ("result", true);
 			salida.put ("msg", "Se ha eliminado el rol");
 		} else {

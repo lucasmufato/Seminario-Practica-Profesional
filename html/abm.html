@@ -11,7 +11,7 @@
 </head>
 
 <body onload="initUI()">
-
+	<div class="loadingScreen"></div>
 
 	<a id="logoutButton" class="btn btn-danger glyphicon glyphicon-off" href="/login">Salir</a>
 
@@ -501,4 +501,45 @@
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
 	</div><!-- .modal -->
+
+	<div id="modalError" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Error')">&times;</button>
+					<h3 class="dialog-title"> Ha ocurrido un error</h3>
+				</div><!-- modal-header -->
+				<div class="modal-body">
+					<div id="errorMessage">
+						Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
+					</div>
+				</div><!-- modal-body -->
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger glyphicon glyphicon-remove" onclick="ui.closeModal('Error')">Cerrar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+
+	<div id="modalDenied" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Error')">&times;</button>
+					<h3 class="dialog-title">Permiso denegado</h3>
+				</div><!-- modal-header -->
+				<div class="modal-body">
+					<div id="deniedMessage">
+						Permiso Denegado. <!-- Esto sera modificado desde javascript -->
+					</div>
+				</div><!-- modal-body -->
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning glyphicon glyphicon-remove" onclick="ui.closeModal('Denied')">Cerrar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+
 </body>

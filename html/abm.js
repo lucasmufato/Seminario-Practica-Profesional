@@ -16,15 +16,20 @@ data.loadData = function() {
 		dataType: 'json',
 		success: function (jsonData) {
 			DEBUGresponse = jsonData;
-			data.personas = jsonData.personas;
-			data.usuarios = jsonData.usuarios;
-			data.roles = jsonData.roles;
-			data.permisos = jsonData.permisos;
-			ui.updatePersonasTable();
-			ui.updateUsuariosTable();
-			ui.updateRolesTable();
-			ui.updatePermisosTable();
-			ui.updatePersonasSelect();
+			if(jsonData.result){
+				$('.loadingScreen').fadeOut();
+				data.personas = jsonData.personas;
+				data.usuarios = jsonData.usuarios;
+				data.roles = jsonData.roles;
+				data.permisos = jsonData.permisos;
+				ui.updatePersonasTable();
+				ui.updateUsuariosTable();
+				ui.updateRolesTable();
+				ui.updatePermisosTable();
+				ui.updatePersonasSelect();
+			} else if (jsonData.redirect != undefined) {
+				window.location = jsonData.redirect;
+			}
 		},
 		error: function (er1, err2, err3) {
 			document.body.innerHTML = er1.responseText;
@@ -220,10 +225,18 @@ ui.deleteButtonPressed = function () {
 			ui.requestPersonaDeletion();
 			break;
 		case 'usuarios':
-			ui.requestUsuarioDeletion();
+			if (ui.selectedId == 0) {
+				aux.deniedMessage("No se permite deshabilitar al usuario Administrador");
+			} else {
+				ui.requestUsuarioDeletion();
+			}
 			break;
 		case 'roles':
-			ui.requestRolDeletion();
+			if (ui.selectedId == 0) {
+				aux.deniedMessage("No se permite deshabilitar al rol Super Usuario");
+			} else {
+				ui.requestRolDeletion();
+			}
 			break;
 		case 'permisos':
 			ui.requestPermisoDeletion();
@@ -340,6 +353,10 @@ ui.showEditPersonaForm = function () {
 ui.showEditUsuarioForm = function() {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
+	if (selected.id == 0) {
+		aux.deniedMessage("No se permite modificar los datos del usuario Administrador. Este siempre tendra el rol de Super Usuario.");
+		return;
+	}
 	$('#formUsuario input[name=id]').hide();
 	$('#formUsuario label[for=id]').hide();
 	$('#formUsuario input[name=id]').val(selected.id);
@@ -355,6 +372,10 @@ ui.showEditUsuarioForm = function() {
 ui.showEditRolForm = function() {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
+	if (selected.id == 0) {
+		aux.deniedMessage("No se permite modificar los datos del rol Super Usuario. Este siempre tendra acceso total a las funcionalidades del sistema.");
+		return;
+	}
 	$('#formRol input[name=id]').show();
 	$('#formRol label[for=id]').show();
 	$('#formRol input[name=id]').val(selected.id);
@@ -381,6 +402,10 @@ ui.showEditPermisoForm = function() {
 ui.showUsuarioRolForm = function () {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
+	if (selected.id == 0) {
+		aux.deniedMessage("No se permite modificar los roles asignados al usuario Administrador. Este siempre tendra el rol de Super Usuario.");
+		return;
+	}
 	$('#formUsuarioRol h3').text(selected.nombre_usuario);
 	$('#formUsuarioRol input[name=id_usuario]').val(selected.id);
 	$('#formUsuarioRol select[name=roles_asignados]').html('');
@@ -409,6 +434,10 @@ ui.showUsuarioRolForm = function () {
 ui.showRolPermisoForm = function () {
 	var selected = ui.getSelectedElement();
 	if (selected == null) return;
+	if (selected.id == 0) {
+		aux.deniedMessage ("No se permite modificar los permisos asignados al rol Super Usuario. Este siempre tendra acceso total a las funcionalidades del sistema.");
+		return;
+	}
 	$('#formPermisoRol h3').text(selected.nombre_rol);
 	$('#formPermisoRol input[name=id_rol]').val(selected.id);
 	$('#formPermisoRol select[name=permisos_asignados]').html('');
@@ -716,7 +745,7 @@ aux.sendForm = function (sendData, onsuccess) {
 			if (jsonData.result) {
 				onsuccess (jsonData);
 			} else {
-				window.alert (jsonData.msg);
+				aux.errorMessage (jsonData.msg);
 			}
 		},
 		error: function (er1, err2, err3) {
@@ -746,6 +775,16 @@ aux.sexoString = function (caracter) {
 		case null: return "No especificado";
 		default: return "Desconocido";
 	}
+}
+
+aux.errorMessage = function (textMsg) {
+	$('#errorMessage').text(textMsg);
+	$('#modalError').modal('show');
+}
+
+aux.deniedMessage = function (textMsg) {
+	$('#deniedMessage').text(textMsg);
+	$('#modalDenied').modal('show');
 }
 
 Array.prototype.removeElement = function(item) {

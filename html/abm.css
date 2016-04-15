@@ -14,8 +14,28 @@ body {
 	cursor: pointer;
 }
 
+.loadingScreen {
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 5000;
+}
+
 .nav-tabs li.active a, .nav-tabs li.active a:hover, .modal-header {
 	background-color: #303F9F;
+	color: white;
+}
+
+#modalError .modal-header {
+	background-color: #D9534F;
+	color: white;
+}
+
+#modalDenied .modal-header {
+	background-color: #F0AD4E;
 	color: white;
 }
 

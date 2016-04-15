@@ -34,7 +34,7 @@ public abstract class BaseDatos {
 	}
 	
 	protected static boolean QueryEliminar(String tabla, String campo, int clave_primaria_tabla ){
-		String query="UPDATE "+tabla+" SET ESTADO=0 WHERE "+campo+"="+clave_primaria_tabla+";";
+		String query="UPDATE "+tabla+" SET ESTADO='B' WHERE "+campo+"="+clave_primaria_tabla+";";
 		boolean bandera=false;
 		try {
 			String datosBD= "jdbc:mysql://"+IP_BD+"/"+nombre_BD;
