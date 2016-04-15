@@ -461,84 +461,155 @@ ui.closeModal = function (name) {
 ui.updatePersonasTable = function () {
 	var tbody = $('#personasTable tbody')[0];
 	var tr;
+	var encontrado = false;
+
+	var rctNombre = $('#personasTab input[name=nombre]').val().toLowerCase();
+	var rctApellido = $('#personasTab input[name=apellidos]').val().toLowerCase();
+	var rctTipoDoc = $('#personasTab select[name=tipo_doc]').val();
+	var rctNroDoc = $('#personasTab input[name=nro_doc]').val();
+	var rctEstado = $('#personasTab select[name=estado]').val();
 
 	tbody.innerHTML = '';
 	data.personas.forEach(function (elem) {
-		tr = document.createElement ('TR');
-		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.apellidos));
-		tr.appendChild (aux.td (elem.nombres));
-		tr.appendChild (aux.td (aux.tipoDoc(elem.tipo_doc)));
-		tr.appendChild (aux.td (elem.nro_doc));
-		tr.appendChild (aux.td (elem.fecha_nacimiento));
-		tr.appendChild (aux.td (aux.sexoString(elem.sexo)));
-		tr.appendChild (aux.td (elem.domicilio));
-		tr.appendChild (aux.td (elem.telefono));
-		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
+		if (
+			elem.nombres.toLowerCase().contains(rctNombre)
+			&& elem.apellidos.toLowerCase().contains(rctApellido)
+			&& ((rctTipoDoc == "*") || (elem.tipo_doc == rctTipoDoc))
+			&& String(elem.nro_doc).contains(rctNroDoc)
+			&& ((rctEstado == "*") || (elem.estado == rctEstado))
+		) {
+			encontrado = true;
+			tr = document.createElement ('TR');
+			tr.appendChild (aux.td (elem.id));
+			tr.appendChild (aux.td (elem.apellidos));
+			tr.appendChild (aux.td (elem.nombres));
+			tr.appendChild (aux.td (aux.tipoDoc(elem.tipo_doc)));
+			tr.appendChild (aux.td (elem.nro_doc));
+			tr.appendChild (aux.td (elem.fecha_nacimiento));
+			tr.appendChild (aux.td (aux.sexoString(elem.sexo)));
+			tr.appendChild (aux.td (elem.domicilio));
+			tr.appendChild (aux.td (elem.telefono));
+			tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 
-		if (elem.estado == 'B') {
-			$(tr).addClass('danger');
-		}
+			if (elem.estado == 'B') {
+				$(tr).addClass('danger');
+			}
 
-		var thistr = tr;
-		tr.onclick = function () {
-			aux.clearSelectedRow (tbody);
-			ui.selectedId = elem.id;
-			$(thistr).addClass('info');
+			var thistr = tr;
+			tr.onclick = function () {
+				aux.clearSelectedRow (tbody);
+				ui.selectedId = elem.id;
+				$(thistr).addClass('info');
+			}
+			tbody.appendChild(tr);
 		}
-		tbody.appendChild(tr);
 	});
+
+	if (!encontrado) {
+		var td;
+
+		tr = document.createElement ('TR');
+		td = document.createElement ('TD');
+		td.setAttribute ('colspan', 10);
+		td.textContent = "No se hay resultados para la busqueda";
+		td.className = "warning";
+	
+		tbody.appendChild (tr);
+		tr.appendChild (td);
+	}
 	
 }
 
 ui.updateUsuariosTable = function () {
 	var tbody = $('#usuariosTable tbody')[0];
+	var encontrado = false;
+
+	var rctNombreUsuario = $('#usuariosTab input[name=nombre-usuario]').val().toLowerCase();
+
 	tbody.innerHTML = '';
 	data.usuarios.forEach(function (elem) {
-		tr = document.createElement ('TR');
-		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.nombre_usuario));
-		tr.appendChild (aux.td (elem.email));
-		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
+		if (
+			elem.nombre_usuario.toLowerCase().contains(rctNombreUsuario) 
+		) {
+			encontrado = true;
+			tr = document.createElement ('TR');
+			tr.appendChild (aux.td (elem.id));
+			tr.appendChild (aux.td (elem.nombre_usuario));
+			tr.appendChild (aux.td (elem.email));
+			tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 
-		if (elem.estado == 'B') {
-			$(tr).addClass('danger');
-		} else if (elem.estado == 'S') {
-			$(tr).addClass('warning');
+			if (elem.estado == 'B') {
+				$(tr).addClass('danger');
+			} else if (elem.estado == 'S') {
+				$(tr).addClass('warning');
+			}
+	
+			var thistr = tr;
+			tr.onclick = function () {
+				aux.clearSelectedRow (tbody);
+				ui.selectedId = elem.id;
+				$(thistr).addClass('info');
+			}
+			tbody.appendChild(tr);
 		}
-
-		var thistr = tr;
-		tr.onclick = function () {
-			aux.clearSelectedRow (tbody);
-			ui.selectedId = elem.id;
-			$(thistr).addClass('info');
-		}
-		tbody.appendChild(tr);
 	});
+
+	if (!encontrado) {
+		var td;
+
+		tr = document.createElement ('TR');
+		td = document.createElement ('TD');
+		td.setAttribute ('colspan', 4);
+		td.textContent = "No se hay resultados para la busqueda";
+		td.className = "warning";
+	
+		tbody.appendChild (tr);
+		tr.appendChild (td);
+	}
 }
 
 ui.updateRolesTable = function () {
 	var tbody = $('#rolesTable tbody')[0];
+	var rctNombreAmigable = $('#rolesTab input[name=nombre-amigable]').val().toLowerCase();
+	var encontrado = false;
+
 	tbody.innerHTML = '';
 	data.roles.forEach(function (elem) {
-		tr = document.createElement ('TR');
-		tr.appendChild (aux.td (elem.id));
-		tr.appendChild (aux.td (elem.nombre_rol));
-		tr.appendChild (aux.td (elem.nombre_amigable));
-		tr.appendChild (aux.td (aux.estadoString(elem.estado)));
+		if (elem.nombre_amigable.toLowerCase().contains(rctNombreAmigable)) {
+			encontrado = true;
+			tr = document.createElement ('TR');
+			tr.appendChild (aux.td (elem.id));
+			tr.appendChild (aux.td (elem.nombre_rol));
+			tr.appendChild (aux.td (elem.nombre_amigable));
+			tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 
-		if (elem.estado == 'B') {
-			$(tr).addClass('danger');
-		}
+			if (elem.estado == 'B') {
+				$(tr).addClass('danger');
+			}
 
-		var thistr = tr;
-		tr.onclick = function () {
-			aux.clearSelectedRow (tbody);
-			ui.selectedId = elem.id;
-			$(thistr).addClass('info');
+			var thistr = tr;
+			tr.onclick = function () {
+				aux.clearSelectedRow (tbody);
+				ui.selectedId = elem.id;
+				$(thistr).addClass('info');
+			}
+			tbody.appendChild(tr);
 		}
-		tbody.appendChild(tr);
 	});
+
+	if (!encontrado) {
+		var td;
+
+		tr = document.createElement ('TR');
+		td = document.createElement ('TD');
+		td.setAttribute ('colspan', 10);
+		td.textContent = "No se hay resultados para la busqueda";
+		td.className = "warning";
+	
+		tbody.appendChild (tr);
+		tr.appendChild (td);
+	}
+
 }
 
 ui.updatePermisosTable = function () {
