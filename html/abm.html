@@ -217,17 +217,17 @@
 
 					<div class="form-group col-md-6">
 						<label for="apellidos" class="col-md-4">Apellido (*)</label>
-						<div class="col-md-8"><input type="text" name="apellidos"></div>
+						<div class="col-md-8"><input type="text" name="apellidos" required></div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="nombres" class="col-md-4">Nombre (*)</label>
-						<div class="col-md-8"><input type="text" name="nombres"></div>
+						<div class="col-md-8"><input type="text" name="nombres" required></div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 					<label for="tipo_doc" class="col-md-4">Tipo de documento (*)</label>
-						<div class="col-md-8"><select name="tipo_doc">
+						<div class="col-md-8"><select name="tipo_doc" required>
 							<option value="1">DNI</option>
 							<option value="2">LE</option>
 							<option value="3">LC</option>
@@ -236,22 +236,22 @@
 
 					<div class="form-group col-md-6">
 						<label for="nro_doc" class="col-md-4">Numero de documento (*)</label>
-						<div class="col-md-8"><input type="number" name="nro_doc"></div>
+						<div class="col-md-8"><input type="number" name="nro_doc" required></div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
-						<div class="col-md-8"><input type="date" name="fecha_nacimiento"></div>
+						<div class="col-md-8"><input type="date" name="fecha_nacimiento" required></div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="domicilio" class="col-md-4">Domicilio (*)</label>
-						<div class="col-md-8"><input type="text" name="domicilio"></div>
+						<div class="col-md-8"><input type="text" name="domicilio" required></div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="sexo" class="col-md-4">Sexo (*)</label>
-						<div class="col-md-8"><select name="sexo">
+						<div class="col-md-8"><select name="sexo" required>
 							<option value="M">Masculino</option>
 							<option value="F">Femenino</option>
 							<option value="O">Otro</option>
@@ -260,7 +260,7 @@
 
 					<div class="form-group col-md-6">
 						<label for="telefono" class="col-md-4">Telefono (*)</label>
-						<div class="col-md-8"><input type="text"  name="telefono"></div>
+						<div class="col-md-8"><input type="text"  name="telefono" required></div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-12">
@@ -270,7 +270,7 @@
 
 					<div class="form-group col-md-6">
 						<label for="Estado" class="col-md-4">Estado (*)</label>
-						<div class="col-md-8"><select name="estado"></div>
+						<div class="col-md-8"><select name="estado" required></div>
 							<option value="A">Activo</option>
 							<option value="B">Inactivo</option>
 						</select></div>
@@ -278,7 +278,7 @@
 				</form>
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
+					<button type="button" class="saveButton" onclick="ui.validarPersonaForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->

@@ -51,6 +51,39 @@ Array.prototype.getById = function (id) {
 	return retval;
 }
 
+ui.validarPersonaForm = function() {
+	console.log("En validar persona");
+	var badera = true;
+	var campos = [];
+	
+	campos.push($('#formPersona input[name=apellidos]'));
+	campos.push($('#formPersona input[name=nombres]'));
+	campos.push($('#formPersona select[name=tipo_doc]'));
+	campos.push($('#formPersona input[name=nro_doc]'));
+	campos.push($('#formPersona input[name=fecha_nacimiento]'));
+	campos.push($('#formPersona select[name=sexo]'));
+	campos.push($('#formPersona input[name=domicilio]'));
+	campos.push($('#formPersona input[name=foto]'));
+	campos.push($('#formPersona input[name=telefono]'));
+	campos.push($('#formPersona textarea[name=descripcion]'));
+	campos.push($('#formPersona select[name=estado]'));
+	campos.push($('#formPersona input[name=foto_registro]'));
+
+	for(var i=0; i<campos.length; i++){
+		if (campos[i].attr("required")){
+			if (campos[i].val() == ""){
+				campos[i].fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+				bandera=false;
+			}
+		}
+	}
+	if (bandera){
+		ui.sendPersonaForm();
+	}else{
+		return false;
+	}
+}
+
 ui.sendPersonaForm = function () {
 	var sendData = {};
 	sendData.entity = 'persona';
