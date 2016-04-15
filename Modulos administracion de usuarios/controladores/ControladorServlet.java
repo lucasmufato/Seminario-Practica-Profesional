@@ -231,6 +231,12 @@ public class ControladorServlet extends HttpServlet {
 		recibido = new JSONObject();
 		salida = new JSONObject();
 
+		if (Integer.parseInt(request.getParameter("id_usuario")) == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite modificar los datos del usuario Administrador");
+			return salida;
+		}
+
 		if (request.getParameter("action").equals("new")) {
 			recibido.put ("id_usuario", -1);
 		} else {
@@ -261,6 +267,12 @@ public class ControladorServlet extends HttpServlet {
 
 		recibido = new JSONObject();
 		salida = new JSONObject();
+
+		if (Integer.parseInt(request.getParameter("id_rol")) == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite modificar los datos del rol SuperUsuario");
+			return salida;
+		}
 
 		if (request.getParameter("action").equals("new")) {
 			recibido.put ("id_rol", -1);
@@ -365,7 +377,11 @@ public class ControladorServlet extends HttpServlet {
 		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
 		salida.put ("id_usuario", id_usuario);
 		salida.put ("id_rol", id_rol);
-		if (Usuario.AsignarRol(id_rol, id_usuario)) {
+
+		if (id_usuario == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite modificar los roles del usuario Administrador");
+		} else if (Usuario.AsignarRol(id_rol, id_usuario)) {
 			salida.put ("result", true);
 			salida.put ("msg", "Se ha asignado el rol al usuario");
 		} else {
@@ -382,14 +398,18 @@ public class ControladorServlet extends HttpServlet {
 		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
 		salida.put ("id_usuario", id_usuario);
 		salida.put ("id_rol", id_rol);
-		if (Usuario.QuitarRol(id_rol, id_usuario)) {
+
+		if (id_usuario == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite modificar los roles del usuario Administrador");
+		} else if (Usuario.QuitarRol(id_rol, id_usuario)) {
 			salida.put ("result", true);
 			salida.put ("msg", "Se ha desasignado el rol al usuario");
 		} else {
 			salida.put ("result", false);
 			salida.put ("msg", "No se ha podido desasignar el rol al usuario");
-		} 
-		
+		}
+	
 		return salida;
 	}	
 	
@@ -408,7 +428,10 @@ public class ControladorServlet extends HttpServlet {
 		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
 		salida.put ("id_rol", id_rol);
 		salida.put ("id_permiso", id_permiso);
-		if (Rol.AsignarPermiso(id_permiso, id_rol)) {
+		if (id_rol == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite modificar los permisos del rol SuperUsuario");
+		} else if (Rol.AsignarPermiso(id_permiso, id_rol)) {
 			salida.put ("result", true);
 			salida.put ("msg", "Se ha asignado el permiso al rol");
 		} else {
@@ -425,7 +448,10 @@ public class ControladorServlet extends HttpServlet {
 		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
 		salida.put ("id_rol", id_rol);
 		salida.put ("id_permiso", id_permiso);
-		if(Rol.QuitarPermiso(id_permiso, id_rol)) {
+		if (id_rol == 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "No se permite modificar los permisos del rol SuperUsuario");
+		} else if(Rol.QuitarPermiso(id_permiso, id_rol)) {
 			salida.put ("result", true);
 			salida.put ("msg", "Se ha revocado el permiso al rol");
 		} else {
