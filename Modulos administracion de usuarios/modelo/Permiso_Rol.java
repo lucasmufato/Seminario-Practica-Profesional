@@ -105,7 +105,12 @@ public class Permiso_Rol extends BaseDatos {
 	
 	public static JSONArray ListaIdPermisos(int idRol) {
 		JSONArray lista = new JSONArray();
-		String consulta = "SELECT id_permiso FROM PERMISO_ROL WHERE id_rol="+idRol;
+		String consulta;
+		if (idRol == 0){
+			consulta = "SELECT * FROM PERMISO";
+		}else{
+			consulta = "SELECT id_permiso FROM PERMISO_ROL WHERE id_rol="+idRol;
+		}
 		ResultSet r= BaseDatos.RealizarConsulta(consulta);
 		try {
 			while (r.next()) {
