@@ -278,7 +278,7 @@
 				</form>
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="saveButton" onclick="ui.validarPersonaForm()">Guardar</button>
+					<button type="button" class="saveButton" onclick="ui.validarVaciosForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -300,21 +300,21 @@
 					<div class="form-group col-md-6">
 						<label for="nombre_usuario" class="col-md-4">Nombre de Usuario (*)</label>
 						<div class="col-md-8">
-							<input type="text" name="nombre_usuario">
+							<input type="text" name="nombre_usuario" required>
 						</div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="password" class="col-md-4">Contraseña (*)</label>
 						<div class="col-md-8">
-							<input type="password" name="password">
+							<input type="password" name="password" required>
 						</div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
 						<label for="id_persona" class="col-md-4">Persona (*)</label>
 						<div class="col-md-8">
-							<select name="id_persona">
+							<select name="id_persona" required>
 							</select>
 						</div>
 					</div><!-- .form-group -->
@@ -322,21 +322,21 @@
 					<div class="form-group col-md-6">
 						<label for="email" class="col-md-4">E-Mail (*)</label>
 						<div class="col-md-8">
-							<input type="text" name="email">
+							<input type="text" name="email" required>
 						</div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-12">
-						<label for="descripcion" class="col-md-2">Descripcion (*)</label>
+						<label for="descripcion" class="col-md-2">Descripcion</label>
 						<div class="col-md-10">
-							<textarea name="descripcion" ></textarea>
+							<textarea name="descripcion"></textarea>
 						</div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
-						<label for="estado" class="col-md-4">Estado</label>
+						<label for="estado" class="col-md-4">Estado (*)</label>
 						<div class="col-md-8">
-							<select name="estado">
+							<select name="estado" required>
 								<option value="A">Activo</option>
 								<option value="B">Inactivo</option>
 								<option value="S">Suspendido</option>
@@ -349,7 +349,7 @@
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
 					<button type="button" class="btn-primary glyphicon glyphicon-knight" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
-					<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
+					<button type="button" class="saveButton" onclick="ui.validarVaciosForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-content -->
@@ -402,14 +402,14 @@
 					<div class="form-group col-md-6">
 						<label for="nombre_rol" class="col-md-4">Nombre de Rol (*)</label>
 						<div class="col-md-8">
-							<input type="text" name="nombre_rol">
+							<input type="text" name="nombre_rol" required>
 						</div>
 					</div><!-- .form-group-->
 
 					<div class="form-group col-md-6">
 						<label for="nombre_amigable" class="col-md-4">Nombre Amigable (*)</label>
 						<div class="col-md-8">
-							<input type="text" name="nombre_amigable">
+							<input type="text" name="nombre_amigable" required>
 						</div>
 					</div><!-- .form-group-->
 
@@ -423,7 +423,7 @@
 					<div class="form-group col-md-6">
 						<label for="estado" class="col-md-4">Estado (*)</label>
 						<div class="col-md-8">
-							<select name="estado">
+							<select name="estado" required>
 								<option value="A">Activo</option>
 								<option value="B">Inactivo</option>
 							</select>
@@ -434,7 +434,7 @@
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
 					<button type="button" class="btn-primary glyphicon glyphicon-check" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
-					<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
+					<button type="button" class="saveButton" onclick="ui.validarVaciosForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -489,14 +489,14 @@
 					<div class="form-group col-md-6">
 						<label for="nombre_permiso" class="col-md-4">Nombre del permiso (*)</label>
 						<div class="col-md-8">
-							<input type="text" name="nombre_permiso">
+							<input type="text" name="nombre_permiso" required>
 						</div>
 					</div><!-- .form-group-->
 
 					<div class="form-group col-md-6">
 						<label for="funcionalidad" class="col-md-4">Funcionalidad (*)</label>
 						<div class="col-md-8">
-							<input type="text" name="funcionalidad">
+							<input type="text" name="funcionalidad" required>
 						</div>
 					</div><!-- .form-group-->
 
@@ -510,7 +510,7 @@
 					<div class="form-group col-md-6">
 						<label for="estado" class="col-md-4">Estado (*)</label>
 						<div class="col-md-8">
-							<select name="estado">
+							<select name="estado" required>
 								<option value="A">Activo</option>
 								<option value="B">Inactivo</option>
 							</select>
@@ -520,7 +520,7 @@
 				</div><!-- modal-body -->
 
 				<div class="modal-footer">
-					<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>
+					<button type="button" class="saveButton" onclick="ui.validarVaciosForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->

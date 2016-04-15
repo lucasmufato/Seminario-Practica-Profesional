@@ -51,34 +51,68 @@ Array.prototype.getById = function (id) {
 	return retval;
 }
 
-ui.validarPersonaForm = function() {
-	console.log("En validar persona");
-	var badera = true;
+ui.validarVaciosForm = function(){
+	var bandera = true;
 	var campos = [];
 	
-	campos.push($('#formPersona input[name=apellidos]'));
-	campos.push($('#formPersona input[name=nombres]'));
-	campos.push($('#formPersona select[name=tipo_doc]'));
-	campos.push($('#formPersona input[name=nro_doc]'));
-	campos.push($('#formPersona input[name=fecha_nacimiento]'));
-	campos.push($('#formPersona select[name=sexo]'));
-	campos.push($('#formPersona input[name=domicilio]'));
-	campos.push($('#formPersona input[name=foto]'));
-	campos.push($('#formPersona input[name=telefono]'));
-	campos.push($('#formPersona textarea[name=descripcion]'));
-	campos.push($('#formPersona select[name=estado]'));
-	campos.push($('#formPersona input[name=foto_registro]'));
-
+	switch (ui.currentTab) {
+		case 'personas':
+			campos.push($('#formPersona input[name=apellidos]'));
+			campos.push($('#formPersona input[name=nombres]'));
+			campos.push($('#formPersona select[name=tipo_doc]'));
+			campos.push($('#formPersona input[name=nro_doc]'));
+			campos.push($('#formPersona input[name=fecha_nacimiento]'));
+			campos.push($('#formPersona select[name=sexo]'));
+			campos.push($('#formPersona input[name=domicilio]'));
+			campos.push($('#formPersona input[name=foto]'));
+			campos.push($('#formPersona input[name=telefono]'));
+			campos.push($('#formPersona textarea[name=descripcion]'));
+			campos.push($('#formPersona select[name=estado]'));
+			campos.push($('#formPersona input[name=foto_registro]'));
+			break;
+		case 'usuarios':
+			campos.push($('#formUsuario input[name=nombre_usuario]'));
+			campos.push($('#formUsuario input[name=password]'));
+			campos.push($('#formUsuario input[name=email]'));
+			campos.push($('#formUsuario textarea[name=descripcion]'));
+			campos.push($('#formUsuario select[name=estado]'));
+			break;
+		case 'roles':
+			campos.push($('#formRol input[name=nombre_rol]'));
+			campos.push($('#formRol input[name=nombre_amigable]'));
+			campos.push($('#formRol select[name=estado]'));
+			break;
+		case 'permisos':
+			campos.push($('#formPermiso input[name=nombre_permiso]'));
+			campos.push($('#formPermiso input[name=funcionalidad]'));
+			campos.push($('#formPermiso select[name=estado]'));
+			break;
+	}
+	
 	for(var i=0; i<campos.length; i++){
 		if (campos[i].attr("required")){
 			if (campos[i].val() == ""){
-				campos[i].fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+				//campos[i].parent().parent().addClass("has-error");
+				campos[i].fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100)
 				bandera=false;
 			}
 		}
 	}
 	if (bandera){
-		ui.sendPersonaForm();
+		switch (ui.currentTab) {
+			case 'personas':
+				ui.sendPersonaForm();
+				break;
+			case 'usuarios':
+				ui.sendUsuarioForm();
+				break;
+			case 'roles':
+				ui.sendRolForm();
+				break;
+			case 'permisos':
+				ui.sendPermisoForm();
+				break;
+	}
 	}else{
 		return false;
 	}
