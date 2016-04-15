@@ -48,7 +48,7 @@ public class Rol extends BaseDatos {
 					json[j].put(vector_atributos[i], r.getObject(vector_atributos[i]));
 					i++;
 				}
-				if (json[j].get("id_rol") == 0) {
+				if (((Integer)json[j].get("id_rol")) == 0) {
 					// Un rol con id 0 es superusuario. Tiene siempre todos los permisos
 					JSONArray todosPerms = new JSONArray();
 					for (JSONObject perm: Permiso.Select()) {
