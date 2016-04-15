@@ -418,13 +418,15 @@ ui.showUsuarioRolForm = function () {
 
 	usuario = data.usuarios.getById(selected.id);
 	data.roles.forEach(function (rol) {
-		newOption = document.createElement ('OPTION');
-		newOption.value = rol.id;
-		newOption.textContent = rol.nombre_amigable;
-		if (usuario.roles.includes(rol.id)) {
-			asignados.appendChild (newOption);
-		} else {
-			noAsignados.appendChild (newOption);
+		if (rol.estado == "A") {
+			newOption = document.createElement ('OPTION');
+			newOption.value = rol.id;
+			newOption.textContent = rol.nombre_amigable;
+			if (usuario.roles.includes(rol.id)) {
+				asignados.appendChild (newOption);
+			} else  {
+				noAsignados.appendChild (newOption);
+			}
 		}
 	});
 
@@ -450,13 +452,15 @@ ui.showRolPermisoForm = function () {
 
 	rol = data.roles.getById(selected.id);
 	data.permisos.forEach(function (permiso) {
-		newOption = document.createElement ('OPTION');
-		newOption.value = permiso.id;
-		newOption.textContent = permiso.nombre_permiso;
-		if (rol.permisos.includes(permiso.id)) {
-			asignados.appendChild (newOption);
-		} else {
-			noAsignados.appendChild (newOption);
+		if (permiso.estado == "A"){
+			 newOption = document.createElement ('OPTION');
+			newOption.value = permiso.id;
+			newOption.textContent = permiso.funcionalidad;
+			if (rol.permisos.includes(permiso.id)) {
+				asignados.appendChild (newOption);
+			} else  {
+				noAsignados.appendChild (newOption);
+			}
 		}
 	});
 	$('#modalPermisoRol').modal('show');
