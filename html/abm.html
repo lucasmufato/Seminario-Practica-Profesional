@@ -25,7 +25,7 @@
 	</nav>
 
 	<section class="tabSection" id="personasTab">
-		<form class="form-horizontal">
+		<form class="form-horizontal" onsubmit="ui.updatePersonasTable(); return false">
 			<header><h3 class="pull-center">Administración de Personas</h3></header>
 				
 			<!-- NOMBRE-->
@@ -69,7 +69,7 @@
 				</div>
 			<!-- BOTON  -->
 				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-2 col-md-offset-3">
-					<button class="btn btn-block btn-primary glyphicon glyphicon-search" type="button" onclick="ui.updatePersonasTable()">Buscar</button>
+					<button class="btn btn-block btn-primary glyphicon glyphicon-search" type="submit">Buscar</button>
 				</div>
 			</div>
 		</form>
@@ -93,50 +93,22 @@
 	</section>
 
 	<section class="tabSection" id="usuariosTab">
-		<form class="form-horizontal">
+		<form class="form-horizontal" onsubmit="ui.updateUsuariosTable(); return false">
 			<header><h3 class="pull-center">Administración de Usuarios</h3></header>
 				<div class="form-group">
-					<label for="nombre" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Nombre de usuario:</label>
+					<label for="nombre-usuario" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Nombre de Usuario:</label>
 					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
-						<input type="text" class="form-control col-sm-2" name="nombre-usuario" placeholder="Nombre de usuario"></input>
+						<input type="text" class="form-control col-sm-2" name="nombre-usuario" placeholder="Nombre de Usuario"></input>
 					</div>
-				</div>
-<div class="form-group">
-					<label for="nombre" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Nombre:</label>
+					<label for="email" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">E-Mail:</label>
 					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
-						<input type="text" class="form-control col-sm-2" name="nombre" placeholder="Nombre"></input>
-					</div>
-					<label for="apellidos" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Apellidos:</label>
-					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
-						<input type="text" class="form-control" name="apellidos" placeholder="Apellidos"></input>
+						<input type="text" class="form-control" name="email" placeholder="E-Mail"></input>
 				    </div>
 				</div>
+
 			<div class="form-group">
-				<label for="option" class="control-label col-xs-2 col-md-2 col-xs-offset-1">Tipo de documento:</label>
-				<div class="col-xs-3 col-md-3 col-lg-2">
-					<select class="form-control" name="tipodoc">
-						<option value="">DNI</option>
-						<option value="">LE</option>
-						<option value="">LC</option>
-					</select>
-				</div>
-				<label for="nrodoc" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Número de documento:</label>
-				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
-					<input type="text" class="form-control" name="nrodoc" placeholder="Nro Documento"></input>
-				</div>
-			</div>				
-			<div class="form-group">
-				<label for="option" class="control-label col-xs-2 col-md-2 col-xs-offset-1">Estado:</label>
-				<div class="col-xs-3 col-md-3 col-lg-2">
-					<select class="form-control" name="estado">
-						<option value="*">Todos</option>
-						<option value="A">Activo</option>
-						<option value="B">Inactivo</option>
-						<option value="S">Suspendido</option>
-					</select>
-				</div>
-				<div class="col-xs-3 col-md-3 col-lg-2 col-xs-offset-2 col-md-offset-2 col-lg-offset-3">
-					<button class="btn btn-primary btn-block glyphicon glyphicon-search" type="button" onclick="ui.updateUsuariosTable()">Buscar</button>
+				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-8 col-md-offset-9 col-lg-offset-8">
+					<button class="btn btn-primary btn-block glyphicon glyphicon-search" type="submit">Buscar</button>
 				</div>
 			</div>
 		</form>		
@@ -155,7 +127,7 @@
 
 	<section class="tabSection" id="rolesTab">
 
-		<form class="form-horizontal">
+		<form class="form-horizontal" onsubmit="ui.updateRolesTable(); return false">
 			<header><h3 class="pull-center">Administración de Roles</h3></header>
 				
 			<!-- NOMBRE-->
@@ -166,7 +138,7 @@
 				</div>
 			<!-- BOTON -->
 				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-2 col-md-offset-3">
-					<button class="btn btn-primary btn-block glyphicon glyphicon-search" type="button" onclick="ui.updateRolesTable()">Buscar</button>
+					<button class="btn btn-primary btn-block glyphicon glyphicon-search" type="submit">Buscar</button>
 				</div>
 			</div> 
 		</form>

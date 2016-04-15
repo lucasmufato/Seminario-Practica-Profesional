@@ -525,11 +525,13 @@ ui.updateUsuariosTable = function () {
 	var encontrado = false;
 
 	var rctNombreUsuario = $('#usuariosTab input[name=nombre-usuario]').val().toLowerCase();
+	var rctEmail = $('#usuariosTab input[name=email]').val().toLowerCase();
 
 	tbody.innerHTML = '';
 	data.usuarios.forEach(function (elem) {
 		if (
-			elem.nombre_usuario.toLowerCase().contains(rctNombreUsuario) 
+			elem.nombre_usuario.toLowerCase().contains(rctNombreUsuario) &&
+			elem.email.toLowerCase().contains(rctEmail) 
 		) {
 			encontrado = true;
 			tr = document.createElement ('TR');
