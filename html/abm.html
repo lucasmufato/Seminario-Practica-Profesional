@@ -4,9 +4,12 @@
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" href="abm.css" />
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 	<script type="text/javascript" src="abm.js"></script>
 </head>
 
@@ -221,7 +224,10 @@
 
 					<div class="form-group col-md-6">
 						<label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
-						<div class="col-md-8"><input type="date" name="fecha_nacimiento" required></div>
+						<div class="input-group date form_date col-md-8">
+							<input class="form-control" type="text" name="fecha_nacimiento" required>
+							<span class="input-group-addon glyphicon glyphicon-calendar" onclick="$('#formPersona input[name=fecha_nacimiento]').datetimepicker('show')");></span>
+						</div>
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
