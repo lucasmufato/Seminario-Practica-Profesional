@@ -328,7 +328,7 @@
 
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="btn-primary glyphicon glyphicon-knight" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
+					<button type="button" id="usuarioRolesButton" class="btn-primary glyphicon glyphicon-knight" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
 					<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
@@ -413,7 +413,7 @@
 					</form>
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="btn-primary glyphicon glyphicon-check" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
+					<button type="button" id="rolPermisosButton" class="btn-primary glyphicon glyphicon-check" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
 					<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
@@ -530,7 +530,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" onclick="ui.closeModal('Error')">&times;</button>
+					<button type="button" class="close" onclick="ui.closeModal('Denied')">&times;</button>
 					<h3 class="dialog-title">Permiso denegado</h3>
 				</div><!-- modal-header -->
 				<div class="modal-body">

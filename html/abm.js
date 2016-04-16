@@ -354,6 +354,7 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario input[name=email]').val('');
 	$('#formUsuario textarea[name=descripcion]').val('');
 	$('#formUsuario select[name=estado]').val('A');
+	$('#usuarioRolesButton').hide();
 	$('#modalUsuario').modal('show');
 };
 
@@ -364,6 +365,7 @@ ui.showNewRolForm = function () {
 	$('#formRol textarea[name=descripcion]').val('');
 	$('#formRol input[name=estado]').val('A');
 	$('#formPermisoRol').hide();
+	$('#rolPermisosButton').hide();
 	$('#modalRol').modal('show');
 }
 
@@ -412,6 +414,7 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
 	$('#formUsuario select[name=estado]').val((selected.estado));
+	$('#usuarioRolesButton').show();
 	$('#modalUsuario').modal('show');
 }
 
@@ -427,6 +430,7 @@ ui.showEditRolForm = function() {
 	$('#formRol input[name=nombre_amigable]').val(selected.nombre_amigable);
 	$('#formRol textarea[name=descripcion]').val(selected.descripcion);
 	$('#formRol select[name=estado]').val((selected.estado));
+	$('#rolPermisosButton').show();
 	$('#modalRol').modal('show');
 }
 
