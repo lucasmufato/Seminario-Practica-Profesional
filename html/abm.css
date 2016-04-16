@@ -4,9 +4,10 @@ body {
 }
 
 #logoutButton {
-	position: absolute;
+	position: fixed;
 	top: 1px;
 	right: 1px;
+	z-index: 1200;
 }
 
 
