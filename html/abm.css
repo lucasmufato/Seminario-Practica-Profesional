@@ -56,6 +56,8 @@ body {
 .tabSection {
 	display: none;
 	border-bottom: 1.47px solid #DDD;
+	margin-bottom: 64px;
+	margin-top: 40px;
 }
 
 
@@ -80,7 +82,6 @@ body {
 	padding-bottom: 0.5%;
 }
 
-
 #personasTab {
 	display: block;
 }
@@ -96,3 +97,4 @@ body {
 .modal-footer {
 	clear: both;
 }
+
