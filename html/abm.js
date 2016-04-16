@@ -126,9 +126,40 @@ ui.sendPersonaForm = function () {
 	$('#modalPersona').modal('hide');
 }
 
+ui.validarNombreUsuario = function(nombreUsuario){
+	if (nombreUsuario.val().length<6){
+		nombreUsuario.val("").attr("placeholder", "Mínimo 6 caracteres").fadeOut(100).fadeIn(100);
+		return false;
+	}
+	return true;
+}
+
+ui.validarPass = function(pass){
+	if (pass.val().length<6){
+		pass.val("").attr("placeholder", "Mínimo 6 caracteres").fadeOut(100).fadeIn(100);
+		return false;
+	}
+	return true;
+}
+
+ui.validarMail = function(mail){
+    var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!regex.test(mail.val())){
+		mail.val("").attr("placeholder", "Mail debe ser válido").fadeOut(100).fadeIn(100);
+		return false;
+	}
+	return true;
+}
+
 ui.sendUsuarioForm = function() {
 	if (!ui.validarVaciosForm()) return false;
-
+	var nombreUsuario =  $('#formUsuario input[name=nombre_usuario]');
+	if (!ui.validarNombreUsuario(nombreUsuario)) return false;
+	var pass = $('#formUsuario input[name=password]');
+	if (!ui.validarPass(pass)) return false;
+	var mail = $('#formUsuario input[name=email]');
+	if (!ui.validarMail(mail)) return false;
+	
 	var sendData = {};
 	sendData.entity = 'usuario';
 	sendData.id_usuario = $('#formUsuario input[name=id]').val() || null;
