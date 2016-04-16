@@ -929,3 +929,9 @@ if (Array.prototype.includes == undefined) {
 		return this.indexOf(item) != -1;
 	}
 }
+
+if (String.prototype.contains == undefined) {
+	String.prototype.contains = function (item) {
+		return this.indexOf(item) != -1;
+	}
+}
