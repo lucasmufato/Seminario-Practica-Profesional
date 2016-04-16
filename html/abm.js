@@ -98,27 +98,12 @@ ui.validarVaciosForm = function(){
 			}
 		}
 	}
-	if (bandera){
-		switch (ui.currentTab) {
-			case 'personas':
-				ui.sendPersonaForm();
-				break;
-			case 'usuarios':
-				ui.sendUsuarioForm();
-				break;
-			case 'roles':
-				ui.sendRolForm();
-				break;
-			case 'permisos':
-				ui.sendPermisoForm();
-				break;
-	}
-	}else{
-		return false;
-	}
+	return bandera;
 }
 
 ui.sendPersonaForm = function () {
+	if (!ui.validarVaciosForm()) return false;
+	
 	var sendData = {};
 	sendData.entity = 'persona';
 	sendData.id_persona = $('#formPersona input[name=id]').val();
@@ -142,6 +127,8 @@ ui.sendPersonaForm = function () {
 }
 
 ui.sendUsuarioForm = function() {
+	if (!ui.validarVaciosForm()) return false;
+
 	var sendData = {};
 	sendData.entity = 'usuario';
 	sendData.id_usuario = $('#formUsuario input[name=id]').val() || null;
@@ -158,6 +145,8 @@ ui.sendUsuarioForm = function() {
 }
 
 ui.sendRolForm = function() {
+	if (!ui.validarVaciosForm()) return false;
+
 	var sendData = {};
 	sendData.entity = 'rol';
 	sendData.id_rol = $('#formRol input[name=id]').val() || null;
@@ -172,6 +161,8 @@ ui.sendRolForm = function() {
 }
 
 ui.sendPermisoForm = function() {
+	if (!ui.validarVaciosForm()) return false;
+
 	var sendData = {};
 	sendData.entity = 'permiso';
 	sendData.id_permiso = $('#formPermiso input[name=id]').val() || null;
