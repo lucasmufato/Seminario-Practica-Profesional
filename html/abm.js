@@ -210,7 +210,7 @@ ui.requestPermisoDeletion = function() {
 initUI = function() {
 	/* Bootstrap */
 	$('button').addClass('btn');
-	$('table').addClass('table table-hover table-responsive');
+	$('table').addClass('table table-hover');
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
 	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
