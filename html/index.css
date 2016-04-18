@@ -1,21 +1,29 @@
+html, body {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:black;
   background-image: url("img/index/fondo1.jpg");
-  background-size: cover;
+  background-size: cover;  
+  background-repeat:no-repeat;
+  background-position:center;
+  background-attachment: fixed;
 }
 .panel_ingreso{
-  margin-top:20px;
-  width:400px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
-  background:#00b8e6;
 }
 .panel_ingreso img{
-  width:400px;
+  width:100%;
 }
 button{
-  width:198px;
-  height:60px;
+  height:50px;
+  width:50%;
+}
+.botones{
+	width:100%;
 }

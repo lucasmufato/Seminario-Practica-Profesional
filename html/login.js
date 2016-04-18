@@ -10,10 +10,10 @@ $(document).ready(function(){
   var inputPass = $("input[name=pass]");
   inputUsuario.focus();
   inputUsuario.focusin(function(){
-    $("#error_usuario").hide();
+	quitarError("usuario");
   });
-    inputPass.focusin(function(){
-    $("#error_pass").hide();
+  inputPass.focusin(function(){
+	quitarError("pass");
   });
   inputUsuario.focusout(validarUser);
   inputPass.focusout(validarPass);
@@ -29,7 +29,21 @@ $(document).keypress(function(e) {
 function ocultarMensajes(){
   $(".msg_error").hide();
 }
-
+function quitarError (campo){
+	var jquery;
+	switch(campo){
+		case "usuario":
+			jquery = $("#error_usuario");
+			break;
+		case "pass":
+			jquery = $("#error_pass");
+			break;
+	}
+	jquery.hide();
+	if (jquery.parent().parent().hasClass("has-error")){
+		jquery.parent().parent().removeClass("has-error");
+	}
+}
 var validarUser = function(){
   var ingresado = $("input[name=usuario]").val();
   userValido=ingresado.length>=6;
@@ -49,10 +63,12 @@ function validarDatos(){
 		enviarForm();
 	}else {
 		if(!passValido) {
-			$("#error_pass").effect('shake', {distance:2},{ times:1 }, 500);
+			//$("#error_pass").effect('shake', {distance:2},{ times:1 }, 500);
+			$("#error_pass").show().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 		}
 		if(!userValido) {
-			$("#error_usuario").effect('shake', {distance:2},{ times:1 }, 500);
+			//$("#error_usuario").effect('shake', {distance:2},{ times:1 }, 500);
+			$("#error_usuario").show().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 		}
 	}
 	return false;
