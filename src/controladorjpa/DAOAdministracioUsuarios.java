@@ -181,7 +181,8 @@ public class DAOAdministracioUsuarios {
 		    //de esa clase saco el JSON original y lo guardo en otra clase
 		    JSONObject j=original.toJSON();
 		    //al json original le cambio la variable estado
-		    j.remove("estado", 'B');
+		    j.remove("estado");
+		    j.put("estado", 'B');
 		    //y ahora al original le pongo el json cambiado, lo unico distinto que tiene es q ahora tiene un estado dado de baja
 		    original.SetJSONObject(j);
 		    //hago el commit del cambio
