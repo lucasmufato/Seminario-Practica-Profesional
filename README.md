@@ -19,9 +19,18 @@ Dentro del directorio del sitio es necesario que existan los siguientes archivos
 
 *   [...]/WEB-INF/classes/ directorio para .class compilados. Debe respetar el arbol de paquetes
 
+*   [...]/WEB-INF/classes/META-INF adentro va "persistence.xml", la configuracion de JPA
 
 *(1)*: En Debian el directorio del sitio es /var/lib/tomcat8/webapps/ROOT  
-*(2)*: En lib tuve que poner los archivos json-simple-1.1.1.jar y mysql-connector-java-5.1.32.jar
+*(2)*: En lib tuve que poner los siguientes archivos:
+*    json-simple-1.1.1.jar
+*    mysql-connector-java.jar
+*    javax.persistence_2.1.0.v201304241213.jar
+*    javax.persistence.source_2.1.0.v201304241213.jar
+*    org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar
+*    org.eclipse.persistence.jpa.modelgen.source_2.5.2.v20140319-9ad6abd.jar
+*    org.eclipse.persistence.jpars_2.5.2.v20140319-9ad6abd.jar
+*    org.eclipse.persistence.jpars.source_2.5.2.v20140319-9ad6abd.jar
 
 
 
