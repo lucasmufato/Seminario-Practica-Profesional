@@ -48,7 +48,6 @@ public class DAOAdministracioUsuarios {
 				jarray.add(pr.getPermiso().toJSON());
 			}
 		}
-		
 		return jarray;
     }
     
@@ -86,7 +85,7 @@ public class DAOAdministracioUsuarios {
 
 	public Usuario buscarUsuarioPorNombre(String nombre_usuario) {
     	try{
-    		Query qry = entitymanager.createNamedQuery("Usuario.porNombre");
+    		Query qry = entitymanager.createNamedQuery("Usuario.porNombreExacto");
     		qry.setParameter("nombre", nombre_usuario);
     		return (Usuario)qry.getSingleResult();
     	}catch(Exception e){
