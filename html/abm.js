@@ -245,6 +245,15 @@ initUI = function() {
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
 	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
+	$('#formPersona input[name=fecha_nacimiento]').datetimepicker({
+		format: 'yyyy-mm-dd',
+		language: 'es',
+		todayBtn: 1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2
+	})
 	data.loadData();
 };
 
@@ -348,9 +357,19 @@ ui.permisosButtonPressed = function () {
 ui.updatePersonasSelect = function() {
 	var select = $('#formUsuario select[name=id_persona]')[0];
 	var newOpt;
+	var persArray = []
+	var compareFunc = function (a, b) {
+		var inpa = a.nombres.toLowerCase() + a.apellidos.toLowerCase();
+		var inpb =  b.nombres.toLowerCase() + b.apellidos.toLowerCase();
+		return inpa.localeCompare (inpb);
+	}
 
 	select.textContent = '';
 	data.personas.forEach (function (persona) {
+		persArray.push(persona);
+	});
+
+	persArray.sort(compareFunc).forEach (function (persona) {
 		newOpt = document.createElement ('OPTION');
 		newOpt.value = persona.id
 		newOpt.textContent = persona.nombres+' '+persona.apellidos;
