@@ -1,25 +1,23 @@
 body{
-	 --background-image: url("https://images7.alphacoders.com/601/601969.jpg");
-	 background-image: url("img/home/fondo1.jpg");
-	 background-size: cover;
+
 }
 .panel_func{
   text-align: center;
   margin: 0px auto;
+  --width:100%;
 }
 .funcionalidad{
   display: inline-block;  
-  width:200px;
+  width:15%;
   margin: 1% 1% 1% 1%;
-  --background-color:#101010;
-  --padding-bottom:1%;
-    box-shadow: 0 0 10px #1a0d00; 
+  box-shadow: 0 0 10px #1a0d00; 
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  cursor:pointer;
 }
 .funcionalidad img{
-  width: 200px; 
-  height: 200px;
+  width: 100%; 
+  min-height: 200px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   --border-bottom: groove 10px #101010;
@@ -28,9 +26,8 @@ body{
 }
 .funcionalidad p{
   --background-color:#303F9F;
-  background-color:#331a00;
-  color:#ffe6cc;
-  margin-bottom:0;
+  background-color:#44f;
+  color:white;
   padding: 5% 5% 5% 5%;
   --border:inherit;
   text-align:center;
@@ -42,5 +39,5 @@ body{
 .funcionalidad:hover { 
   -moz-box-shadow: 0 0 10px #ccc; 
   -webkit-box-shadow: 0 0 10px #ccc; 
-  box-shadow: 0 0 10px #804000; 
+  box-shadow: 0 0 30px #ccc; 
 }
