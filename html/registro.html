@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <head>
 	<title>Registro</title>
@@ -7,77 +6,167 @@
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="registro.css" />
 	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="registro.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<form><center>
-			<!-- Las fotos no estan habilitadas todavia -->
-			<input type="hidden" name="foto" value="">
-			<input type="hidden" name="foto_registro" value="">
-			<br>
-			<div class="form-group">
-			<label for="apellidos">Apellido</label><input type="text" name="apellidos" placeholder="Apellidos"><br />
-			</div>
-			<div class="form-group">
-			<label for="nombres">Nombres</label><input type="text" name="nombres" placeholder="Nombres"><br />
-			</div>
-			<div class="form-group">
-			<label for="tipo_doc">Tipo de documento</label>
-				<select name="tipo_doc">
-					<option value="1">DNI</option>
-					<option value="2">LE</option>
-					<option value="3">LC</option>
-				</select><br /><br />
-			
-			<label for="nro_doc">Numero de documento</label>
-			<input type="number" name="nro_doc" placeholder="Nro. Documento"><br />
-			</div>
-			<div class="form-group">
-			<label for="fecha_nacimiento">Fecha de nacimiento</label>
-			<input type="date" name="fecha_nacimiento"><br />
-			</div>
-			<div class="form-group">
-			<label for="domicilio">Domicilio</label>
-			<input type="text" name="domicilio" placeholder="Domicilio"><br />
-			</div>
-			<div class="form-group">
-			<label>Sexo</label>
-			<select name="sexo">
-				<option value="M">Masculino</option>
-				<option value="F">Femenino</option>
-				<option value="O">Otro</option>
-			</select><br />
-			</div>
-			<div class="form-group">
-			<label for="telefono">Telefono</label>
-			<input type="text"  name="telefono" placeholder="Teléfono"><br />
-			</div>
-			<div class="form-group">
-			<label for="descripcion">Descripcion</label>
-			<textarea  name="descripcion" placeholder="Descripción"></textarea><br /><br />
-			</div>
-			<div class="form-group">
-			<label for="Estado">Estado</label>
-			<select name="estado">
-				<option value="A">Activo</option>
-				<option value="B">Inactivo</option>
-			</select><br />
-			</div>
-			<div class="form-group">
-			<label for="nombreusuario" id="nombreusuarioLabel">Nombre de Usuario</label><input type="text" placeholder="No se permiten espacios"><br />
-			</div>
-			<div class="form-group">
-			<label for="contrasenia" id="contrasenaLabel">Contraseña</label><input type="text" align="center"><br />
-			</div>
-			<div class="form-group">
-			<label for="contrasenia2" id="contrasenaLabel2">Repita su Contraseña</label><input type="text" ><br />
-			</div>
-			<div class="form-group">
-			<button type="button" class="closeButton" onclick="ui.closeForms()">Volver</button>
-			<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Registrarse</button>
-			</div>
-		</form ></center>
+  <div class="container-fluid">   
+    
+    <nav class="navbar  navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">Viajes Compartidos</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="panel panel-primary" id="formUsuario">
+      <div class="panel-heading">
+        <h3 class="panel-title">Registro - Paso 1</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group panel-error col-md-12"></div>
+        <form class="form-horizontal">
+          <input type="hidden" id="usuarioIdInput" name="id">
+
+          <div class="form-group col-md-6">
+            <label for="nombre_usuario" class="col-md-4">Nombre de Usuario (*)</label>
+            <div class="col-md-8">
+              <input type="text" name="nombre_usuario" class="form-control" required>
+            </div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="password" class="col-md-4">Contraseña (*)</label>
+            <div class="col-md-8">
+              <input type="password" name="password" class="form-control" required>
+            </div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="repetirPassword" class="col-md-4">Repetir contraseña (*)</label>
+            <div class="col-md-8">
+              <input type="password" name="repetirPassword" class="form-control" required>
+            </div>
+          </div><!-- .form-group -->
+          
+          <div class="form-group col-md-6">
+            <label for="email" class="col-md-4">E-Mail (*)</label>
+            <div class="col-md-8">
+              <input type="text" name="email" class="form-control" required>
+            </div>
+          </div><!-- .form-group -->
+        </form>
+      </div>
+      <div class="panel-footer clearfix">
+        <button class="btn btn-primary glyphicon glyphicon-step-forward pull-right" type="submit" onclick="ui.validar('Usuario')"> Siguiente</button></div>
+    </div>
+    
+    <div class="panel panel-primary" id="formPersona">
+      <div class="panel-heading">
+        <h3 class="panel-title">Registro - Paso 2</h3>
+      </div>
+      <div class="panel-body">
+        <div class="panel-error col-md-12"></div>
+        <form class="form-horizontal">
+          <!-- Las fotos no estan habilitadas todavia -->
+          <input type="hidden" name="id">
+
+          <div class="form-group col-md-6">
+            <label for="apellidos" class="col-md-4">Apellido (*)</label>
+            <div class="col-md-8"><input type="text" name="apellidos" class="form-control" required></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="nombres" class="col-md-4">Nombre (*)</label>
+            <div class="col-md-8"><input type="text" name="nombres" class="form-control" required></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="tipo_doc" class="col-md-4">Tipo de documento (*)</label>
+            <div class="col-md-8"><select name="tipo_doc" required>
+              <option value="1">DNI</option>
+              <option value="2">LE</option>
+              <option value="3">LC</option>
+              </select></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="nro_doc" class="col-md-4">Numero de documento (*)</label>
+            <div class="col-md-8"><input type="number" name="nro_doc" class="form-control" required></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
+            <div class="col-md-8"><input type="date" name="fecha_nacimiento" class="form-control" required></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="domicilio" class="col-md-4">Domicilio (*)</label>
+            <div class="col-md-8"><input type="text" name="domicilio" class="form-control" required></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="sexo" class="col-md-4">Sexo (*)</label>
+            <div class="col-md-8"><select name="sexo" required>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="O">Otro</option>
+              </select></div>
+          </div><!-- .form-group -->
+
+          <div class="form-group col-md-6">
+            <label for="telefono" class="col-md-4">Telefono (*)</label>
+            <div class="col-md-6"><input type="text"  name="telefono" class="form-control" required></div>
+          </div><!-- .form-group -->
+        </form>
+      </div>
+      <div class="panel-footer clearfix">
+        <div class="btn-group pull-right" role="group">
+          <button class="btn btn-default glyphicon glyphicon-step-backward" type="submit" onclick="ui.activateTab('Usuario')"> Volver</button>
+          <button class="btn btn-primary glyphicon glyphicon-step-forward" type="submit" onclick="ui.validar('Persona')"> Siguiente</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-primary" id="formCliente">
+      <div class="panel-heading">
+        <h3 class="panel-title">Registro - Paso 3</h3>
+      </div>
+      <div class="panel-body">
+        <div class="panel-error col-md-12"></div>
+        <form class="form-horizontal">
+          <div class="form-group col-md-6">
+            <label for="apellidos" class="col-md-6">Foto del registro de conducir</label>
+            <div class="col-md-6">
+              <span class="btn btn-default btn-file">
+                Buscar <input type="file">
+              </span>
+            </div>
+          </div><!-- .form-group -->
+        </form>
+      </div>
+      <div class="panel-footer clearfix">
+        <div class="btn-group pull-right" role="group">
+          <button class="btn btn-default glyphicon glyphicon-step-backward" type="submit" onclick="ui.activateTab('Persona')"> Volver</button>
+          <button class="btn btn-primary glyphicon glyphicon-check" type="submit" onclick="ui.validar('Cliente')"> Confirmar</button>
+        </div>
+      </div>
+    </div>
+    
+</div>
 
 
 </body>
