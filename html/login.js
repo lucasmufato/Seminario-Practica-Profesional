@@ -40,8 +40,8 @@ function quitarError (campo){
 			break;
 	}
 	jquery.hide();
-	if (jquery.parent().parent().hasClass("has-error")){
-		jquery.parent().parent().removeClass("has-error");
+	if (jquery.parent().parent().parent().hasClass("has-error")){
+		jquery.parent().parent().parent().removeClass("has-error");
 	}
 }
 var validarUser = function(){
@@ -64,11 +64,11 @@ function validarDatos(){
 	}else {
 		if(!passValido) {
 			//$("#error_pass").effect('shake', {distance:2},{ times:1 }, 500);
-			$("#error_pass").show().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+			$("#error_pass").show().parent().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 		}
 		if(!userValido) {
 			//$("#error_usuario").effect('shake', {distance:2},{ times:1 }, 500);
-			$("#error_usuario").show().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+			$("#error_usuario").show().parent().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 		}
 	}
 	return false;

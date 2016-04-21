@@ -7,7 +7,7 @@ body{
 }
 .panel{
 margin:auto;
-	width:90%;
+	--width:70%;
 }
 /*
  Para darle estilo al input type="file"

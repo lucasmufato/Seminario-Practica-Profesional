@@ -30,7 +30,7 @@ public class ControladorLogin extends HttpServlet {
 			c.setMaxAge(0);
 			response.addCookie(c); 
 		}
-		response.sendRedirect("login.html");
+		response.sendRedirect("index.html");
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
