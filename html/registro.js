@@ -7,6 +7,7 @@ data.cliente=[];
 
 $(document).ready(function(){
   ui.setNewForm();
+  $('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
 });
 
 ui.validarUsuario = function(){
@@ -20,14 +21,41 @@ ui.validarUsuario = function(){
   };
 
 
-ui.validarNombreUsuario = function(nombreUsuario){
-  console.log(nombreUsuario.val());
-	if (nombreUsuario.val().length<6){
-		customAlert(nombreUsuario);
-    ui.sendMsgError("Usuario: Mínimo 6 caracteres","Usuario");
-		return false;
+ui.validarNombreUsuario = function(){
+	var inputUsuario = $(this);
+	if (inputUsuario.val().length<6){
+		customAlert($(this),"Usuario: Mínimo 6 caracteres","Usuario");
+	} else{
+		usuarioExiste(inputUsuario.val(),function(existe){
+			if (!existe){
+				console.log("no existe usuario");
+				customAlert(inputUsuario,"Usuario existente","Usuario");
+			} else{
+				console.log("existe usuario");
+			}
+		});
 	}
-	return true;
+}
+
+function usuarioExiste(nombreUsuario,callback){
+	var sendData = {
+      accion: 'validar_usuario',
+      usuario: nombreUsuario,
+    };
+	$.ajax({
+      url: '/registro',
+      method: 'POST',
+      data: sendData,
+      dataType: 'json',
+      success: function (jsonData) {
+        DEBUGresponse = jsonData;
+        callback(jsonData.result);
+      },
+      error: function (er1, err2, err3) {
+        document.body.innerHTML = er1.responseText;
+        window.alert (err3);
+      }
+    });
 }
 
 ui.validarPass = function(pass1,pass2){
@@ -158,22 +186,25 @@ ui.hideForms = function () {
   $('#formPersona').hide();
 } 
 
-ui.sendMsgError = function(msg,form){
-  var formSelector = '#'+'form'+form;
-  if(msg==""){
-    $(formSelector +" .panel-error").html("");
-  }else{
-    var html='<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger\" role=\"alert\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>'+msg+'</div>';
-    $(formSelector +" .panel-error").append(html).focus();
-  }
-}
-
-
-function customAlert(input){
+function customAlert(input, msg){
+   ui.sendMsgError(input, msg);
    input.parent().parent().addClass("has-error");
- input.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+   input.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
    input.focus(function(){
      input.unbind('focus');//para el IE
      input.parent().parent().removeClass("has-error"); 
+	 ui.deleteMsgError(input)
    });
+}
+
+ui.sendMsgError = function(input,msg){
+  //var formSelector = '#'+'form'+form;
+  var idGenerado = "error-"+input.attr("name");
+  var html='<div id=\"'+idGenerado+'\" class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger\" role=\"alert\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>'+msg+'</div>';
+  $(".panel-error").append(html).focus();
+}
+
+ui.deleteMsgError = function(input){
+	var idGenerado = "#"+"error-"+input.attr("name");
+	$(idGenerado).remove();
 }
