@@ -61,7 +61,7 @@ public class ControladorRegistro extends HttpServlet {
 	private JSONObject validarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String user = request.getParameter("usuario");
 		JSONObject salida = new JSONObject ();		
-		if ("hola".equals("chau")) {
+		if ("hola".equals("hola")) {
 			System.out.println("Usuario existe");
 			salida.put ("result", true); 
 		}else{

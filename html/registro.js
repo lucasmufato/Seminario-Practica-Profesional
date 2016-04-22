@@ -8,28 +8,34 @@ data.cliente=[];
 $(document).ready(function(){
   ui.setNewForm();
   $('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
-});
+  $('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
+  $('#formUsuario input[name=email]').focusout(ui.validarMail);
+  $('form input[required]').focusout(ui.validarCampoObligatorio);
+  });
 
-ui.validarUsuario = function(){
-	var nombreUsuario =  $('#formUsuario input[name=nombre_usuario]');
-  var pass1 = $('#formUsuario input[name=password]');
-  var pass2 = $('#formUsuario input[name=repetirPassword]');
-  var mail = $('#formUsuario input[name=email]');
-
+function labelDelInput(input){
+	return label = $('label[for="'+input.attr('name')+'"]').text().split(" (*)")[0];
+}
   
-	return ui.validarNombreUsuario(nombreUsuario) & ui.validarPass(pass1,pass2) & ui.validarMail(mail);
-  };
-
-
+ui.validarCampoObligatorio = function(){
+	var input = $(this);
+	if (input.val().length==0){
+		customAlert(input, labelDelInput(input)+": Completar campo obligatorio");
+	}
+}
+  
 ui.validarNombreUsuario = function(){
 	var inputUsuario = $(this);
-	if (inputUsuario.val().length<6){
-		customAlert($(this),"Usuario: Mínimo 6 caracteres","Usuario");
+	var valor = inputUsuario.val();
+	if (valor.length < 6){
+		if (valor.length > 0){
+			customAlert(inputUsuario, labelDelInput(inputUsuario)+": Mínimo 6 caracteres");
+		}
 	} else{
 		usuarioExiste(inputUsuario.val(),function(existe){
 			if (!existe){
 				console.log("no existe usuario");
-				customAlert(inputUsuario,"Usuario existente","Usuario");
+				customAlert(inputUsuario, labelDelInput(inputUsuario)+": Usuario existente");
 			} else{
 				console.log("existe usuario");
 			}
@@ -58,89 +64,52 @@ function usuarioExiste(nombreUsuario,callback){
     });
 }
 
-ui.validarPass = function(pass1,pass2){
-	if (pass1.val().length<6){
-		customAlert(pass1);
-    ui.sendMsgError("Contraseña: Mínimo 6 caracteres","Usuario");
-		return false;
-	}else if (pass1.val() != pass2.val()){
-	
-    customAlert(pass1);
-    customAlert(pass2);
-    ui.sendMsgError("Contraseñas no coinciden entre sí","Usuario");
-		return false;
-  }
-	return true;
-}
-
-ui.validarMail = function(mail){
-  var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!regex.test(mail.val())){
-		customAlert(mail);
-    ui.sendMsgError("Mail no válido","Usuario");
-		return false;
-	}
-	return true;
-}
-
-ui.validar = function(form){
-  //Limpio mensajes de error
-  ui.sendMsgError("",form);
-  if (ui.validarVaciosForm(form)){
-    if (form=="Usuario"){
-      if (!ui.validarUsuario()) return false;
-    }
-    ui.setNewForm(form);
-    return true;
-  }
-  return false;
-}
-
-ui.validarVaciosForm = function(form){
-	var bandera = true;
-	var campos = [];
-	
-	switch (form) {
-		case 'Persona':
-			campos.push($('#formPersona input[name=apellidos]'));
-			campos.push($('#formPersona input[name=nombres]'));
-			campos.push($('#formPersona select[name=tipo_doc]'));
-			campos.push($('#formPersona input[name=nro_doc]'));
-			campos.push($('#formPersona input[name=fecha_nacimiento]'));
-			campos.push($('#formPersona select[name=sexo]'));
-			campos.push($('#formPersona input[name=domicilio]'));
-			campos.push($('#formPersona input[name=foto]'));
-			campos.push($('#formPersona input[name=telefono]'));
-			campos.push($('#formPersona textarea[name=descripcion]'));
-			campos.push($('#formPersona select[name=estado]'));
-			campos.push($('#formPersona input[name=foto_registro]'));
-			break;
-		case 'Usuario':
-			campos.push($('#formUsuario input[name=nombre_usuario]'));
-			campos.push($('#formUsuario input[name=password]'));
-			campos.push($('#formUsuario input[name=repetirPassword]'));
-			campos.push($('#formUsuario input[name=email]'));
-			campos.push($('#formUsuario textarea[name=descripcion]'));
-			campos.push($('#formUsuario select[name=estado]'));
-			break;
-	}
-	
-	for(var i=0; i<campos.length; i++){
-		if (campos[i].attr("required")){
-			if (campos[i].val() == ""){
-				customAlert(campos[i]);
-				bandera=false;
+ui.validarPass = function(){
+	var inputPass = $(this);
+	var label = labelDelInput(inputPass);
+	if (inputPass.val().length > 0){
+		if (inputPass.attr("name") == "password"){
+			if (inputPass.val().length<6){
+				customAlert(inputPass,label+": Mínimo 6 caracteres");
+			}
+		}else if (inputPass.attr("name") == "repetirPassword"){
+			if (inputPass.val() != $('#formUsuario input[name=password]').val()){
+				customAlert(inputPass, label+": no coinciden contraseñas");
 			}
 		}
 	}
-  
-  if (!bandera){
-    ui.sendMsgError("Completar Campos Vacios",form);
-  } 
-	return bandera;
 }
-/*
-ui.sendPersonaForm = function () {
+
+ui.validarMail = function(){
+  var inputMail = $(this);
+  var label = labelDelInput(inputMail);
+  var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (inputMail.val().length>0 && !regex.test(inputMail.val())){
+	customAlert(inputMail,label+": Mail no válido");
+  }
+}
+
+ui.validar = function(form){
+  //Parche fierisimo, para no pase al siguiente formulario habiendo
+  //errores piso todos los inputs y 
+  //pregunto si existe algun elemento en el panel de alarmas
+	var ultimoElemento; // para sacar de foco el ultimo elemento 
+	$("#form"+form+" input").each(function () {
+		ultimoElemento = $(this).focus();
+	});
+	ultimoElemento.focusout();
+	if ($(".panel-error").has("div").length == 0){
+		console.log("no hay errores");
+		if (ui.setNewForm(form)){ // si no hay mas formularios envio datos;
+			//ui.sendForm();
+		}
+	}else{
+		console.log("hay errores");
+	}
+}
+
+/*	
+ui.sendForm = function () {
 	if (!ui.validarVaciosForm()) return false;
 	
 	var sendData = {};
@@ -162,32 +131,34 @@ ui.sendPersonaForm = function () {
 ui.setNewForm = function (actualForm) {
   //cambio de un form al siguiente, si es el ultimo envio datos.
   if (actualForm==undefined){
-    ui.activateTab("Usuario");
+    ui.activateForm("Usuario");
   }else if (actualForm=="Usuario"){
-    ui.activateTab("Persona");
+    ui.activateForm("Persona");
   } else if (actualForm=="Persona"){
-    ui.activateTab("Cliente");
+    ui.activateForm("Cliente");
   } else if (actualForm="Cliente"){
-    //sendData();
+    return false;
   }
-
+	return true;
 };
 
-ui.activateTab = function(form){
+ui.activateForm = function(form){
   var formSelector = '#'+'form'+form;
 	ui.hideForms();
 	$(formSelector).show();
+	//$(formSelector + " input[required]").first().focus();
 }
 
 ui.hideForms = function () {
-	//$('.formSection').hide();
   $('#formCliente').hide();
   $('#formUsuario').hide();
   $('#formPersona').hide();
 } 
 
-function customAlert(input, msg){
-   ui.sendMsgError(input, msg);
+function customAlert(input,msg){
+   if (msg != undefined){
+	ui.sendMsgError(msg, input);
+   }
    input.parent().parent().addClass("has-error");
    input.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
    input.focus(function(){
@@ -197,11 +168,10 @@ function customAlert(input, msg){
    });
 }
 
-ui.sendMsgError = function(input,msg){
-  //var formSelector = '#'+'form'+form;
-  var idGenerado = "error-"+input.attr("name");
-  var html='<div id=\"'+idGenerado+'\" class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger\" role=\"alert\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>'+msg+'</div>';
-  $(".panel-error").append(html).focus();
+ui.sendMsgError = function(msg, input){
+  var id = "error-"+input.attr("name");
+  var html='<div id=\"'+id+'\" class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger\" role=\"alert\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>'+msg+'</div>';
+  input.closest(".panel-body").find(".panel-error").append(html).focus();
 }
 
 ui.deleteMsgError = function(input){

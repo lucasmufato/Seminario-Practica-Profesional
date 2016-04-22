@@ -7,8 +7,6 @@ body{
 }
 .panel{
 margin:auto;
-}.alert {
-  display:inline-block;
 }
 /*
  Para darle estilo al input type="file"
