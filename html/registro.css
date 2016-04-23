@@ -13,6 +13,16 @@ label span {
 	font-size:0.8em;
 }
 
+.loadingScreen {
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 5000;
+}
+
 /*
 	Estilo a mensajes de error
 */

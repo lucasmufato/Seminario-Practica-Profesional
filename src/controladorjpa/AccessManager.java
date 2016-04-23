@@ -16,12 +16,11 @@ public class AccessManager {
 	
 	public static boolean HasPermiso(HttpServletRequest request, String nombrePermiso) {
 		DAOAdministracioUsuarios dao= new DAOAdministracioUsuarios();
-		System.out.println("En AccessManager");
-		Cookie c = getCookieUsuario(request);
+		System.out.println("En AccessManager - HasPermiso");
 		//esta logueado?
-		if (c != null) {
+		if (EstaLogueado(request)) {
 			System.out.println("Esta logueado");
-			String nombre = c.getValue();
+			String nombre = getCookieUsuario(request).getValue();
 			//tiene rol super usuario (id=0)? 
 			JSONArray roles = dao.NombreRolUsuario(nombre);
 			System.out.println("Usuario "+nombre+" tiene roles: "+roles);
@@ -30,13 +29,17 @@ public class AccessManager {
 				return true;
 			}else{
 				//tiene permiso?
-				JSONArray permisos = 	dao.NombrePermisosDeUnUsuario(c.getValue());//Usuario.GetNombrePermisosUsuario(c.getValue());
+				JSONArray permisos = 	dao.NombrePermisosDeUnUsuario(nombre);//Usuario.GetNombrePermisosUsuario(c.getValue());
 				System.out.println("Permisos: "+permisos);
 				return tieneValor(permisos,"nombre_permiso",nombrePermiso);
 			}
 
 		}
 		return false;
+	}
+	
+	public static boolean EstaLogueado(HttpServletRequest request){
+		return getCookieUsuario(request) != null;
 	}
 	
 	private static boolean tieneValor(JSONArray lista, String propiedad, String valor){

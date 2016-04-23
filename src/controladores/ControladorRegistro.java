@@ -13,7 +13,7 @@ import modelo.BaseDatos;
 import modelo.Persona;
 import modelo.Rol;
 import modelo.Usuario;
-
+import controladorjpa.AccessManager;
 
 public class ControladorRegistro extends HttpServlet {
 
@@ -24,10 +24,38 @@ public class ControladorRegistro extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("En doGet de ControladorRegistro");
+		
+		PrintWriter writer = response.getWriter();
 
+		response.setContentType("application/json");
+
+		if (AccessManager.EstaLogueado(request)){
+			System.out.println("Esta logueado");
+			this.printDeniedRedirect(writer);
+		}else{
+			System.out.println("No esta logueado");
+			this.printAccept(writer);
+		}
 		
 	}
+	private void printAccept(PrintWriter writer) {
+		JSONObject resultado;
 
+		resultado = new JSONObject();
+		resultado.put("result", true);
+
+		writer.println(resultado);
+	}
+	private void printDeniedRedirect (PrintWriter writer) {
+		JSONObject resultado;
+
+		resultado = new JSONObject();
+		resultado.put("result", false);
+		resultado.put("redirect", "home.html");
+
+		writer.println(resultado);
+	}
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("En doPost de ControladorRegistro!");

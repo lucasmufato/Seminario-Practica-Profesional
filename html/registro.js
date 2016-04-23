@@ -1,9 +1,40 @@
 ui = {}; // use esto para nombrar funciones sin hilación alguna, recordar sacarlo
 
+loadData = function() {
+	$.ajax({
+		url: '/registro',
+		dataType: 'json',
+		success: function (jsonData) {
+			DEBUGresponse = jsonData;
+			if(jsonData.result){
+				$('.loadingScreen').fadeOut();
+			} else if (jsonData.redirect != undefined) {
+				window.location = jsonData.redirect;
+			}
+		},
+		error: function (er1, err2, err3) {
+			document.body.innerHTML = er1.responseText;
+			window.alert (err3);
+		}
+	});
+}
+
+initUI = function() {
+	/* Bootstrap */
+	$('button').addClass('btn');
+	$('table').addClass('table table-hover');
+	$('input, select, textarea').addClass('form-control');
+	$('label').addClass('control-label');
+	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
+	/*-----------*/
+	
+	loadData();
+};
+
 $(document).ready(function(){
 	ui.setNewForm();
 	setearEventos();
- });
+});
 
 function setearEventos(){
   $('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
