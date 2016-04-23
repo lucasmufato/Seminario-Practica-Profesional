@@ -213,3 +213,6 @@ errorMessage = function (textMsg) {
 	$('#errorMessage').text(textMsg);
 	$('#modalError').modal('show');
 }
+closeModal = function (name) {
+	$('#modal' + name).modal('hide');
+}

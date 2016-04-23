@@ -23,14 +23,14 @@ public class ControladorRegistro extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("En doGet de ControladorLogin");
+		System.out.println("En doGet de ControladorRegistro");
 
 		
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("En doPost de ControladorLogin!");
+		System.out.println("En doPost de ControladorRegistro!");
 		JSONObject out = null;
 
 		// Setear driver
@@ -65,7 +65,8 @@ public class ControladorRegistro extends HttpServlet {
 	private JSONObject validarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String user = request.getParameter("usuario");
 		JSONObject salida = new JSONObject ();		
-		if ("hola".equals("chau")) {
+		Integer id = Usuario.GetIdPorNombre(user);
+		if (id != null && id != -1) {
 			System.out.println("Usuario existe");
 			salida.put ("result", true); 
 		}else{
@@ -77,11 +78,8 @@ public class ControladorRegistro extends HttpServlet {
 
 	private JSONObject registrarCliente(HttpServletRequest request) {
 		JSONObject out = new JSONObject();
-		System.out.println("En registrar Cliente");
-		System.out.println(request.getParameter("persona"));
 		out = guardarPersona(request);
 		if ((boolean) out.get("result")){
-			System.out.println("Guarde persona bien, voy hacia guardar Usuario");
 			out = guardarUsuario(request, out.get("id"));
 		}
 		return out;
@@ -90,20 +88,19 @@ public class ControladorRegistro extends HttpServlet {
 	private JSONObject guardarPersona (HttpServletRequest request) {
 		JSONObject recibida, salida;
 		Persona persona;
-		System.out.println("En guardar Persona");
 		recibida = new JSONObject();
 		salida = new JSONObject();
 
 		recibida.put ("id_persona", -1);
-		recibida.put("nombres", request.getParameter("nombres"));
-		recibida.put("apellidos", request.getParameter("apellidos"));
-		recibida.put("tipo_doc", Integer.parseInt(request.getParameter("tipo_doc")));
-		recibida.put("nro_doc", Integer.parseInt(request.getParameter("nro_doc")));
-		recibida.put("fecha_nacimiento", request.getParameter("fecha_nacimiento"));
-		recibida.put("sexo", request.getParameter("sexo"));
-		recibida.put("domicilio", request.getParameter("domicilio"));
-		recibida.put("telefono", request.getParameter("telefono"));
-		System.out.println("Tome parametros");
+		recibida.put("nombres", request.getParameter("persona[nombres]"));
+		recibida.put("apellidos", request.getParameter("persona[apellidos]"));
+		recibida.put("tipo_doc", Integer.parseInt(request.getParameter("persona[tipo_doc]")));
+		recibida.put("nro_doc", Integer.parseInt(request.getParameter("persona[nro_doc]")));
+		recibida.put("fecha_nacimiento", request.getParameter("persona[fecha_nacimiento]"));
+		recibida.put("sexo", request.getParameter("persona[sexo]"));
+		recibida.put("domicilio", request.getParameter("persona[domicilio]"));
+		recibida.put("telefono", request.getParameter("persona[telefono]"));
+		recibida.put("estado", "A");
 
 		persona = new Persona (recibida);
 		if (persona.guardar()) {
@@ -124,27 +121,25 @@ public class ControladorRegistro extends HttpServlet {
 	private JSONObject guardarUsuario (HttpServletRequest request, Object idPersona) {
 		JSONObject recibido, salida;
 		Usuario usuario;
-		System.out.println("En guardar Usuario");
 		recibido = new JSONObject();
 		salida = new JSONObject();
 		
 		recibido.put("id_usuario", -1);
 		recibido.put("id_persona", idPersona);
-		recibido.put("nombre_usuario", request.getParameter("nombre_usuario"));
-		recibido.put("password", request.getParameter("password"));
-		recibido.put("email", request.getParameter("email"));
-		recibido.put("descripcion", request.getParameter("descripcion"));
-		recibido.put("estado", (request.getParameter("estado")));
+		recibido.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
+		recibido.put("password", request.getParameter("usuario[password]"));
+		recibido.put("email", request.getParameter("usuario[email]"));
+		recibido.put("descripcion", request.getParameter("usuario[descripcion]"));
+		recibido.put("estado", "A");
 
 		usuario = new Usuario (recibido);
 		if (usuario.guardar()) {
-			System.out.println("Usuario guardado, hacia asignar Rol");
-			if (asignarRolUsuario(usuario)){
+			if (asignarRolUsuarioCliente(usuario)){
 				salida.put ("result", true);
 				salida.put ("msg", "El usuario ha sido registrado correctamente");
 			}else{
 				salida.put ("result", false);
-				salida.put ("msg", "No se ha podido asignar su rol correspondiente");
+				salida.put ("msg", "Usted ha sido registrado pero han surgido fallas. Comuniquese con el administrador.");
 			}
 		} else {
 			salida.put ("result", false);
@@ -153,10 +148,11 @@ public class ControladorRegistro extends HttpServlet {
 		return salida;
 	}
 	
-	private boolean asignarRolUsuario(Usuario usuario){
+	private boolean asignarRolUsuarioCliente(Usuario usuario){
 		// asigno rol cliente
 		//en mi bd el rol cliente es el 6. Por pruebas se lo pongo a la fuerza.
-		return usuario.AsignarRol(6);
+		String rolCliente = "cliente"; // hardcodeo dedicado al marce
+		return usuario.AsignarRol(Rol.getRolPorNombre(rolCliente));
 	}
 	
 	public void destroy()

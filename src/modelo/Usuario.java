@@ -119,6 +119,7 @@ public class Usuario extends BaseDatos {
 		}
 		this.Conectarse_BD();
 		bandera=this.EnviarQuery(query);
+		this.setId(); // Juan: parche para setear el id del usuario que acabo de insertar
 		this.Desconectarse_BD();
 		return bandera;
 	}
@@ -220,7 +221,7 @@ public class Usuario extends BaseDatos {
 		return listaPermisos;
 	}
 	
-	private static int GetIdPorNombre(String nombre_usuario) {
+	public static int GetIdPorNombre(String nombre_usuario) {
 		String consulta = "SELECT id_usuario from USUARIO where nombre_usuario='"+nombre_usuario+"'";
 		ResultSet r = BaseDatos.RealizarConsulta(consulta);
 		try {
@@ -252,5 +253,30 @@ public class Usuario extends BaseDatos {
 	public static JSONArray GetRolesPorNombre(String nombreUsuario) {
 		int id_usuario = Usuario.GetIdPorNombre(nombreUsuario);
 		return ListaIdRoles(id_usuario);		
+	}
+
+	/*
+	 * Parche de Juan para setear la id del usuario que se inserta desde metodo guardar
+	 */
+	private void setId() {
+		String query="SELECT id_usuario FROM "+tabla
+				+" WHERE id_persona = '"+this.id_persona
+				+"' AND nombre_usuario = '"+this.nombre
+				+"' AND password = '"+this.password
+				+"' AND email = '"+this.email+"';";
+		this.Conectarse_BD();
+		ResultSet rs =this.RealizarConsulta(query);
+		this.Desconectarse_BD();
+		try {
+			if (rs.next()){
+				this.id = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Usuario: Error al obtener id_usuario");
+			e.printStackTrace();
+		}
+	}
+	public int getId(){
+		return this.id;
 	}
 }

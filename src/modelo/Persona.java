@@ -107,7 +107,7 @@ public class Persona extends BaseDatos {
 	}
 	@Override
 	public boolean guardar(){
-boolean bandera=false;	
+		boolean bandera=false;	
 		
 		//creo un pedaso del codigo automaticamente con la informacion en el vector_atributos
 		String values="(";
@@ -152,10 +152,39 @@ boolean bandera=false;
 		}
 		this.Conectarse_BD();
 		bandera=this.EnviarQuery(query);
+		this.setId();// parche para setear el id de la persona que acabo de insertar
+		System.out.println("id: "+this.getId()+"bandera "+bandera);
 		this.Desconectarse_BD();
 		return bandera;
 	}
 	
+	/*
+	 * Parche de Juan para setear la id del usuario que se inserta desde metodo guardar
+	 */
+	private void setId(){
+		String query="SELECT id_persona FROM "+tabla
+				+" WHERE nombres = '"+this.nombres
+				+"' AND apellidos = '"+this.apellidos
+				+"' AND tipo_doc = '"+this.tipo_doc
+				+"' AND nro_doc = '"+this.nro_doc
+				+"' AND fecha_nacimiento = '"+this.fecha_nacimiento
+				+"' AND sexo = '"+this.sexo
+				+"' AND domicilio = '"+this.domicilio+"';";
+		this.Conectarse_BD();
+		ResultSet rs =this.RealizarConsulta(query);
+		this.Desconectarse_BD();
+		try {
+			if (rs.next()){
+				this.id = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al obtener id_persona");
+			e.printStackTrace();
+		}
+	}
+	public int getId(){
+		return this.id;
+	}
 	public static boolean  Eliminar(int clave_primaria_tabla){
 		boolean bandera=false;
 		bandera = BaseDatos.idExistente(tabla, campo_pk, clave_primaria_tabla);

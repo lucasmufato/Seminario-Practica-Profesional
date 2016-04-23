@@ -195,4 +195,18 @@ public class Rol extends BaseDatos {
 		return lista;
 	}
 	
+	public static int getRolPorNombre(String rol){
+		
+		String query = "SELECT "+campo_pk+ " FROM "+ tabla + " WHERE nombre_rol = '"+rol+"'";
+		ResultSet r = BaseDatos.RealizarConsulta(query);
+		try {
+			while(r.next()){
+				return r.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error al obtener id_rol por nombre_rol");
+			e.printStackTrace();
+		}
+		return -1;
+	}
 }
