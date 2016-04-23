@@ -7,6 +7,10 @@ body{
 }
 .panel{
 margin:auto;
+margin-top:8%;
+}
+label span {
+	font-size:0.8em;
 }
 /*
  Para darle estilo al input type="file"

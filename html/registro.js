@@ -1,18 +1,17 @@
-ui = {};
-
-data={};
-data.usuario=[];
-data.persona=[];
-data.cliente=[];
+ui = {}; // use esto para nombrar funciones sin hilación alguna, recordar sacarlo
 
 $(document).ready(function(){
-  ui.setNewForm();
+	ui.setNewForm();
+	setearEventos();
+ });
+
+function setearEventos(){
   $('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
   $('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
   $('#formUsuario input[name=email]').focusout(ui.validarMail);
   $('form input[required]').focusout(ui.validarCampoObligatorio);
-  });
-
+}
+ 
 function labelDelInput(input){
 	return label = $('label[for="'+input.attr('name')+'"]').text().split(" (*)")[0];
 }
@@ -35,9 +34,9 @@ ui.validarNombreUsuario = function(){
 		usuarioExiste(inputUsuario.val(),function(existe){
 			if (!existe){
 				console.log("no existe usuario");
-				customAlert(inputUsuario, labelDelInput(inputUsuario)+": Usuario existente");
 			} else{
 				console.log("existe usuario");
+				customAlert(inputUsuario, labelDelInput(inputUsuario)+": Usuario existente");
 			}
 		});
 	}
@@ -45,7 +44,7 @@ ui.validarNombreUsuario = function(){
 
 function usuarioExiste(nombreUsuario,callback){
 	var sendData = {
-      accion: 'validar_usuario',
+      action: 'validar_usuario',
       usuario: nombreUsuario,
     };
 	$.ajax({
@@ -93,41 +92,51 @@ ui.validar = function(form){
   //Parche fierisimo, para no pase al siguiente formulario habiendo
   //errores piso todos los inputs y 
   //pregunto si existe algun elemento en el panel de alarmas
-	var ultimoElemento; // para sacar de foco el ultimo elemento 
+	//var ultimoElemento; // para sacar de foco el ultimo elemento //cuidado: genera un pequeño bug
 	$("#form"+form+" input").each(function () {
 		ultimoElemento = $(this).focus();
 	});
 	ultimoElemento.focusout();
 	if ($(".panel-error").has("div").length == 0){
-		console.log("no hay errores");
-		if (ui.setNewForm(form)){ // si no hay mas formularios envio datos;
-			//ui.sendForm();
+		if (!ui.setNewForm(form)){ // si no hay mas formularios envio datos;
+			ui.sendForm();
 		}
 	}else{
-		console.log("hay errores");
+		console.log("Datos invalidos");
 	}
 }
 
-/*	
 ui.sendForm = function () {
-	if (!ui.validarVaciosForm()) return false;
 	
 	var sendData = {};
-	sendData.entity = 'persona';
-	sendData.id_persona = $('#formPersona input[name=id]').val();
 	sendData.action = 'new';
-	sendData.apellidos = $('#formPersona input[name=apellidos]').val() || null;
-	sendData.nombres= $('#formPersona input[name=nombres]').val() || null;
-	sendData.tipo_doc= $('#formPersona select[name=tipo_doc]').val() || null;
-	sendData.nro_doc= $('#formPersona input[name=nro_doc]').val() || null;
-	sendData.fecha_nacimiento= $('#formPersona input[name=fecha_nacimiento]').val() || null;
-	sendData.sexo= $('#formPersona select[name=sexo]').val() || null;
-	sendData.domicilio= $('#formPersona input[name=domicilio]').val() || null;
-	sendData.telefono= $('#formPersona input[name=telefono]').val() || null;
+	sendData.persona={};
+	sendData.usuario={};
+	sendData.cliente={};
+	
+	// cargo persona
+	sendData.persona.apellidos = $('#formPersona input[name=apellidos]').val() || null;
+	sendData.persona.nombres= $('#formPersona input[name=nombres]').val() || null;
+	sendData.persona.tipo_doc= $('#formPersona select[name=tipo_doc]').val() || null;
+	sendData.persona.nro_doc= $('#formPersona input[name=nro_doc]').val() || null;
+	sendData.persona.fecha_nacimiento= $('#formPersona input[name=fecha_nacimiento]').val() || null;
+	sendData.persona.sexo= $('#formPersona select[name=sexo]').val() || null;
+	sendData.persona.domicilio= $('#formPersona input[name=domicilio]').val() || null;
+	sendData.persona.telefono= $('#formPersona input[name=telefono]').val() || null;
 
-	//aux.sendForm(sendData, data.loadData);
+	// cargo Usuario
+	sendData.usuario.id_persona = null;
+	sendData.usuario.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val() || null;
+	sendData.usuario.password = $('#formUsuario input[name=password]').val() || null;
+	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
+	
+	// cargo Cliente
+	sendData.cliente.foto_registro = $('#formCliente input[name=foto_registro]').val() || null;
+	
+	console.log("mando: ",sendData);
+	sendAjax(sendData);
 }
-*/
+
 ui.setNewForm = function (actualForm) {
   //cambio de un form al siguiente, si es el ultimo envio datos.
   if (actualForm==undefined){
@@ -139,7 +148,7 @@ ui.setNewForm = function (actualForm) {
   } else if (actualForm="Cliente"){
     return false;
   }
-	return true;
+  return true;
 };
 
 ui.activateForm = function(form){
@@ -177,4 +186,30 @@ ui.sendMsgError = function(msg, input){
 ui.deleteMsgError = function(input){
 	var idGenerado = "#"+"error-"+input.attr("name");
 	$(idGenerado).remove();
+}
+
+sendAjax = function (sendData) {
+	$.ajax({
+		url: '/registro',
+		method: 'POST',
+		data: sendData,
+		dataType: 'json',
+		success: function (jsonData) {
+			DEBUGresponse = jsonData;
+			if (jsonData.result) {
+				console.log("registrado correctamente");
+			} else {
+				errorMessage (jsonData.msg);
+			}
+		},
+		error: function (er1, err2, err3) {
+			document.body.innerHTML = er1.responseText;
+			window.alert (err3);
+		}
+	});
+}
+
+errorMessage = function (textMsg) {
+	$('#errorMessage').text(textMsg);
+	$('#modalError').modal('show');
 }

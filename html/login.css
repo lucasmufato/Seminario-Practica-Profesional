@@ -10,14 +10,13 @@ body {
 form label span {
   color: #44f;
 }
+.panel{
+  margin-top:10%;
+}
 form .msg_error {
   color:#911;
 }
 
-.login{
-	--width:90%;
-	--margin-top:8%;
-}
 #myModal {
   position: absolute;
   top: 10%;

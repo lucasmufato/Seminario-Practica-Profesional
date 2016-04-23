@@ -36,116 +36,114 @@
 		
 	<div class="col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8 col-sm-12 col-xs-12">
 
-    <div class="panel panel-primary" id="formUsuario">
-      <div class="panel-heading">
-        <h3 class="panel-title">Registro - Paso 1</h3>
-      </div>
-      <div class="panel-body">
-        <div class="form-group panel-error col-md-12"></div>
-        <form class="form-horizontal">
-          <input type="hidden" id="usuarioIdInput" name="id">
+		<div class="panel panel-primary" id="formUsuario">
+		  <div class="panel-heading">
+			<h3 class="panel-title">Registro - Paso 1</h3>
+		  </div>
+		  <div class="panel-body">
+			<div class="form-group panel-error col-md-12"></div>
+			<form class="form-horizontal">
+			
+			  <div class="form-group col-md-6">
+				<label for="nombre_usuario" class="col-md-6">Nombre de Usuario <span>(*)</span></label>
+				<div class="col-md-6">
+				  <input type="text" name="nombre_usuario" class="form-control" required>
+				</div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="nombre_usuario" class="col-md-4">Nombre de Usuario (*)</label>
-            <div class="col-md-8">
-              <input type="text" name="nombre_usuario" class="form-control" required>
-            </div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="email" class="col-md-5">E-Mail <span>(*)</span></label>
+				<div class="col-md-7">
+				  <input type="text" name="email" class="form-control" required>
+				</div>
+			  </div><!-- .form-group -->
+			  
+			  <div class="form-group col-md-6">
+				<label for="password" class="col-md-6">Contraseña <span>(*)</span></label>
+				<div class="col-md-6">
+				  <input type="password" name="password" class="form-control" required>
+				</div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="password" class="col-md-4">Contraseña (*)</label>
-            <div class="col-md-8">
-              <input type="password" name="password" class="form-control" required>
-            </div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="repetirPassword" class="col-md-5">Repetir contraseña <span>(*)</span></label>
+				<div class="col-md-7">
+				  <input type="password" name="repetirPassword" class="form-control" required>
+				</div>
+			  </div><!-- .form-group -->
+			  
+			</form>
+		  </div>
+		  <div class="panel-footer clearfix">
+			<button class="btn btn-success glyphicon glyphicon-step-forward pull-right" type="submit" onclick="ui.validar('Usuario')"> Siguiente</button></div>
+		</div>
+		
+		<div class="panel panel-primary" id="formPersona">
+		  <div class="panel-heading">
+			<h3 class="panel-title">Registro - Paso 2</h3>
+		  </div>
+		  <div class="panel-body">
+			<div class="panel-error col-md-12"></div>
+			<form class="form-horizontal">
 
-          <div class="form-group col-md-6">
-            <label for="repetirPassword" class="col-md-4">Repetir contraseña (*)</label>
-            <div class="col-md-8">
-              <input type="password" name="repetirPassword" class="form-control" required>
-            </div>
-          </div><!-- .form-group -->
-          
-          <div class="form-group col-md-6">
-            <label for="email" class="col-md-4">E-Mail (*)</label>
-            <div class="col-md-8">
-              <input type="text" name="email" class="form-control" required>
-            </div>
-          </div><!-- .form-group -->
-        </form>
-      </div>
-      <div class="panel-footer clearfix">
-        <button class="btn btn-success glyphicon glyphicon-step-forward pull-right" type="submit" onclick="ui.validar('Usuario')"> Siguiente</button></div>
-    </div>
-    
-    <div class="panel panel-primary" id="formPersona">
-      <div class="panel-heading">
-        <h3 class="panel-title">Registro - Paso 2</h3>
-      </div>
-      <div class="panel-body">
-        <div class="panel-error col-md-12"></div>
-        <form class="form-horizontal">
-          <!-- Las fotos no estan habilitadas todavia -->
-          <input type="hidden" name="id">
+			  <div class="form-group col-md-6">
+				<label for="apellidos" class="col-md-4">Apellido (*)</label>
+				<div class="col-md-8"><input type="text" name="apellidos" class="form-control" required></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="apellidos" class="col-md-4">Apellido (*)</label>
-            <div class="col-md-8"><input type="text" name="apellidos" class="form-control" required></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="nombres" class="col-md-4">Nombre (*)</label>
+				<div class="col-md-8"><input type="text" name="nombres" class="form-control" required></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="nombres" class="col-md-4">Nombre (*)</label>
-            <div class="col-md-8"><input type="text" name="nombres" class="form-control" required></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="tipo_doc" class="col-md-4">Tipo de documento (*)</label>
+				<div class="col-md-8"><select name="tipo_doc" required>
+				  <option value="1">DNI</option>
+				  <option value="2">LE</option>
+				  <option value="3">LC</option>
+				  </select></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="tipo_doc" class="col-md-4">Tipo de documento (*)</label>
-            <div class="col-md-8"><select name="tipo_doc" required>
-              <option value="1">DNI</option>
-              <option value="2">LE</option>
-              <option value="3">LC</option>
-              </select></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="nro_doc" class="col-md-4">Numero de documento (*)</label>
+				<div class="col-md-8"><input type="number" name="nro_doc" class="form-control" required></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="nro_doc" class="col-md-4">Numero de documento (*)</label>
-            <div class="col-md-8"><input type="number" name="nro_doc" class="form-control" required></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
+				<div class="col-md-8"><input type="date" name="fecha_nacimiento" class="form-control" required></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
-            <div class="col-md-8"><input type="date" name="fecha_nacimiento" class="form-control" required></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="domicilio" class="col-md-4">Domicilio (*)</label>
+				<div class="col-md-8"><input type="text" name="domicilio" class="form-control" required></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="domicilio" class="col-md-4">Domicilio (*)</label>
-            <div class="col-md-8"><input type="text" name="domicilio" class="form-control" required></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="sexo" class="col-md-4">Sexo (*)</label>
+				<div class="col-md-8"><select name="sexo" required>
+				  <option value="M">Masculino</option>
+				  <option value="F">Femenino</option>
+				  <option value="O">Otro</option>
+				  </select></div>
+			  </div><!-- .form-group -->
 
-          <div class="form-group col-md-6">
-            <label for="sexo" class="col-md-4">Sexo (*)</label>
-            <div class="col-md-8"><select name="sexo" required>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-              <option value="O">Otro</option>
-              </select></div>
-          </div><!-- .form-group -->
+			  <div class="form-group col-md-6">
+				<label for="telefono" class="col-md-4">Telefono (*)</label>
+				<div class="col-md-6"><input type="text"  name="telefono" class="form-control" required></div>
+			  </div><!-- .form-group -->
+			</form>
+		  </div>
+		  <div class="panel-footer clearfix">
+			<div class="btn-group pull-right" role="group">
+			  <button class="btn btn-default glyphicon glyphicon-step-backward" type="submit" onclick="ui.activateForm('Usuario')"> Volver</button>
+			  <button class="btn btn-success glyphicon glyphicon-step-forward" type="submit" onclick="ui.validar('Persona')"> Siguiente</button>
+			</div>
+		  </div>
+		</div>
 
-          <div class="form-group col-md-6">
-            <label for="telefono" class="col-md-4">Telefono (*)</label>
-            <div class="col-md-6"><input type="text"  name="telefono" class="form-control" required></div>
-          </div><!-- .form-group -->
-        </form>
-      </div>
-      <div class="panel-footer clearfix">
-        <div class="btn-group pull-right" role="group">
-          <button class="btn btn-default glyphicon glyphicon-step-backward" type="submit" onclick="ui.activateForm('Usuario')"> Volver</button>
-          <button class="btn btn-success glyphicon glyphicon-step-forward" type="submit" onclick="ui.validar('Persona')"> Siguiente</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-primary" id="formCliente">
+		<div class="panel panel-primary" id="formCliente">
       <div class="panel-heading">
         <h3 class="panel-title">Registro - Paso 3</h3>
       </div>
@@ -153,10 +151,10 @@
         <div class="panel-error col-md-12"></div>
         <form class="form-horizontal">
           <div class="form-group col-md-6">
-            <label for="apellidos" class="col-md-6">Foto del registro de conducir</label>
+            <label for="foto_registro" class="col-md-6">Foto del registro de conducir</label>
             <div class="col-md-6">
               <span class="btn btn-default btn-file">
-                Buscar <input type="file">
+                Buscar <input type="file" name="foto_registro">
               </span>
             </div>
           </div><!-- .form-group -->
@@ -170,7 +168,27 @@
       </div>
     </div>
     </div>
-</div>
+	
+	<div id="modalError" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" onclick="ui.closeModal('Error')">&times;</button>
+					<h3 class="dialog-title"> Ha ocurrido un error</h3>
+				</div><!-- modal-header -->
+				<div class="modal-body">
+					<div id="errorMessage">
+						Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
+					</div>
+				</div><!-- modal-body -->
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger glyphicon glyphicon-remove" onclick="ui.closeModal('Error')">Cerrar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+  </div>
 
 
 </body>
