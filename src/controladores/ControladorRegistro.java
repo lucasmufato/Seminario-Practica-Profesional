@@ -44,7 +44,7 @@ public class ControladorRegistro extends HttpServlet {
 		
 		String accion = request.getParameter("action");
 
-		if (accion.equals("validar_usuario")){
+		if (accion.equals("usuario_existe")){
 			//recibo el nombre del usuario y pregunto si existe o no.
 			out = validarUsuario(request,response);
 		}else if(accion.equals("new")){

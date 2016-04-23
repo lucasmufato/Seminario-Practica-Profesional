@@ -31,36 +31,17 @@ ui.validarNombreUsuario = function(){
 			customAlert(inputUsuario, labelDelInput(inputUsuario)+": Mínimo 6 caracteres");
 		}
 	} else{
-		usuarioExiste(inputUsuario.val(),function(existe){
-			if (!existe){
-				console.log("no existe usuario");
-			} else{
-				console.log("existe usuario");
+		var sendData = {
+		  action: 'usuario_existe',
+		  usuario: inputUsuario.val(),
+		};
+		var onsuccess = function(jsonData){
+			if (jsonData.result){
 				customAlert(inputUsuario, labelDelInput(inputUsuario)+": Usuario existente");
 			}
-		});
+		}
+		sendAjax(sendData,onsuccess);
 	}
-}
-
-function usuarioExiste(nombreUsuario,callback){
-	var sendData = {
-      action: 'validar_usuario',
-      usuario: nombreUsuario,
-    };
-	$.ajax({
-      url: '/registro',
-      method: 'POST',
-      data: sendData,
-      dataType: 'json',
-      success: function (jsonData) {
-        DEBUGresponse = jsonData;
-        callback(jsonData.result);
-      },
-      error: function (er1, err2, err3) {
-        document.body.innerHTML = er1.responseText;
-        window.alert (err3);
-      }
-    });
 }
 
 ui.validarPass = function(){
@@ -92,17 +73,20 @@ ui.validar = function(form){
   //Parche fierisimo, para no pase al siguiente formulario habiendo
   //errores piso todos los inputs y 
   //pregunto si existe algun elemento en el panel de alarmas
-	//var ultimoElemento; // para sacar de foco el ultimo elemento //cuidado: genera un pequeño bug
+	//var elemento es para sacar de foco el ultimo elemento //cuidado: genera un pequeño bug
 	$("#form"+form+" input").each(function () {
-		ultimoElemento = $(this).focus();
+		elemento = $(this).focus();
 	});
-	ultimoElemento.focusout();
+	elemento.focusout();
+	
 	if ($(".panel-error").has("div").length == 0){
 		if (!ui.setNewForm(form)){ // si no hay mas formularios envio datos;
 			ui.sendForm();
 		}
 	}else{
-		console.log("Datos invalidos");
+		// Oculto el form actual y muestro el que tiene el error.
+		$("#form"+form).hide();
+		$(".panel-error").has("div").closest(".panel").show();
 	}
 }
 
@@ -134,7 +118,17 @@ ui.sendForm = function () {
 	sendData.cliente.foto_registro = $('#formCliente input[name=foto_registro]').val() || null;
 	
 	console.log("mando: ",sendData);
-	sendAjax(sendData);
+	
+	var onSuccess = function(jsonData){
+		if (jsonData.result) {
+			ui.activateForm("Usuario");//parche para que no mande otro formulario igual al ajax
+			successMessage(jsonData.msg);
+		} else {
+			errorMessage (jsonData.msg);
+		}
+	}
+	
+	sendAjax(sendData,onSuccess);
 }
 
 ui.setNewForm = function (actualForm) {
@@ -188,7 +182,7 @@ ui.deleteMsgError = function(input){
 	$(idGenerado).remove();
 }
 
-sendAjax = function (sendData) {
+sendAjax = function (sendData,callback) {
 	$.ajax({
 		url: '/registro',
 		method: 'POST',
@@ -196,11 +190,7 @@ sendAjax = function (sendData) {
 		dataType: 'json',
 		success: function (jsonData) {
 			DEBUGresponse = jsonData;
-			if (jsonData.result) {
-				console.log("registrado correctamente");
-			} else {
-				errorMessage (jsonData.msg);
-			}
+			callback(jsonData);
 		},
 		error: function (er1, err2, err3) {
 			document.body.innerHTML = er1.responseText;
@@ -209,9 +199,15 @@ sendAjax = function (sendData) {
 	});
 }
 
+//MODALS
+
 errorMessage = function (textMsg) {
 	$('#errorMessage').text(textMsg);
 	$('#modalError').modal('show');
+}
+successMessage = function (textMsg) {
+	$('#successMessage').text(textMsg);
+	$('#modalSuccess').modal('show');
 }
 closeModal = function (name) {
 	$('#modal' + name).modal('hide');

@@ -144,29 +144,29 @@
 		</div>
 
 		<div class="panel panel-primary" id="formCliente">
-      <div class="panel-heading">
-        <h3 class="panel-title">Registro - Paso 3</h3>
-      </div>
-      <div class="panel-body">
-        <div class="panel-error col-md-12"></div>
-        <form class="form-horizontal">
-          <div class="form-group col-md-6">
-            <label for="foto_registro" class="col-md-6">Foto del registro de conducir</label>
-            <div class="col-md-6">
-              <span class="btn btn-default btn-file">
-                Buscar <input type="file" name="foto_registro">
-              </span>
-            </div>
-          </div><!-- .form-group -->
-        </form>
-      </div>
-      <div class="panel-footer clearfix">
-        <div class="btn-group pull-right" role="group">
+		  <div class="panel-heading">
+			<h3 class="panel-title">Registro - Paso 3</h3>
+		  </div>
+		  <div class="panel-body">
+			<div class="panel-error col-md-12"></div>
+			<form class="form-horizontal">
+			  <div class="form-group col-md-6">
+				<label for="foto_registro" class="col-md-6">Foto del registro de conducir</label>
+				<div class="col-md-6">
+				  <span class="btn btn-default btn-file">
+					Buscar <input type="file" name="foto_registro">
+				  </span>
+				</div>
+			  </div><!-- .form-group -->
+			</form>
+		  </div>
+		  <div class="panel-footer clearfix">
+			<div class="btn-group pull-right" role="group">
           <button class="btn btn-default glyphicon glyphicon-step-backward" type="submit" onclick="ui.activateForm('Persona')"> Volver</button>
           <button class="btn btn-success glyphicon glyphicon-check" type="submit" onclick="ui.validar('Cliente')"> Confirmar</button>
         </div>
-      </div>
-    </div>
+		  </div>
+		</div>
     </div>
 	
 	<div id="modalError" class="modal fade">
@@ -188,6 +188,27 @@
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
 	</div><!-- .modal -->
+  
+	<div id="modalSuccess" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-success">
+					<button type="button" class="close" onclick="closeModal('Success')">&times;</button>
+					<h3 class="dialog-title"> Éxito!</h3>
+				</div><!-- modal-header -->
+				<div class="modal-body">
+					<div id="successMessage">
+						Registrado correctamente <!-- Esto sera modificado desde javascript -->
+					</div>
+				</div><!-- modal-body -->
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success glyphicon glyphicon-ok" onclick="location.href='login.html'"> Ingresar</button>
+				</div><!-- .modal-footer -->
+			</div><!-- .modal-content -->
+		</div><!-- .modal-dialog -->
+	</div><!-- .modal -->
+  
   </div>
 
 

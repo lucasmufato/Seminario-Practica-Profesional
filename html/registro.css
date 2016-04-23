@@ -12,6 +12,30 @@ margin-top:8%;
 label span {
 	font-size:0.8em;
 }
+
+/*
+	Estilo a mensajes de error
+*/
+
+#modalError .modal-header {
+	background-color: #D9534F;
+	color: white;
+}
+
+.modal-header {
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	text-align: center;
+}
+
+.modal-header .close {
+	color: white;
+}
+
+.modal-header .close:hover {
+	color: red;
+}
+
 /*
  Para darle estilo al input type="file"
 */
