@@ -78,10 +78,12 @@ public class AccessManager {
 	 * como parche arme la funcion siguiente:
 	 */
 	private static boolean tieneRol(JSONArray roles, int rol){
+		JSONObject objetoRol;
 		System.out.println("entre");
 		for (int i=0; i<roles.size(); i++){
-			int r = (Integer) roles.get(i);
-			if (r==rol){
+			objetoRol = (JSONObject) roles.get(i);
+			int r = (Integer)objetoRol.get("id_rol");
+ 			if (r==rol){
 				System.out.println("valor: "+r);
 				return true;
 			}
