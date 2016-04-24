@@ -3,12 +3,10 @@ body{
 }
 .panel_func{
   text-align: center;
-  margin: 0px auto;
-  --width:100%;
 }
 .funcionalidad{
   display: inline-block;  
-  width:15%;
+  width:200px;
   margin: 1% 1% 1% 1%;
   box-shadow: 0 0 10px #1a0d00; 
   border-top-left-radius: 20px;
@@ -16,8 +14,7 @@ body{
   cursor:pointer;
 }
 .funcionalidad img{
-  width: 100%; 
-  min-height: 200px;
+  max-width: 100%; 
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   --border-bottom: groove 10px #101010;

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<script type="application/javascript" src="jquery.js"></script>
+	<script type="application/javascript">
+		toggleSidebar = function () {
+			$('body').toggleClass("sidebar-on");
+		}
+	</script>
+	<title>Ejemplo de sidebar</title>
+</head>
+
+<body>
+    <nav id="common-navbar" class="navbar navbar-fixed-top" id="commonbar">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle pull-left collapsed glyphicon glyphicon-menu-hamburger" onclick="toggleSidebar()">
+          </button>
+          <a class="navbar-brand" href="#">Viajes compartidos</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+			<a href="/login" class=" navbar-right btn glyphicon glyphicon-off">Salir</a>
+          <!--<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="/login">Salir</a></li>
+				</ul>
+			</li>
+          </ul>-->
+        </div><!--/.nav-collapse -->
+
+
+      </div><!-- /.container -->
+    </nav><!-- /.navbar -->	
+
+	<sidebar id="common-sidebar">
+		<nav>
+			<img src="img/navegacion/vc_logo.svg" alt="Viajes compartidos">
+			<hr>
+			<div class="btn-group-vertical col-xs-12">
+				<a href="#" class="btn btn-primary">Mi Perfil</a>
+				<a href="#" class="btn btn-primary">Mis Vehiculos</a>
+				<a href="#" class="btn btn-primary">Mis Viajes</a>
+			</div>
+			<hr class="col-xs-12">
+			<div class="btn-group-vertical col-xs-12">
+				<a href="#" class="btn btn-primary">Cargar saldo</a>
+				<a href="#" class="btn btn-success">Beneficios</a>
+			</div>
+		</nav>
+	</sidebar>
+
+	<main>
+	</main>
+</body>
