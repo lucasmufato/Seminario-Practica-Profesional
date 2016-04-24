@@ -11,7 +11,7 @@ import org.json.simple.JSONArray;
 
 import modelo.BaseDatos;
 import modelo.Usuario;
-
+import controladores.AccessManager;
 
 public class ControladorLogin extends HttpServlet {
 
@@ -22,17 +22,15 @@ public class ControladorLogin extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("En doGet de ControladorLogin");
-
+		
 		// Cuando se desloguea
-		Cookie c = getCookieUsuario(request);
-		if (c!=null){
-			//borro cookie
-			c.setMaxAge(0);
-			response.addCookie(c); 
+		if (AccessManager.EstaLogueado(request)){
+			if (AccessManager.EliminarCookie(request, response)){
+				System.out.println("Log out: cookie eliminada");
+				response.sendRedirect("index.html");
+			}
 		}
-		response.sendRedirect("index.html");
 	}
-
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("En doPost de ControladorLogin!");
@@ -85,7 +83,7 @@ public class ControladorLogin extends HttpServlet {
 		JSONObject salida = new JSONObject ();		
 		if (Usuario.isUsuarioPass(user,pass)) {
 			//agrego cookie
-			response.addCookie(setearCookie(user));
+			AccessManager.SetearCookie(response,user);
 			System.out.println("Usuario logueado");
 			salida.put ("result", true); 
 			salida.put ("msg", "El usuario se ha logueado correctamente.");

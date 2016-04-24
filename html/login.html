@@ -19,7 +19,8 @@
 		<script type="text/javascript" src="login.js"></script>		
   </head>
 
-  <body>
+<body onload="initUI()">
+		<div class="loadingScreen"></div>
 	<div class="container-fluid">
 	
 		<nav class="navbar  navbar-default">
@@ -66,7 +67,7 @@
 						<input name="pass" maxlength="55" type="password" class="form-control" placeholder="Contraseña"/>
 					</div>  
 					<div class="col-md-12">
-						<button class="btn btn-success btn-block" id="ingresar" onClick="return validarDatos()">Ingresar</button>
+						<button class="btn btn-success btn-block" id="ingresar" onClick="return validarDatos()" type="submit">Ingresar</button>
 					</div>
 
 				</form>

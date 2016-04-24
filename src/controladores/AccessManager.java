@@ -2,6 +2,7 @@ package controladores;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import modelo.Usuario;
 
@@ -36,6 +37,27 @@ public class AccessManager {
 
 		}
 		return false;
+	}
+	
+	
+	public static boolean EstaLogueado(HttpServletRequest request){
+		return getCookieUsuario(request) != null;
+	}
+	public static boolean EliminarCookie(HttpServletRequest request, HttpServletResponse response){
+		Cookie c = getCookieUsuario(request);
+		if (c!=null){
+			//borro cookie
+			c.setMaxAge(0);
+			response.addCookie(c); 
+			return true;
+		}else{
+			return false;
+		}
+	}
+	public static void SetearCookie(HttpServletResponse response, String user) {
+		Cookie cookie = new Cookie("nombre_usuario",user);//Seteo cookie con parametros: nombre y valor
+		cookie.setMaxAge(60*60*24*365); // tiempo de vida de cookie en segundos
+		response.addCookie(cookie);
 	}
 	
 	private static boolean tieneValor(JSONArray lista, String propiedad, String valor){

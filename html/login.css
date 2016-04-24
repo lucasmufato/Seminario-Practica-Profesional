@@ -16,7 +16,15 @@ form label span {
 form .msg_error {
   color:#911;
 }
-
+.loadingScreen {
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 5000;
+}
 #myModal {
   position: absolute;
   top: 10%;

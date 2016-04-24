@@ -152,7 +152,8 @@ ui.sendForm = function () {
 	
 	var onSuccess = function(jsonData){
 		if (jsonData.result) {
-			ui.activateForm("Usuario");//parche para que no mande otro formulario igual al ajax
+			//podria limpiar formularios en esta linea
+			ui.setNewForm();
 			successMessage(jsonData.msg);
 		} else {
 			errorMessage (jsonData.msg);
@@ -162,10 +163,18 @@ ui.sendForm = function () {
 	sendAjax(sendData,onSuccess);
 }
 
+ingresarLogin = function(){
+	var parametro = "usuario";
+	var valor = $("#formUsuario input[name='nombre_usuario']").val();
+	
+	window.location = "login.html?"+parametro+"="+valor;
+}
+
 ui.setNewForm = function (actualForm) {
   //cambio de un form al siguiente, si es el ultimo envio datos.
   if (actualForm==undefined){
     ui.activateForm("Usuario");
+	$("#formUsuario input[required]").first().focus();
   }else if (actualForm=="Usuario"){
     ui.activateForm("Persona");
   } else if (actualForm=="Persona"){

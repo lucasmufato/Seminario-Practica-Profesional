@@ -19,15 +19,14 @@ public class ControladorLogin extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("En doGet de ControladorLogin");
-
+		
 		// Cuando se desloguea
-		Cookie c = getCookieUsuario(request);
-		if (c!=null){
-			//borro cookie
-			c.setMaxAge(0);
-			response.addCookie(c); 
+		if (AccessManager.EstaLogueado(request)){
+			if (AccessManager.EliminarCookie(request, response)){
+				System.out.println("Log out: cookie eliminada");
+				response.sendRedirect("index.html");
+			}
 		}
-		response.sendRedirect("index.html");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -84,7 +83,7 @@ public class ControladorLogin extends HttpServlet {
 		JSONObject salida = new JSONObject ();		
 		if (dao.isUsuarioPass(user,pass)) {
 			//agrego cookie
-			response.addCookie(setearCookie(user));
+			AccessManager.SetearCookie(response,user);
 			System.out.println("Usuario logueado");
 			salida.put ("result", true); 
 			salida.put ("msg", "El usuario se ha logueado correctamente.");
@@ -99,21 +98,5 @@ public class ControladorLogin extends HttpServlet {
 	{
 	}
 
-	@SuppressWarnings("unused")
-	private void mostrarRapido(HttpServletResponse resp, String msg)
-			throws IOException {
-		PrintWriter out = resp.getWriter();
-		out.println("<html>");
-		out.println("<body>");
-		out.println("<p>" + msg + "</p>");
-		out.println("</body>");
-		out.println("</html>");
-	}
-	
-	private Cookie setearCookie(String user){
-		Cookie cookie = new Cookie("nombre_usuario",user);//Seteo cookie con parametros: nombre y valor
-		cookie.setMaxAge(60*60*24*365); // tiempo de vida de cookie en segundos
-		return cookie;
-	}
-	
+		
 }

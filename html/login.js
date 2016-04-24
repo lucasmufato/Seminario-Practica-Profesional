@@ -1,13 +1,29 @@
 var userValido = false;
 var passValido = false;
 
+
+initUI = function() {
+	/* Bootstrap */
+	$('button').addClass('btn');
+	$('table').addClass('table table-hover');
+	$('input, select, textarea').addClass('form-control');
+	$('label').addClass('control-label');
+	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
+	/*-----------*/
+	
+
+};
+
 $(document).ready(function(){
 	if (getCookie("nombre_usuario")!="") {
 		return window.location.replace("home.html");
+	}else{
+		ocultarMensajes();
+		$('.loadingScreen').fadeOut();
 	}
-  ocultarMensajes();
   var inputUsuario = $("input[name=usuario]");
   var inputPass = $("input[name=pass]");
+  inputUsuario.val(getUrlVars()["usuario"]);
   inputUsuario.focus();
   inputUsuario.focusin(function(){
 	quitarError("usuario");
@@ -18,14 +34,6 @@ $(document).ready(function(){
   inputUsuario.focusout(validarUser);
   inputPass.focusout(validarPass);
 });
-
-$(document).keypress(function(e) {
-    if(e.which == 13) {//enter
-		validarUser();
-		validarPass();
-    }
-});
-
 function ocultarMensajes(){
   $(".msg_error").hide();
 }
@@ -110,4 +118,12 @@ function getCookie(nombreCookie) {
         if (c.indexOf(nombre) == 0) return c.substring(nombre.length,c.length);
     }
     return "";
+}
+
+function getUrlVars() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		vars[key] = value;
+	});
+	return vars;
 }
