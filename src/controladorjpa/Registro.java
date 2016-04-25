@@ -1,4 +1,4 @@
-package controladores;
+package controladorjpa;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -6,20 +6,20 @@ import java.util.Enumeration;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import modelojpa.Usuario;
+
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
-import modelo.BaseDatos;
-import modelo.Persona;
-import modelo.Rol;
-import modelo.Usuario;
 import controladorjpa.AccessManager;
 
-public class ControladorRegistro extends HttpServlet {
+public class Registro extends HttpServlet {
 
+	DAOAdministracioUsuarios dao;
 
 	public void init() throws ServletException
 	{
+		dao= new DAOAdministracioUsuarios();
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,12 +60,6 @@ public class ControladorRegistro extends HttpServlet {
 
 		// Setear driver
 		PrintWriter writer = response.getWriter();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (Exception e) {
-			writer.println("No se pudo abrir el driver de la base de datos");
-			writer.println(e.getMessage());
-		}
 		
 		String accion = request.getParameter("action");
 
@@ -89,9 +83,9 @@ public class ControladorRegistro extends HttpServlet {
 
 	private JSONObject validarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String user = request.getParameter("usuario");
-		JSONObject salida = new JSONObject ();		
-		Integer id = Usuario.GetIdPorNombre(user);
-		if (id != null && id != -1) {
+		JSONObject salida = new JSONObject ();	
+		Usuario u = dao.buscarUsuarioPorNombre(user);
+		if (u != null) {
 			System.out.println("Usuario existe");
 			salida.put ("result", true); 
 		}else{
@@ -103,13 +97,55 @@ public class ControladorRegistro extends HttpServlet {
 
 	private JSONObject registrarCliente(HttpServletRequest request) {
 		JSONObject out = new JSONObject();
-		out = guardarPersona(request);
-		if ((boolean) out.get("result")){
-			out = guardarUsuario(request, out.get("id"));
+		JSONObject cliente = cargarJSON(request);
+		//POR IMPLEMENTAR:
+		/*
+		if (dao.altaCliente(cliente)){
+			out.put ("result", true);
+			out.put ("msg", "El usuario ha sido registrado correctamente");
+		}else{
+			out.put ("result", false);
+			out.put ("msg", "Error en registro de usuario");
 		}
+		*/
 		return out;
 	}
 	
+	private JSONObject cargarJSON(HttpServletRequest request){
+		JSONObject salida, persona, usuario,cliente;
+		salida = new JSONObject();
+		persona = new JSONObject();
+		usuario = new JSONObject();
+		cliente = new JSONObject();
+		
+		persona.put ("id_persona", -1);
+		persona.put("nombres", request.getParameter("persona[nombres]"));
+		persona.put("apellidos", request.getParameter("persona[apellidos]"));
+		persona.put("tipo_doc", Integer.parseInt(request.getParameter("persona[tipo_doc]")));
+		persona.put("nro_doc", Integer.parseInt(request.getParameter("persona[nro_doc]")));
+		persona.put("fecha_nacimiento", request.getParameter("persona[fecha_nacimiento]"));
+		persona.put("sexo", request.getParameter("persona[sexo]"));
+		persona.put("domicilio", request.getParameter("persona[domicilio]"));
+		persona.put("telefono", request.getParameter("persona[telefono]"));
+		persona.put("estado", "A");
+		
+		usuario.put("id_usuario", -1);
+		//usuario.put("id_persona", idPersona);
+		usuario.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
+		usuario.put("password", request.getParameter("usuario[password]"));
+		usuario.put("email", request.getParameter("usuario[email]"));
+		usuario.put("descripcion", request.getParameter("usuario[descripcion]"));
+		usuario.put("estado", "A");
+		
+		cliente.put("foto_registro", request.getParameter("cliente[foto_registro]"));
+		
+		salida.put("persona", persona);
+		salida.put("usuario", persona);
+		salida.put("cliente", persona);
+				
+		return salida;
+	}
+	/*
 	private JSONObject guardarPersona (HttpServletRequest request) {
 		JSONObject recibida, salida;
 		Persona persona;
@@ -175,11 +211,10 @@ public class ControladorRegistro extends HttpServlet {
 	
 	private boolean asignarRolUsuarioCliente(Usuario usuario){
 		// asigno rol cliente
-		//en mi bd el rol cliente es el 6. Por pruebas se lo pongo a la fuerza.
 		String rolCliente = "cliente"; // hardcodeo dedicado al marce
 		return usuario.AsignarRol(Rol.getRolPorNombre(rolCliente));
 	}
-	
+	*/
 	public void destroy()
 	{
 	}

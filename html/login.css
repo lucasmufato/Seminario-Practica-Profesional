@@ -15,6 +15,7 @@ form label span {
 }
 form .msg_error {
   color:#911;
+  font-size:0.8em;
 }
 .loadingScreen {
 	position: fixed;

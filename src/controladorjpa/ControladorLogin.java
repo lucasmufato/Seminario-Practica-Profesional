@@ -7,14 +7,16 @@ import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
 
+import controladorjpa.*;
 
 @SuppressWarnings("serial")
 public class ControladorLogin extends HttpServlet {
 	
-	DAOAdministracioUsuarios dao= new DAOAdministracioUsuarios();
+	DAOAdministracioUsuarios dao;
 
 	public void init() throws ServletException
 	{
+		dao= new DAOAdministracioUsuarios();
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,21 +37,12 @@ public class ControladorLogin extends HttpServlet {
 		System.out.println("En doPost de ControladorLogin!");
 		JSONObject out = null;
 
-		// Setear driver
 		PrintWriter writer = response.getWriter();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (Exception e) {
-			writer.println("No se pudo abrir el driver de la base de datos");
-			writer.println(e.getMessage());
-		}
 		
 		String accion = request.getParameter("accion");
 
 		if (accion.equals("login")){
-			if (getCookieUsuario(request) == null){//pregunto si esta logueado
-				out = login(request,response);
-			}
+			out = login(request,response);
 		}
 		
 		if (out == null) {
@@ -63,24 +56,12 @@ public class ControladorLogin extends HttpServlet {
 
 	}
 
-	private Cookie getCookieUsuario(HttpServletRequest request) {
-		Cookie[] cookie = request.getCookies();
-		if (cookie != null){
-			for (Cookie c: cookie){
-				if (c.getName().equals("nombre_usuario")){
-					return c;
-				}
-			}
-		}
-		return null;
-	}
-
 	@SuppressWarnings("unchecked")
 	private JSONObject login(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Parametros del formulario
 		String user = request.getParameter("usuario");
 		String pass = request.getParameter("pass");
-		JSONObject salida = new JSONObject ();		
+		JSONObject salida = new JSONObject ();	
 		if (dao.isUsuarioPass(user,pass)) {
 			//agrego cookie
 			AccessManager.SetearCookie(response,user);
