@@ -244,6 +244,7 @@ public class Persona implements JSONable {
 		json.put("id_persona", this.id_persona);
 		json.put("nombres", this.nombres);
 		json.put("apellidos", this.apellidos);
+		json.put("domicilio", this.domicilio);
 		json.put("descripcion", this.descripcion);
 		json.put("foto", this.foto);
 		json.put("foto_registro", this.foto_registro);

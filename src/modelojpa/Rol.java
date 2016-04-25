@@ -16,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 
 @Table(name="rol")
@@ -142,12 +143,21 @@ public class Rol implements JSONable {
 	@SuppressWarnings("unchecked")  //esta anotacion es para q no rompa las bolas con los warnings
 	@Override
 	public JSONObject toJSON(){
+		JSONArray idpermisos;
+
 		JSONObject json = new JSONObject();
 		json.put("id_rol", this.id_rol);
 		json.put("nombre_rol", this.nombre_rol);
 		json.put("nombre_amigable", this.nombre_amigable);
 		json.put("descripcion", this.descripcion);
 		json.put("estado", this.estado.toString());
+
+		idpermisos = new JSONArray();
+		for (Object permiso: this.getPermisos()){
+			idpermisos.add(((PermisoRol)permiso).getPermiso().getId_permiso());
+		}
+		json.put("permisos", idpermisos);
+		
 		return json;
 	}
 

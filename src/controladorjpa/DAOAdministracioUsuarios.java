@@ -292,7 +292,7 @@ public class DAOAdministracioUsuarios {
 			e.printStackTrace();
 			return false;
 		}
-	    return false;
+	    return true;
 	}
 	
 	//busca por clave primaria 
