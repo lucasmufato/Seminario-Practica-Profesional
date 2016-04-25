@@ -27,6 +27,8 @@ initUI = function() {
 	$('label').addClass('control-label');
 	/*-----------*/
 	
+	$("#img_usuario, #img_registro").hide();
+	
 	loadData();
 };
 
@@ -40,6 +42,9 @@ function setearEventos(){
   $('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
   $('#formUsuario input[name=email]').focusout(ui.validarMail);
   $('form input[required]').focusout(ui.validarCampoObligatorio);
+  $("#formCliente input[type='file']").change(function(){
+    readURL(this);
+	});
 }
  
 function labelDelInput(input){
@@ -103,12 +108,8 @@ ui.validar = function(form){
   //Parche fierisimo, para no pase al siguiente formulario habiendo
   //errores piso todos los inputs y 
   //pregunto si existe algun elemento en el panel de alarmas
-	//var elemento es para sacar de foco el ultimo elemento //cuidado: genera un pequeño bug
-	$("#form"+form+" input").each(function () {
-		elemento = $(this).focus();
-	});
-	elemento.focusout();
-	
+	$("#form"+form+" input").focus();
+	$("#form"+form+" input").last().blur();
 	if ($(".panel-error").has("div").length == 0){
 		if (!ui.setNewForm(form)){ // si no hay mas formularios envio datos;
 			ui.sendForm();
@@ -145,7 +146,9 @@ ui.sendForm = function () {
 	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
 	
 	// cargo Cliente
-	sendData.cliente.foto_registro = $('#formCliente input[name=foto_registro]').val() || null;
+	var foto_registro = $('#formCliente input[name=foto_registro]')[0].files[0].size;
+	console.log(foto_registro);
+	sendData.cliente.foto_registro = foto_registro;
 	
 	console.log("mando: ",sendData);
 	
@@ -159,7 +162,7 @@ ui.sendForm = function () {
 		}
 	}
 	
-	sendAjax(sendData,onSuccess);
+	//sendAjax(sendData,onSuccess);
 }
 
 ingresarLogin = function(){
@@ -192,7 +195,7 @@ ui.activateForm = function(form){
 }
 
 ui.hideForms = function () {
-  $('#formCliente').hide();
+  //$('#formCliente').hide();
   $('#formUsuario').hide();
   $('#formPersona').hide();
 } 
@@ -250,4 +253,17 @@ successMessage = function (textMsg) {
 }
 closeModal = function (name) {
 	$('#modal' + name).modal('hide');
+}
+
+//img
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $(input).closest(".form-group").find("img").attr('src', e.target.result).show();
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
 }
