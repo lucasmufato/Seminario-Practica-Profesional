@@ -14,7 +14,7 @@ import modelojpa.Usuario;
 import org.json.simple.JSONArray;
 
 
-public class ControladorServletJPA2_0 extends HttpServlet {
+public class AdministracionUsuarios extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private DAOAdministracioUsuarios dao;
