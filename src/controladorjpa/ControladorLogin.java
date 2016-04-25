@@ -87,6 +87,7 @@ public class ControladorLogin extends HttpServlet {
 			System.out.println("Usuario logueado");
 			salida.put ("result", true); 
 			salida.put ("msg", "El usuario se ha logueado correctamente.");
+			salida.put("redirect", "home.html");
 		}else{
 			salida.put("result", false);
 			salida.put ("msg", "<p>Usuario o contrase&ntilde;a incorrectas.</p>");

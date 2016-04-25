@@ -10,84 +10,86 @@ initUI = function() {
 	$('label').addClass('control-label');
 	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
 	/*-----------*/
-	
-
+	// si esta logueado, lo mando a la home
+	if (getCookie("nombre_usuario")!="") {
+		return window.location.replace("home.html");
+	}
 };
 
 $(document).ready(function(){
-	if (getCookie("nombre_usuario")!="") {
-		return window.location.replace("home.html");
-	}else{
-		ocultarMensajes();
-		$('.loadingScreen').fadeOut();
-	}
-  var inputUsuario = $("input[name=usuario]");
-  var inputPass = $("input[name=pass]");
-  inputUsuario.val(getUrlVars()["usuario"]);
-  inputUsuario.focus();
-  inputUsuario.focusin(function(){
-	quitarError("usuario");
-  });
-  inputPass.focusin(function(){
-	quitarError("pass");
-  });
-  inputUsuario.focusout(validarUser);
-  inputPass.focusout(validarPass);
+	ocultarMensajesError();
+	$("form input").first().focus();
+    setearEventos();
+	$('.loadingScreen').fadeOut(); 
+	$("form input[name='usuario']").val(getUrlVars()["usuario"]);
 });
-function ocultarMensajes(){
+
+function setearEventos(){
+  $('input[name=usuario]').focusout(validarNombreUsuario);
+  $('input[name=pass]').focusout(validarPass);
+}
+ 
+validarNombreUsuario = function(){
+	var inputUsuario = $(this);
+	var valor = inputUsuario.val();
+	if (valor.length < 6){
+		customAlert(inputUsuario, "Mínimo 6 caracteres");
+	}
+}
+
+validarPass = function(){
+	var inputPass = $(this);
+	if (inputPass.val().length<6){
+		customAlert(inputPass,"Mínimo 6 caracteres");
+	}
+}
+function customAlert(input,msg){
+   sendMsgError(msg, input);
+   input.closest(".form-group").addClass("has-error");
+   input.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+   input.focus(function(){
+     input.unbind('focus');//para el IE
+     input.closest(".form-group").removeClass("has-error"); 
+	 deleteMsgError(input);
+   });
+}
+ 
+sendMsgError = function(msg, input){
+	input.closest(".form-group").find(".msg_error").show();
+}
+
+deleteMsgError = function(input){
+	input.closest(".form-group").find(".msg_error").hide();
+}
+
+function ocultarMensajesError(){
   $(".msg_error").hide();
 }
-function quitarError (campo){
-	var jquery;
-	switch(campo){
-		case "usuario":
-			jquery = $("#error_usuario");
-			break;
-		case "pass":
-			jquery = $("#error_pass");
-			break;
-	}
-	jquery.hide();
-	if (jquery.parent().parent().parent().hasClass("has-error")){
-		jquery.parent().parent().parent().removeClass("has-error");
-	}
-}
-var validarUser = function(){
-  var ingresado = $("input[name=usuario]").val();
-  userValido=ingresado.length>=6;
-  if (!userValido){
-    $("#error_usuario").show();
-  }
-};
-var validarPass = function(){
-  var ingresado = $("input[name=pass]").val();
-  passValido=ingresado.length>=6;
-  if (!passValido){
-    $("#error_pass").show();
-  }
-};
 function validarDatos(){
-	if (userValido && passValido) {
+	$("form input").focusout();
+	var error=0;
+	if ($("form").find(".has-error").length == 0) {
 		enviarForm();
-	}else {
-		if(!passValido) {
-			//$("#error_pass").effect('shake', {distance:2},{ times:1 }, 500);
-			$("#error_pass").show().parent().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-		}
-		if(!userValido) {
-			//$("#error_usuario").effect('shake', {distance:2},{ times:1 }, 500);
-			$("#error_usuario").show().parent().parent().parent().addClass("has-error").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-		}
 	}
 	return false;
 }
-
 function enviarForm(){
     var sendData = {
       accion: 'login',
       usuario: $("input[name=usuario]").val(),
       pass: $("input[name=pass]").val(),
     };
+	var callback = function(jsonData){
+	    if (jsonData.result) {
+          window.location = jsonData.redirect;
+        } else {
+		  $("#myModal").find(".modal-body").html(jsonData.msg);
+		  $("#myModal").modal();
+        }
+	}
+	sendAjax(sendData,callback);
+}
+function sendAjax(sendData,callback){
     $.ajax({
       url: '/login',
       method: 'POST',
@@ -95,12 +97,7 @@ function enviarForm(){
       dataType: 'json',
       success: function (jsonData) {
         DEBUGresponse = jsonData;
-        if (jsonData.result) {
-          window.location.replace("home.html");
-        } else {
-		  $("#myModal").find(".modal-body").html(jsonData.msg);
-		  $("#myModal").modal();
-        }
+		callback(jsonData);
       },
       error: function (er1, err2, err3) {
         document.body.innerHTML = er1.responseText;
