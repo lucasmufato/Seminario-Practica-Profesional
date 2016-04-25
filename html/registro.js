@@ -25,7 +25,6 @@ initUI = function() {
 	$('table').addClass('table table-hover');
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
-	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
 	/*-----------*/
 	
 	loadData();
