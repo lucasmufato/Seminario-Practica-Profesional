@@ -16,6 +16,7 @@ initUI = function() {
 $(document).ready(function(){
 console.log("ready");
 	esconderFuncionalidades();
+	initUI();
 });
 
 function esconderFuncionalidades(){

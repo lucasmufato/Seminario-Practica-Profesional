@@ -13,7 +13,7 @@ import modelojpa.Usuario;
 
 import org.json.simple.JSONArray;
 
-import controladores.AccessManager;
+import controladorjpa.AccessManager;
 
 
 public class AdministracionUsuarios extends HttpServlet {
@@ -77,7 +77,7 @@ public class AdministracionUsuarios extends HttpServlet {
 			out = assignPermiso(request);
 		} else if (action.equals("revokePermiso") && entity.equals("rol")) {
 			out = revokePermiso(request);
-		} else if (action.equals("login") && entity.equals("usuario")){
+		} else if (action.equals("get_permisos")){
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 			} catch (Exception e) {
