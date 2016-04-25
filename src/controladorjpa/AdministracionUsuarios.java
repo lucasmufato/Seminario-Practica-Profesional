@@ -13,6 +13,8 @@ import modelojpa.Usuario;
 
 import org.json.simple.JSONArray;
 
+import controladores.AccessManager;
+
 
 public class AdministracionUsuarios extends HttpServlet {
 
@@ -76,7 +78,6 @@ public class AdministracionUsuarios extends HttpServlet {
 		} else if (action.equals("revokePermiso") && entity.equals("rol")) {
 			out = revokePermiso(request);
 		} else if (action.equals("login") && entity.equals("usuario")){
-			System.out.println("en action login de controladorServlet");
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 			} catch (Exception e) {
@@ -430,11 +431,15 @@ public class AdministracionUsuarios extends HttpServlet {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject getPermisosUsuario (HttpServletRequest request) {		
-		JSONObject salida = new JSONObject ();		
-		String nombre_usuario = request.getParameter("nombre_usuario");
-		salida.put ("nombre_usuario", nombre_usuario);
-		JSONArray permisos = dao.NombrePermisosDeUnUsuario(nombre_usuario);
-		salida.put ("result", permisos);
+		JSONObject salida = new JSONObject ();
+		if (AccessManager.EstaLogueado(request)){
+			JSONArray permisos = dao.NombrePermisosDeUnUsuario(AccessManager.ValorCookie(request));
+			salida.put ("result", true);
+			salida.put("permisos", permisos);
+		}else{
+			salida.put ("result", false);
+			salida.put("redirect", "index.html");
+		}
 		return salida;
 	}	
 

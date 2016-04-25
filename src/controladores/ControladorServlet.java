@@ -76,16 +76,13 @@ public class ControladorServlet extends HttpServlet {
 			out = assignPermiso(request);
 		} else if (action.equals("revokePermiso") && entity.equals("rol")) {
 			out = revokePermiso(request);
-		} else if (action.equals("login") && entity.equals("usuario")){
-			System.out.println("en action login de controladorServlet");
-
+		} else if (action.equals("get_permisos")){
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 			} catch (Exception e) {
 				writer.println("No se pudo abrir el driver de la base de datos");
 				writer.println(e.getMessage());
 			}
-			
 			out = getPermisosUsuario(request);
 		}
 		
@@ -438,11 +435,16 @@ public class ControladorServlet extends HttpServlet {
 	}	
 	
 	private JSONObject getPermisosUsuario (HttpServletRequest request) {		
-		JSONObject salida = new JSONObject ();		
-		String nombre_usuario = request.getParameter("nombre_usuario");
-		salida.put ("nombre_usuario", nombre_usuario);
-		JSONArray permisos = Usuario.GetNombrePermisosUsuario(nombre_usuario);
-		salida.put ("result", permisos);
+		JSONObject salida = new JSONObject ();
+		if (AccessManager.EstaLogueado(request)){
+			JSONArray permisos = Usuario.GetNombrePermisosUsuario(AccessManager.ValorCookie(request));
+			salida.put ("result", true);
+			salida.put("permisos", permisos);
+		}else{
+			salida.put ("result", false);
+			salida.put("redirect", "index.html");
+		}
+
 		return salida;
 	}	
 

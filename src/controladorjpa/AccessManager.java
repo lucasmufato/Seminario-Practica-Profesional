@@ -20,8 +20,7 @@ public class AccessManager {
 		System.out.println("En AccessManager - HasPermiso");
 		//esta logueado?
 		if (EstaLogueado(request)) {
-			System.out.println("Esta logueado");
-			String nombre = getCookieUsuario(request).getValue();
+			String nombre = ValorCookie(request);
 			//tiene rol super usuario (id=0)? 
 			JSONArray roles = dao.NombreRolUsuario(nombre);
 			System.out.println("Usuario "+nombre+" tiene roles: "+roles);
@@ -46,6 +45,9 @@ public class AccessManager {
 		Cookie cookie = new Cookie("nombre_usuario",user);//Seteo cookie con parametros: nombre y valor
 		cookie.setMaxAge(60*60*24*365); // tiempo de vida de cookie en segundos
 		response.addCookie(cookie);
+	}
+	public static String ValorCookie(HttpServletRequest request) {
+		return getCookieUsuario(request).getValue();
 	}
 	public static boolean EliminarCookie(HttpServletRequest request, HttpServletResponse response){
 		Cookie c = getCookieUsuario(request);

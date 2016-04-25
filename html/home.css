@@ -1,5 +1,12 @@
-body{
 
+.loadingScreen {
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 5000;
 }
 .panel_func{
   text-align: center;

@@ -16,12 +16,9 @@ public class AccessManager {
 	}
 	
 	public static boolean HasPermiso(HttpServletRequest request, String nombrePermiso) {
-		System.out.println("En AccessManager");
-		Cookie c = getCookieUsuario(request);
-		//esta logueado?
-		if (c != null) {
-			System.out.println("Esta logueado");
-			String nombre = c.getValue();
+		System.out.println("En AccessManager - HasPermiso");
+		if (EstaLogueado(request)) {
+			String nombre = ValorCookie(request);
 			//tiene rol super usuario (id=0)? 
 			JSONArray roles = Usuario.GetRolesPorNombre(nombre);
 			System.out.println("Usuario "+nombre+" tiene roles: "+roles);
@@ -30,7 +27,7 @@ public class AccessManager {
 				return true;
 			}else{
 				//tiene permiso?
-				JSONArray permisos = Usuario.GetNombrePermisosUsuario(c.getValue());
+				JSONArray permisos = Usuario.GetNombrePermisosUsuario(nombre);
 				System.out.println("Permisos: "+permisos);
 				return tieneValor(permisos,"nombre_permiso",nombrePermiso);
 			}
@@ -59,7 +56,9 @@ public class AccessManager {
 		cookie.setMaxAge(60*60*24*365); // tiempo de vida de cookie en segundos
 		response.addCookie(cookie);
 	}
-	
+	public static String ValorCookie(HttpServletRequest request) {
+		return getCookieUsuario(request).getValue();
+	}
 	private static boolean tieneValor(JSONArray lista, String propiedad, String valor){
 		for (int i=0; i<lista.size(); i++){
 			JSONObject p = (JSONObject) lista.get(i);

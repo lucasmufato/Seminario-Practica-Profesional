@@ -1,60 +1,56 @@
+data={};
+data.permisos=[];
 
+initUI = function() {
+	/* Bootstrap */
+	$('button').addClass('btn');
+	$('table').addClass('table table-hover');
+	$('input, select, textarea').addClass('form-control');
+	$('label').addClass('control-label');
+	$('.saveButton').addClass('btn btn-success glyphicon glyphicon-ok');
+	/*-----------*/
+	console.log("init");
+
+	getPermisosUsuario();
+	$('.loadingScreen').fadeOut(); 
+};
 
 $(document).ready(function(){
-  console.log("entro a home.js");
-  // escondo funcionalidades
-  esconderFuncionalidades();
-  //pregunto si esta logueado
-  var nombreUsuario = getCookie("nombre_usuario");
-  if (nombreUsuario == ""){
-	//no esta logueado, vuelve al index
-    window.location.replace("index.html");
-  }else{
-  	console.log("nombre usuario:", nombreUsuario);
-	getRolesUsuario(nombreUsuario);
-  }
-})
+console.log("ready");
+	esconderFuncionalidades();
+});
 
 function esconderFuncionalidades(){
-    $("#administracion_usuarios").hide();
+  $("#administracion_usuarios").hide();
   $("#gestion_viajes").hide();
   $("#gestion_vehiculos").hide();
   $("#gestion_puntos").hide();
 }
 
-function getRolesUsuario (nombreUsuario) {
+function getPermisosUsuario() {
+	console.log("en get permisos usuario");
 	var sendData = {
-		entity: 'usuario',
-		action: 'login',
-		nombre_usuario: nombreUsuario,
+		action: 'get_permisos'
 	};
-	$.ajax({
-		url: '/users',
-		method: 'POST',
-		data: sendData,
-		dataType: 'json',
-		success: function (jsonData) {
-			DEBUGresponse = jsonData;// esta linea no se que hace, ante la duda la dejo.
-			if (jsonData.result) {
-				mostrarFunciones(jsonData);
-			} else {
-				window.alert ("Ocurrio un error");
-			}
-		},
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
+	var callback = function (jsonData){
+		if (jsonData.result){
+			data.permisos = jsonData.permisos;
+			mostrarFunciones();
+		}else if (jsonData.redirect != undefined){
+			window.location = jsonData.redirect;
 		}
-	});
+
+	}
+	sendAjax(sendData,callback);
 }
 
-function mostrarFunciones(jsonData){
-	console.log("Permisos que me traje: ",jsonData.result);
-	if (jsonData.result){
+function mostrarFunciones(){
+	console.log("Permisos que me traje: ",data.permisos);
+	if (data.permisos){
 		var permiso=0;
-		for (permiso in jsonData.result){
-			var nombrePermiso=jsonData.result[permiso]["nombre_permiso"];
-			var estadoPermiso=jsonData.result[permiso]["estado"];
+		for (permiso in data.permisos){
+			var nombrePermiso=data.permisos[permiso]["nombre_permiso"];
+			var estadoPermiso=data.permisos[permiso]["estado"];
 			if (nombrePermiso && estadoPermiso=="A"){
 				if (nombrePermiso == "administrar_usuarios"){
 					$("#administracion_usuarios").show();
@@ -79,4 +75,21 @@ function getCookie(nombreCookie) {
         if (c.indexOf(nombre) == 0) return c.substring(nombre.length,c.length);
     }
     return "";
+}
+
+var sendAjax = function(sendData,callback){
+	$.ajax({
+		url: '/users',
+		method: 'POST',
+		data: sendData,
+		dataType: 'json',
+		success: function (jsonData) {
+			DEBUGresponse = jsonData;
+			callback(jsonData);
+		},
+		error: function (er1, err2, err3) {
+			document.body.innerHTML = er1.responseText;
+			window.alert (err3);
+		}
+	});
 }
