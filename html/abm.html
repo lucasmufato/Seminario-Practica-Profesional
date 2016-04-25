@@ -16,14 +16,14 @@
 <body onload="initUI()">
 	<div class="loadingScreen"></div>
 
-	<a id="logoutButton" class="btn btn-danger glyphicon glyphicon-off" href="/login">Salir</a>
+	<a id="logoutButton" class="btn btn-danger " href="/login"><span class="glyphicon glyphicon-off"></span> Salir</a>
 
 	<nav id="tabBox" class="navbar-default navbar-fixed-top">
 		<ul class="nav nav-tabs">
-			<li class="active"><a id="personasTabButton" class="glyphicon glyphicon-user" onclick="ui.activateTab('personas')" data-toggle="tab">Personas</a>
-			<li><a id="usuariosTabButton" class="glyphicon glyphicon-user" onclick="ui.activateTab('usuarios')" data-toggle="tab">Usuarios</a>
-			<li><a id="rolesTabButton" class="glyphicon glyphicon-knight" onclick="ui.activateTab('roles')" data-toggle="tab">Roles</a>
-			<li><a id="permisosTabButton" class="glyphicon glyphicon-check" onclick="ui.activateTab('permisos')" data-toggle="tab">Permisos</a>
+			<li class="active"><a id="personasTabButton" class="" onclick="ui.activateTab('personas')" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Personas</a>
+			<li><a id="usuariosTabButton" class="" onclick="ui.activateTab('usuarios')" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Usuarios</a>
+			<li><a id="rolesTabButton" class="" onclick="ui.activateTab('roles')" data-toggle="tab"><span class="glyphicon glyphicon-knight"></span> Roles</a>
+			<li><a id="permisosTabButton" class="" onclick="ui.activateTab('permisos')" data-toggle="tab"><span class="glyphicon glyphicon-check"></span> Permisos</a>
 		</ul>
 	</nav>
 
@@ -72,7 +72,7 @@
 				</div>
 			<!-- BOTON  -->
 				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-2 col-md-offset-3">
-					<button class="btn btn-block btn-primary glyphicon glyphicon-search" type="submit">Buscar</button>
+					<button class="btn btn-block btn-primary " type="submit"><span class="glyphicon glyphicon-search"></span> Buscar</button>
 				</div>
 			</div>
 		</form>
@@ -111,7 +111,7 @@
 
 			<div class="form-group">
 				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-8 col-md-offset-9 col-lg-offset-8">
-					<button class="btn btn-primary btn-block glyphicon glyphicon-search" type="submit">Buscar</button>
+					<button class="btn btn-primary btn-block " type="submit"><span class="glyphicon glyphicon-search"></span> Buscar</button>
 				</div>
 			</div>
 		</form>		
@@ -141,7 +141,7 @@
 				</div>
 			<!-- BOTON -->
 				<div class="col-xs-3 col-md-2 col-lg-2 col-xs-offset-2 col-md-offset-3">
-					<button class="btn btn-primary btn-block glyphicon glyphicon-search" type="submit">Buscar</button>
+					<button class="btn btn-primary btn-block " type="submit"><span class="glyphicon glyphicon-search"></span> Buscar</button>
 				</div>
 			</div> 
 		</form>
@@ -176,11 +176,11 @@
 
 	<div class="text-center navbar-fixed-bottom navbar-default">
 		<div class="btn-group" style="margin: 12px">
-			<button type="button" id="deleteButton" class="glyphicon glyphicon-trash btn-danger btn-lg" onclick="ui.deleteButtonPressed()">Eliminar</button>
-			<button type="button" id="editButton" class="glyphicon glyphicon-pencil btn-primary btn-lg" onclick="ui.editButtonPressed()">Modificar</button>
-			<button type="button" id="rolesButton" class="glyphicon glyphicon-knight btn-primary btn-lg" onclick="ui.rolesButtonPressed()">Roles</button>
-			<button type="button" id="permisosButton" class="glyphicon glyphicon-check btn-primary btn-lg" onclick="ui.permisosButtonPressed()">Permisos</button>
-			<button type="button" id="newButton" class="glyphicon glyphicon-plus btn-success btn-lg" onclick="ui.newButtonPressed()">Agregar</button>
+			<button type="button" id="deleteButton" class=" btn-danger btn-lg" onclick="ui.deleteButtonPressed()"><span class="glyphicon glyphicon-trash"></span> Eliminar</button>
+			<button type="button" id="editButton" class=" btn-primary btn-lg" onclick="ui.editButtonPressed()"><span class="glyphicon glyphicon-pencil"></span> Modificar</button>
+			<button type="button" id="rolesButton" class=" btn-primary btn-lg" onclick="ui.rolesButtonPressed()"><span class="glyphicon glyphicon-knight"></span> Roles</button>
+			<button type="button" id="permisosButton" class=" btn-primary btn-lg" onclick="ui.permisosButtonPressed()"><span class="glyphicon glyphicon-check"></span> Permisos</button>
+			<button type="button" id="newButton" class=" btn-success btn-lg" onclick="ui.newButtonPressed()"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
 		</div>
 	</div>
 
@@ -226,7 +226,7 @@
 						<label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
 						<div class="input-group date form_date col-md-8">
 							<input class="form-control" type="text" name="fecha_nacimiento" required>
-							<span class="input-group-addon glyphicon glyphicon-calendar" onclick="$('#formPersona input[name=fecha_nacimiento]').datetimepicker('show')");></span>
+							<span class="input-group-addon " onclick="$('#formPersona input[name=fecha_nacimiento]').datetimepicker('show')");><span class="glyphicon glyphicon-calendar"></span> </span>
 						</div>
 					</div><!-- .form-group -->
 
@@ -264,7 +264,7 @@
 				</form>
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="saveButton" onclick="ui.sendPersonaForm()">Guardar</button>
+					<button type="button" class="btn btn-success " onclick="ui.sendPersonaForm()"><span class="glyphicon glyphicon-ok"></span> Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -334,8 +334,8 @@
 
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" id="usuarioRolesButton" class="btn-primary glyphicon glyphicon-knight" onclick="ui.rolesButtonPressed()">Gestionar roles</button>
-					<button type="button" class="saveButton" onclick="ui.sendUsuarioForm()">Guardar</button>
+					<button type="button" id="usuarioRolesButton" class="btn-primary " onclick="ui.rolesButtonPressed()"><span class="glyphicon glyphicon-knight"></span> Gestionar roles</button>
+					<button type="button" class="btn btn-success " onclick="ui.sendUsuarioForm()"><span class="glyphicon glyphicon-ok"></span> Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-content -->
@@ -357,8 +357,8 @@
 					</div>
 
 					<div class="btn-group-vertical col-md-4">
-						<button type="button" class="btn-primary glyphicon glyphicon-arrow-left" onclick="ui.assignRolUsuario()">Asignar</button>
-						<button type="button" class="btn-primary glyphicon glyphicon-arrow-right" onclick="ui.removeRolUsuario()" >Quitar</button>
+						<button type="button" class="btn-primary " onclick="ui.assignRolUsuario()"><span class="glyphicon glyphicon-arrow-left"></span> Asignar</button>
+						<button type="button" class="btn-primary " onclick="ui.removeRolUsuario()" ><span class="glyphicon glyphicon-arrow-right"></span> Quitar</button>
 					</div>
 
 					<div class="col-md-4">
@@ -368,7 +368,7 @@
 					<div style="visibility: hidden">.</div><!-- sin esto se ve mal el layout -->
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-						<button type="button" class="btn-success glyphicon glyphicon-ok" onclick="ui.closeModal('UsuarioRol')">Aceptar</button>
+						<button type="button" class="btn-success " onclick="ui.closeModal('UsuarioRol')"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -419,8 +419,8 @@
 					</form>
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" id="rolPermisosButton" class="btn-primary glyphicon glyphicon-check" onclick="ui.permisosButtonPressed()">Gestionar permisos</button>
-					<button type="button" class="saveButton" onclick="ui.sendRolForm()">Guardar</button>
+					<button type="button" id="rolPermisosButton" class="btn-primary " onclick="ui.permisosButtonPressed()"><span class="glyphicon glyphicon-check"></span> Gestionar permisos</button>
+					<button type="button" class="btn btn-success " onclick="ui.sendRolForm()"><span class="glyphicon glyphicon-ok"></span> Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -443,8 +443,8 @@
 					</div>
 
 					<div class="btn-group-vertical col-md-4">
-						<button type="button" class="btn-primary glyphicon glyphicon-arrow-left" onclick="ui.assignPermisoRol()">Asignar</button>
-						<button type="button" class="btn-primary glyphicon glyphicon-arrow-right" onclick="ui.revokePermisoRol()">Quitar</button>
+						<button type="button" class="btn-primary " onclick="ui.assignPermisoRol()"><span class="glyphicon glyphicon-arrow-left"></span> Asignar</button>
+						<button type="button" class="btn-primary " onclick="ui.revokePermisoRol()"><span class="glyphicon glyphicon-arrow-right"></span> Quitar</button>
 					</div>
 
 					<div class="col-md-4">
@@ -454,7 +454,7 @@
 					<div style="visibility: hidden">.</div><!-- sin esto se ve mal el layout -->
 				</div><!-- .modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="saveButton" onclick="ui.closeModal('PermisoRol')">Aceptar</button>
+					<button type="button" class="btn btn-success " onclick="ui.closeModal('PermisoRol')"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -506,7 +506,7 @@
 				</div><!-- modal-body -->
 
 				<div class="modal-footer">
-					<button type="button" class="saveButton" onclick="ui.sendPermisoForm()">Guardar</button>
+					<button type="button" class="btn btn-success " onclick="ui.sendPermisoForm()"><span class="glyphicon glyphicon-ok"></span> Guardar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -526,7 +526,7 @@
 				</div><!-- modal-body -->
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger glyphicon glyphicon-remove" onclick="ui.closeModal('Error')">Cerrar</button>
+					<button type="button" class="btn btn-danger " onclick="ui.closeModal('Error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
@@ -546,7 +546,7 @@
 				</div><!-- modal-body -->
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-warning glyphicon glyphicon-remove" onclick="ui.closeModal('Denied')">Cerrar</button>
+					<button type="button" class="btn btn-warning " onclick="ui.closeModal('Denied')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
