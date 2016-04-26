@@ -34,7 +34,7 @@ CREATE TABLE USUARIO (
 
 CREATE TABLE CLIENTE(
 	id_usuario Integer NOT NULL,
-	punto Integer,
+	puntos Integer,
 	reputacion Integer,
 	foto_registro VARCHAR(120),
 	
