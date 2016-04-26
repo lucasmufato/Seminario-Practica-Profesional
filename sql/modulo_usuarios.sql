@@ -25,11 +25,23 @@ CREATE TABLE USUARIO (
 	email VARCHAR(40) NOT NULL,
 	descripcion TEXT,
 	estado CHAR(1) NOT NULL, -- PODRIA SER DEL TIPO: A=ACTIVO, B=BAJA, S=SUSPENDIDO, ETC
+	tipo CHAR(1), --ESTE SE USA AUTOMATICO PARA LA HERENCIA 
 
 	PRIMARY KEY (id_usuario),
 	UNIQUE (nombre_usuario),
 	FOREIGN KEY (id_persona) REFERENCES PERSONA (id_persona)
 );
+
+CREATE TABLE CLIENTE(
+	id_usuario Integer NOT NULL,
+	punto Integer,
+	reputacion Integer,
+	foto_registro VARCHAR(120),
+	
+	PRIMARY KEY(id_usuario),
+	FOREIGN KEY (id_usuario) REFERENCES USUARIO (id_usuario)
+
+)
 
 CREATE TABLE ROL (
 	id_rol INTEGER NOT NULL AUTO_INCREMENT,
