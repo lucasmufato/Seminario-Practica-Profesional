@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 import controladorjpa.AccessManager;
 import controladorjpa.AdministracionUsuarios;
 import controladorjpa.ControladorLogin;
-import controladorjpa.ControladorServletJPA;
 import controladorjpa.DAOAdministracioUsuarios;
 import controladorjpa.Registro;
 import modelojpa.Cliente;
@@ -26,7 +25,6 @@ public class Probador {
 		Probador p = new Probador();
 		p.menu();
 		//para que cree los .class
-		ControladorServletJPA cs= new ControladorServletJPA();
 		ControladorLogin cl= new ControladorLogin();
 		AccessManager am= new AccessManager();
 		Registro r11 = new Registro();

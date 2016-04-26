@@ -31,9 +31,6 @@ public class DAOAdministracioUsuarios {
     	//creo los objectos a partir de los JSON recibidos
     	Persona p= new Persona(persona);
     	Cliente c= new Cliente(cliente);
-    	c.setEmail("probandooo");
-    	c.setNombre_usuario("probando");
-    	p.setTipo_doc(2);
     	try{
 			 entitymanager.getTransaction( ).begin( );
 			 c.setPersona(p);
