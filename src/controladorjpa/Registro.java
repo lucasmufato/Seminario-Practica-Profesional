@@ -6,7 +6,7 @@ import java.util.Enumeration;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import modelojpa.Usuario;
+import modelojpa.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -112,10 +112,9 @@ public class Registro extends HttpServlet {
 	}
 	
 	private JSONObject cargarJSON(HttpServletRequest request){
-		JSONObject salida, persona, usuario,cliente;
+		JSONObject salida, persona,cliente;
 		salida = new JSONObject();
 		persona = new JSONObject();
-		usuario = new JSONObject();
 		cliente = new JSONObject();
 		
 		persona.put ("id_persona", -1);
@@ -127,22 +126,24 @@ public class Registro extends HttpServlet {
 		persona.put("sexo", request.getParameter("persona[sexo]"));
 		persona.put("domicilio", request.getParameter("persona[domicilio]"));
 		persona.put("telefono", request.getParameter("persona[telefono]"));
-		persona.put("estado", "A");
+		persona.put("estado", "A");		
 		
-		usuario.put("id_usuario", -1);
-		//usuario.put("id_persona", idPersona);
-		usuario.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
-		usuario.put("password", request.getParameter("usuario[password]"));
-		usuario.put("email", request.getParameter("usuario[email]"));
-		usuario.put("descripcion", request.getParameter("usuario[descripcion]"));
-		usuario.put("estado", "A");
+		cliente.put("id_usuario", -1);
+		//cliente.put("id_persona", idPersona);
+		cliente.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
+		cliente.put("password", request.getParameter("usuario[password]"));
+		cliente.put("email", request.getParameter("usuario[email]"));
+		cliente.put("descripcion", request.getParameter("usuario[descripcion]"));
+		cliente.put("estado", "A");
 		
 		cliente.put("foto_registro", request.getParameter("cliente[foto_registro]"));
 		
+		
+		//no entiendo para q poner esos datos en la salida
 		salida.put("persona", persona);
-		salida.put("usuario", persona);
 		salida.put("cliente", persona);
-				
+		
+		Boolean resultado=dao.nuevoCliente(persona, cliente);	
 		return salida;
 	}
 	/*

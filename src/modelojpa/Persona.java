@@ -24,6 +24,7 @@ import org.json.simple.JSONObject;
 	@NamedQuery(name="Persona.SearchById",query="SELECT p FROM Persona p WHERE p.id_persona = :id"),
 	@NamedQuery(name="Persona.porNombreYApellido", query= "SELECT p FROM Persona p WHERE p.nombres LIKE :nombre and p.apellidos LIKE :apellidos"),
 	@NamedQuery(name="Persona.porNroDocumento",query="SELECT p FROM Persona p WHERE p.nro_doc = :nro_doc"),
+	@NamedQuery(name="Persona.porNroYTipoDeDocumento",query="SELECT p FROM Persona p WHERE p.nro_doc = :nro_doc and p.tipo_doc=:tipo_doc"),
 	@NamedQuery(name="Persona.porEstado",query="SELECT p FROM Persona p WHERE p.estado = :estado"),
 	
 })
@@ -89,6 +90,7 @@ public class Persona implements JSONable {
 		try {
 			parsed = format.parse(fn);
 		} catch (ParseException e) {
+			//this.fecha_nacimiento=null;
 			e.printStackTrace();
 		}
         this.fecha_nacimiento = new java.sql.Date(parsed.getTime());
@@ -265,12 +267,22 @@ public class Persona implements JSONable {
 		this.tipo_doc=Integer.parseInt(json.get("tipo_doc").toString());
 		this.nro_doc=new BigInteger(json.get("nro_doc").toString());
 		this.fecha_nacimiento=(Date)json.get("fecha_nacimiento");
-		this.sexo=json.get("sexo").toString().charAt(0);
+		String sexo=(String) json.get("estado");
+		if(sexo!=null){
+			this.estado= json.get("estado").toString().charAt(0);
+		}else{
+			this.sexo=null;
+		}
 		this.foto=(String)json.get("foto");
 		this.domicilio=(String)json.get("domicilio");
 		this.telefono=(String)json.get("telefono");
 		this.descripcion=(String)json.get("descripcion");
-		this.estado=json.get("estado").toString().charAt(0);
+		String estado=(String) json.get("estado");
+		if(estado!=null){
+			this.estado= json.get("estado").toString().charAt(0);
+		}else{
+			this.estado=null;
+		}
 		this.foto_registro=(String)json.get("foto_registro");
 	}
 

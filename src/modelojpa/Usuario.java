@@ -2,20 +2,7 @@ package modelojpa;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -28,12 +15,11 @@ import org.json.simple.JSONArray;
 	@NamedQuery(name="Usuario.porNombreExacto",query="SELECT u FROM Usuario u	WHERE u.nombre_usuario = :nombre"),
 	@NamedQuery(name="Usuario.SearchById",query="SELECT u FROM Usuario u WHERE u.id_usuario = :id"),
 	@NamedQuery(name="Usuario.porEmail",query="SELECT u FROM Usuario u WHERE u.email = :emai"),
-	@NamedQuery(name="Usuario.porEstado",query="SELECT u FROM Usuario u WHERE u.estado = :estado"),
-	//@NamedQuery(name="Usuario.susRoles"
-	//,query="SELECT r FROM Usuario u JOIN UsuarioRol ur JOIN Rol r WHERE u.id_usuario=ur.id_usuario AND r.id_rol=ur.id_rol")
-	
-	
+	@NamedQuery(name="Usuario.porEstado",query="SELECT u FROM Usuario u WHERE u.estado = :estado")
 })
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="Tipo", discriminatorType=DiscriminatorType.STRING,length=20)
+@DiscriminatorValue("U")
 public class Usuario implements JSONable {
 	
 	@Id
@@ -52,6 +38,10 @@ public class Usuario implements JSONable {
 	protected String descripcion;
 	@Column(nullable=false,length=1)
 	protected Character estado;
+	
+	@Column(nullable=false,length=1)
+	protected Character tipo;			//necesaria para que la herencia de JPA ande. aca va el tipo de "hijo" que tiene las misma caracteristicas
+	
 	@OneToMany(mappedBy="usuario", cascade=CascadeType.PERSIST)
 	protected List<UsuarioRol> roles;
 	
@@ -174,6 +164,7 @@ public class Usuario implements JSONable {
 		json.put("descripcion", this.descripcion);
 		json.put("email", this.email);
 		json.put("estado", this.estado.toString());
+		json.put("tipo", this.tipo);
 		//envio el id de la persona con la q esta relacionada
 		if(this.persona!=null){
 			json.put("id_persona", this.persona.getId_persona());
@@ -201,7 +192,13 @@ public class Usuario implements JSONable {
 		this.password= (String) json.get("password");
 		this.email= (String) json.get("email");
 		this.descripcion= (String) json.get("descripcion");
-		this.estado= json.get("estado").toString().charAt(0);
+		String estado=(String) json.get("estado");
+		if(estado!=null){
+			this.estado= json.get("estado").toString().charAt(0);
+		}else{
+			this.estado=null;
+		}
+		this.tipo= json.get("tipo").toString().charAt(0);
 	}
 
 	@Override

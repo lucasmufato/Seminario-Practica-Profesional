@@ -12,15 +12,7 @@ import org.eclipse.persistence.jpa.JpaHelper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import modelojpa.JSONable;
-import modelojpa.Permiso;
-import modelojpa.PermisoRol;
-import modelojpa.PermisoRolID;
-import modelojpa.Persona;
-import modelojpa.Rol;
-import modelojpa.Usuario;
-import modelojpa.UsuarioRol;
-import modelojpa.UsuarioRolID;
+import modelojpa.*;
 
 @SuppressWarnings("unused")
 public class DAOAdministracioUsuarios {
@@ -34,6 +26,37 @@ public class DAOAdministracioUsuarios {
     }
     
     //-------------------------------------------------------------para la parte de administracion de usuarios------------------------------
+    
+    public Boolean nuevoCliente(JSONObject persona,JSONObject cliente) {
+    	//creo los objectos a partir de los JSON recibidos
+    	Persona p= new Persona(persona);
+    	Cliente c= new Cliente(cliente);
+    	try{
+			 entitymanager.getTransaction( ).begin( );
+			 entitymanager.persist(p);
+			/*
+			 * tendria q probar si haciendo:
+			 * c.serPersona(p);
+			 * persist(p);
+			 * persist(c);
+			 * anda igual, pero de esta forma seguro anda:
+			 */
+			 Query qry = entitymanager.createNamedQuery("Persona.porNroYTipoDeDocumento");
+	    	 qry.setParameter("nro_doc", p.getNro_doc());
+	    	 qry.setParameter("tipo_doc", p.getTipo_doc());
+	    	 Persona persona_recien_guardada=(Persona)qry.getSingleResult();
+	    	 //acabo de recuperar la persona recien guardada, entonces ya tiene un id valido
+			 c.setPersona(persona_recien_guardada);
+			 entitymanager.persist(c);
+			 entitymanager.getTransaction( ).commit( );	
+			 return true;
+		}catch(Exception e){
+
+			e.printStackTrace();
+			return false;
+		}    	
+	}
+    
     
     //Metodo que devuelvo un JSONArray con:
     //permiso1, permiso3, permiso4... cada permiso en JSON
@@ -133,7 +156,6 @@ public class DAOAdministracioUsuarios {
 		    //guardo la nueva info
 		    entitymanager.getTransaction( ).commit( );	
 	    }catch(Exception e){
-    		entitymanager.getTransaction( ).rollback();
     		e.printStackTrace();
     		return false;
     	}
