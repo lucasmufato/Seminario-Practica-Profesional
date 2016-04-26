@@ -5,6 +5,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	
 	<persistence-unit name="seminario_practica_profesionalJPA" transaction-type="RESOURCE_LOCAL">
 	
+	<class>modelojpa.Cliente</class>
 	<class>modelojpa.Permiso</class>
 	<class>modelojpa.PermisoRol</class>
 	<class>modelojpa.PermisoRolID</class>

@@ -97,25 +97,19 @@ public class Registro extends HttpServlet {
 
 	private JSONObject registrarCliente(HttpServletRequest request) {
 		JSONObject out = new JSONObject();
-		JSONObject cliente = cargarJSON(request);
-		//POR IMPLEMENTAR:
-		/*
-		if (dao.altaCliente(cliente)){
+		JSONObject persona = this.cargarPersona(request);
+		JSONObject cliente = this.cargarCliente(request);
+		if (dao.nuevoCliente(persona,cliente)){
 			out.put ("result", true);
 			out.put ("msg", "El usuario ha sido registrado correctamente");
 		}else{
 			out.put ("result", false);
 			out.put ("msg", "Error en registro de usuario");
 		}
-		*/
 		return out;
 	}
-	
-	private JSONObject cargarJSON(HttpServletRequest request){
-		JSONObject salida, persona,cliente;
-		salida = new JSONObject();
-		persona = new JSONObject();
-		cliente = new JSONObject();
+	private JSONObject cargarPersona(HttpServletRequest request){
+		JSONObject persona = new JSONObject();
 		
 		persona.put ("id_persona", -1);
 		persona.put("nombres", request.getParameter("persona[nombres]"));
@@ -128,94 +122,22 @@ public class Registro extends HttpServlet {
 		persona.put("telefono", request.getParameter("persona[telefono]"));
 		persona.put("estado", "A");		
 		
+		return persona;
+	}
+
+	private JSONObject cargarCliente(HttpServletRequest request){
+		JSONObject cliente = new JSONObject();
+		
 		cliente.put("id_usuario", -1);
-		//cliente.put("id_persona", idPersona);
 		cliente.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
 		cliente.put("password", request.getParameter("usuario[password]"));
 		cliente.put("email", request.getParameter("usuario[email]"));
 		cliente.put("descripcion", request.getParameter("usuario[descripcion]"));
 		cliente.put("estado", "A");
-		
 		cliente.put("foto_registro", request.getParameter("cliente[foto_registro]"));
-		
-		
-		//no entiendo para q poner esos datos en la salida
-		salida.put("persona", persona);
-		salida.put("cliente", persona);
-		
-		Boolean resultado=dao.nuevoCliente(persona, cliente);	
-		return salida;
+
+		return cliente;
 	}
-	/*
-	private JSONObject guardarPersona (HttpServletRequest request) {
-		JSONObject recibida, salida;
-		Persona persona;
-		recibida = new JSONObject();
-		salida = new JSONObject();
-
-		recibida.put ("id_persona", -1);
-		recibida.put("nombres", request.getParameter("persona[nombres]"));
-		recibida.put("apellidos", request.getParameter("persona[apellidos]"));
-		recibida.put("tipo_doc", Integer.parseInt(request.getParameter("persona[tipo_doc]")));
-		recibida.put("nro_doc", Integer.parseInt(request.getParameter("persona[nro_doc]")));
-		recibida.put("fecha_nacimiento", request.getParameter("persona[fecha_nacimiento]"));
-		recibida.put("sexo", request.getParameter("persona[sexo]"));
-		recibida.put("domicilio", request.getParameter("persona[domicilio]"));
-		recibida.put("telefono", request.getParameter("persona[telefono]"));
-		recibida.put("estado", "A");
-
-		persona = new Persona (recibida);
-		if (persona.guardar()) {
-			System.out.println("Guarde persona");
-
-			salida.put ("result", true);
-			salida.put ("msg", "Se han guardado los datos de la persona");
-			salida.put("id", persona.getId());
-			System.out.println("guarde id");
-
-		} else {
-			salida.put ("result", false);
-			salida.put ("msg", "No se ha podido guardar los datos de la persona");
-		}
-		return salida;
-	}
-
-	private JSONObject guardarUsuario (HttpServletRequest request, Object idPersona) {
-		JSONObject recibido, salida;
-		Usuario usuario;
-		recibido = new JSONObject();
-		salida = new JSONObject();
-		
-		recibido.put("id_usuario", -1);
-		recibido.put("id_persona", idPersona);
-		recibido.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
-		recibido.put("password", request.getParameter("usuario[password]"));
-		recibido.put("email", request.getParameter("usuario[email]"));
-		recibido.put("descripcion", request.getParameter("usuario[descripcion]"));
-		recibido.put("estado", "A");
-
-		usuario = new Usuario (recibido);
-		if (usuario.guardar()) {
-			if (asignarRolUsuarioCliente(usuario)){
-				salida.put ("result", true);
-				salida.put ("msg", "El usuario ha sido registrado correctamente");
-			}else{
-				salida.put ("result", false);
-				salida.put ("msg", "Usted ha sido registrado pero han surgido fallas. Comuniquese con el administrador.");
-			}
-		} else {
-			salida.put ("result", false);
-			salida.put ("msg", "El usuario no ha sido registrado correctamente");
-		}
-		return salida;
-	}
-	
-	private boolean asignarRolUsuarioCliente(Usuario usuario){
-		// asigno rol cliente
-		String rolCliente = "cliente"; // hardcodeo dedicado al marce
-		return usuario.AsignarRol(Rol.getRolPorNombre(rolCliente));
-	}
-	*/
 	public void destroy()
 	{
 	}

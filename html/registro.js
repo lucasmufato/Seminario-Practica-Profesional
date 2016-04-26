@@ -146,7 +146,7 @@ ui.sendForm = function () {
 	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
 	
 	// cargo Cliente
-	var foto_registro = $('#formCliente input[name=foto_registro]')[0].files[0].size;
+	var foto_registro = $('#formCliente input[name=foto_registro]')[0].files[0].name;
 	console.log(foto_registro);
 	sendData.cliente.foto_registro = foto_registro;
 	
@@ -162,7 +162,7 @@ ui.sendForm = function () {
 		}
 	}
 	
-	//sendAjax(sendData,onSuccess);
+	sendAjax(sendData,onSuccess);
 }
 
 ingresarLogin = function(){
@@ -195,7 +195,7 @@ ui.activateForm = function(form){
 }
 
 ui.hideForms = function () {
-  //$('#formCliente').hide();
+  $('#formCliente').hide();
   $('#formUsuario').hide();
   $('#formPersona').hide();
 } 
@@ -262,7 +262,18 @@ function readURL(input) {
 
         reader.onload = function (e) {
             $(input).closest(".form-group").find("img").attr('src', e.target.result).show();
-        }
+		}
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+function readBinary(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $(input).closest(".form-group").find("img").attr('src', e.target.result).show();
+		}
 
         reader.readAsDataURL(input.files[0]);
     }
