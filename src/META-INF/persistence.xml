@@ -5,7 +5,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	
 	<persistence-unit name="seminario_practica_profesionalJPA" transaction-type="RESOURCE_LOCAL">
 	
-	<class>modelojpa.Cliente</class>
 	<class>modelojpa.Permiso</class>
 	<class>modelojpa.PermisoRol</class>
 	<class>modelojpa.PermisoRolID</class>
@@ -16,9 +15,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       <properties>
          <property name="eclipselink.logging.level" value="FINE"/>
          <property name="eclipselink.ddl-generation" value="create-tables"/>
+         <property name="eclipselink.allow-zero-id" value="true"/>
          <property name="javax.persistence.jdbc.user" value="root"/>
          <property name="javax.persistence.jdbc.password" value="root"/>
-         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/pruebajpa"/>
+         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/seminario"/>
          <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       </properties>
 	
