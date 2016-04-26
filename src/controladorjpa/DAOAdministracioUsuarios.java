@@ -31,24 +31,29 @@ public class DAOAdministracioUsuarios {
     	//creo los objectos a partir de los JSON recibidos
     	Persona p= new Persona(persona);
     	Cliente c= new Cliente(cliente);
+    	c.setEmail("probandooo");
+    	c.setNombre_usuario("probando");
+    	p.setTipo_doc(2);
     	try{
 			 entitymanager.getTransaction( ).begin( );
+			 c.setPersona(p);
+			 System.out.println("id persona antes de insert: "+p.getId_persona());
 			 entitymanager.persist(p);
-			/*
-			 * tendria q probar si haciendo:
-			 * c.serPersona(p);
-			 * persist(p);
-			 * persist(c);
-			 * anda igual, pero de esta forma seguro anda:
-			 */
-			 Query qry = entitymanager.createNamedQuery("Persona.porNroYTipoDeDocumento");
-	    	 qry.setParameter("nro_doc", p.getNro_doc());
-	    	 qry.setParameter("tipo_doc", p.getTipo_doc());
-	    	 Persona persona_recien_guardada=(Persona)qry.getSingleResult();
-	    	 //acabo de recuperar la persona recien guardada, entonces ya tiene un id valido
-			 c.setPersona(persona_recien_guardada);
+			 System.out.println("id persona despues de insert: "+p.getId_persona());
+			 System.out.println("id cliente antes de insert: "+c.getId_usuario());
 			 entitymanager.persist(c);
+			 System.out.println("id cliente despues de insert: "+c.getId_usuario());
+			 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
+	    	 qry.setParameter("nombre", "cliente");
+			 Rol r= (Rol) qry.getSingleResult();
+			 c.asignarRol(r);
 			 entitymanager.getTransaction( ).commit( );	
+			 
+			 System.out.println("id persona despues de commit: "+p.getId_persona());
+			 System.out.println("id cliente despues de commit: "+c.getId_usuario());
+			 Rol rol_recien_asignado= c.getRoles().get(0).getRol();
+			 System.out.println("nombre del rol recien asignado: "+rol_recien_asignado.getNombre_rol());
+			 
 			 return true;
 		}catch(Exception e){
 

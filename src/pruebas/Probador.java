@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import controladorjpa.AccessManager;
 import controladorjpa.AdministracionUsuarios;
 import controladorjpa.ControladorLogin;
+import controladorjpa.ControladorServletJPA;
 import controladorjpa.DAOAdministracioUsuarios;
 import controladorjpa.Registro;
 import modelojpa.Cliente;
@@ -25,6 +26,7 @@ public class Probador {
 		Probador p = new Probador();
 		p.menu();
 		//para que cree los .class
+		ControladorServletJPA cs= new ControladorServletJPA();
 		ControladorLogin cl= new ControladorLogin();
 		AccessManager am= new AccessManager();
 		Registro r11 = new Registro();
@@ -69,9 +71,10 @@ public class Probador {
 		JSONObject persona, cliente;
 		Persona p= new Persona();
 		Cliente c= new Cliente();
+		//los paso a JSON para emular que al DAO le llegan desde un servlet
 		persona= p.toJSON();
 		persona.remove("fecha_nacimiento");
-		persona.put("fecha_nacimiento", "19920411");
+		persona.put("fecha_nacimiento", "19920411");	//hago una fecha del tipo String, que es como le debe llegar al contructor de Persona
 		cliente= c.toJSON();
 		boolean b=dao.nuevoCliente(persona,cliente);
 		System.out.println(b);
