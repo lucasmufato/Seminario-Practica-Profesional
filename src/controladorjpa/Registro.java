@@ -4,10 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.servlet.*;
@@ -104,9 +107,9 @@ public class Registro extends HttpServlet {
 
 	private JSONObject registrarCliente(HttpServletRequest request) {
 		JSONObject out = new JSONObject();
-		//JSONObject persona = this.cargarPersona(request);
+		JSONObject persona = this.cargarPersona(request);
 		JSONObject cliente = this.cargarCliente(request);
-		/*
+
 		if (dao.nuevoCliente(persona,cliente)){
 			out.put ("result", true);
 			out.put ("msg", "El usuario ha sido registrado correctamente");
@@ -114,7 +117,7 @@ public class Registro extends HttpServlet {
 			out.put ("result", false);
 			out.put ("msg", "Error en registro de usuario");
 		}
-		*/
+
 		return out;
 	}
 	private JSONObject cargarPersona(HttpServletRequest request){
@@ -136,54 +139,30 @@ public class Registro extends HttpServlet {
 
 	private JSONObject cargarCliente(HttpServletRequest request){
 		JSONObject cliente = new JSONObject();
-		/*
+
 		cliente.put("id_usuario", -1);
 		cliente.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
 		cliente.put("password", request.getParameter("usuario[password]"));
 		cliente.put("email", request.getParameter("usuario[email]"));
 		cliente.put("descripcion", request.getParameter("usuario[descripcion]"));
 		cliente.put("estado", "A");
-		cliente.put("foto_registro", request.getParameter("cliente[foto_registro]"));
-		*/
-		String foto_uri = request.getParameter("cliente[foto_registro]") ;
-		String foto_bytes = foto_uri.substring(foto_uri.indexOf(",")+1);
 		
-		byte[] data = Base64.getDecoder().decode(foto_bytes);
-
-		try {
-			PrintWriter a = new PrintWriter("C:\\Users\\Juan\\Desktop\\filename.txt");
-			System.out.println("path info: "+request.getPathInfo());
-			System.out.println("path translated: "+request.getPathTranslated());
-			System.out.println("servlet path: "+request.getServletPath());
-			System.out.println("real path servlet info: "+request.getRealPath(getServletInfo()));
+		String pathImgRegistro = this.subirArchivo(request.getParameter("cliente[foto_registro]"));
+		cliente.put("foto_registro", pathImgRegistro);
+		
+		String pathImgUsuario = this.subirArchivo(request.getParameter("cliente[foto_usuario]"));
+		//cliente.put("foto_usuario", pathImgUsuario);
 			
-			ServletContext servletContext = this.getServletContext();
-			try {
-				String s = servletContext.getRealPath("upload");
-				try (OutputStream stream = new FileOutputStream(s+"/imagen.png")) {
-				    stream.write(data);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} finally{
-				
-			}
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-
-
-
-		
-
 		return cliente;
 	}
+
+	private String subirArchivo(String archivo) {
+		if (!archivo.isEmpty()){
+			archivo = FileManager.uploadImage(getServletContext().getRealPath("/"), archivo);
+		}
+		return archivo;
+	}
+
 	public void destroy()
 	{
 	}

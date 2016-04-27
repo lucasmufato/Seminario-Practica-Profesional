@@ -1,7 +1,5 @@
 ui = {}; // use esto para nombrar funciones sin hilación alguna, recordar sacarlo
 
-var uriRegistro; // el asincronismo de cargar una imagen me supera, le mando var global de parche.
-
 loadData = function() {
 	$.ajax({
 		url: '/registro',
@@ -40,10 +38,10 @@ $(document).ready(function(){
 });
 
 function setearEventos(){
-  //$('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
-  //$('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
-  //$('#formUsuario input[name=email]').focusout(ui.validarMail);
-  //$('form input[required]').focusout(ui.validarCampoObligatorio);
+  $('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
+  $('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
+  $('#formUsuario input[name=email]').focusout(ui.validarMail);
+  $('form input[required]').focusout(ui.validarCampoObligatorio);
   $("#formCliente input[type='file']").change(function(){
 		readURL(this);
 	});
@@ -148,13 +146,6 @@ ui.cargarForm = function () {
 	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
 	
 	// cargo Cliente
-	var foto_registro = uriRegistro;
-	console.log(uriRegistro.slice(0,100));
-	if (foto_registro != undefined){
-		console.log("vacio");
-	}else{
-		console.log("no vacio");
-	}
 	sendData.cliente.foto_registro = $("#img_registro").attr("src");
 	sendData.cliente.foto_usuario = $("#img_usuario").attr("src");
 	
@@ -199,11 +190,10 @@ ui.activateForm = function(form){
   var formSelector = '#'+'form'+form;
 	ui.hideForms();
 	$(formSelector).show();
-	//$(formSelector + " input[required]").first().focus();
 }
 
 ui.hideForms = function () {
-  //$('#formCliente').hide();
+  $('#formCliente').hide();
   $('#formUsuario').hide();
   $('#formPersona').hide();
 } 
@@ -269,8 +259,6 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-			//console.log(e.target.result);
-			uriRegistro = e.target.result;
             $(input).closest(".form-group").find("img").attr('src', e.target.result).show();
 		}
 
