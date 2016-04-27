@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
@@ -50,11 +52,20 @@ public class FileManager {
 		return base64String.substring(base64String.indexOf(",")+1);
 	}
 	
-	private static String getImgFormat(String base64String){		
+	private static String getImgFormat(String base64String){
+		/*
 		int desde = base64String.indexOf("/")+1;
 		int hasta = base64String.indexOf(";");
-		
 		return "."+base64String.substring(desde, hasta);
+		*/
+	    String pattern = "\\/([A-z]+)";
+	    Pattern r = Pattern.compile(pattern);
+	    Matcher m = r.matcher(base64String);
+	    if (m.find()) {
+	    	return "."+m.group(1);
+	    } 
+	    return "";
+	    
 	}
 	
 	public static String generateFileName(){
