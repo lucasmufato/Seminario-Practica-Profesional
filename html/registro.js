@@ -155,7 +155,8 @@ ui.cargarForm = function () {
 	}else{
 		console.log("no vacio");
 	}
-	sendData.cliente.foto_registro = foto_registro;
+	sendData.cliente.foto_registro = $("#img_registro").attr("src");
+	sendData.cliente.foto_usuario = $("#img_usuario").attr("src");
 	
 	console.log("mando: ",sendData);
 	

@@ -2,8 +2,12 @@ package controladorjpa;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Enumeration;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.servlet.*;
@@ -143,17 +147,39 @@ public class Registro extends HttpServlet {
 		*/
 		String foto_uri = request.getParameter("cliente[foto_registro]") ;
 		String foto_bytes = foto_uri.substring(foto_uri.indexOf(",")+1);
-
+		
 		byte[] data = Base64.getDecoder().decode(foto_bytes);
-		try (OutputStream stream = new FileOutputStream("C:\\Users\\Juan\\Desktop\\imagen.png")) {
-		    stream.write(data);
-		} catch (FileNotFoundException e) {
+
+		try {
+			PrintWriter a = new PrintWriter("C:\\Users\\Juan\\Desktop\\filename.txt");
+			System.out.println("path info: "+request.getPathInfo());
+			System.out.println("path translated: "+request.getPathTranslated());
+			System.out.println("servlet path: "+request.getServletPath());
+			System.out.println("real path servlet info: "+request.getRealPath(getServletInfo()));
+			
+			ServletContext servletContext = this.getServletContext();
+			try {
+				String s = servletContext.getRealPath("upload");
+				try (OutputStream stream = new FileOutputStream(s+"/imagen.png")) {
+				    stream.write(data);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} finally{
+				
+			}
+		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+		
+
+
+
 		
 
 		return cliente;
