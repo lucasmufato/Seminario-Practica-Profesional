@@ -1,18 +1,6 @@
 package controladorjpa;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
