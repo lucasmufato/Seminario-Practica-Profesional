@@ -25,7 +25,7 @@
 			margin-right: auto;
 
 		}
-
+		
 		sidebar a {
 			color: white;
 		}
@@ -59,7 +59,10 @@
 			background: white;
 			z-index: 5000;
 		}
-
+		#divanio {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
 		@media (max-width: 767px) {
 			sidebar {
 				width: 0px;

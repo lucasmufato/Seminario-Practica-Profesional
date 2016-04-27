@@ -3,17 +3,22 @@
 <head>
 	<title>Viajes Compartidos</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="common.css" />
 	<link rel="stylesheet" href="home.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="common.css" />
+
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="calendarioanios.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+
 </head>
 
 <body>
-
     <main>
     	<h1 class="text-center">Modificar Vehículo</h1>
     	<div class="container-fluid">
@@ -42,8 +47,9 @@
 
 			<div class="form-group">
 				<label for="anio" class="control-label col-xs-3 col-sm-2 col-md-2 col-lg-2">Año:</label>
-				<div class="col-xs-5 col-sm-2 col-md-3 col-lg-3">
-					<input type="text" class="form-control" id="anio" placeholder="Año">
+				<div class="input-group date form_date col-xs-5 col-sm-2 col-md-3 col-lg-2" id="divanio">
+					<input type="text" class="form-control" id="anio" placeholder="Año" required>
+					<span class="input-group-addon " onclick="$('#anio').datetimepicker('show')");><span class="glyphicon glyphicon-calendar"></span></span>
 				</div>
 			</div>
 
