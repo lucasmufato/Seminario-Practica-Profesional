@@ -1,5 +1,7 @@
 ui = {}; // use esto para nombrar funciones sin hilación alguna, recordar sacarlo
 
+var uriRegistro; // el asincronismo de cargar una imagen me supera, le mando var global de parche.
+
 loadData = function() {
 	$.ajax({
 		url: '/registro',
@@ -38,12 +40,12 @@ $(document).ready(function(){
 });
 
 function setearEventos(){
-  $('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
-  $('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
-  $('#formUsuario input[name=email]').focusout(ui.validarMail);
-  $('form input[required]').focusout(ui.validarCampoObligatorio);
+  //$('#formUsuario input[name=nombre_usuario]').focusout(ui.validarNombreUsuario);
+  //$('#formUsuario input[name=password], #formUsuario input[name=repetirPassword]').focusout(ui.validarPass);
+  //$('#formUsuario input[name=email]').focusout(ui.validarMail);
+  //$('form input[required]').focusout(ui.validarCampoObligatorio);
   $("#formCliente input[type='file']").change(function(){
-    readURL(this);
+		readURL(this);
 	});
 }
  
@@ -112,7 +114,7 @@ ui.validar = function(form){
 	$("#form"+form+" input").last().blur();
 	if ($(".panel-error").has("div").length == 0){
 		if (!ui.setNewForm(form)){ // si no hay mas formularios envio datos;
-			ui.sendForm();
+			ui.cargarForm();
 		}
 	}else{
 		// Oculto el form actual y muestro el que tiene el error.
@@ -121,7 +123,7 @@ ui.validar = function(form){
 	}
 }
 
-ui.sendForm = function () {
+ui.cargarForm = function () {
 	
 	var sendData = {};
 	sendData.action = 'new';
@@ -146,8 +148,13 @@ ui.sendForm = function () {
 	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
 	
 	// cargo Cliente
-	var foto_registro = $('#formCliente input[name=foto_registro]')[0].files[0].name;
-	console.log(foto_registro);
+	var foto_registro = uriRegistro;
+	console.log(uriRegistro.slice(0,100));
+	if (foto_registro != undefined){
+		console.log("vacio");
+	}else{
+		console.log("no vacio");
+	}
 	sendData.cliente.foto_registro = foto_registro;
 	
 	console.log("mando: ",sendData);
@@ -195,7 +202,7 @@ ui.activateForm = function(form){
 }
 
 ui.hideForms = function () {
-  $('#formCliente').hide();
+  //$('#formCliente').hide();
   $('#formUsuario').hide();
   $('#formPersona').hide();
 } 
@@ -261,17 +268,8 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $(input).closest(".form-group").find("img").attr('src', e.target.result).show();
-		}
-
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-function readBinary(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
+			//console.log(e.target.result);
+			uriRegistro = e.target.result;
             $(input).closest(".form-group").find("img").attr('src', e.target.result).show();
 		}
 

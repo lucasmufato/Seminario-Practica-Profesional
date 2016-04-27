@@ -1,8 +1,11 @@
 package controladorjpa;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Base64;
 import java.util.Enumeration;
 
+import javax.imageio.ImageIO;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -97,8 +100,9 @@ public class Registro extends HttpServlet {
 
 	private JSONObject registrarCliente(HttpServletRequest request) {
 		JSONObject out = new JSONObject();
-		JSONObject persona = this.cargarPersona(request);
+		//JSONObject persona = this.cargarPersona(request);
 		JSONObject cliente = this.cargarCliente(request);
+		/*
 		if (dao.nuevoCliente(persona,cliente)){
 			out.put ("result", true);
 			out.put ("msg", "El usuario ha sido registrado correctamente");
@@ -106,6 +110,7 @@ public class Registro extends HttpServlet {
 			out.put ("result", false);
 			out.put ("msg", "Error en registro de usuario");
 		}
+		*/
 		return out;
 	}
 	private JSONObject cargarPersona(HttpServletRequest request){
@@ -127,7 +132,7 @@ public class Registro extends HttpServlet {
 
 	private JSONObject cargarCliente(HttpServletRequest request){
 		JSONObject cliente = new JSONObject();
-		
+		/*
 		cliente.put("id_usuario", -1);
 		cliente.put("nombre_usuario", request.getParameter("usuario[nombre_usuario]"));
 		cliente.put("password", request.getParameter("usuario[password]"));
@@ -135,11 +140,26 @@ public class Registro extends HttpServlet {
 		cliente.put("descripcion", request.getParameter("usuario[descripcion]"));
 		cliente.put("estado", "A");
 		cliente.put("foto_registro", request.getParameter("cliente[foto_registro]"));
+		*/
+		String foto_uri = request.getParameter("cliente[foto_registro]") ;
+		String foto_bytes = foto_uri.substring(foto_uri.indexOf(",")+1);
+
+		byte[] data = Base64.getDecoder().decode(foto_bytes);
+		try (OutputStream stream = new FileOutputStream("C:\\Users\\Juan\\Desktop\\imagen.png")) {
+		    stream.write(data);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		return cliente;
 	}
 	public void destroy()
 	{
 	}
-		
+
 }
