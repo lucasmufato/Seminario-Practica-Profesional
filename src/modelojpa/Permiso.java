@@ -21,7 +21,8 @@ import org.json.simple.JSONObject;
 	@NamedQuery(name="Permiso.todos",query="SELECT p FROM Permiso p"),
 	@NamedQuery(name="Permiso.porNombre",query="SELECT p FROM Permiso p	WHERE p.nombre_permiso LIKE :nombre_permiso"),
 	@NamedQuery(name="Permiso.SearchById",query="SELECT p FROM Permiso p WHERE p.id_permiso = :id"),
-	@NamedQuery(name="Permiso.porFuncinalidad",query="SELECT p FROM Permiso p WHERE p.funcionalidad LIKE :funcionalidad")
+	@NamedQuery(name="Permiso.porFuncinalidad",query="SELECT p FROM Permiso p WHERE p.funcionalidad LIKE :funcionalidad"),
+	@NamedQuery(name="Permiso.buscarPorClaveCandidata",query="SELECT p FROM Permiso p WHERE p.nombre_permiso = :clave_candidata"),
 })
 @Entity
 @Table

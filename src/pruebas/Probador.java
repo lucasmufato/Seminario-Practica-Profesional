@@ -43,8 +43,8 @@ public class Probador {
 	public void menu(){
 
 		//para usar inicializar es conveninte haberle hecho truncate a toda la BD
-		//inicializar sirve para crear un par de personas, usuarios, roles y permisos y asignarlos
-		//inicializar();
+		//inicializar sirve para crear un par de personas, usuarios,clientes, roles y permisos y asignarlos
+		//inicializar();			//funca
 	
 		//probarDAOUsuarioConPersona();		//funca 
 		//probarDAOselectAll();		//funca, hay q pasarle el .class.getSimpleName() y te tira devuelve la lista con los resultados
@@ -62,9 +62,22 @@ public class Probador {
 		//DAOisUsuarioPass(); 		//funca
 		//DAOCliente();			//se puede cargar una entidad con un json vacio o incompleto, los datos quedan en null
 		//ConstruirClienteConJSONVacio();		//funca
-		DAOnuevoCliente();
+		//DAOnuevoCliente();		//funca
+		//DAOBuscarPorClaveCandidata();		//funca
 	}
-	
+	public void DAOBuscarPorClaveCandidata(){
+		//el test esta hecho para q funque con los datos creado por el inicializador
+		
+		//no busco por persona por que tiene una CC compuesta, despues hare ese metodo
+		Object o=dao.buscarPorClaveCandidata("Usuario", "lucasmufato");
+		System.out.println(o.toString());
+		o=dao.buscarPorClaveCandidata("Cliente", "segundo_user");
+		System.out.println(o.toString());
+		o= dao.buscarPorClaveCandidata("Rol", "super_usuario");
+		System.out.println(o.toString());
+		o= dao.buscarPorClaveCandidata("Permiso", "administrar_usuarios");
+		System.out.println(o.toString());
+	}
 	public void DAOnuevoCliente(){
 		JSONObject persona, cliente;
 		Persona p= new Persona();
@@ -109,23 +122,30 @@ public class Probador {
 		Persona p2= new Persona();
 		p2.setTipo_doc(2);						//cambio el tipo de documento, por q el tipo y nro de doc son clave unica.
 		System.out.println(	dao.persistir(p2)	);
-		Usuario u2 = new Usuario();
+		Cliente u2 = new Cliente();
 		u2.setNombre_usuario("segundo_user");	//cambio el username por q es clave unica.
+		u2.setEmail("segundo@mail.com");
 		System.out.println(	dao.persistirUsuarioConPersona(u2, p2.getId_persona())	);
 		
 		//hacer varios roles y permisos
 		Rol r1= new Rol();
+		r1.setNombre_rol("rol1");
 		System.out.println(	dao.persistir(r1)	);
 		Rol r2 = new Rol();
+		r2.setNombre_rol("rol2");
 		System.out.println(	dao.persistir(r2)	);
 		Rol r3 = new Rol();
+		r3.setNombre_rol("rol3");
 		System.out.println(	dao.persistir(r3)	);
 		
 		Permiso pem1= new Permiso();
+		pem1.setNombre_permiso("permiso1");
 		System.out.println(	dao.persistir(pem1)	);
 		Permiso pem2= new Permiso();
+		pem2.setNombre_permiso("permiso2");
 		System.out.println(	dao.persistir(pem2)	);
 		Permiso pem3= new Permiso();
+		pem3.setNombre_permiso("permiso3");
 		System.out.println(	dao.persistir(pem3)	);
 		
 		//dar roles a los usuarios y permisos a los roles

@@ -30,7 +30,8 @@ import org.json.simple.JSONArray;
 	@NamedQuery(name="Rol.todos",query="SELECT r FROM Rol r"),
 	@NamedQuery(name="Rol.porNombre",query="SELECT r FROM Rol r	WHERE r.nombre_rol = :nombre"),
 	@NamedQuery(name="Rol.SearchById",query="SELECT r FROM Rol r WHERE r.id_rol = :id"),
-	@NamedQuery(name="Rol.porNombreAmigable",query="SELECT r FROM Rol r WHERE r.nombre_amigable LIKE :nombre_amigable")
+	@NamedQuery(name="Rol.porNombreAmigable",query="SELECT r FROM Rol r WHERE r.nombre_amigable LIKE :nombre_amigable"),
+	@NamedQuery(name="Rol.buscarPorClaveCandidata",query="SELECT r FROM Rol r WHERE r.nombre_rol = :clave_candidata")
 	
 })
 @Entity

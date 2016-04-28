@@ -192,7 +192,8 @@ public class DAOAdministracioUsuarios {
     }
     
     //el metodo devuelve true aunque el estado ya estubiera dado de baja
-    public boolean darDeBaja(Integer id,String clase) {
+    @SuppressWarnings("unchecked")
+	public boolean darDeBaja(Integer id,String clase) {
 		entitymanager.getTransaction( ).begin( );
 		try{
 			//busco la clase a dar de baja usando la namedquery que tendria q tener
@@ -258,6 +259,17 @@ public class DAOAdministracioUsuarios {
 	
 	//-------------------------------------------parte generalizada-------------------------------------------------------------------------
 	
+    public Object buscarPorClaveCandidata(String clase, Object clave_candidata){
+    	try{
+    		Query qry = entitymanager.createNamedQuery(clase+".buscarPorClaveCandidata");
+    		qry.setParameter("clave_candidata", clave_candidata);
+    		return qry.getResultList();
+    		}catch(Exception e){
+    			e.printStackTrace();
+    			return null;
+    		}
+    }
+    
     //devuelve una lista con todos los objetos de esa clase
 	@SuppressWarnings("rawtypes")
 	public List selectAll(String nombreDeLaClase){
@@ -278,9 +290,9 @@ public class DAOAdministracioUsuarios {
 			 entitymanager.getTransaction( ).commit( );	
 			 return true;
 		}catch(Exception e){
-			System.out.println("mensaje de causa de la excepcion: "+e.getCause().getCause().getLocalizedMessage());
+			System.out.println("mensaje de causa de la excepcion: "+e.getCause());
 			System.out.println("fin mjs excepcion");
-			//e.printStackTrace();
+			e.printStackTrace();
 			return false;
 		}
 	}

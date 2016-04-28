@@ -15,7 +15,9 @@ import org.json.simple.JSONArray;
 	@NamedQuery(name="Usuario.porNombreExacto",query="SELECT u FROM Usuario u	WHERE u.nombre_usuario = :nombre"),
 	@NamedQuery(name="Usuario.SearchById",query="SELECT u FROM Usuario u WHERE u.id_usuario = :id"),
 	@NamedQuery(name="Usuario.porEmail",query="SELECT u FROM Usuario u WHERE u.email = :emai"),
-	@NamedQuery(name="Usuario.porEstado",query="SELECT u FROM Usuario u WHERE u.estado = :estado")
+	@NamedQuery(name="Usuario.porEstado",query="SELECT u FROM Usuario u WHERE u.estado = :estado"),
+	@NamedQuery(name="Usuario.buscarPorClaveCandidata",query="SELECT u FROM Usuario u WHERE u.nombre_usuario = :clave_candidata")
+	
 })
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="Tipo", discriminatorType=DiscriminatorType.STRING,length=20)
@@ -148,7 +150,7 @@ public class Usuario implements JSONable {
 	@Override
 	public String toString(){
 		return "Usuario: [ID:"+this.id_usuario+" , "+this.nombre_usuario+" , "+this.password+" , "+this.descripcion+" , "+this.email+" , "+
-					this.estado+" ,ID_Persona "+this.persona.getId_persona()+" ]";
+					this.estado+" ,ID_Persona "+this.persona.getId_persona()+",tipo: "+this.tipo+" ]";
 	}
 	
 	@SuppressWarnings("unchecked")  //esta anotacion es para q no rompa las bolas con los warnings
