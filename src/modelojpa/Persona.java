@@ -50,8 +50,6 @@ public class Persona implements JSONable {
 	@Column(nullable=false,length=30)
 	protected Character sexo;
 	@Column(nullable=true,length=120)
-	protected String foto;
-	@Column(nullable=false,length=120)
 	protected String domicilio;
 	@Column(nullable=false,length=16)
 	protected String telefono;
@@ -59,8 +57,6 @@ public class Persona implements JSONable {
 	protected String descripcion;
 	@Column(nullable=false,length=1)
 	protected Character estado;
-	@Column(nullable=true,length=120)
-	protected String foto_registro;
 	
 	
 	public Persona(){
@@ -71,8 +67,6 @@ public class Persona implements JSONable {
 		this.domicilio="dr muñiz 1482";
 		this.estado='A';
 		this.fecha_nacimiento= new java.sql.Date( (new java.util.Date()).getTime() );
-		this.foto="url://fefdsefsefsefes";
-		this.foto_registro="URL://efdsefesfsef";
 		this.telefono="425790";
 		this.id_persona=1;
 		this.nro_doc= BigInteger.valueOf(new Integer(38842784).intValue());
@@ -96,12 +90,10 @@ public class Persona implements JSONable {
 		}
         this.fecha_nacimiento = new java.sql.Date(parsed.getTime());
 		this.sexo=json.get("sexo").toString().charAt(0);
-		this.foto=(String)json.get("foto");
 		this.domicilio=(String)json.get("domicilio");
 		this.telefono=(String)json.get("telefono");
 		this.descripcion=(String)json.get("descripcion");
 		this.estado=json.get("estado").toString().charAt(0);
-		this.foto_registro=(String)json.get("foto_registro");
 	}
 
 	public Integer getId_persona() {
@@ -173,17 +165,6 @@ public class Persona implements JSONable {
 		this.sexo = sexo;
 	}
 
-
-	public String getFoto() {
-		return foto;
-	}
-
-
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
-
-
 	public String getDomicilio() {
 		return domicilio;
 	}
@@ -221,22 +202,11 @@ public class Persona implements JSONable {
 
 	public void setEstado(Character estado) {
 		this.estado = estado;
-	}
-
-
-	public String getFoto_registro() {
-		return foto_registro;
-	}
-
-
-	public void setFoto_registro(String foto_registro) {
-		this.foto_registro = foto_registro;
 	}	
 	
 	public String toString(){
-		return "Persona: ["+this.id_persona+" , "+this.nombres+" , "+this.apellidos+this.descripcion+" , "+this.domicilio+" , "+
-					this.foto+" , "+this.foto_registro+" , "+this.telefono+" , "+this.sexo+" , "+this.tipo_doc+" , "+this.nro_doc+" , "+
-					this.fecha_nacimiento.toString()+" , "+this.estado+" ]";
+		return "Persona: ["+this.id_persona+" , "+this.nombres+" , "+this.apellidos+this.descripcion+" , "+this.domicilio+" , "
+	+this.telefono+" , "+this.sexo+" , "+this.tipo_doc+" , "+this.nro_doc+" , "+this.fecha_nacimiento.toString()+" , "+this.estado+" ]";
 	}
 	
 	
@@ -249,8 +219,6 @@ public class Persona implements JSONable {
 		json.put("apellidos", this.apellidos);
 		json.put("domicilio", this.domicilio);
 		json.put("descripcion", this.descripcion);
-		json.put("foto", this.foto);
-		json.put("foto_registro", this.foto_registro);
 		json.put("telefono", this.telefono);
 		json.put("sexo", this.sexo.toString());
 		json.put("tipo_doc", this.tipo_doc);
@@ -274,7 +242,6 @@ public class Persona implements JSONable {
 		}else{
 			this.sexo=null;
 		}
-		this.foto=(String)json.get("foto");
 		this.domicilio=(String)json.get("domicilio");
 		this.telefono=(String)json.get("telefono");
 		this.descripcion=(String)json.get("descripcion");
@@ -284,7 +251,6 @@ public class Persona implements JSONable {
 		}else{
 			this.estado=null;
 		}
-		this.foto_registro=(String)json.get("foto_registro");
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 @Entity
 @Table(name="cliente")
 
+@NamedQuery(name="Cliente.buscarPorClaveCandidata",query="SELECT c FROM Cliente c WHERE c.nombre_usuario = :clave_candidata")
 @DiscriminatorValue("C")		//valor que va en la tabla de usuario, por el cual JPA distingue que tipo de clase hijo es
 public class Cliente extends Usuario implements JSONable {
 	@Column(nullable=true)
@@ -18,12 +19,16 @@ public class Cliente extends Usuario implements JSONable {
 	protected Integer puntos;
 	@Column(nullable=true,length=120)
 	protected String foto_registro;
+	@Column(nullable=true,length=120)
+	protected String foto;
+	
 	
 	public Cliente(){
 		super();
 		this.reputacion=7;
 		this.puntos=7;
 		this.foto_registro="no tiene";
+		this.foto="no tiene";
 	}
 
 	public Cliente(JSONObject cliente) {
@@ -31,7 +36,9 @@ public class Cliente extends Usuario implements JSONable {
 		this.reputacion =(Integer) cliente.get("reputacion");
 		this.puntos= (Integer) cliente.get("puntos");
 		this.foto_registro=(String) cliente.get("foto_registro");
+		this.foto=(String) cliente.get("foto");
 		this.tipo='C';
+		
 	}
 
 	public Integer getReputacion() {
@@ -67,6 +74,9 @@ public class Cliente extends Usuario implements JSONable {
 		json.put("tipo", this.tipo.toString());
 		json.put("puntos", this.puntos);
 		json.put("reputacion", this.reputacion);
+		json.put("foto", this.foto);
+		json.put("foto_registro", this.foto_registro);
+		
 		//envio el id de la persona con la q esta relacionada
 		if(this.persona!=null){
 			json.put("id_persona", this.persona.getId_persona());
@@ -78,7 +88,7 @@ public class Cliente extends Usuario implements JSONable {
 		listaroles = this.getRoles();
 		if (listaroles != null) {
 			for (Object rol: listaroles) {
-				idroles.add (((UsuarioRol)rol).getRol().getId_rol());
+				idroles.add( ((UsuarioRol)rol).getRol().getId_rol() );
 			}
 		}
 		json.put("roles", idroles);
@@ -102,12 +112,21 @@ public class Cliente extends Usuario implements JSONable {
 		}
 		this.reputacion =(Integer) json.get("reputacion");
 		this.puntos= (Integer) json.get("puntos");
+		this.foto= (String) json.get("foto");
+		this.foto_registro= (String) json.get("foto_registro");
 		this.tipo='C';
 	}
 
 	@Override
 	public Object getPrimaryKey() {
 		return this.id_usuario;
+	}
+	
+	@Override
+	public String toString(){
+		return "CLiente: [ID:"+this.id_usuario+" , "+this.nombre_usuario+" , "+this.password+" , "+this.descripcion+" , "+this.email+" , "
+				+this.estado+" ,ID_Persona "+this.persona.getId_persona()+",tipo: "+this.tipo+" ,reputacion: "+this.reputacion+" ,puntos: "+this.puntos+
+				", "+this.foto+", "+this.foto_registro+" ]";
 	}
 	
 }
