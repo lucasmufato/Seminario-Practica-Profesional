@@ -610,6 +610,7 @@ ui.updatePersonasTable = function () {
 			tr.onclick = function () {
 				aux.clearSelectedRow (tbody);
 				ui.selectedId = elem.id;
+				aux.enableButtons();
 				$(thistr).addClass('info');
 			}
 			tbody.appendChild(tr);
@@ -661,6 +662,7 @@ ui.updateUsuariosTable = function () {
 			tr.onclick = function () {
 				aux.clearSelectedRow (tbody);
 				ui.selectedId = elem.id;
+				aux.enableButtons();
 				$(thistr).addClass('info');
 			}
 			tbody.appendChild(tr);
@@ -704,6 +706,7 @@ ui.updateRolesTable = function () {
 			tr.onclick = function () {
 				aux.clearSelectedRow (tbody);
 				ui.selectedId = elem.id;
+				aux.enableButtons();
 				$(thistr).addClass('info');
 			}
 			tbody.appendChild(tr);
@@ -743,6 +746,7 @@ ui.updatePermisosTable = function () {
 		tr.onclick = function () {
 			aux.clearSelectedRow (tbody);
 			ui.selectedId = elem.id;
+			aux.enableButtons();
 			$(thistr).addClass('info');
 		}
 		tbody.appendChild(tr);
@@ -903,7 +907,22 @@ aux.clearSelectedRow = function (tbody) {
 		$(tbody.childNodes[i]).removeClass('info');
 		i++;
 	}
+	aux.disableButtons ();
 	ui.selectedId = null;
+}
+
+aux.disableButtons = function () {
+	$('#deleteButton').prop('disabled', true);
+	$('#editButton').prop('disabled', true);
+	$('#rolesButton').prop('disabled', true);
+	$('#PermisosButton').prop('disabled', true);
+}
+
+aux.enableButtons = function () {
+	$('#deleteButton').prop('disabled', false);
+	$('#editButton').prop('disabled', false);
+	$('#rolesButton').prop('disabled', false);
+	$('#PermisosButton').prop('disabled', false);
 }
 
 aux.sendForm = function (sendData, onsuccess) {
