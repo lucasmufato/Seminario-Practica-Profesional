@@ -64,7 +64,7 @@ public class Cliente extends Usuario implements JSONable {
 		json.put("descripcion", this.descripcion);
 		json.put("email", this.email);
 		json.put("estado", this.estado.toString());
-		json.put("tipo", this.tipo);
+		json.put("tipo", this.tipo.toString());
 		json.put("puntos", this.puntos);
 		json.put("reputacion", this.reputacion);
 		//envio el id de la persona con la q esta relacionada
