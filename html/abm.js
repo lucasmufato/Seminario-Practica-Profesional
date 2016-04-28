@@ -26,7 +26,6 @@ data.loadData = function() {
 				ui.updateUsuariosTable();
 				ui.updateRolesTable();
 				ui.updatePermisosTable();
-				ui.updatePersonasSelect();
 			} else if (jsonData.redirect != undefined) {
 				window.location = jsonData.redirect;
 			}
@@ -164,7 +163,7 @@ ui.sendUsuarioForm = function() {
 	sendData.entity = 'usuario';
 	sendData.id_usuario = $('#formUsuario input[name=id]').val() || null;
 	sendData.action = (sendData.id_usuario == -1)? 'new': 'edit';
-	sendData.id_persona = $('#formUsuario select[name=id_persona]').val() || null;
+	sendData.id_persona = $('#formUsuario input[name=id_persona]').val() || null;
 	sendData.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val() || null;
 	sendData.password = $('#formUsuario input[name=password]').val() || null;
 	sendData.email = $('#formUsuario input[name=email]').val() || null;
@@ -253,6 +252,24 @@ initUI = function() {
 		startView: 2,
 		minView: 2
 	})
+	ui.magicPersona = $('#formUsuario input[name=buscar_persona]').magicSuggest({
+		method: 'GET',
+		data: '/autocompletado',
+		mode: 'remote',
+		allowFreeEntries: false,
+		hideTrigger: true,
+		placeholder: 'Buscar Personas',
+		noSuggestionText: 'No hay sugerencias',
+		maxSelection: 1,
+		maxSelectionRenderer: function(){},
+		dataUrlParams: {
+			entity: "persona"
+		}
+	});
+
+	$(ui.magicPersona).on('selectionchange', function() {
+		$('#formUsuario input[name=id_persona]').val(this.getValue())
+	});
 	data.loadData();
 };
 
@@ -353,29 +370,6 @@ ui.permisosButtonPressed = function () {
 	ui.showRolPermisoForm();
 }
 
-ui.updatePersonasSelect = function() {
-	var select = $('#formUsuario select[name=id_persona]')[0];
-	var newOpt;
-	var persArray = []
-	var compareFunc = function (a, b) {
-		var inpa = a.nombres.toLowerCase() + a.apellidos.toLowerCase();
-		var inpb =  b.nombres.toLowerCase() + b.apellidos.toLowerCase();
-		return inpa.localeCompare (inpb);
-	}
-
-	select.textContent = '';
-	data.personas.forEach (function (persona) {
-		persArray.push(persona);
-	});
-
-	persArray.sort(compareFunc).forEach (function (persona) {
-		newOpt = document.createElement ('OPTION');
-		newOpt.value = persona.id
-		newOpt.textContent = persona.nombres+' '+persona.apellidos;
-		select.appendChild (newOpt);
-	});
-}
-
 ui.showNewPersonaForm = function () {
 	$('#formPersonaTitle').html('Nueva Persona');
 	$('#formPersona input[name=id]').val('-1');
@@ -404,6 +398,7 @@ ui.showNewUsuarioForm = function () {
 	$('#formUsuario textarea[name=descripcion]').val('');
 	$('#formUsuario select[name=estado]').val('A');
 	$('#usuarioRolesButton').hide();
+	ui.magicPersona.clear();
 	$('#modalUsuario').modal('show');
 };
 
@@ -463,6 +458,11 @@ ui.showEditUsuarioForm = function() {
 	$('#formUsuario input[name=email]').val(selected.email);
 	$('#formUsuario textarea[name=descripcion]').val(selected.descripcion);
 	$('#formUsuario select[name=estado]').val((selected.estado));
+	ui.magicPersona.clear();
+	if (selected.id_persona) {
+		var p = data.personas.getById(selected.id_persona);
+		ui.magicPersona.addToSelection([{name: p.nombres + ' ' +p.apellidos+': '+p.nro_doc, id: selected.id_persona}]);
+	}
 	$('#usuarioRolesButton').show();
 	$('#modalUsuario').modal('show');
 }

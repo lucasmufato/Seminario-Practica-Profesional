@@ -255,6 +255,7 @@ public class AdministracionUsuarios extends HttpServlet {
 		recibido.put("email", request.getParameter("email"));
 		recibido.put("descripcion", request.getParameter("descripcion"));
 		recibido.put("estado", (request.getParameter("estado")));
+		recibido.put("tipo", "U");
 
 		usuario = new Usuario (recibido);
 		if (request.getParameter("action").equals("new")) {

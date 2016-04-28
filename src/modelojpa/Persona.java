@@ -26,6 +26,7 @@ import org.json.simple.JSONObject;
 	@NamedQuery(name="Persona.porNroDocumento",query="SELECT p FROM Persona p WHERE p.nro_doc = :nro_doc"),
 	@NamedQuery(name="Persona.porNroYTipoDeDocumento",query="SELECT p FROM Persona p WHERE p.nro_doc = :nro_doc and p.tipo_doc=:tipo_doc"),
 	@NamedQuery(name="Persona.porEstado",query="SELECT p FROM Persona p WHERE p.estado = :estado"),
+	@NamedQuery(name="Persona.autocompletar",query="SELECT p FROM Persona p WHERE CONCAT(p.nro_doc, \" \", p.nombres, \" \", p.apellidos, \" \", p.nombres) LIKE :busqueda")
 	
 })
 @Entity

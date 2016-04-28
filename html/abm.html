@@ -5,11 +5,13 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="css/magicsuggest.css" />
 	<link rel="stylesheet" href="abm.css" />
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+	<script type="text/javascript" src="js/magicsuggest-min.js"></script>
 	<script type="text/javascript" src="abm.js"></script>
 </head>
 
@@ -298,10 +300,10 @@
 					</div><!-- .form-group -->
 
 					<div class="form-group col-md-6">
-						<label for="id_persona" class="col-md-4">Persona (*)</label>
+						<label for="buscar_persona" class="col-md-4">Persona (*)</label>
+							<input type="hidden" name="id_persona">
 						<div class="col-md-8">
-							<select name="id_persona" required>
-							</select>
+							<input type="text" name="buscar_persona">
 						</div>
 					</div><!-- .form-group -->
 

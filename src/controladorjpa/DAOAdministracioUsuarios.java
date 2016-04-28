@@ -255,7 +255,6 @@ public class DAOAdministracioUsuarios {
     }
     
 	//-------------------------------------------fin de la parte de administracion de usuarios----------------------------------------------
-	
 	//-------------------------------------------parte generalizada-------------------------------------------------------------------------
 	
     //devuelve una lista con todos los objetos de esa clase
@@ -338,5 +337,16 @@ public class DAOAdministracioUsuarios {
 	public Object buscarPorPrimaryKey(Object clase, Object primaryKey){
 		return entitymanager.find((clase).getClass(), primaryKey);
 	}
-	
+
+	// Auto completado. Devuelve un JSONArray con los resultados
+	public List autocompletar (String nombreDeLaClase, String busqueda) {
+		try{
+			Query qry = entitymanager.createNamedQuery(nombreDeLaClase+".autocompletar");
+			qry.setParameter("busqueda", "%"+busqueda+"%");
+			return qry.getResultList();
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}	
 }
