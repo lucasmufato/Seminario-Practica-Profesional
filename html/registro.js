@@ -161,7 +161,7 @@ ui.cargarForm = function () {
 	sendData.action = 'new';
 	sendData.persona={};
 	sendData.usuario={};
-	sendData.cliente={};
+	//sendData.cliente={};
 	
 	// cargo persona
 	sendData.persona.apellidos = $('#formPersona input[name=apellidos]').val() || null;
@@ -179,14 +179,19 @@ ui.cargarForm = function () {
 	sendData.usuario.password = $('#formUsuario input[name=password]').val() || null;
 	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
 	
+	/*
 	// cargo Cliente
 	sendData.cliente.foto_registro = $("#img_registro").attr("src");
 	sendData.cliente.foto_usuario = $("#img_usuario").attr("src");
+	*/
 	
 	console.log("mando: ",sendData);
 	
 	var onSuccess = function(jsonData){
 		if (jsonData.result) {
+			// Si cliente se carga correctamente:
+			// Subo imagenes
+			subirImagenes();
 			//podria limpiar formularios en esta linea
 			ui.setNewForm();
 			successMessage(jsonData.msg);
@@ -196,6 +201,29 @@ ui.cargarForm = function () {
 	}
 	
 	sendAjax(sendData,onSuccess);
+}
+
+var subirImagenes = function(){
+	//data a enviar
+	var sendData = {};
+	sendData.action = "subir_imagen";
+	sendData.usuario = $('#formUsuario input[name=nombre_usuario]').val();
+	
+	// si hay foto de registro, se manda.
+	var foto_registro = $("#img_registro").attr("src");	
+	if (foto_registro != ""){
+		sendData.campo = "foto_registro";
+		sendData.imagen = foto_registro;
+		sendAjax(sendData,function(){});
+	}
+	
+	// si hay foto de usuario, se manda.
+	var foto_usuario = $("#img_usuario").attr("src");
+	if (foto_usuario != ""){
+		sendData.campo = "foto";
+		sendData.imagen = foto_usuario;
+		sendAjax(sendData,function(){});
+	}
 }
 
 ingresarLogin = function(){

@@ -26,40 +26,7 @@ public class DAOAdministracioUsuarios {
     	entitymanager = emfactory.createEntityManager( );
     }
     
-    //-------------------------------------------------------------para la parte de administracion de usuarios------------------------------
-    
-    public Boolean nuevoCliente(JSONObject persona,JSONObject cliente) {
-    	//creo los objectos a partir de los JSON recibidos
-    	Persona p= new Persona(persona);
-    	Cliente c= new Cliente(cliente);
-    	try{
-			 entitymanager.getTransaction( ).begin( );
-			 c.setPersona(p);
-			 System.out.println("id persona antes de insert: "+p.getId_persona());
-			 entitymanager.persist(p);
-			 System.out.println("id persona despues de insert: "+p.getId_persona());
-			 System.out.println("id cliente antes de insert: "+c.getId_usuario());
-			 entitymanager.persist(c);
-			 System.out.println("id cliente despues de insert: "+c.getId_usuario());
-			 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
-	    	 qry.setParameter("nombre", "cliente");
-			 Rol r= (Rol) qry.getSingleResult();
-			 c.asignarRol(r);
-			 entitymanager.getTransaction( ).commit( );	
-			 
-			 System.out.println("id persona despues de commit: "+p.getId_persona());
-			 System.out.println("id cliente despues de commit: "+c.getId_usuario());
-			 Rol rol_recien_asignado= c.getRoles().get(0).getRol();
-			 System.out.println("nombre del rol recien asignado: "+rol_recien_asignado.getNombre_rol());
-			 
-			 return true;
-		}catch(Exception e){
-
-			e.printStackTrace();
-			return false;
-		}    	
-	}
-    
+    //-------------------------------------------------------------para la parte de administracion de usuarios------------------------------   
     
     //Metodo que devuelvo un JSONArray con:
     //permiso1, permiso3, permiso4... cada permiso en JSON
@@ -259,7 +226,78 @@ public class DAOAdministracioUsuarios {
 	//-------------------------------------------fin de la parte de administracion de usuarios----------------------------------------------
 	//-------------------------------------------Registro Clientes-------------------------------------------------------------------------
 	
+    public Boolean nuevoCliente(JSONObject persona,JSONObject cliente) {
+    	//creo los objectos a partir de los JSON recibidos
+    	Persona p= new Persona(persona);
+    	Cliente c= new Cliente(cliente);
+    	try{
+			 entitymanager.getTransaction( ).begin( );
+			 c.setPersona(p);
+			 System.out.println("id persona antes de insert: "+p.getId_persona());
+			 entitymanager.persist(p);
+			 System.out.println("id persona despues de insert: "+p.getId_persona());
+			 System.out.println("id cliente antes de insert: "+c.getId_usuario());
+			 entitymanager.persist(c);
+			 System.out.println("id cliente despues de insert: "+c.getId_usuario());
+			 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
+	    	 qry.setParameter("nombre", "cliente");
+			 Rol r= (Rol) qry.getSingleResult();
+			 c.asignarRol(r);
+			 entitymanager.getTransaction( ).commit( );	
+			 
+			 System.out.println("id persona despues de commit: "+p.getId_persona());
+			 System.out.println("id cliente despues de commit: "+c.getId_usuario());
+			 Rol rol_recien_asignado= c.getRoles().get(0).getRol();
+			 System.out.println("nombre del rol recien asignado: "+rol_recien_asignado.getNombre_rol());
+			 
+			 return true;
+		}catch(Exception e){
+
+			e.printStackTrace();
+			return false;
+		}    	
+	}
     
+	public boolean subirFotoRegistro(JSONObject foto) {
+		Cliente c = this.clientePorNombre(foto.get("usuario").toString());
+		if (c!=null){
+			try{
+				 entitymanager.getTransaction( ).begin( );
+				 c.setFoto_registro(foto.get("imagen").toString());
+				 entitymanager.persist(c);
+				 entitymanager.getTransaction( ).commit( );	
+				 return true;
+			}catch(Exception e){
+				e.printStackTrace();
+				return false;
+			}    	
+		}
+		return false;
+	}	
+    
+	public boolean subirFotoCliente(JSONObject foto) {
+    	Cliente c = this.clientePorNombre(foto.get("usuario").toString());
+		if (c!=null){
+			 entitymanager.getTransaction( ).begin( );
+			 c.setFoto(foto.get("imagen").toString());
+			 entitymanager.persist(c);
+			 entitymanager.getTransaction( ).commit( );	
+			 return true;
+		}
+		return false;
+	}	
+	
+	public Cliente clientePorNombre(String nombre){
+    	try{
+    		Query qry = entitymanager.createNamedQuery("Cliente.buscarPorClaveCandidata");
+    		qry.setParameter("clave_candidata", nombre);
+    		return (Cliente) qry.getSingleResult();
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
     public boolean mailExiste(String mail){
     	try{
     		Query qry = entitymanager.createNamedQuery("Usuario.porEmail");
@@ -388,5 +426,6 @@ public class DAOAdministracioUsuarios {
 			e.printStackTrace();
 			return null;
 		}
-	}	
+	}
+
 }

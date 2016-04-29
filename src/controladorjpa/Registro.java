@@ -72,6 +72,8 @@ public class Registro extends HttpServlet {
 			out = validarDocumento(request,response);
 		}else if(accion.equals("new")){
 			out = registrarCliente(request);
+		}else if(accion.equals("subir_imagen")){
+			out = subirImagen(request);
 		}
 		
 		if (out == null) {
@@ -126,16 +128,52 @@ public class Registro extends HttpServlet {
 		cliente.put("email", request.getParameter("usuario[email]"));
 		cliente.put("descripcion", request.getParameter("usuario[descripcion]"));
 		cliente.put("estado", "A");
-		
+		/*
 		String pathImgRegistro = this.subirArchivo(request.getParameter("cliente[foto_registro]"));
 		cliente.put("foto_registro", pathImgRegistro);
 		
 		String pathImgUsuario = this.subirArchivo(request.getParameter("cliente[foto_usuario]"));
 		cliente.put("foto", pathImgUsuario);
-			
+			*/
 		return cliente;
 	}
 
+	private JSONObject subirImagen(HttpServletRequest request) {
+		JSONObject out = new JSONObject();
+		System.out.println("en subir imagen de servlet");
+		//Subo imagen al servidor
+		String imagen = request.getParameter("imagen");
+		String path = this.subirArchivo(imagen);
+		System.out.println("Imagen subida");
+
+		// Cargo JSON para subir path de imagen a la bd
+		JSONObject foto = new JSONObject();
+		foto.put("usuario", request.getParameter("usuario"));
+		foto.put("imagen", path);
+		
+		// Es foto del registro de conducir o del cliente?
+		boolean bandera=false;
+		String campo = request.getParameter("campo");
+		if (campo.equals("foto_registro")){
+			System.out.println("Subiendo foto registro");
+			bandera = dao.subirFotoRegistro(foto);
+		}else if(campo.equals("foto")){
+			System.out.println("Subiendo foto");
+			bandera = dao.subirFotoCliente(foto);
+		}
+		System.out.println("servlet: foto subida");
+
+		if (bandera){
+			out.put ("result", true);
+			out.put ("msg", "Imagen guardada");
+		}else{
+			out.put ("result", false);
+			out.put ("msg", "Error al guardar la imagen");
+		}
+		
+		return out;
+	}
+	
 	private String subirArchivo(String archivo) {
 		if (!archivo.isEmpty()){
 			archivo = FileManager.uploadImage(getServletContext().getRealPath("/"), archivo);

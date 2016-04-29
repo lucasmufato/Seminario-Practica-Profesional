@@ -56,7 +56,21 @@ public class Cliente extends Usuario implements JSONable {
 	public void setPuntos(Integer puntos) {
 		this.puntos = puntos;
 	}
-	
+	public String getFoto_registro() {
+		return foto_registro;
+	}
+
+	public void setFoto_registro(String foto_registro) {
+		this.foto_registro = foto_registro;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
