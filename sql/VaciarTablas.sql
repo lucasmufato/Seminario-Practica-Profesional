@@ -1,9 +1,9 @@
 SET FOREIGN_KEY_CHECKS = 0;
-truncate pruebajpa.cliente;
-truncate pruebajpa.permiso;
-truncate pruebajpa.permiso_rol;
-truncate pruebajpa.persona;
-truncate pruebajpa.rol;
-truncate pruebajpa.usuario;
-truncate pruebajpa.usuario_rol;
+truncate seminario.cliente;
+truncate seminario.permiso;
+truncate seminario.permiso_rol;
+truncate seminario.persona;
+truncate seminario.rol;
+truncate seminario.usuario;
+truncate seminario.usuario_rol;
 SET FOREIGN_KEY_CHECKS = 1; 

@@ -1,9 +1,9 @@
 SET FOREIGN_KEY_CHECKS = 0;
-drop table pruebajpa.cliente;
-drop table pruebajpa.permiso;
-drop table pruebajpa.permiso_rol;
-drop table pruebajpa.persona;
-drop table pruebajpa.rol;
-drop table pruebajpa.usuario;
-drop table pruebajpa.usuario_rol;
+drop table seminario.cliente;
+drop table seminario.permiso;
+drop table seminario.permiso_rol;
+drop table seminario.persona;
+drop table seminario.rol;
+drop table seminario.usuario;
+drop table seminario.usuario_rol;
 SET FOREIGN_KEY_CHECKS = 1; 

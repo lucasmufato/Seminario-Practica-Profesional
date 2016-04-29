@@ -139,7 +139,7 @@ public class Registro extends HttpServlet {
 		cliente.put("foto_registro", pathImgRegistro);
 		
 		String pathImgUsuario = this.subirArchivo(request.getParameter("cliente[foto_usuario]"));
-		//cliente.put("foto_usuario", pathImgUsuario);
+		cliente.put("foto", pathImgUsuario);
 			
 		return cliente;
 	}
