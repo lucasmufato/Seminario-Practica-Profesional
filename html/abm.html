@@ -15,18 +15,21 @@
 	<script type="text/javascript" src="abm.js"></script>
 </head>
 
-<body onload="initUI()">
+<body>
 	<div class="loadingScreen"></div>
 
-	<a id="logoutButton" class="btn btn-danger " href="/login"><span class="glyphicon glyphicon-off"></span> Salir</a>
 
 	<nav id="tabBox" class="navbar-default navbar-fixed-top">
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs navbar-left">
 			<li class="active"><a id="personasTabButton" class="" onclick="ui.activateTab('personas')" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Personas</a>
 			<li><a id="usuariosTabButton" class="" onclick="ui.activateTab('usuarios')" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Usuarios</a>
 			<li><a id="rolesTabButton" class="" onclick="ui.activateTab('roles')" data-toggle="tab"><span class="glyphicon glyphicon-knight"></span> Roles</a>
 			<li><a id="permisosTabButton" class="" onclick="ui.activateTab('permisos')" data-toggle="tab"><span class="glyphicon glyphicon-check"></span> Permisos</a>
 		</ul>
+		<div class="navbar-right">
+			<a id="exitButton" class="btn btn-primary" href="/home.html"><span class="glyphicon glyphicon-home"></span> Ir al Home</a>
+			<a id="logoutButton" class="btn btn-danger " href="/login"><span class="glyphicon glyphicon-off"></span> Salir</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		</div>
 	</nav>
 
 	<section class="tabSection" id="personasTab">

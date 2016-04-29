@@ -998,3 +998,5 @@ if (String.prototype.contains == undefined) {
 		return this.indexOf(item) != -1;
 	}
 }
+
+window.onload = initUI;
