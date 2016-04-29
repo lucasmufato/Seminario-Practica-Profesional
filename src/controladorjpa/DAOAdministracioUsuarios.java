@@ -1,5 +1,6 @@
 package controladorjpa;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
 
@@ -263,6 +264,18 @@ public class DAOAdministracioUsuarios {
     	try{
     		Query qry = entitymanager.createNamedQuery("Usuario.porEmail");
     		qry.setParameter("email", mail);
+    		return !qry.getResultList().isEmpty();
+    		}catch(Exception e){
+    			e.printStackTrace();
+    			return false;
+    		}
+    }
+    
+    public boolean documentoExiste(Integer tipo, BigInteger numero){
+    	try{
+    		Query qry = entitymanager.createNamedQuery("Persona.porNroYTipoDeDocumento");
+    		qry.setParameter("nro_doc", numero);
+    		qry.setParameter("tipo_doc", tipo);
     		return !qry.getResultList().isEmpty();
     		}catch(Exception e){
     			e.printStackTrace();

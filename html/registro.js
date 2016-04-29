@@ -45,6 +45,8 @@ function setearEventos(){
   $("#formCliente input[type='file']").change(function(){
 		readURL(this);
 	});
+  $('#formPersona select[name=tipo_doc], #formPersona input[name=nro_doc]').focusout(ui.validarDocumento);
+
 }
  
 function labelDelInput(input){
@@ -117,6 +119,25 @@ ui.validarMail = function(){
   }
 }
 
+ui.validarDocumento = function(){
+  var inputTipo = $('#formPersona select[name=tipo_doc]');
+  var inputNumero = $('#formPersona input[name=nro_doc]');
+  console.log(inputTipo.val());
+  if (inputNumero.val().length > 0){
+	var sendData = {
+	  action: 'documento_existe',
+	  tipo: inputTipo.val(),
+	  nro: inputNumero.val()
+	};
+	var onsuccess = function(jsonData){
+		if (jsonData.result && jsonData.existe){
+			customAlert(inputNumero, labelDelInput(inputNumero)+": Documento existente");
+		}
+	}
+	sendAjax(sendData,onsuccess);
+  }
+}
+
 ui.validar = function(form){
   //Parche fierisimo, para no pase al siguiente formulario habiendo
   //errores piso todos los inputs y 
@@ -130,7 +151,7 @@ ui.validar = function(form){
 	}else{
 		// Oculto el form actual y muestro el que tiene el error.
 		$("#form"+form).hide();
-		$(".panel-error").has("div").closest(".panel").show();
+		$(".panel-error").has("div").closest(".panel").first().show();
 	}
 }
 

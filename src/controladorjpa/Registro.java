@@ -1,6 +1,7 @@
 package controladorjpa;
 
 import java.io.*;
+import java.math.BigInteger;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -67,6 +68,8 @@ public class Registro extends HttpServlet {
 			out = validarUsuario(request,response);
 		}else if(accion.equals("mail_existe")){
 			out = validarMail(request,response);
+		}else if(accion.equals("documento_existe")){
+			out = validarDocumento(request,response);
 		}else if(accion.equals("new")){
 			out = registrarCliente(request);
 		}
@@ -167,6 +170,21 @@ public class Registro extends HttpServlet {
 			salida.put ("result", true); 
 		}else{
 			System.out.println("Mail no existe");
+			salida.put ("existe", false); 
+			salida.put("result", true);
+		}
+		return salida;
+	}
+	private JSONObject validarDocumento(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		BigInteger numero = new BigInteger(request.getParameter("nro"));
+		Integer tipo = Integer.parseInt(request.getParameter("tipo"));
+		JSONObject salida = new JSONObject ();	
+		if (dao.documentoExiste(tipo,numero)) {
+			System.out.println("Documento existe");
+			salida.put ("existe", true); 
+			salida.put ("result", true); 
+		}else{
+			System.out.println("Documento no existe");
 			salida.put ("existe", false); 
 			salida.put("result", true);
 		}
