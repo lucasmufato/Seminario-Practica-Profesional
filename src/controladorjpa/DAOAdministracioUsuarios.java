@@ -256,6 +256,21 @@ public class DAOAdministracioUsuarios {
     }
     
 	//-------------------------------------------fin de la parte de administracion de usuarios----------------------------------------------
+	//-------------------------------------------Registro Clientes-------------------------------------------------------------------------
+	
+    
+    public boolean mailExiste(String mail){
+    	try{
+    		Query qry = entitymanager.createNamedQuery("Usuario.porEmail");
+    		qry.setParameter("email", mail);
+    		return !qry.getResultList().isEmpty();
+    		}catch(Exception e){
+    			e.printStackTrace();
+    			return false;
+    		}
+    }
+    
+	//-------------------------------------------fin de la parte de registro de clientes----------------------------------------------
 	//-------------------------------------------parte generalizada-------------------------------------------------------------------------
 	
     public Object buscarPorClaveCandidata(String clase, Object clave_candidata){

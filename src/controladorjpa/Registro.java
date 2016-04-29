@@ -1,6 +1,7 @@
 package controladorjpa;
 
 import java.io.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -64,6 +65,8 @@ public class Registro extends HttpServlet {
 		if (accion.equals("usuario_existe")){
 			//recibo el nombre del usuario y pregunto si existe o no.
 			out = validarUsuario(request,response);
+		}else if(accion.equals("mail_existe")){
+			out = validarMail(request,response);
 		}else if(accion.equals("new")){
 			out = registrarCliente(request);
 		}
@@ -77,20 +80,6 @@ public class Registro extends HttpServlet {
 		System.out.println("Lo que mando al js: "+out);
 		writer.println (out);
 
-	}
-
-	private JSONObject validarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String user = request.getParameter("usuario");
-		JSONObject salida = new JSONObject ();	
-		Usuario u = dao.buscarUsuarioPorNombre(user);
-		if (u != null) {
-			System.out.println("Usuario existe");
-			salida.put ("result", true); 
-		}else{
-			System.out.println("Usuario no existe");
-			salida.put("result", false);
-		}
-		return salida;
 	}
 
 	private JSONObject registrarCliente(HttpServletRequest request) {
@@ -154,5 +143,33 @@ public class Registro extends HttpServlet {
 	public void destroy()
 	{
 	}
-
+	private JSONObject validarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String user = request.getParameter("usuario");
+		JSONObject salida = new JSONObject ();	
+		Usuario u = dao.buscarUsuarioPorNombre(user);
+		if (u != null) {
+			System.out.println("Usuario existe");
+			salida.put ("existe", true); 
+			salida.put ("result", true); 
+		}else{
+			System.out.println("Usuario no existe");
+			salida.put ("existe", false); 
+			salida.put("result", true);
+		}
+		return salida;
+	}
+	private JSONObject validarMail(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String mail = request.getParameter("mail");
+		JSONObject salida = new JSONObject ();	
+		if (dao.mailExiste(mail)) {
+			System.out.println("Mail existe");
+			salida.put ("existe", true); 
+			salida.put ("result", true); 
+		}else{
+			System.out.println("Mail no existe");
+			salida.put ("existe", false); 
+			salida.put("result", true);
+		}
+		return salida;
+	}
 }

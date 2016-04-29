@@ -71,7 +71,7 @@ ui.validarNombreUsuario = function(){
 		  usuario: inputUsuario.val(),
 		};
 		var onsuccess = function(jsonData){
-			if (jsonData.result){
+			if (jsonData.result && jsonData.existe){
 				customAlert(inputUsuario, labelDelInput(inputUsuario)+": Usuario existente");
 			}
 		}
@@ -99,8 +99,21 @@ ui.validarMail = function(){
   var inputMail = $(this);
   var label = labelDelInput(inputMail);
   var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (inputMail.val().length>0 && !regex.test(inputMail.val())){
+  if (inputMail.val().length > 0){
+    if (!regex.test(inputMail.val())){
 	customAlert(inputMail,label+": Mail no válido");
+	}else{
+		var sendData = {
+		  action: 'mail_existe',
+		  mail: inputMail.val(),
+		};
+		var onsuccess = function(jsonData){
+			if (jsonData.result && jsonData.existe){
+				customAlert(inputMail, labelDelInput(inputMail)+": Mail existente");
+			}
+		}
+		sendAjax(sendData,onsuccess);
+	}
   }
 }
 
