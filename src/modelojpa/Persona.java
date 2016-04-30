@@ -26,12 +26,11 @@ import org.json.simple.JSONObject;
 	@NamedQuery(name="Persona.porNroDocumento",query="SELECT p FROM Persona p WHERE p.nro_doc = :nro_doc"),
 	@NamedQuery(name="Persona.porNroYTipoDeDocumento",query="SELECT p FROM Persona p WHERE p.nro_doc = :nro_doc and p.tipo_doc=:tipo_doc"),
 	@NamedQuery(name="Persona.porEstado",query="SELECT p FROM Persona p WHERE p.estado = :estado"),
-	@NamedQuery(name="Persona.autocompletar",query="SELECT p FROM Persona p WHERE CONCAT(p.nro_doc, \" \", p.nombres, \" \", p.apellidos, \" \", p.nombres) LIKE :busqueda")
+	@NamedQuery(name="Persona.autocompletar",query="SELECT p FROM Persona p WHERE CONCAT('p.nro_doc' , \" \", p.nombres, \" \", p.apellidos, \" \", p.nombres) LIKE :busqueda")
 	
 })
 @Entity
 public class Persona implements JSONable {
-	
 	@Id
 	@Column(nullable=false)
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorPersona")
@@ -71,6 +70,7 @@ public class Persona implements JSONable {
 		this.id_persona=1;
 		this.nro_doc= BigInteger.valueOf(new Integer(38842784).intValue());
 		this.sexo='M';
+		System.out.println("hola que tal");
 	}
 
 	public Persona(JSONObject json){ 

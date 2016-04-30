@@ -14,7 +14,7 @@ import javax.servlet.ServletContext;
 
 public class FileManager {
 	
-	private static String directorioRaiz = "upload";
+	private static String directorioRaiz = "upload/";
 	
 	public static String uploadImage(String pathReal, String img){
 		// si no existe directorio, lo creo
@@ -23,7 +23,7 @@ public class FileManager {
 		// Seteo imagen con nombre generado, formato de la imagen dada y el path relativo
 		String imgName = generateFileName();
 		String imgFormat = getImgFormat(img);
-		String pathRelativo = "/"+directorioRaiz+"/"+imgName+imgFormat;
+		String pathRelativo = directorioRaiz+imgName+imgFormat;
 		//
 		
 		// Genero imagen en base a la uri dada y la subo 

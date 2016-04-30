@@ -278,11 +278,16 @@ public class DAOAdministracioUsuarios {
 	public boolean subirFotoCliente(JSONObject foto) {
     	Cliente c = this.clientePorNombre(foto.get("usuario").toString());
 		if (c!=null){
+			try{
 			 entitymanager.getTransaction( ).begin( );
 			 c.setFoto(foto.get("imagen").toString());
 			 entitymanager.persist(c);
 			 entitymanager.getTransaction( ).commit( );	
 			 return true;
+			}catch(Exception e){
+				e.printStackTrace();
+				return false;
+			}    
 		}
 		return false;
 	}	
