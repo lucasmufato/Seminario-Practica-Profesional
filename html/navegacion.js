@@ -11,7 +11,7 @@ var addNavegacion = function () {
 
 	var sidebar = document.createElement('SIDEBAR');
 	$(sidebar).load('navegacion.html #common-sidebar');
-
+	$.getScript( "permisos.js");
 	$('body').prepend (sidebar);
 	$('body').prepend (nav);
 }
