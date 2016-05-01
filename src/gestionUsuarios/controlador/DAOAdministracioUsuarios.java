@@ -3,13 +3,16 @@ package gestionUsuarios.controlador;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+
 import org.eclipse.persistence.jpa.JpaHelper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import gestionUsuarios.modelo.*;
 import otros.*;
 

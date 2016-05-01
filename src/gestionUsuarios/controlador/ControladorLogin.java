@@ -1,4 +1,4 @@
-package otros;
+package gestionUsuarios.controlador;
 
 import java.io.*;
 
@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import org.json.simple.JSONObject;
 
+import otros.AccessManager;
 import gestionUsuarios.controlador.*;
 
 @SuppressWarnings("serial")

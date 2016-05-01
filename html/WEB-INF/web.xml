@@ -1,7 +1,7 @@
 <web-app>
     <servlet>
         <servlet-name>usuarios</servlet-name>
-        <servlet-class>controladorjpa.AdministracionUsuarios</servlet-class>
+        <servlet-class>gestionUsuarios.controlador.AdministracionUsuarios</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>usuarios</servlet-name>
@@ -10,7 +10,7 @@
 
     <servlet>
         <servlet-name>login</servlet-name>
-        <servlet-class>controladorjpa.ControladorLogin</servlet-class>
+        <servlet-class>gestionUsuarios.controlador.ControladorLogin</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>login</servlet-name>
@@ -19,7 +19,7 @@
 
     <servlet>
         <servlet-name>registro</servlet-name>
-        <servlet-class>controladorjpa.Registro</servlet-class>
+        <servlet-class>gestionUsuarios.controlador.Registro</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>registro</servlet-name>
@@ -28,7 +28,7 @@
 
 	<servlet>
 		<servlet-name>autocompletado</servlet-name>
-        <servlet-class>controladorjpa.Autocompletado</servlet-class>
+        <servlet-class>otros.Autocompletado</servlet-class>
 	</servlet>
     <servlet-mapping>
         <servlet-name>autocompletado</servlet-name>
