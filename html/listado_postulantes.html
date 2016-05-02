@@ -26,20 +26,36 @@
 						</tr>
 					</thead>
 					<tbody>
-						
 					</tbody>
 				</table>
 			</div>
-			<button class="btn btn-primary col-lg-offset-3">
+			<button class="btn btn-primary col-xs-offset-1 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
 				Ver Perfil
 			</button>
-			<button class="btn btn-danger col-lg-offset-5">
+			<button type="button" class="btn btn-danger col-xs-offset-1 col-sm-offset-4 col-md-offset-5 col-lg-offset-5" data-toggle="modal" data-target=".bs-example-modal-sm">
 				Rechazar
-			</button>
+			</button>	
 			<br><br><br>
-			<button class="btn btn-primary col-lg-offset-9">
+			<button class="btn btn-primary col-xs-offset-1 col-sm-offset-8 col-md-offset-9 col-lg-offset-9">
 				Aceptar
 			</button>
+
+			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  				<div class="modal-dialog modal-sm">
+    				<div class="modal-content">
+						<div class="modal-header">
+        					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        					<h4 class="modal-title" id="myModalLabel">Rechazo</h4>
+      					</div>
+      					<div class="modal-body">
+							Pasajero Rechazado
+     					 </div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+						</div>
+    				</div>
+ 				 </div>
+			</div>
 		</div>
 
     </main>
