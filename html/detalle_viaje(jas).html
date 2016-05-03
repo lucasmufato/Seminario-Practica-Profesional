@@ -23,81 +23,103 @@
 		<hr>
 		<div class="container-fluid">
 			<div class="col-lg-12 col-md-12">
-				<div class="panel panel-primary" id="panel-viaje">
-					<div class="panel-heading">
-						<h3 class="panel-title">Viaje</h3>
-					</div>
-					<div class="panel-body">
-						<div class="col-lg-12">
-							<label class="col-lg-2">Tipo de Viaje:</label> 
-							<div class="col-lg-2">
-								<p><a href="#">Ida/IdaVuelta</a></p>
-							</div>
-							<label class="col-lg-2">Origen:</label> 
-							<div class="col-lg-2">
-								<p><a href="#">Moreno</a></p>
-							</div>
-							<label class="col-lg-2">Destino:</label> 
-							<div class="col-lg-2">
-								<p><a href="#">Luján</a></p>
-							</div>
+				<div class="panel-group" id="panel-viaje">
+					<div class="panel-primary" id="datos-viaje">
+						<div class="panel-heading">
+							<h3 class="panel-title">Viaje</h3>
 						</div>
-		
-						<div class="col-lg-12">
-							<label class="col-lg-2">Fecha:</label> 
-							<div class="col-lg-2">
-								<p><a href="#">28/10/2016</a></p>
-							</div>
-							<label class="col-lg-2">Hora:</label> 
-							<div class="col-lg-2">
-								<p><a href="#">10:00</a></p>
-							</div>
-							<label class="col-lg-2">Precio:</label> 
-							<div class="col-lg-2">
-								<p><a href="#">100$</a></p>
-							</div>
-						</div>
-
-						<div class="col-lg-12">
-							<div class="col-lg-3">
-								<label class="">Puntos intermedios:</label> 
-								<div class="">
-									<ul>
-									  <li>Punto1</li>
-									  <li>Punto2</li>
-									  <li>Punto3</li>
-									</ul>
+						<div class="panel-body">
+							<div class="col-lg-12">
+								<label class="col-lg-2">Tipo de Viaje:</label> 
+								<div class="col-lg-2">
+									<p>Ida/IdaVuelta</p>
+								</div>
+								<label class="col-lg-2">Origen:</label> 
+								<div class="col-lg-2">
+									<p>Moreno</p>
+								</div>
+								<label class="col-lg-2">Destino:</label> 
+								<div class="col-lg-2">
+									<p>Luján</p>
 								</div>
 							</div>
-							<div class="col-lg-6" id="mapa">
-								<a href="img/home/mapa.png" class="thumbnail">
-									<img src="img/home/mapa.png" alt="camino">
-								</a>
+			
+							<div class="col-lg-12">
+								<label class="col-lg-2">Fecha:</label> 
+								<div class="col-lg-2">
+									<p>28/10/2016</p>
+								</div>
+								<label class="col-lg-2">Hora:</label> 
+								<div class="col-lg-2">
+									<p>10:00</p>
+								</div>
+								<label class="col-lg-2">Precio:</label> 
+								<div class="col-lg-2">
+									<p>100$</p>
+								</div>
 							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="col-lg-offset-10">
-								<button class="btn btn-primary">Modificar</button>
-							</div>
-						</div>
 
-						
-						<div class="col-lg-12">
-							<label class="col-lg-3">Dejar comentario:</label>
-							<div class="col-lg-6">
-								<textarea class="form-control"></textarea>
+							<div class="col-lg-12">
+								<div class="col-lg-3">
+									<label class="">Puntos intermedios:</label> 
+									<div class="">
+										<ul>
+										  <li>Punto1</li>
+										  <li>Punto2</li>
+										  <li>Punto3</li>
+										</ul>
+									</div>
+								</div>
+								<div class="col-lg-6" id="mapa">
+									<a href="img/home/mapa.png" class="thumbnail">
+										<img src="img/home/mapa.png" alt="camino"></a>
+								</div>
 							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="col-lg-offset-5">
-								<button class="btn btn-primary">Enviar comentario</button>
-							</div>
-						</div>
-						
 
+							<div class="btn-group col-lg-6 col-lg-offset-4">
+								<button type="button" class="btn btn-primary">Modificar</button>
+							  	<button type="button" class="btn btn-primary">Suscribirse</button>
+							 	<button type="button" class="btn btn-primary">Participar</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default" id="comentarios">
+						<div class="panel-body">
+							<div class="col-lg-12">
+								<div class="col-lg-4"
+									<p><a href="#">Jasmin-p</a></p>
+									<p>lalalalalalalalalallalalalal</p>
+									<p>Fecha/hora</p>
+								</div>
+								<div class="col-lg-4"
+									<p><a href="#">Jasmin-p</a></p>
+									<p>lalalalalalalalalallalalalal</p>
+									<p>Fecha/hora</p>
+								</div>
+								<div class="col-lg-4"
+									<p><a href="#">Jasmin-p</a></p>
+									<p>lalalalalalalalalallalalalal</p>
+									<p>Fecha/hora</p>
+								</div>
+							</div>
+		    				<div class="col-lg-12" id="comentario">
+								<label class="col-lg-3">Dejar comentario:</label>
+								<div class="col-lg-6">
+									<textarea class="form-control"></textarea>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="col-lg-offset-5" id="btn-comentario">
+									<button class="btn btn-primary ">Enviar comentario</button>		
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+
+
 			<div class="col-lg-6 col-md-6">
 				<div class="panel panel-primary" id="panel-conductor">
 					<div class="panel-heading">
@@ -139,6 +161,7 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="col-lg-6 col-md-6">
 				<div class="panel panel-primary" id="panel-vehiculo">
 					<div class="panel-heading">
@@ -154,43 +177,43 @@
 							<div class="">
 								<label class="col-md-6 col-sm-6 col-xs-6">Marca:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">Gol</a></p>
+									<p>Volkswagen</p>
 								</div>
 							</div>
 							<div class="">
 								<label class="col-md-6 col-sm-6 col-xs-6">Modelo:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">Sport</a></p>
+									<p>Gol</p>
 								</div>
 							</div>
 							<div class="">	
 								<label class="col-md-6 col-sm-6 col-xs-6">Patente:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">GGG 123</a></p>
+									<p>GGG 123</p>
 								</div>
 							</div> 
 							<div class="">
 								<label class="col-md-6 col-sm-6 col-xs-6">Año:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">2010</a></p>
+									<p>2010</p>
 								</div>
 							</div>
 							<div class="">
 								<label class="col-md-6 col-sm-6 col-xs-6">Color:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">Rojo</a></p>
+									<p>Rojo</p>
 								</div>
 							</div>
 							<div class="">
 								<label class="col-md-6 col-sm-6 col-xs-6">A/C:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">Si/No</a></p>
+									<p>Si/No</p>
 								</div>
 							</div>
 							<div class="">
 								<label class="col-md-6 col-sm-6 col-xs-6">Seguro:</label>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p><a href="#">Si/No</a></p>
+									<p>Si/No</p>
 								</div>
 							</div>
 						</div>
