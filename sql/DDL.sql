@@ -86,3 +86,35 @@ CREATE TABLE PERMISO_ROL (
 	FOREIGN KEY (id_rol) REFERENCES ROL (id_rol)
 
 );
+
+CREATE TABLE LOCALIDADES (
+	id INTEGER NOT NULL,
+	nombre VARCHAR (200),
+	nombre_ascii VARCHAR (200),
+	nombres_alternativos VARCHAR(10000),
+	lat FLOAT,
+	lng FLOAT,
+	clasificacion CHAR(1),
+	clase_punto VARCHAR(10),
+	pais  CHAR(2),
+	paises_alternativos VARCHAR(200),
+	admin1 VARCHAR(20),
+	admin2 VARCHAR(80),
+	admin3 VARCHAR(20),
+	admin4 VARCHAR(20),
+	poblacion BIGINT,
+	elevacion INTEGER,
+	dem INTEGER,
+	zona_horaria VARCHAR(40),
+	fecha_modificacion DATE,
+
+
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE LOCALIDADES_CLASIFICACION (
+	codigo CHAR(1),
+	nombre_clase VARCHAR(50),
+
+	PRIMARY KEY (codigo)
+);
