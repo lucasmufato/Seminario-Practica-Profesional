@@ -32,7 +32,7 @@ var showViajes = function(jsonData){
 			tr.appendChild (aux.td (elem.hora));
 			tr.appendChild (aux.td (aux.estadoString(elem.estado)));
 			tr.appendChild (aux.td (elem.conductor));
-			tr.appendChild (aux.td (elem.reputacion));
+			tr.appendChild (aux.td (aux.reputacionStars(elem.reputacion),"reputacion"));
 
 			var thistr = tr;
 			tr.onclick = function () {
@@ -148,9 +148,10 @@ var sendForm = function (sendData, onsuccess) {
 }
 
 aux = {};
-aux.td = function (text){
+aux.td = function (text,className){
 	var td = document.createElement('TD');
 	td.appendChild(document.createTextNode(text));
+	if (className != undefined) {td.className = className;}
 	return td;
 }
 
@@ -184,6 +185,15 @@ aux.estadoString = function (caracter) {
 		case null: return "No especificado";
 		default: return "Desconocido";
 	}
+}
+
+aux.reputacionStars = function(caracter){
+	var stars = "";
+	while (caracter > 0){
+		stars += "★";
+		caracter--;
+	}
+	return stars;
 }
 
 //MODALS

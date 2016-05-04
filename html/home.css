@@ -1,4 +1,6 @@
-
+.reputacion{
+	color: orange;
+}
 .loadingScreen {
 	position: fixed;
 	left: 0px;
