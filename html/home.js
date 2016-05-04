@@ -7,18 +7,21 @@ initUI = function() {
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
 	/*-----------*/
-
 	$('.loadingScreen').fadeOut(); 
 };
 
 $(document).ready(function(){
 	initUI();
+	aux.clearSelectedRow($('#resultadosviaje tbody')[0]);
 });
 
 var showViajes = function(jsonData){
+
 	var tbody = $('#resultadosviaje tbody')[0];
 	var tr;
 	
+	tbody.innerHTML = '';
+
 	if (jsonData.viajes){
 		jsonData.viajes.forEach(function (elem){
 			tr = document.createElement ('TR');
@@ -68,6 +71,12 @@ var buscarViaje = function(){
 		
 	sendForm(sendData, showViajes);
 
+}
+
+var verViajeDetallado = function(){
+	var linkViaje = "detalle_viaje(jas).html?id="+selectedId;
+	console.log(linkViaje);
+	window.location = linkViaje;
 }
 
 var sendForm = function (sendData, onsuccess) {
