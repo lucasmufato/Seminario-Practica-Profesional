@@ -11,13 +11,14 @@
 	<link rel="stylesheet" href="detalle_viaje.css" />
 
 	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="detalle_viaje.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 </head>
 
-<body>
+<body onload="initUI();">
 	<main>
 		<h2 class="text-center">Detalle de Viaje</h2>
 		<hr>
@@ -32,30 +33,30 @@
 							<div class="col-lg-12">
 								<label class="col-lg-2">Tipo de Viaje:</label> 
 								<div class="col-lg-2">
-									<p>Ida/IdaVuelta</p>
+									<p id="tipo">Ida/IdaVuelta</p>
 								</div>
 								<label class="col-lg-2">Origen:</label> 
 								<div class="col-lg-2">
-									<p>Moreno</p>
+									<p id="origen">Moreno</p>
 								</div>
 								<label class="col-lg-2">Destino:</label> 
 								<div class="col-lg-2">
-									<p>Luján</p>
+									<p id="destino">Luján</p>
 								</div>
 							</div>
 			
 							<div class="col-lg-12">
 								<label class="col-lg-2">Fecha:</label> 
 								<div class="col-lg-2">
-									<p>28/10/2016</p>
+									<p id="fecha">28/10/2016</p>
 								</div>
 								<label class="col-lg-2">Hora:</label> 
 								<div class="col-lg-2">
-									<p>10:00</p>
+									<p id="hora">10:00</p>
 								</div>
 								<label class="col-lg-2">Precio:</label> 
 								<div class="col-lg-2">
-									<p>100$</p>
+									<p id="precio">100</p>
 								</div>
 							</div>
 
@@ -63,10 +64,7 @@
 								<div class="col-lg-3">
 									<label class="">Puntos intermedios:</label> 
 									<div class="">
-										<ul>
-										  <li>Punto1</li>
-										  <li>Punto2</li>
-										  <li>Punto3</li>
+										<ul id="puntosIntermedios">
 										</ul>
 									</div>
 								</div>
@@ -83,7 +81,7 @@
 							</div>
 						</div>
 					</div>
-
+<!-- COMENTADO HASTA SER IMPLEMENTADO
 					<div class="panel panel-default" id="comentarios">
 						<div class="panel-body">
 							<div class="col-lg-12">
@@ -118,7 +116,7 @@
 					</div>
 				</div>
 			</div>
-
+-->
 
 			<div class="col-lg-6 col-md-6">
 				<div class="panel panel-primary" id="panel-conductor">
@@ -130,15 +128,13 @@
 							<div class="col-md-12 row">
 								<label class="col-md-12 col-sm-12 col-xs-12">Usuario: </label> 
 								<div class="col-md-12 col-sm-12 col-xs-12">
-									<p><a href="#">Juan_cardona23</a></p>
+									<p id="nombreConductor"><a href="#">Juan_cardona23</a></p>
 								</div>
 							</div>
 							<div class="col-md-12 row">
 								<label class="col-md-12">Reputación: </label> 
 								<div class="col-md-12">
-									<a href="https://speakingofresearch.files.wordpress.com/2015/03/3-star.jpg" class="thumbnail">
-										<img src="https://speakingofresearch.files.wordpress.com/2015/03/3-star.jpg" alt="reputacion">
-									</a>
+									<p id="reputacion">★★★</p>
 								</div>
 							</div>
 						</div>
@@ -146,7 +142,7 @@
 							<label class="col-md-12">Foto de perfil</label>
 							<div class="col-md-12">
 								<a href="img/home/administracion_usuarios.png" class="thumbnail" id="foto-conductor">
-									<img src="img/home/administracion_usuarios.png" alt="foto de conductor">
+									<img src="img/home/administracion_usuarios.png" alt="foto de conductor" id="fotoPerfil">
 								</a>
 							</div>
 						</div>
@@ -154,7 +150,7 @@
 							<label class="col-md-12">Registro</label>
 							<div class="col-md-12" id="foto-registro">
 								<a href="img/home/fondo1.jpg" class="thumbnail">
-									<img src="img/home/fondo1.jpg" alt="foto de registro">
+									<img src="img/home/fondo1.jpg" alt="foto de registro" id="fotoRegistro">
 								</a>
 							</div>
 						</div>
