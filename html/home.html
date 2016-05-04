@@ -21,12 +21,12 @@
 	<main>
 		<h1 class="text-center">Buscador de Viajes</h1>
 		<div class="container-fluid">
-			<form class="form-horizontal">
+			<form class="form-horizontal" id="formBusqueda" onsubmit="buscarViaje(); return false;">
 				<div class="form-group">
 					<label for="origen" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-2">Origen:</label>
 					<div class="col-xs-8 col-sm-4 col-md-3 col-lg-3">
 					<!--SE QUE ESTO ESTo MAL PERO ANDaBA PROBANDO -->
-						<input list="ciudades" class="form-control" id="origen"></input>
+						<input list="ciudades" class="form-control" name="origen">
 						<datalist id="ciudades">
 							<option value="Luján"></option>
 							<option value="Moreno"></option>
@@ -38,41 +38,41 @@
 					</div>
 					<label for="destino" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-2">Destino:</label>
 					<div class="col-xs-8 col-sm-4 col-md-3 col-lg-3">
-						<input type="text" class="form-control" id="destino"></input>
+						<input type="text" class="form-control" name="destino">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label for="fechadesde" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-2">Fecha desde:</label>
 					<div class="input-group date form_date col-xs-6 col-sm-3 col-md-2 col-lg-2">
-						<input type="text" class="form-control" id="fechadesde" required>
-						<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show')");><span class="glyphicon glyphicon-calendar"></span></span>
+						<input type="text" class="form-control" name="fechadesde" id="fechadesde">
+						<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="fechahasta" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-2">Fecha hasta:</label>
 					<div class="input-group date form_date col-xs-6 col-sm-3 col-md-2 col-lg-2">
-						<input type="text" class="form-control" id="fechahasta" required>
-						<span class="input-group-addon " onclick="$('#fechahasta').datetimepicker('show')");><span class="glyphicon glyphicon-calendar"></span></span>
+						<input type="text" class="form-control" name="fechahasta" id="fechahasta">
+						<span class="input-group-addon " onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="conductor" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-2">Conductor:</label>
 					<div class="col-xs-8 col-sm-4 col-md-3 col-lg-3">
-						<input type="text" class="form-control" id="conductor">
+						<input type="text" class="form-control" name="conductor">
 					</div>
 					<label for="asientos" class="control-label col-xs-7 col-sm-2 col-md-2 col-lg-2">Cantidad de asientos:</label>
 					<div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-						<select class="form-control" name="" id="asientos">
-							<option value="">1</option>
-							<option value="">2</option>
-							<option value="">3</option>
-							<option value="">4</option>
-							<option value="">5</option>
-							<option value="">6</option>
-							<option value="">7</option>
+						<select class="form-control" name="asientos">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
 						</select>					
 					</div>
 				</div>
@@ -80,20 +80,21 @@
 				<div class="form-group">
 					<label for="estadoviaje" class="control-label col-xs-7 col-sm-2 col-md-2 col-lg-2">Estado de viaje:</label>
 					<div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-						<select class="form-control" name="" id="estadoviaje">
-							<option value="">Terminado</option>
-							<option value="">No iniciado</option>
-							<option value="">Iniciado</option>
-							<option value="">Cancelado</option>
+						<select class="form-control" name="estadoviaje">
+							<option value=""></option>
+							<option value="1">Terminado</option>
+							<option value="2">No iniciado</option><!-- le puse 'p' de pendiente-->
+							<option value="3">Iniciado</option>
+							<option value="4">Cancelado</option>
 						</select>					
 					</div>
 				</div>
 				
-			<div class="form-group">
-				<div class="col-xs-offset-8 col-sm-offset-8 col-md-offset-7 col-lg-offset-7">
-					<button class="btn btn-primary">Buscar</button>
+				<div class="form-group">
+					<div class="col-xs-offset-8 col-sm-offset-8 col-md-offset-7 col-lg-offset-7">
+						<button class="btn btn-primary" ><span class="glyphicon glyphicon-search"></span> Buscar</button>
+					</div>
 				</div>
-			</div>
 			</form>
 			<div class="table-responsive">
 				<table id="resultadosviaje" class="table table-bordered table-hover table-condensed">
@@ -101,9 +102,9 @@
 						<tr class="info">
 							<th>Destino</th>
 							<th>Origen</th>
-							<th>Fecha desde</th>
-							<th>Fecha hasta</th>
-							<th>Hora</th>
+							<th>Fecha inicio</th>
+							<th>Hora</th> <!-- podria ir incluido en columna fecha-->
+							<th>Estado</th>
 							<th>Conductor</th>
 							<th>Reputación</th>
 						</tr>
@@ -112,6 +113,27 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+		<!-- MENSAJE DE ERROR -->
+			<div id="modalError" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" onclick="ui.closeModal('Error')">&times;</button>
+							<h3 class="dialog-title"> Ha ocurrido un error</h3>
+						</div><!-- modal-header -->
+						<div class="modal-body">
+							<div id="errorMessage">
+								Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
+							</div>
+						</div><!-- modal-body -->
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger " onclick="ui.closeModal('Error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+						</div><!-- .modal-footer -->
+					</div><!-- .modal-content -->
+				</div><!-- .modal-dialog -->
+			</div><!-- .modal -->
 	</main>
 </body>	
 </html>
