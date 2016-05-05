@@ -30,51 +30,51 @@
 							<h3 class="panel-title">Viaje</h3>
 						</div>
 						<div class="panel-body collapse in" id="collapseViaje">
-							<div class="col-lg-12">
-								<label class="col-lg-2">Tipo de Viaje:</label> 
-								<div class="col-lg-2">
+							<div class="col-sm-12">
+								<label class="col-sm-3">Tipo de Viaje:</label> 
+								<div class="col-sm-1">
 									<p id="tipo">Ida/IdaVuelta</p>
 								</div>
-								<label class="col-lg-2">Origen:</label> 
-								<div class="col-lg-2">
+								<label class="col-sm-2">Origen:</label> 
+								<div class="col-sm-2">
 									<p id="origen">Moreno</p>
 								</div>
-								<label class="col-lg-2">Destino:</label> 
-								<div class="col-lg-2">
+								<label class="col-sm-2">Destino:</label> 
+								<div class="col-sm-2">
 									<p id="destino">Luján</p>
 								</div>
 							</div>
 			
-							<div class="col-lg-12">
-								<label class="col-lg-2">Fecha:</label> 
-								<div class="col-lg-2">
+							<div class="col-sm-12">
+								<label class="col-sm-2">Fecha:</label> 
+								<div class="col-sm-2">
 									<p id="fecha">28/10/2016</p>
 								</div>
-								<label class="col-lg-2">Hora:</label> 
-								<div class="col-lg-2">
+								<label class="col-sm-2">Hora:</label> 
+								<div class="col-sm-2">
 									<p id="hora">10:00</p>
 								</div>
-								<label class="col-lg-2">Precio:</label> 
-								<div class="col-lg-2">
+								<label class="col-sm-2">Precio:</label> 
+								<div class="col-sm-2">
 									<p id="precio">100</p>
 								</div>
 							</div>
 
-							<div class="col-lg-12">
-								<div class="col-lg-3">
+							<div class="col-sm-12">
+								<div class="col-sm-3">
 									<label class="">Puntos intermedios:</label> 
 									<div class="">
 										<ul id="puntosIntermedios">
 										</ul>
 									</div>
 								</div>
-								<div class="col-lg-6" id="mapa">
+								<div class="col-sm-6" id="mapa">
 									<a href="img/home/mapa.png" class="thumbnail">
 										<img src="img/home/mapa.png" alt="camino"></a>
 								</div>
 							</div>
 
-							<div class="btn-group col-lg-6 col-lg-offset-4">
+							<div class="btn-group col-sm-6 col-sm-offset-4">
 								<button type="button" class="btn btn-primary">Modificar</button>
 							  	<button type="button" class="btn btn-primary">Suscribirse</button>
 							 	<button type="button" class="btn btn-primary">Participar</button>
@@ -124,35 +124,30 @@
 						<h3 class="panel-title">Conductor</h3>
 					</div>
 					<div class="panel-body row text-center collapse in" id="collapseConductor">
-						<div class="col-md-6 col-sm-4 col-xs-4 row">
-							<div class="col-md-12 row">
-								<label class="col-md-12 col-sm-12 col-xs-12">Usuario: </label> 
-								<div class="col-md-12 col-sm-12 col-xs-12">
-									<p id="nombreConductor"><a href="#">Juan_cardona23</a></p>
-								</div>
-							</div>
-							<div class="col-md-12 row">
-								<label class="col-md-12">Reputación: </label> 
-								<div class="col-md-12">
-									<p id="reputacion">★★★</p>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-4 col-xs-4 row">
+						<div class="col-md-6 col-sm-6 col-xs-6 row">
 							<label class="col-md-12">Foto de perfil</label>
-							<div class="col-md-12">
-								<a href="img/home/administracion_usuarios.png" class="thumbnail" id="foto-conductor">
-									<img src="img/home/administracion_usuarios.png" alt="foto de conductor" id="fotoPerfil">
+							<div class="col-md-12" id="panel-foto-conductor">
+								<a href="img/home/administracion_usuarios.png" target="_blank" class="thumbnail">
+									<img src="img/home/administracion_usuarios.png" alt="foto de conductor">
 								</a>
 							</div>
 						</div>
-						<div class="col-md-12 col-sm-4 col-xs-4 row">
-							<label class="col-md-12">Registro</label>
-							<div class="col-md-12" id="foto-registro">
-								<a href="img/home/fondo1.jpg" class="thumbnail">
-									<img src="img/home/fondo1.jpg" alt="foto de registro" id="fotoRegistro">
-								</a>
+						<div class="col-md-6 col-sm-6  col-xs-6 row">
+							<label class="col-md-12 col-sm-12 col-xs-12">Usuario: </label> 
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<p><a href="#" id="nombreConductor">Juan_cardona23</a></p>
 							</div>
+						</div>
+						<div class="col-md-6 col-sm-6  col-xs-6 row">
+							<label class="col-md-12">Reputación: </label> 
+							<div class="col-md-12">
+								<p id="reputacion" class="reputacion">★★★</p>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6  col-xs-6 row" id="panel-foto-registro">
+								<a href="img/home/fondo1.jpg"  target="_blank" class="thumbnail">
+										<img src="img/home/fondo1.jpg" alt="foto de registro">
+								</a>
 						</div>
 					</div>
 				</div>
@@ -163,56 +158,58 @@
 					<div class="panel-heading" data-toggle="collapse" data-target="#collapseVehiculo" aria-expanded="true">
 						<h3 class="panel-title">Vehículo</h3>
 					</div>
-					<div class="panel-body  collapse in" id="collapseVehiculo">
-						<div class="col-xs-6 col-md-6" id="foto-vehiculo">
-							<a href="img/home/gestion_vehiculos.png" class="thumbnail">
-								<img src="img/home/gestion_vehiculos.png" alt="foto de vehiculo">
-							</a>
+					<div class="panel-body  collapse in row" id="collapseVehiculo">
+						<div class="col-md-6 col-sm-6 col-xs-6 row">
+							<div class="col-md-12" id="panel-foto-vehiculo">
+								<a href="img/home/gestion_vehiculos.png" class="thumbnail">
+									<img src="img/home/gestion_vehiculos.png" alt="foto de vehiculo">
+								</a>
+							</div>
 						</div>
-						<div class="col-xs-6 col-md-6" id="datos-vehiculo">
-							<div class="">
-								<label class="col-md-6 col-sm-6 col-xs-6">Marca:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>Volkswagen</p>
+							<div class="col-md-6 col-sm-6 col-xs-6  row">
+								<label class="col-md-6 col-sm-6 col-xs-6 ">Marca:</label>
+								<div class="col-md-6 col-sm-6 col-xs-6 ">
+									<p id="marca">Volkswagen</p>
 								</div>
 							</div>
-							<div class="">
-								<label class="col-md-6 col-sm-6 col-xs-6">Modelo:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>Gol</p>
+							<div class="col-md-6  col-sm-6 col-xs-6 row">
+								<label class="col-md-6 col-sm-6 col-xs-6 ">Modelo:</label>
+								<div class="col-md-6 col-sm-6 col-xs-6 ">
+									<p id="modelo">Gol</p>
 								</div>
 							</div>
-							<div class="">	
-								<label class="col-md-6 col-sm-6 col-xs-6">Patente:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>GGG 123</p>
+							<div class="col-md-6  col-sm-6 col-xs-6 row">	
+								<label class="col-md-6 col-sm-6 col-xs-6 ">Patente:</label>
+								<div class="col-md-6 col-sm-6 col-xs-6 ">
+									<small><p id="patente">GGG 123</p></small>
 								</div>
 							</div> 
-							<div class="">
-								<label class="col-md-6 col-sm-6 col-xs-6">Año:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>2010</p>
+							<div class="col-md-6  col-sm-6 col-xs-6 row">
+								<label class="col-md-6 col-sm-6 col-xs-6 ">Año:</label>
+								<div class="col-md-6 col-sm-6 col-xs-6 ">
+									<p id="anio">2010</p>
 								</div>
 							</div>
-							<div class="">
-								<label class="col-md-6 col-sm-6 col-xs-6">Color:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>Rojo</p>
+							<div class="col-md-6  col-sm-6 col-xs-6 row">
+								<label class="col-md-8 col-sm-6 col-xs-6 ">A/C:</label>
+								<div class="col-md-4 col-sm-6 col-xs-6 ">
+									<p id="aire">Si/No</p>
 								</div>
 							</div>
-							<div class="">
-								<label class="col-md-6 col-sm-6 col-xs-6">A/C:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>Si/No</p>
+							<div class="col-md-6  col-sm-6 col-xs-6 row">
+								<label class="col-md-8 col-sm-6 col-xs-6 ">Seguro:</label>
+								<div class="col-md-4 col-sm-6 col-xs-6 ">
+									<p id="seguro">Si/No</p>
 								</div>
 							</div>
-							<div class="">
-								<label class="col-md-6 col-sm-6 col-xs-6">Seguro:</label>
-								<div class="col-md-6 col-sm-6 col-xs-6">
-									<p>Si/No</p>
+							<div class="col-md-6 col-sm-6 col-xs-6  row">
+								<label class="col-md-8 col-sm-6 col-xs-6 ">Verificado:</label>
+								<div class="col-md-4 col-sm-6 col-xs-6 ">
+									<p id="verificado">Si/No</p>
 								</div>
 							</div>
-						</div>
+
+
 					</div>
 				</div>
 			</div>

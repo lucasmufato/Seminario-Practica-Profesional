@@ -64,10 +64,41 @@ var simular = function(json){
 		precio: "30",
 		puntos_intermedios: ["Rodriguez","Otro lugar"]
 	};
+	data.conductor = {
+		nombre_usuario: "Juanc23",
+		reputacion: "3",
+		foto: "upload/foto.jpg",
+		foto_registro: "upload/foto_reg.jpg"
+	};
+	data.vehiculo = {
+		marca: "Ford",
+		modelo: "Falcon",
+		anio: "2012",
+		patente: "LKJ 890",
+		aire: "S",
+		seguro: "N",
+		verificado: "S",
+		foto: "upload/auto.jpg"
+	};
 	cargarViaje();
+	cargarConductor();
+	cargarVehiculo();
 }
 
-var cargarViaje = function(){
+var cargarVehiculo = function(){
+	$("#panel-foto-vehiculo a").attr('href',data.vehiculo.foto);
+	$("#panel-foto-vehiculo img").attr('src',data.vehiculo.foto);
+	$("#marca").text(data.vehiculo.marca);
+	$("#modelo").text(data.vehiculo.modelo);
+	$("#anio").text(data.vehiculo.anio);
+	$("#patente").text(data.vehiculo.patente);
+	$("#aire").html(generarEmoticon(data.vehiculo.aire));
+	$("#seguro").html(generarEmoticon(data.vehiculo.seguro));
+	$("#verificado").html(generarEmoticon(data.vehiculo.verificado));
+
+}
+
+var cargarConductor = function(){
 	
 	$("#tipo").text(data.viaje.tipo);
 	$("#origen").text(data.viaje.origen);
@@ -79,6 +110,37 @@ var cargarViaje = function(){
 		$("#puntosIntermedios").append('<li>'+elem+'</li>');
 	});
 
+}
+
+var cargarViaje = function(){
+	$("#panel-foto-conductor a").attr('href',data.conductor.foto);
+	$("#panel-foto-conductor img").attr('src',data.conductor.foto);
+	$("#panel-foto-registro a").attr('href',data.conductor.foto_registro);
+	$("#panel-foto-registro img").attr('src',data.conductor.foto_registro);
+	$("#reputacion").text(reputacionStars(data.conductor.reputacion));;
+	$("#nombreConductor").text(data.conductor.nombre_usuario);
+	$("#nombreConductor").attr('href',"perfil.html?=nombre_usuario="+data.conductor.nombre_usuario);
+}
+
+
+var reputacionStars = function(caracter){
+	var stars = "";
+	while (caracter > 0){
+		stars += "★";
+		caracter--;
+	}
+	return stars;
+}
+
+var generarEmoticon = function(caracter){
+	var span = document.createElement("SPAN");
+	if (caracter=="S"){
+		span.className = "glyphicon glyphicon-ok text-success";
+		return span;
+	}else{
+		span.className = "glyphicon glyphicon-remove text-danger";
+		return span;
+	}
 }
 
 function getUrlVars() {
