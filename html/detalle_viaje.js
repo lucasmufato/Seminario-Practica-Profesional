@@ -1,15 +1,13 @@
 var data = {};
 data.viaje = {};
+data.viaje.id = getUrlVars()["id"];
 data.conductor = {};
 data.vehiculo = {};
 data.comentarios = {};
 data.usuario_logueado = {};
 
-data.loadData = function() {
-	var sendData = {
-		"id": getUrlVars()["id"]
-	}
-	simular(sendData);
+var sendAjax = function(sendData,callback){
+	console.log("mando: ",sendData);
 	/*
 	$.ajax({
 		url: '/viaje', 
@@ -18,21 +16,7 @@ data.loadData = function() {
 		data: sendData,
 		success: function (jsonData) {
 			DEBUGresponse = jsonData;
-			if(jsonData.result){
-				$('.loadingScreen').fadeOut();
-				data.viaje = jsonData.viaje;
-				data.conductor = jsonData.conductor;
-				data.vehiculo = jsonData.vehiculo;
-				data.comentarios = jsonData.comentarios;
-				data.usuario_logueado = jsonData.usuario_logueado;
-				cargarViaje();
-				cargarVehiculo();
-				cargarComentarios();
-				cargarConductor();
-				configurarUi();
-			} else if (jsonData.redirect != undefined) {
-				window.location = jsonData.redirect;
-			}
+			callback(jsonData);
 		},
 		error: function (er1, err2, err3) {
 			document.body.innerHTML = er1.responseText;
@@ -40,6 +24,35 @@ data.loadData = function() {
 		}
 	});
 	*/
+}
+
+
+data.loadData = function() {
+	var sendData = {
+		action: "ver_viaje",
+		"id": data.viaje.id
+	}
+	var onsuccess = function(jsonData){
+		if(jsonData.result){
+			$('.loadingScreen').fadeOut();
+			data.viaje = jsonData.viaje;
+			data.conductor = jsonData.conductor;
+			data.vehiculo = jsonData.vehiculo;
+			data.comentarios = jsonData.comentarios;
+			data.usuario_logueado = jsonData.usuario_logueado;
+			cargarViaje();
+			cargarVehiculo();
+			cargarComentarios();
+			cargarConductor();
+			configurarUi();
+		} else if (jsonData.redirect != undefined) {
+			window.location = jsonData.redirect;
+		}
+	}
+	
+	simular(sendData);
+	
+	sendAjax(sendData,onsuccess);
 }
 
 initUI = function() {
@@ -59,6 +72,7 @@ $(document).ready(function(){
 var simular = function(json){
 	console.log("id: ",json.id);
 	data.viaje = {
+		id: 35,
 		nombre_amigable: "Un alto viaje",
 		estado: "2",
 		tipo: "ida",
@@ -160,6 +174,35 @@ function setearViajeComplemento(idComp){
 	}
 }
 
+var mostrarVentanaParticipar = function(){
+	$("select[name=origenPasajero], select[name=destinoPasajero]").empty();
+	data.viaje.recorrido.forEach(function(elem){
+		var option = document.createElement("OPTION");
+		option.text = elem;
+		option.value = elem;
+		$("select[name=origenPasajero], select[name=destinoPasajero]").append(option);
+	});
+	$('#modalParticipar').modal('show');
+}
+
+var participarViaje = function(){
+	var sendJson = {
+		action: "participar",
+		id_viaje: data.viaje.id,
+		origen:  $("select[name=origenPasajero]").val(),
+		destino:  $("select[name=destinoPasajero]").val()
+	}
+	var onsuccess = function(jsonData){
+		closeModal('Participar');
+		if (jsonData.result){
+			$('#modalSuccess').modal('show');
+		}else{
+			errorMessage(jsonData.msg);
+		}
+	}
+	sendAjax(sendJson,onsuccess);
+}
+
 estadoString = function (caracter) {
 	switch (caracter) {
 		case '1': return "Terminado";
@@ -190,6 +233,16 @@ var generarEmoticon = function(caracter){
 		span.className = "glyphicon glyphicon-remove text-danger";
 		return span;
 	}
+}
+
+//MODALS
+
+errorMessage = function (textMsg) {
+	$('#errorMessage').text(textMsg);
+	$('#modalError').modal('show');
+}
+closeModal = function (name) {
+	$('#modal' + name).modal('hide');
 }
 
 // funciones robadas
