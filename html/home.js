@@ -127,7 +127,7 @@ var sendForm = function (sendData, onsuccess) {
 	
 	/*
 	$.ajax({
-		url: '',// POR COMPLETAR
+		url: '/viaje',
 		method: 'POST',
 		data: sendData,
 		dataType: 'json',

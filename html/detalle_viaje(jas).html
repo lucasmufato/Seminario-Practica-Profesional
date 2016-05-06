@@ -30,11 +30,13 @@
 					</div>
 					<div class="panel-body collapse in row" id="collapseViaje">
 						<div class="col-sm-8 row">
+							<div class="col-sm-12 row">
+								<label class="col-sm-3">Tipo:</label> 
+								<p id="tipo" class="col-sm-6">Ida/Vuelta</p>
+							</div>
 							<div class="col-sm-6 row">
-								<label class="col-sm-8">Tipo de Viaje:</label> 
-								<div class="col-sm-4">
-									<p id="tipo">Ida/IdaVuelta</p>
-								</div>
+								<label class="col-sm-6">Estado:</label> 
+								<p id="estado" class="col-sm-6"></p>
 							</div>
 							<div class="col-sm-6 row">
 								<label class="col-sm-6">Origen:</label> 
@@ -66,19 +68,11 @@
 									<p id="precio">100</p>
 								</div>
 							</div>
-							<div class="col-sm-6 row">
-								<label class="col-sm-6">Precio:</label> 
-								<div class="col-sm-6">
-									<p id="precio">100</p>
-								</div>
-							</div>
-							<div class="col-sm-6 row">
-								<div class="col-sm-12">
-									<label class="">Puntos intermedios:</label> 
-									<div class="">
-										<ul id="puntosIntermedios">
-										</ul>
-									</div>
+							<div class="col-sm-12 row">
+								<label class="col-sm-3">Recorrido:</label> 
+								<div class="col-sm-9 row">
+									<ol id="recorrido" class="list-inline">
+									</ol>
 								</div>
 							</div>
 						</div>
@@ -87,10 +81,10 @@
 							<img src="img/home/mapa.png" alt="camino"></a>
 						</div>
 
-						<div class="btn-group col-xs-6 col-xs-offset-3 row">
-							<button type="button" class="btn btn-primary ">Modificar</button>
-							<button type="button" class="btn btn-primary ">Suscribirse</button>
-							<button type="button" class="btn btn-success ">Participar</button>
+						<div class="btn-group col-xs-8 col-xs-offset-4 row">
+							<button type="btn button" class="btn btn-primary " id="btnModificar">Modificar</button>
+							<button type="btn button" class="btn btn-primary " id="btnSuscribirse">Suscribirse</button>
+							<button type="btn button" class="btn btn-success" id="btnParticipar">Participar</button>
 						</div>
 					</div>
 				</div>

@@ -57,10 +57,15 @@ public class ServletViaje extends HttpServlet {
 		daoViajes.getAutoViaje( id_viaje);
 		/*
 		 EL JSON DE LA RESPUESTA DEBERIA TENER:
-		 {"CLIENTE":{APELLIDO, NOMBRE, FOTOPERFIL, FOTO_REGISTRO, REPUTACION},
-		 "VEHICULO":{FOTO,MARCA,MODELO, PATENTE,AÑO,COLOR,AIRE_ACOND,SEGURO,VERIFICADO},
-		 "VIAJE":{FECHA,HORA,NOMBRE_AMIGABLE,IDA/VUELTA,COSTO,ESTADO,ASIENTOS_LIBRES
-		 			"RECORRIDO":{ ORIGEN,INTERMDIO,....,DESTINO}		 }
+		 
+		 Nota de Juan: contrastar este json con el de 'detalle_viaje.js' funcion: 'simular()'
+		 {
+		 	"CONDUCTOR":{NOMBREUSUARIO, FOTOPERFIL, FOTO_REGISTRO, REPUTACION},
+		 	"VEHICULO":{FOTO,MARCA,MODELO, PATENTE,AÑO,AIRE_ACOND,SEGURO,VERIFICADO},
+		 	"VIAJE":{FECHA,HORA,NOMBRE_AMIGABLE,IDA/VUELTA,ID_VIAJECOMPLEMENTO(es el id_ida o id_vuelta), COSTO,ESTADO,ASIENTOS_LIBRES
+		 			"RECORRIDO":[ ORIGEN,INTERMDIO,....,DESTINO]		 
+		 	"usuario_logueado":{es_conductor}
+		 }
 		 
 		 */
 		return null;
