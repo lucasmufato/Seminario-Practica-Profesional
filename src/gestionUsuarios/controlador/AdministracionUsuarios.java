@@ -16,11 +16,11 @@ import org.json.simple.JSONArray;
 public class AdministracionUsuarios extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private DAOAdministracioUsuarios dao;
+	private DAOAdministracionUsuarios dao;
 	
 	public void init() throws ServletException
 	{
-		dao= new DAOAdministracioUsuarios();
+		dao= new DAOAdministracionUsuarios();
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

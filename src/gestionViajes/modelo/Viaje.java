@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
 
+import gestionUsuarios.modelo.Cliente;
 import otros.JSONable;
 
 @NamedQueries({
@@ -28,6 +29,21 @@ public class Viaje implements JSONable {
 	protected List<Localidad> localidades;
 	protected List<PasajeroViaje> pasajeros;
 	
+	public void añadir_localidad( Localidad loc1, Localidad loc2){
+		
+	}
+	
+	public void añadir_pasajeroViaje (Integer id_cliente, Localidad subida, Localidad bajada){
+		//el pasajeroViaje se crea con estado POSTULADO
+	}
+	
+	public List<Localidad> devolver_recorrido_desde_hasta(Localidad desde, Localidad hasta){
+		return null;
+	}
+	
+	public PasajeroViaje recuperar_pasajeroViaje_por_cliente(Cliente cliente){
+		return null;
+	}
 	
 	public Viaje(){
 		

@@ -16,7 +16,7 @@ public class AccessManager {
 	}
 	
 	public static boolean HasPermiso(HttpServletRequest request, String nombrePermiso) {
-		DAOAdministracioUsuarios dao= new DAOAdministracioUsuarios();
+		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
 		System.out.println("En AccessManager - HasPermiso");
 		//esta logueado?
 		if (EstaLogueado(request)) {
