@@ -23,7 +23,7 @@ public class Registro extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("En doGet de ControladorRegistro");
-		
+
 		PrintWriter writer = response.getWriter();
 
 		response.setContentType("application/json");

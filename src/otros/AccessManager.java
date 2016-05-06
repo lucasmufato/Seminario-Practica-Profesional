@@ -12,7 +12,7 @@ public class AccessManager {
 	
 	
 	public AccessManager(){
-		
+
 	}
 	
 	public static boolean HasPermiso(HttpServletRequest request, String nombrePermiso) {

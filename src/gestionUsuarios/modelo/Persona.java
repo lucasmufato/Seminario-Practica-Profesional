@@ -72,7 +72,6 @@ public class Persona implements JSONable {
 		this.id_persona=1;
 		this.nro_doc= BigInteger.valueOf(new Integer(38842784).intValue());
 		this.sexo='M';
-		System.out.println("hola que tal");
 	}
 
 	public Persona(JSONObject json){ 

@@ -42,11 +42,11 @@ public class Probador {
 
 		//para usar inicializar es conveninte haberle hecho truncate a toda la BD
 		//inicializar sirve para crear un par de personas, usuarios,clientes, roles y permisos y asignarlos
-		inicializar();			//funca
+		//inicializar();			//funca
 	
 		//probarDAOUsuarioConPersona();		//funca 
 		//probarDAOselectAll();		//funca, hay q pasarle el .class.getSimpleName() y te tira devuelve la lista con los resultados
-		//probarDAOselectAllJSON();	//funca, al contrario que el metodo anterior, este devuelve un arreglo de JSONObject
+		probarDAOselectAllJSON();	//funca, al contrario que el metodo anterior, este devuelve un arreglo de JSONObject
 		//DAOpersistir();		//funca con todos, por ahi no con usuario a menos que ya tenga una persona asociada
 		//DAOActualizar();		//funcaS seguro con clases q implementan JSONable
 		//DAOasignarRolAUsuario(); //funca, tiene q ser un ROL y un USUARIO que estan con estado='a'
