@@ -17,9 +17,9 @@ import gestionUsuarios.modelo.*;
 import otros.*;
 
 @SuppressWarnings("unused")
-public class DAOAdministracioUsuarios extends DataAccesObject {
+public class DAOAdministracionUsuarios extends DataAccesObject {
     
-    public DAOAdministracioUsuarios(){
+    public DAOAdministracionUsuarios(){
     	super();
     	emfactory= Persistence.createEntityManagerFactory( "Viajes Compartidos" ); 
     	entitymanager = emfactory.createEntityManager( );

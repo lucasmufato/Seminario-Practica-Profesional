@@ -17,11 +17,11 @@ import otros.*;
 
 public class Autocompletado extends HttpServlet {
 
-	DAOAdministracioUsuarios dao;
+	DAOAdministracionUsuarios dao;
 
 	public void init() throws ServletException
 	{
-		dao= new DAOAdministracioUsuarios();
+		dao= new DAOAdministracionUsuarios();
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
