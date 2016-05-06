@@ -24,63 +24,78 @@
 		<hr>
 		<div class="container-fluid">
 			<div class="col-lg-12 col-md-12">
-				<div class="panel-group" id="panel-viaje">
-					<div class="panel-primary">
-						<div class="panel-heading" data-toggle="collapse" data-target="#collapseViaje" aria-expanded="true">
-							<h3 class="panel-title">Viaje</h3>
-						</div>
-						<div class="panel-body collapse in" id="collapseViaje">
-							<div class="col-sm-12">
-								<label class="col-sm-3">Tipo de Viaje:</label> 
-								<div class="col-sm-1">
+				<div class="panel panel-primary">
+					<div class="panel-heading" data-toggle="collapse" data-target="#collapseViaje" aria-expanded="true">
+						<h3 class="panel-title">Viaje</h3>
+					</div>
+					<div class="panel-body collapse in row" id="collapseViaje">
+						<div class="col-sm-8 row">
+							<div class="col-sm-6 row">
+								<label class="col-sm-8">Tipo de Viaje:</label> 
+								<div class="col-sm-4">
 									<p id="tipo">Ida/IdaVuelta</p>
 								</div>
-								<label class="col-sm-2">Origen:</label> 
-								<div class="col-sm-2">
+							</div>
+							<div class="col-sm-6 row">
+								<label class="col-sm-6">Origen:</label> 
+								<div class="col-sm-6">
 									<p id="origen">Moreno</p>
 								</div>
-								<label class="col-sm-2">Destino:</label> 
-								<div class="col-sm-2">
+							</div>
+							<div class="col-sm-6 row">
+								<label class="col-sm-6">Destino:</label> 
+								<div class="col-sm-6">
 									<p id="destino">Luján</p>
 								</div>
 							</div>
-			
-							<div class="col-sm-12">
-								<label class="col-sm-2">Fecha:</label> 
-								<div class="col-sm-2">
+							<div class="col-sm-6 row">
+								<label class="col-sm-6">Fecha:</label> 
+								<div class="col-sm-6">
 									<p id="fecha">28/10/2016</p>
 								</div>
-								<label class="col-sm-2">Hora:</label> 
-								<div class="col-sm-2">
+							</div>
+							<div class="col-sm-6 row">
+								<label class="col-sm-6">Hora:</label> 
+								<div class="col-sm-6">
 									<p id="hora">10:00</p>
 								</div>
-								<label class="col-sm-2">Precio:</label> 
-								<div class="col-sm-2">
+							</div>
+							<div class="col-sm-6 row">
+								<label class="col-sm-6">Precio:</label> 
+								<div class="col-sm-6">
 									<p id="precio">100</p>
 								</div>
 							</div>
-
-							<div class="col-sm-12">
-								<div class="col-sm-3">
+							<div class="col-sm-6 row">
+								<label class="col-sm-6">Precio:</label> 
+								<div class="col-sm-6">
+									<p id="precio">100</p>
+								</div>
+							</div>
+							<div class="col-sm-6 row">
+								<div class="col-sm-12">
 									<label class="">Puntos intermedios:</label> 
 									<div class="">
 										<ul id="puntosIntermedios">
 										</ul>
 									</div>
 								</div>
-								<div class="col-sm-6" id="mapa">
-									<a href="img/home/mapa.png" class="thumbnail">
-										<img src="img/home/mapa.png" alt="camino"></a>
-								</div>
-							</div>
-
-							<div class="btn-group col-sm-6 col-sm-offset-4">
-								<button type="button" class="btn btn-primary">Modificar</button>
-							  	<button type="button" class="btn btn-primary">Suscribirse</button>
-							 	<button type="button" class="btn btn-primary">Participar</button>
 							</div>
 						</div>
+						<div class="col-sm-4 row" id="mapa">
+							<a href="img/home/mapa.png" class="thumbnail">
+							<img src="img/home/mapa.png" alt="camino"></a>
+						</div>
+
+						<div class="btn-group col-xs-6 col-xs-offset-3 row">
+							<button type="button" class="btn btn-primary ">Modificar</button>
+							<button type="button" class="btn btn-primary ">Suscribirse</button>
+							<button type="button" class="btn btn-success ">Participar</button>
+						</div>
 					</div>
+				</div>
+			</div>
+
 <!-- COMENTADO HASTA SER IMPLEMENTADO
 					<div class="panel panel-default" id="comentarios">
 						<div class="panel-body">
@@ -114,10 +129,8 @@
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+			
 -->
-
 			<div class="col-lg-6 col-md-6">
 				<div class="panel panel-primary" id="panel-conductor">
 					<div class="panel-heading"  data-toggle="collapse" data-target="#collapseConductor" aria-expanded="true">
