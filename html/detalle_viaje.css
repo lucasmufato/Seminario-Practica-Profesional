@@ -4,3 +4,7 @@
 .reputacion{
 	color: orange;
 }
+
+.panel .panel-body{
+	background-color: #ecf0f1;
+}

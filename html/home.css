@@ -10,3 +10,19 @@
 	background: white;
 	z-index: 5000;
 }
+
+form header {
+	margin-bottom: 1%;
+	margin-top: 0px;
+}
+header h3 {
+	text-align: center;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	margin-top: 1px;
+}
+ form {
+	margin-top:2%;
+	padding-bottom:1%;
+	background-color: #ecf0f1;
+}
