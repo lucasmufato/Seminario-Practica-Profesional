@@ -101,7 +101,9 @@ var simular = function(json){
 		foto: "upload/auto.jpg"
 	};
 	data.usuario_logueado = {
-		es_conductor: false
+		es_conductor: false,
+		es_pasajero: false,
+		es_seguidor: false
 	};	
 	cargarViaje();
 	cargarConductor();
@@ -112,19 +114,37 @@ var simular = function(json){
 var configurarUi = function(){
 
 	var esConductor = data.usuario_logueado.es_conductor;
-	if (esConductor){
-		$("#btnModificar").show();
-		$("#btnParticipar").hide();
-	}else{
-		$("#btnModificar").hide();
-	}
-	
+	var esPasajero = data.usuario_logueado.es_pasajero;
+	var esSeguidor = data.usuario_logueado.es_seguidor;
 	var estado = data.viaje.estado;
-	if (estado != 2){ //si esta en "no iniciado"
-		$("#btnParticipar").hide();
-		$("#btnSuscribirse").hide();
-		$("#btnModificar").hide();
-	} 
+	if (estado != 2){ //si no esta en "no iniciado"
+		$("#botonera-conductor").hide();
+		$("#botonera-pasajero").hide();
+	} else if (esConductor){
+		$("#botonera-conductor").show();
+		$("#botonera-pasajero").hide();
+	} else {
+		$("#botonera-conductor").hide();
+		if (esPasajero){
+				$("#botonera-pasajero").show();
+				$("#btnSeguir").hide();
+				$("#btnDejarSeguir").show();
+				$("#btnParticipar").hide();
+				$("#btnCancelarParticipacion").show();	
+		}else{
+			if (esSeguidor){
+				$("#btnDejarSeguir").show();
+				$("#btnSeguir").hide();
+			} else{
+				$("#btnDejarSeguir").hide();
+				$("#btnSegir").show();		
+			}
+			$("#btnParticipar").show();
+			$("#btnCancelarParticipacion").hide();	
+		}
+	}
+
+
 }
 
 var cargarVehiculo = function(){
@@ -217,7 +237,8 @@ var participarViaje = function(){
 	var onsuccess = function(jsonData){
 		closeModal('Participar');
 		if (jsonData.result){
-			$('#modalSuccess').modal('show');
+			successMessage(jsonData.msg);//podria incluir datos de conductor como mail o telefono
+			data.loadData();
 		}else{
 			errorMessage(jsonData.msg);
 		}
@@ -240,6 +261,46 @@ var esTramoValido = function(){
 		return false;
 	}
 	return true;
+}
+
+var seguirViaje = function(){
+	var sendJson = {
+		action: "seguir_viaje",
+		id_viaje: data.viaje.id
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			successMessage(jsonData.msg);//opcional
+			data.loadData();
+		}else{
+			errorMessage(jsonData.msg);
+		}
+	}
+	sendAjax(sendJson,onsuccess);
+}
+var dejarDeSeguirViaje = function(){
+	var sendJson = {
+		action: "dejar_seguir_viaje",
+		id_viaje: data.viaje.id
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			successMessage(jsonData.msg);//opcional
+			data.loadData();
+		}else{
+			errorMessage(jsonData.msg);
+		}
+	}
+	sendAjax(sendJson,onsuccess);
+}
+var cancelarParticipacion = function(){
+	console.log("cancelarParticipacion");
+}
+var modificarViaje = function(){
+	console.log("modificarViaje");
+}
+var verPostulantes = function(){
+	console.log("verPostulantes");
 }
 
 var customAlert = function(panel,elemento,msg){
@@ -294,6 +355,10 @@ var generateAlert = function(msg){
 var errorMessage = function (textMsg) {
 	$('#errorMessage').text(textMsg);
 	$('#modalError').modal('show');
+}
+var successMessage = function (textMsg) {
+	$('#successMessage').text(textMsg);
+	$('#modalSuccess').modal('show');
 }
 var closeModal = function (name) {
 	$('#modal' + name).modal('hide');

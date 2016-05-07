@@ -78,11 +78,18 @@
 							<a href="img/home/mapa.png" class="thumbnail">
 							<img src="img/home/mapa.png" alt="camino"></a>
 						</div>
-
-						<div class="btn-group col-xs-8 col-xs-offset-4 row">
-							<button type="btn button" class="btn btn-primary " id="btnModificar">Modificar</button>
-							<button type="btn button" class="btn btn-primary " id="btnSuscribirse">Suscribirse</button>
-							<button type="btn button" class="btn btn-success" id="btnParticipar" onclick="mostrarVentanaParticipar();">Participar</button>
+						
+						<div class="col-xs-8 col-xs-offset-4 row">
+							<div id="botonera-pasajero">
+								<button type="btn button" class="btn btn-info" onclick="seguirViaje();" id="btnSeguir">Seguir</button>
+								<button type="btn button" class="btn btn-info" onclick="dejarDeSeguirViaje();" id="btnDejarSeguir">Dejar de seguir</button>
+								<button type="btn button" class="btn btn-success" id="btnParticipar" onclick="mostrarVentanaParticipar();">Participar</button>
+								<button type="btn button" class="btn btn-danger" id="btnCancelarParticipacion" onclick="cancelarParticipacion();">Cancelar Participación</button>
+							</div>
+							<div id="botonera-conductor">
+								<button type="btn button" class="btn btn-warning " onclick="modificarViaje();" id="btnModificar">Modificar</button>
+								<button type="btn button" class="btn btn-primary " onclick="verPostulantes();" id="btnPostulantes">Ver Postulantes</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -262,9 +269,9 @@
 						<h3 class="dialog-title"> Éxito!</h3>
 					</div><!-- modal-header -->
 					<div class="modal-body">
-							<!-- Esto sera modificado desde javascript -->
-					</div><!-- modal-body -->
-
+						<div id="successMessage">
+							Todo salió bien. <!-- Esto sera modificado desde javascript -->
+						</div>					</div><!-- modal-body -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" onclick="closeModal('Success');"> Cerrar</button>
 					</div><!-- .modal-footer -->

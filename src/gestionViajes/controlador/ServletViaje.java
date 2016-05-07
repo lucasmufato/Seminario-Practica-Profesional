@@ -63,8 +63,9 @@ public class ServletViaje extends HttpServlet {
 		 	"CONDUCTOR":{NOMBREUSUARIO, FOTOPERFIL, FOTO_REGISTRO, REPUTACION},
 		 	"VEHICULO":{FOTO,MARCA,MODELO, PATENTE,AÑO,AIRE_ACOND,SEGURO,VERIFICADO},
 		 	"VIAJE":{FECHA,HORA,NOMBRE_AMIGABLE,IDA/VUELTA,ID_VIAJECOMPLEMENTO(es el id_ida o id_vuelta), COSTO,ESTADO,ASIENTOS_LIBRES
-		 			"RECORRIDO":[ ORIGEN,INTERMDIO,....,DESTINO]		 
-		 	"usuario_logueado":{es_conductor}
+		 			"RECORRIDO":[ ORIGEN,INTERMDIO,....,DESTINO]
+			//esto es para mostrarle funcionalidades(botones)
+		 	"usuario_logueado":{es_conductor,es_pasajero,es_seguidor}
 		 }
 		 
 		 */
