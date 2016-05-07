@@ -175,14 +175,36 @@ function setearViajeComplemento(idComp){
 }
 
 var mostrarVentanaParticipar = function(){
-	$("select[name=origenPasajero], select[name=destinoPasajero]").empty();
-	data.viaje.recorrido.forEach(function(elem){
-		var option = document.createElement("OPTION");
-		option.text = elem;
-		option.value = elem;
-		$("select[name=origenPasajero], select[name=destinoPasajero]").append(option);
-	});
+	cargarTramos(data.viaje.recorrido);
 	$('#modalParticipar').modal('show');
+}
+
+var cargarTramos = function(recorrido){
+	var queryOrigen = "select[name=origenPasajero]";
+	var queryDestino = "select[name=destinoPasajero]";
+	$(queryOrigen+","+queryDestino).empty();
+	for (var i=0; i<recorrido.length; i++){
+		var valor = recorrido[i];
+		var texto = (i+1)+" - "+valor;
+		var op = createOp(valor,texto);
+		if (i == 0){
+			//agrego primer elemento solo a origen
+			$(queryOrigen).append(op);
+		} else if(i==recorrido.length-1){
+			//agrego ultimo elemento solo a destino
+			$(queryDestino).append(op);
+		} else{
+			//agrego todos los demas
+			$(queryOrigen+","+queryDestino).append(op);
+		}
+	}
+}
+
+var createOp = function(valor,texto){
+	var option = document.createElement("OPTION");
+	option.text = texto;
+	option.value = valor;
+	return option;
 }
 
 var participarViaje = function(){
@@ -200,10 +222,35 @@ var participarViaje = function(){
 			errorMessage(jsonData.msg);
 		}
 	}
-	sendAjax(sendJson,onsuccess);
+	if (esTramoValido()){
+		sendAjax(sendJson,onsuccess);
+	};
 }
 
-estadoString = function (caracter) {
+var esTramoValido = function(){
+	var origen = $("select[name=origenPasajero]").val();
+	var destino = $("select[name=destinoPasajero]").val();
+	var indexOrigen = data.viaje.recorrido.indexOf(origen);
+	var indexDestino = data.viaje.recorrido.indexOf(destino);
+	if (indexOrigen >= indexDestino){
+		var msg = "Puntos de subida y bajada son incompatibles con el recorrido de este viaje";
+		var panel = "#panel-error-tramo";
+		var elemento = "select[name=origenPasajero],select[name=destinoPasajero]";
+		customAlert(panel,elemento,msg);
+		return false;
+	}
+	return true;
+}
+
+var customAlert = function(panel,elemento,msg){
+	$(panel).append(generateAlert(msg));
+	
+	$(elemento).change(function(){
+		$(panel).empty();
+	});
+}
+
+var estadoString = function (caracter) {
 	switch (caracter) {
 		case '1': return "Terminado";
 		case '2': return "No iniciado";
@@ -235,13 +282,20 @@ var generarEmoticon = function(caracter){
 	}
 }
 
+var generateAlert = function(msg){
+	return html = '<div class=\"alert alert-danger\" role=\"alert\">'
+		+'<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>'
+		+'<span class=\"sr-only\">Error:</span> '
+		+msg+'</div>';
+}
+
 //MODALS
 
-errorMessage = function (textMsg) {
+var errorMessage = function (textMsg) {
 	$('#errorMessage').text(textMsg);
 	$('#modalError').modal('show');
 }
-closeModal = function (name) {
+var closeModal = function (name) {
 	$('#modal' + name).modal('hide');
 }
 
