@@ -1,7 +1,8 @@
 package gestionUsuarios.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import gestionViajes.modelo.*;
 import javax.persistence.*;
 
 import org.json.simple.JSONArray;
@@ -23,6 +24,9 @@ public class Cliente extends Usuario implements JSONable {
 	protected String foto_registro;
 	@Column(nullable=true,length=120)
 	protected String foto;
+	
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.PERSIST)
+	protected List<Maneja> vehiculos= new ArrayList<Maneja>();
 	
 	
 	public Cliente(){
@@ -74,6 +78,14 @@ public class Cliente extends Usuario implements JSONable {
 		this.foto = foto;
 	}
 	
+	public List<Maneja> getVehiculos() {
+		return vehiculos;
+	}
+
+	public void setVehiculos(List<Maneja> vehiculos) {
+		this.vehiculos = vehiculos;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject toJSON(){

@@ -22,6 +22,7 @@
 		<class>gestionUsuarios.modelo.Usuario</class>
 		<class>gestionUsuarios.modelo.UsuarioRol</class>
 		<class>gestionViajes.modelo.Localidad</class>
+		<class>gestionViajes.modelo.LocalidadViaje</class>
 		<class>gestionViajes.modelo.Maneja</class>
 		<class>gestionViajes.modelo.PasajeroViaje</class>
 		<class>gestionViajes.modelo.Vehiculo</class>

@@ -2,8 +2,13 @@ package gestionViajes.modelo;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.Table;
 
@@ -14,13 +19,24 @@ import gestionUsuarios.modelo.Cliente;
 })
 @Entity
 @Table(name="maneja")
+@IdClass(ManejaID.class)
 public class Maneja {
 	
 	@Id
+	@JoinColumn(name="id_cliente")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Cliente cliente;
+	@Id
+	@JoinColumn(name="id_vehiculo")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Vehiculo vehiculo;
+	
+	@Column(nullable=false)
 	protected Date fecha_inicio;
+	@Column(nullable=true)
 	protected Date fecha_fin;
+	
+	
 	
 	protected Maneja(){
 		

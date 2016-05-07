@@ -1,7 +1,11 @@
 package gestionViajes.modelo;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.Table;
 
@@ -21,14 +25,34 @@ public class PasajeroViaje implements JSONable {
 
 	@Id
 	protected Integer id;
-	
+	@Column(nullable=true)
 	protected float kilometros;
 
+	@Column(nullable=false)
+	protected Character estado;		//falta hacer el enum	
+	
+	@JoinColumn(name="id_calificacion")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Calificacion calificacion;
+	
+	@JoinColumn(name="id_cliente")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Cliente cliente;
+	
+	@JoinColumn(name="id_comision")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected ComisionCobrada comision;
-	protected Localidad localidad_bajada;
-	protected Localidad localidad_subida;
+	
+	@JoinColumn(name="id_localidad_bajada")
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	protected LocalidadViaje localidad_bajada;
+	
+	@JoinColumn(name="id_localidad_subida")
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	protected LocalidadViaje localidad_subida;
+	
+	@JoinColumn(name="id_viaje")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Viaje viaje;
 	
 	public PasajeroViaje(){
@@ -75,28 +99,28 @@ public class PasajeroViaje implements JSONable {
 		this.comision = comision;
 	}
 
-	public Localidad getLocalidad_bajada() {
-		return localidad_bajada;
-	}
-
-	public void setLocalidad_bajada(Localidad localidad_bajada) {
-		this.localidad_bajada = localidad_bajada;
-	}
-
-	public Localidad getLocalidad_subida() {
-		return localidad_subida;
-	}
-
-	public void setLocalidad_subida(Localidad localidad_subida) {
-		this.localidad_subida = localidad_subida;
-	}
-
 	public Viaje getViaje() {
 		return viaje;
 	}
 
 	public void setViaje(Viaje viaje) {
 		this.viaje = viaje;
+	}
+
+	public LocalidadViaje getLocalidad_bajada() {
+		return localidad_bajada;
+	}
+
+	public void setLocalidad_bajada(LocalidadViaje localidad_bajada) {
+		this.localidad_bajada = localidad_bajada;
+	}
+
+	public LocalidadViaje getLocalidad_subida() {
+		return localidad_subida;
+	}
+
+	public void setLocalidad_subida(LocalidadViaje localidad_subida) {
+		this.localidad_subida = localidad_subida;
 	}
 
 	@Override

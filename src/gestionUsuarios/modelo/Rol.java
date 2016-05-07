@@ -61,11 +61,7 @@ public class Rol implements JSONable {
 	
 	
 	public Rol(){
-		this.id_rol=5;
-		this.nombre_rol="jpa default";
-		this.nombre_amigable="rol()";
-		this.descripcion="dentro del rol() de la clase rol";
-		this.estado='A';
+		
 	}
 	
 	public Rol(JSONObject json){

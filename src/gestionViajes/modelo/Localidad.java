@@ -1,5 +1,6 @@
 package gestionViajes.modelo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -18,8 +19,10 @@ public class Localidad implements JSONable {
 
 	@Id
 	protected Integer id;
-	protected String nombre;
-	protected String provincia;
+	@Column(nullable=false)
+	protected Double latitud;
+	@Column(nullable=false)
+	protected Double longuitud;
 	
 	public Localidad(){
 		
@@ -33,20 +36,20 @@ public class Localidad implements JSONable {
 		this.id = id;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public Double getLatitud() {
+		return latitud;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setLatitud(Double latitud) {
+		this.latitud = latitud;
 	}
 
-	public String getProvincia() {
-		return provincia;
+	public Double getLonguitud() {
+		return longuitud;
 	}
 
-	public void setProvincia(String provincia) {
-		this.provincia = provincia;
+	public void setLonguitud(Double longuitud) {
+		this.longuitud = longuitud;
 	}
 
 	@Override

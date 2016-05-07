@@ -61,17 +61,9 @@ public class Persona implements JSONable {
 	
 	
 	public Persona(){
-		this.nombres="lucas";
-		this.apellidos="mufato";
-		this.tipo_doc=1;
-		this.descripcion="yoyoyoyoyoo";
-		this.domicilio="dr muñiz 1482";
-		this.estado='A';
-		this.fecha_nacimiento= new java.sql.Date( (new java.util.Date()).getTime() );
-		this.telefono="425790";
-		this.id_persona=1;
-		this.nro_doc= BigInteger.valueOf(new Integer(38842784).intValue());
-		this.sexo='M';
+		//dejo estos 2 campos para copiar y pegar al momento de poner una fecha o un biginteger
+		//this.fecha_nacimiento= new java.sql.Date( (new java.util.Date()).getTime() );
+		//this.nro_doc= BigInteger.valueOf(new Integer(38842784).intValue());
 	}
 
 	public Persona(JSONObject json){ 

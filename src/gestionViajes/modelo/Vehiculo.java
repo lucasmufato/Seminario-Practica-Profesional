@@ -1,10 +1,18 @@
 package gestionViajes.modelo;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
@@ -19,16 +27,45 @@ import otros.JSONable;
 public class Vehiculo implements JSONable {
 
 	@Id
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorVehiculo")
+	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorVehiculo", sequenceName = "sequence")
 	protected Integer id;
-	protected Integer anio;
+	@Column(name="anio",nullable=false,length=10)
+	protected Integer año;
+	@Column(nullable=false,length=30)
 	protected String marca;
+	@Column(nullable=false,length=30)
+	protected String modelo;
+	@Column(nullable=false,length=15)
 	protected String patente;
+	@Column(nullable=false,length=1)
 	protected Character verificado;
+	@Column(nullable=false)
+	protected Character estado;	//falta hacer el enum
+	@Column(nullable=true)
+	protected Date fecha_verificacion;
 	
-	protected List<Maneja> conductores;
+	@OneToMany(mappedBy="vehiculo", cascade=CascadeType.PERSIST)
+	protected List<Maneja> conductores = new ArrayList<Maneja>();
 	
 	public Vehiculo(){
 		
+	}
+	
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public Date getFecha_verificacion() {
+		return fecha_verificacion;
+	}
+
+	public void setFecha_verificacion(Date fecha_verificacion) {
+		this.fecha_verificacion = fecha_verificacion;
 	}
 	
 	public Integer getId() {
@@ -39,12 +76,12 @@ public class Vehiculo implements JSONable {
 		this.id = id;
 	}
 
-	public Integer getAnio() {
-		return anio;
+	public Integer getAño() {
+		return año;
 	}
 
-	public void setAnio(Integer anio) {
-		this.anio = anio;
+	public void setAño(Integer año) {
+		this.año = año;
 	}
 
 	public String getMarca() {
