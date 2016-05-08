@@ -107,8 +107,8 @@ var simular = function(json){
 		foto: "upload/auto.jpg"
 	};
 	data.usuario_logueado = {
-		es_conductor: false,
-		es_pasajero: true,
+		es_conductor: true,
+		es_pasajero: false,
 		es_seguidor: true
 	};	
 	cargarViaje();
@@ -134,7 +134,7 @@ var configurarUi = function(){
 		if (esPasajero){
 				$("#botonera-pasajero").show();
 				$("#btnSeguir").hide();
-				$("#btnDejarSeguir").show();
+				$("#btnDejarSeguir").hide();
 				$("#btnParticipar").hide();
 				$("#btnCancelarParticipacion").show();	
 		}else{
@@ -431,15 +431,4 @@ function getUrlVars() {
 		vars[key] = value;
 	});
 	return vars;
-}
-
-function getCookie(nombreCookie) {
-    var nombre = nombreCookie + "=";
-    var propiedadesCookies = document.cookie.split(';');
-    for(var i=0; i<propiedadesCookies.length; i++) {
-        var c = propiedadesCookies[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(nombre) == 0) return c.substring(nombre.length,c.length);
-    }
-    return "";
 }
