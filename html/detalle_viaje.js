@@ -65,9 +65,15 @@ initUI = function() {
 	data.loadData();
 };
 
-$(document).ready(function(){
+window.onload=initUI;
 
+initMap = function() {
+map = new google.maps.Map(document.getElementById('mapa'), {
+	center: {lat: -34.5774135, lng: -59.0909557},
+	drawingControl: false,
+	zoom: 16
 });
+}
 
 var simular = function(json){
 	console.log("id: ",json.id);

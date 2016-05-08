@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="detalle_viaje.css" />
 
 	<script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg&callback=initMap"></script>
 	<script type="text/javascript" src="detalle_viaje.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
@@ -18,7 +19,7 @@
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 </head>
 
-<body onload="initUI();">
+<body>
 	<main>
 		<div class="container-fluid">
 			<div class="col-lg-12 col-md-12">
@@ -74,7 +75,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-4 row" id="mapa">
+						<div class="col-sm-4 row" id="mapa" style="height: 300px">
 							<a href="img/home/mapa.png" class="thumbnail">
 							<img src="img/home/mapa.png" alt="camino"></a>
 						</div>
