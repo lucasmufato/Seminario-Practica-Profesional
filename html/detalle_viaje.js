@@ -101,7 +101,7 @@ var simular = function(json){
 		foto: "upload/auto.jpg"
 	};
 	data.usuario_logueado = {
-		es_conductor: false,
+		es_conductor: true,
 		es_pasajero: false,
 		es_seguidor: false
 	};	
@@ -297,10 +297,27 @@ var cancelarParticipacion = function(){
 	console.log("cancelarParticipacion");
 }
 var modificarViaje = function(){
-	console.log("modificarViaje");
+	window.location = "modificar_viaje.html?id="+data.viaje.id;
 }
 var verPostulantes = function(){
-	console.log("verPostulantes");
+	// si hiciera un modal
+	/*
+	var sendJson = {
+		action: "ver_postulantes",
+		id_viaje: data.viaje.id
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			//a completar
+		}else{
+			errorMessage(jsonData.msg);
+		}
+	}
+	sendAjax(sendJson,onsuccess);
+	*/
+	
+	//si lo redirijo a listado_postulantes.html
+	window.location = "listado_postulantes.html?id="+data.viaje.id;
 }
 
 var customAlert = function(panel,elemento,msg){
