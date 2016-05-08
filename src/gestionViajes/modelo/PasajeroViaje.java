@@ -45,11 +45,11 @@ public class PasajeroViaje implements JSONable {
 	
 	@JoinColumn(name="id_localidad_bajada")
 	@ManyToOne(cascade=CascadeType.PERSIST)
-	protected LocalidadViaje localidad_bajada;
+	protected LocalidadViaje id_localidad_bajada;
 	
 	@JoinColumn(name="id_localidad_subida")
 	@ManyToOne(cascade=CascadeType.PERSIST)
-	protected LocalidadViaje localidad_subida;
+	protected LocalidadViaje id_localidad_subida;
 	
 	@JoinColumn(name="id_viaje")
 	@ManyToOne(cascade=CascadeType.PERSIST)
