@@ -78,7 +78,7 @@ map = new google.maps.Map(document.getElementById('mapa'), {
 var simular = function(json){
 	console.log("id: ",json.id);
 	data.viaje = {
-		id: 35,
+		id: data.viaje.id ,
 		nombre_amigable: "Un alto viaje",
 		estado: "2",
 		tipo: "ida",
@@ -107,9 +107,9 @@ var simular = function(json){
 		foto: "upload/auto.jpg"
 	};
 	data.usuario_logueado = {
-		es_conductor: false,
+		es_conductor: true,
 		es_pasajero: false,
-		es_seguidor: false
+		es_seguidor: true
 	};	
 	cargarViaje();
 	cargarConductor();
@@ -134,7 +134,7 @@ var configurarUi = function(){
 		if (esPasajero){
 				$("#botonera-pasajero").show();
 				$("#btnSeguir").hide();
-				$("#btnDejarSeguir").show();
+				$("#btnDejarSeguir").hide();
 				$("#btnParticipar").hide();
 				$("#btnCancelarParticipacion").show();	
 		}else{
@@ -243,7 +243,7 @@ var participarViaje = function(){
 	var onsuccess = function(jsonData){
 		closeModal('Participar');
 		if (jsonData.result){
-			successMessage(jsonData.msg);//podria incluir datos de conductor como mail o telefono
+			modalMessage('success',jsonData.msg);//podria incluir datos de conductor como mail o telefono
 			data.loadData();
 		}else{
 			errorMessage(jsonData.msg);
@@ -276,7 +276,7 @@ var seguirViaje = function(){
 	}
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
-			successMessage(jsonData.msg);//opcional
+			modalMessage('success',jsonData.msg);//opcional
 			data.loadData();
 		}else{
 			errorMessage(jsonData.msg);
@@ -291,7 +291,7 @@ var dejarDeSeguirViaje = function(){
 	}
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
-			successMessage(jsonData.msg);//opcional
+			modalMessage('success',jsonData.msg);//opcional
 			data.loadData();
 		}else{
 			errorMessage(jsonData.msg);
@@ -299,14 +299,56 @@ var dejarDeSeguirViaje = function(){
 	}
 	sendAjax(sendJson,onsuccess);
 }
+
 var cancelarParticipacion = function(){
-	console.log("cancelarParticipacion");
+	var modalName='warning';
+	var confirmarCancelacion = function(){
+		closeModal(modalName);
+		var sendJson = {
+			action: "cancelar_participacion",
+			id_viaje: data.viaje.id
+		}
+		var onsuccess = function(jsonData){
+			if (jsonData.result){
+				data.loadData();
+			}else{
+				errorMessage(jsonData.msg);
+			}
+		}
+		sendAjax(sendJson,onsuccess);
+	}
+	var msg = "Al presionar en 'Cancelar Participación' usted será sancionado"
+		+" y podría perder su cuenta temporalmente."
+	var btn = document.createElement("BUTTON");       
+	btn.className="btn btn-danger dinamico";
+	btn.innerHTML = 'Confirmar cancelación';
+	btn.name = "confirmarCancelacion";
+	btn.onclick=confirmarCancelacion;
+	modalButton(modalName,btn);
+	modalMessage(modalName,msg);
 }
 var modificarViaje = function(){
-	console.log("modificarViaje");
+	window.open("modificar_viaje.html?id="+data.viaje.id,"_blanck");
 }
 var verPostulantes = function(){
-	console.log("verPostulantes");
+	// si hiciera un modal
+	/*
+	var sendJson = {
+		action: "ver_postulantes",
+		id_viaje: data.viaje.id
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			//a completar
+		}else{
+			errorMessage(jsonData.msg);
+		}
+	}
+	sendAjax(sendJson,onsuccess);
+	*/
+	
+	//si lo redirijo a listado_postulantes.html
+	window.open("listado_postulantes.html?id="+data.viaje.id,"_blanck");
 }
 
 var customAlert = function(panel,elemento,msg){
@@ -357,18 +399,29 @@ var generateAlert = function(msg){
 }
 
 //MODALS
+//eliminar elementos de modal que fueron generados dinamicamente
+$(document).on('hide.bs.modal', function (e) {
+  $(".dinamico").each(function(){
+	$(this).remove();
+  });
+});
 
 var errorMessage = function (textMsg) {
-	$('#errorMessage').text(textMsg);
-	$('#modalError').modal('show');
+	$('#error-message').text(textMsg);
+	$('#modal-error').modal('show');
 }
-var successMessage = function (textMsg) {
-	$('#successMessage').text(textMsg);
-	$('#modalSuccess').modal('show');
+var modalMessage = function (modalName,textMsg,titleMsg) {
+	$('#'+modalName+'-message').text(textMsg);
+	$('#modal-'+modalName).modal('show');
+}
+var modalButton = function(modalName,btn){
+	//$('#modal-'+modalName+' button[name='+btn.name+']').remove(); //si ya existe, elimino el elemento antes de crearlo
+	$('#modal-'+modalName+' .modal-footer').append(btn);
 }
 var closeModal = function (name) {
-	$('#modal' + name).modal('hide');
+	$('#modal-' + name).modal('hide');
 }
+
 
 // funciones robadas
 
@@ -378,15 +431,4 @@ function getUrlVars() {
 		vars[key] = value;
 	});
 	return vars;
-}
-
-function getCookie(nombreCookie) {
-    var nombre = nombreCookie + "=";
-    var propiedadesCookies = document.cookie.split(';');
-    for(var i=0; i<propiedadesCookies.length; i++) {
-        var c = propiedadesCookies[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(nombre) == 0) return c.substring(nombre.length,c.length);
-    }
-    return "";
 }
