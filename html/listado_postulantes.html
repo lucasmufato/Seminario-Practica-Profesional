@@ -22,11 +22,13 @@
 	-->
 	<script id="postulante-template" type="text/template">
 		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-0 col-lg-offset-0" >
-			<div class="panel panel-info">
-				<div class="panel-heading">
-				  <h3 class="panel-title">{{nombre_usuario}}<small> - Postulante</small></h3>
+			<div class="panel panel-{{color_panel}}">
+				<div class="panel-heading" data-toggle="collapse" data-target="#postulante-{{nombre_usuario}}" aria-expanded="true">
+					<div style="cursor:pointer"  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
+					  <h3 class="panel-title">{{nombre_usuario}} - {{estado_string}}</h3>
+					</div>
 				</div>
-				<div class="panel-body">
+				<div class="panel-body collapse in" id="postulante-{{nombre_usuario}}">
 					<div class="row">
 					
 						<div class="col-md-3 col-lg-3 " align="center"> 
@@ -67,9 +69,9 @@
 									</tr>
 								</tbody>
 							</table>
-							<div class="btn-group col-xs-12">
-								<button class="btn btn-danger col-xs-6"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
-								<button class="btn btn-success col-xs-6"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
+							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
+								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante()"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
+								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante()"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
 							</div>
 						</div>
 					</div>
@@ -98,22 +100,25 @@
 				
 			</div>
 
-			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  				<div class="modal-dialog modal-sm">
-    				<div class="modal-content">
-						<div class="modal-header">
-        					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        					<h4 class="modal-title" id="myModalLabel">Rechazo</h4>
-      					</div>
-      					<div class="modal-body">
-							Pasajero Rechazado
-     					 </div>
+			<div id="modal-error" class="modal fade">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content panel-danger">
+						<div class="modal-header panel-heading" >
+							<button type="button" class="close" onclick="closeModal('error')">&times;</button>
+							<h3 class="dialog-title"> Ha ocurrido un error</h3>
+						</div><!-- modal-header -->
+						<div class="modal-body">
+							<div id="error-message">
+								Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
+							</div>
+						</div><!-- modal-body -->
+
 						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-						</div>
-    				</div>
- 				 </div>
-			</div>
+							<button type="button" class="btn btn-danger" onclick="closeModal('error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+						</div><!-- .modal-footer -->
+					</div><!-- .modal-content -->
+				</div><!-- .modal-dialog -->
+			</div><!-- .modal -->
 		</div>
 
     </main>

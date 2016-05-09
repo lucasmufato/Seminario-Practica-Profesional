@@ -33,6 +33,7 @@ window.onload=initUI;
 
 var simular = function(){
 	postulantes = [{
+		estado: "1", //1: postulado, 2: aceptado, 3: rechazado
 		nombre_usuario: "Carolo4",
 		foto:"img/home/administracion_usuarios.png",
 		origen: "San Andres de Giles, Buenos Aires, Argentina",
@@ -42,6 +43,7 @@ var simular = function(){
 		telefono: "421154",
 		mail: "carolo4@gmail.com"
 	},{
+		estado: "2", //1: postulado, 2: aceptado, 3: rechazado
 		nombre_usuario: "KarinaK100",
 		foto:"upload/foto.jpg",
 		origen: "Navarro, Buenos Aires, Argentina",
@@ -51,6 +53,7 @@ var simular = function(){
 		telefono: "497673",
 		mail: "Karina234123@outlook.com"
 	},{
+		estado: "3",
 		nombre_usuario: "RodolfoU",
 		foto:"upload/foto.jpg",
 		origen: "Rosario, Santa Fe, Argentina",
@@ -66,9 +69,48 @@ var simular = function(){
 var cargarPostulantes = function(){
 	var template = $("#postulante-template").html();
 	postulantes.forEach(function(elem){
+		elem.estado_string = estadoString(elem.estado);
+		elem.color_panel = colorPanel(elem.estado);
 		var html = Mustache.render(template, elem);
 		$("#panel-postulantes").append(html);	
+		if (elem.estado != 1){
+			$("#botonera-postulante-"+elem.nombre_usuario+" button").css('visibility','hidden');
+			$("#postulante-"+elem.nombre_usuario).removeClass('in');
+		}
 	});
+}
+
+var aceptarPostulante = function(){
+	var sendData = {
+		action: "aceptar_postulante",
+		"id": idViaje
+	}
+	var onsuccess = function(jsonData){
+		if(jsonData.result){
+			$('.loadingScreen').fadeOut();
+			postulantes = jsonData.postulantes;
+			cargarPostulantes();
+		} else {
+			modalMessage("error",jsonData.msg,"Aceptar postulante");
+		}
+	}	
+	sendAjax(sendData,onsuccess);
+}
+var rechazarPostulante = function(){
+	var sendData = {
+		action: "rechazar_postulante",
+		"id": idViaje
+	}
+	var onsuccess = function(jsonData){
+		if(jsonData.result){
+			$('.loadingScreen').fadeOut();
+			postulantes = jsonData.postulantes;
+			cargarPostulantes();
+		} else {
+			modalMessage("error",jsonData.msg,"Rechazar postulante");
+		}
+	}	
+	sendAjax(sendData,onsuccess);
 }
 
 var sendAjax = function(sendData,callback){
@@ -91,7 +133,36 @@ var sendAjax = function(sendData,callback){
 	*/
 }
 
+var estadoString = function (caracter) {
+	switch (caracter) {
+		case '1': return "Postulado";
+		case '2': return "Aceptado";
+		case '3': return "Rechazado";
+		case null: return "No especificado";
+		default: return "Desconocido";
+	}
+}
 
+var colorPanel = function(caracter){
+	switch (caracter) {
+		case '1': return "info";
+		case '2': return "success";
+		case '3': return "danger";
+		case null: return "default";
+		default: return "default";
+	}
+}
+
+var modalMessage = function (modalName,textMsg,titleMsg) {
+	$('#'+modalName+'-message').text(textMsg);
+	if (titleMsg){
+		$('#modal-'+modalName+" .dialog-title").text(titleMsg);
+	}
+	$('#modal-'+modalName).modal('show');
+}
+var closeModal = function (name) {
+	$('#modal-' + name).modal('hide');
+}
 
 function getUrlVars() {
 	var vars = {};
