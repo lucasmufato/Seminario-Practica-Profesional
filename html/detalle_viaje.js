@@ -195,7 +195,7 @@ var cargarConductor = function(){
 
 function setearViajeComplemento(idComp){
 	if (idComp){
-		var link = "detalle_viaje(jas).html?id=" + idComp;
+		var link = "detalle_viaje.html?id=" + idComp;
 		$("#tipo").append(" <a href='"+link+"'><small>(complemento)</small></a>")
 	}
 }
@@ -328,7 +328,7 @@ var cancelarParticipacion = function(){
 	modalMessage(modalName,msg);
 }
 var modificarViaje = function(){
-	window.open("modificar_viaje.html?id="+data.viaje.id,"_blanck");
+	window.open("modificar_viaje.html?id="+data.viaje.id,"_blank");
 }
 var verPostulantes = function(){
 	// si hiciera un modal
@@ -348,7 +348,7 @@ var verPostulantes = function(){
 	*/
 	
 	//si lo redirijo a listado_postulantes.html
-	window.open("listado_postulantes.html?id="+data.viaje.id,"_blanck");
+	window.open("listado_postulantes.html?id="+data.viaje.id,"_blank");
 }
 
 var customAlert = function(panel,elemento,msg){

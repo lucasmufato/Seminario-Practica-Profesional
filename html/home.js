@@ -74,7 +74,7 @@ var buscarViaje = function(){
 }
 
 var verViajeDetallado = function(){
-	var linkViaje = "detalle_viaje(jas).html?id="+selectedId;
+	var linkViaje = "detalle_viaje.html?id="+selectedId;
 	console.log(linkViaje);
 	window.location = linkViaje;
 }

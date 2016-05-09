@@ -11,7 +11,7 @@ var loadData = function() {
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();
 			postulantes = jsonData.postulantes;
-			cargarPostulantes();
+			if (postulantes) cargarPostulantes();
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;// si no es conductor de este viaje, acceso denegado
 		}
@@ -63,21 +63,35 @@ var simular = function(){
 		telefono: "3434 15421154",
 		mail: "rodolfoU@hotmail.com"
 	}];
-	cargarPostulantes();
+	if (postulantes.length) cargarPostulantes();
 }
 
 var cargarPostulantes = function(){
 	var template = $("#postulante-template").html();
+	var htmlPendientes = "";
+	var htmlNoPendientes = "";
 	postulantes.forEach(function(elem){
 		elem.estado_string = estadoString(elem.estado);
 		elem.color_panel = colorPanel(elem.estado);
-		var html = Mustache.render(template, elem);
-		$("#panel-postulantes").append(html);	
-		if (elem.estado != 1){
-			$("#botonera-postulante-"+elem.nombre_usuario+" button").css('visibility','hidden');
-			$("#postulante-"+elem.nombre_usuario).removeClass('in');
+		if (elem.es_pendiente = elem.estado == 1){
+			htmlPendientes += Mustache.render(template, elem);
+		}else{
+			htmlNoPendientes += Mustache.render(template, elem);
 		}
 	});
+	if (htmlPendientes != "" && htmlNoPendientes != ""){
+		var html = "<div class=' col-md-6'>"
+			+htmlPendientes+
+		"</div>"+
+		"<div class=' col-md-6'>"
+			+htmlNoPendientes+
+		"</div>"
+	}else{
+		var html = "<div class='row col-xs-12 col-sm-12 col-md-12 col-lg-12' >"
+			+htmlPendientes+htmlNoPendientes+
+			"</div>";
+	}
+	$("#panel-postulantes").html(html);
 }
 
 var aceptarPostulante = function(){
@@ -111,6 +125,10 @@ var rechazarPostulante = function(){
 		}
 	}	
 	sendAjax(sendData,onsuccess);
+}
+
+var verViaje = function(){
+	window.open("detalle_viaje.html?id="+idViaje,"_blank");
 }
 
 var sendAjax = function(sendData,callback){

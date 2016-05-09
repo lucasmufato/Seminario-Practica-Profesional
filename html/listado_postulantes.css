@@ -14,4 +14,6 @@
 .table-user-information > tbody > tr > td {
     border-top: 0;
 }
-
+.panel{
+	overflow:hidden;
+}

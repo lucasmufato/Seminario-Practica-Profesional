@@ -21,14 +21,13 @@
 		y le agrego los parametros que definí mediante Mustache.
 	-->
 	<script id="postulante-template" type="text/template">
-		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-0 col-lg-offset-0" >
 			<div class="panel panel-{{color_panel}}">
-				<div class="panel-heading" data-toggle="collapse" data-target="#postulante-{{nombre_usuario}}" aria-expanded="true">
-					<div style="cursor:pointer"  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
+				<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#postulante-{{nombre_usuario}}" aria-expanded="true">
+					<div  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
 					  <h3 class="panel-title">{{nombre_usuario}} - {{estado_string}}</h3>
 					</div>
 				</div>
-				<div class="panel-body collapse in" id="postulante-{{nombre_usuario}}">
+				<div class="panel-body collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}">
 					<div class="row">
 					
 						<div class="col-md-3 col-lg-3 " align="center"> 
@@ -69,10 +68,12 @@
 									</tr>
 								</tbody>
 							</table>
+							{{#es_pendiente}}
 							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
 								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante()"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
 								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante()"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
 							</div>
+							{{/es_pendiente}}
 						</div>
 					</div>
 				</div>
@@ -87,17 +88,22 @@
 				</div>
 												-->
 			</div>
-		</div>
 	</script>
 </head>
 
 <body>
 
     <main>
-		<h1 class="text-center bg-primary">Postulantes</h1>
 		<div class="container-fluid">
-			<div class="row" id="panel-postulantes">
-				
+			<header class="">
+				<button class="btn btn-success btn-sm" onclick="verViaje()"><i class="glyphicon glyphicon-open"></i> Viaje</button>
+				<h1 class="text-center  bg-primary ">Postulantes</h1>
+			</header>
+
+			<div class="row " id="panel-postulantes">
+				<div class="jumbotron">
+				  <h4 class="text-center text-primary">Aún sin postulantes</h4>
+				</div>
 			</div>
 
 			<div id="modal-error" class="modal fade">
