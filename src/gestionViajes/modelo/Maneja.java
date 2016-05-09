@@ -43,6 +43,13 @@ public class Maneja {
 		
 	}
 
+	public Maneja(Cliente cliente2, Vehiculo vehiculo2) {
+		this.cliente=cliente2;
+		this.vehiculo=vehiculo2;
+		this.fecha_inicio=  new Date((new java.util.Date()).getTime());
+		this.fecha_fin=null;
+	}
+
 	public Cliente getCliente() {
 		return cliente;
 	}

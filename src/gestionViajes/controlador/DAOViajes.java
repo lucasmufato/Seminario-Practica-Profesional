@@ -9,11 +9,54 @@ import gestionViajes.modelo.*;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import otros.DataAccesObject;
+import otros.ExceptionViajesCompartidos;
 
 public class DAOViajes extends DataAccesObject {
 
     public DAOViajes(){
     	super();
+    }
+    
+    public boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{
+    	
+    	/* estructura del JSON datos:
+    	 * { "CONDUCTOR": ID_USUARIO,
+    	 * "VEHICULO":{FOTO,MARCA,MODELO, PATENTE,ANIO,AIRE_ACOND,SEGURO} FOTO,AIRE_ACOND Y SEGURO NO ESTAN EN EL DIAGRAMA DE CLASE, Q SE HACE?
+    	 * }
+    	 * 
+    	 * pasos a seguir:
+    	 * recupero el cliente, si no existe tiro error
+    	 * verifico si existe el auto (verifico por patente que es unique)
+    	 * 			si existe, segun los casos de uso no pasa nada :P jjajajaja, asi q tiro error y listo, 
+    	 * 						hay un caso de uso que dice "mantener conductores asociados", asi q ese tema se resuelve en otro metodo
+    	 * 		no existe el auto, lo creo
+    	 * 		creo la relacion Maneja
+    	 */
+    	Integer id_cliente=(Integer) datos.get("conductor");
+    	Cliente cliente=(Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+    	if(cliente==null){
+    		throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE!");
+    	}
+    	String patente= (String) datos.get("patente");
+    	Vehiculo vehiculo = (Vehiculo) this.buscarPorClaveCandidata("Vehiculo", patente);
+    	if(vehiculo!=null){
+    		throw new ExceptionViajesCompartidos("ERROR: EXISTE UN VEHICULO CON ESA PATENTE");
+    	}
+    	JSONObject datos_vehiculo= (JSONObject) datos.get("vehiculo");
+    	entitymanager.getTransaction( ).begin( );
+    	vehiculo = new Vehiculo();
+    	vehiculo.setAnio( (Integer)datos_vehiculo.get("anio") );
+    	vehiculo.setFecha_verificacion(null);
+    	vehiculo.setMarca( (String)datos_vehiculo.get("marca") );
+    	vehiculo.setModelo( (String)datos_vehiculo.get("modelo") );
+    	vehiculo.setPatente( (String)datos_vehiculo.get("patente") );
+    	//estos los pongo por q los pide la BD, abria q ir haciendo los enum
+    	vehiculo.setEstado('A');
+    	vehiculo.setVerificado('N');
+    	
+    	cliente.asignarVehiculo(vehiculo);    	
+    	entitymanager.getTransaction( ).commit( );	
+    	return true;
     }
     
 	public Cliente getConductorViaje(Integer id_viaje) {
