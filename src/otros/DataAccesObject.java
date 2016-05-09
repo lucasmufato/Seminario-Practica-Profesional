@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 public abstract class DataAccesObject {
@@ -12,7 +13,8 @@ public abstract class DataAccesObject {
 	protected EntityManager entitymanager;
 	
 	public DataAccesObject(){
-		
+		this.emfactory= Persistence.createEntityManagerFactory( "Viajes Compartidos" ); 
+    	this.entitymanager = emfactory.createEntityManager( );
 	}
 	
 
@@ -119,4 +121,16 @@ public abstract class DataAccesObject {
 			return null;
 		}
 	}
+	
+	public boolean cerrarConexiones(){
+		try{
+			this.emfactory.close();
+			this.entitymanager.close();
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+		
+	}
+	
 }
