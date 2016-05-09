@@ -13,7 +13,7 @@ INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUE
 INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "administrar_usuarios","administrar usuarios","permite ABM de usuarios","A");
 INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES(1,1,CURRENT_DATE);
 
-INSERT INTO LOCALIDADES_CLASIFICACION(codigo, nombre_clase) VALUES
+INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("A", "Ciudad/Estado/Región"),
 	("H", "Flujo de agua/Lago"),
 	("L", "Parque/Area"),
