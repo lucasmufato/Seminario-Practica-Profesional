@@ -156,5 +156,11 @@ public class Cliente extends Usuario implements JSONable {
 				+this.estado+" ,ID_Persona "+this.persona.getId_persona()+",tipo: "+this.tipo+" ,reputacion: "+this.reputacion+" ,puntos: "+this.puntos+
 				", "+this.foto+", "+this.foto_registro+" ]";
 	}
+
+	public boolean asignarVehiculo(Vehiculo vehiculo) {
+		Maneja maneja= new Maneja(this,vehiculo);
+		this.vehiculos.add(maneja);		
+		return true;
+	}
 	
 }
