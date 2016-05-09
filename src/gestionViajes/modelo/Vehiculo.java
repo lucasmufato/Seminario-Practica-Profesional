@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,7 +21,8 @@ import org.json.simple.JSONObject;
 import otros.JSONable;
 
 @NamedQueries({
-	
+@NamedQuery(name="Vehiculo.SearchById",query="SELECT veh FROM Maneja veh WHERE ( (m.id_vehiculo= :idveh) )"),//agregada por fede	
+@NamedQuery(name="Vehiculo.PorPatente",query="SELECT veh FROM Maneja veh WHERE ( (m.patente= :patente) )"),//agregada por fede	
 })
 @Entity
 @Table(name="vehiculo")
@@ -31,7 +33,7 @@ public class Vehiculo implements JSONable {
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorVehiculo", sequenceName = "sequence")
 	protected Integer id;
 	@Column(name="anio",nullable=false,length=10)
-	protected Integer año;
+	protected Integer anio;
 	@Column(nullable=false,length=30)
 	protected String marca;
 	@Column(nullable=false,length=30)
@@ -76,12 +78,12 @@ public class Vehiculo implements JSONable {
 		this.id = id;
 	}
 
-	public Integer getAño() {
-		return año;
+	public Integer getAnio() {
+		return anio;
 	}
 
-	public void setAño(Integer año) {
-		this.año = año;
+	public void setAnio(Integer anio) {
+		this.anio = anio;
 	}
 
 	public String getMarca() {

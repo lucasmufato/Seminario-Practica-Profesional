@@ -6,17 +6,47 @@ import org.json.simple.JSONObject;
 
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import otros.DataAccesObject;
 
 public class DAOViajes extends DataAccesObject {
 
-	public void getConductorViaje(Integer id_viaje) {
+    public DAOViajes(){
+    	super();
+    	emfactory= Persistence.createEntityManagerFactory( "Viajes Compartidos" ); 
+    	entitymanager = emfactory.createEntityManager( );
+    }
+    
+	public Cliente getConductorViaje(Integer id_viaje) {
 		// TODO Auto-generated method stub
-		
+                //agregado de fede
+                Cliente conductor = new Cliente();
+                Viaje v = new Viaje();
+                Query qry = entitymanager.createNamedQuery("Viaje.SearchById");
+    		qry.setParameter("id_viaje", id_viaje);
+    		v =(Viaje)qry.getSingleResult();
+                Maneja conductor_maneja = v.getConductor_vehiculo();
+                conductor = conductor_maneja.getCliente(); 
+                
+		return conductor;
+                //fin agregado fede
 	}
 	
-	public void getAutoViaje(Integer id_viaje) {
+	public Vehiculo getAutoViaje(Integer id_viaje) {
 		// TODO Auto-generated method stub
+                //agregado de fede
+                Cliente conductor = new Cliente();
+                Viaje v = new Viaje();
+                Vehiculo veh = new Vehiculo();
+                Query qry = entitymanager.createNamedQuery("Viaje.SearchById");
+    		qry.setParameter("id_viaje", id_viaje);
+    		v =(Viaje)qry.getSingleResult();
+                Maneja conductor_maneja = v.getConductor_vehiculo();
+                veh= conductor_maneja.getVehiculo();
+                
+		return veh;
+                //fin agregado fede
 		
 	}
 
@@ -35,8 +65,16 @@ public class DAOViajes extends DataAccesObject {
 
 	public Maneja buscarManeja(Integer id_cliente, Integer id_vehiculo){
 		//podria ser resuelto por un buscar por pk compuesta en el DAO general
-		//
-		return null;
+		//agregado fede
+                Maneja conductor_vehiculo = new Maneja();    
+                Query qry = entitymanager.createNamedQuery("Maneja.SearchById");
+    		qry.setParameter("id_cliente",id_cliente);
+                qry.setParameter("id_vehiculo",id_vehiculo);
+    		conductor_vehiculo =(Maneja)qry.getSingleResult();
+                
+                
+		return conductor_vehiculo;
+                //fin fede
 	}
 	
 	public Cliente GetConductorViaje(Integer id_viaje){
