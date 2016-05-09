@@ -19,11 +19,14 @@ import javax.persistence.Table;
 import org.json.simple.JSONObject;
 
 import gestionUsuarios.modelo.Cliente;
+import javax.persistence.NamedQuery;
 import otros.JSONable;
 
 @NamedQueries({
-	
+@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id_viaje = :id"),//agregada por fede
+    
 })
+
 @Entity
 @Table(name="viaje")
 public class Viaje implements JSONable {
@@ -55,11 +58,11 @@ public class Viaje implements JSONable {
 	@OneToMany(mappedBy="viaje", cascade=CascadeType.PERSIST)
 	protected List<PasajeroViaje> pasajeros;
 	
-	public void añadir_localidad( Localidad loc1, Localidad loc2){
+	public void aniadir_localidad( Localidad loc1, Localidad loc2){
 		
 	}
 	
-	public void añadir_pasajeroViaje (Integer id_cliente, Localidad subida, Localidad bajada){
+	public void aniadir_pasajeroViaje (Integer id_cliente, Localidad subida, Localidad bajada){
 		//el pasajeroViaje se crea con estado POSTULADO
 	}
 	
