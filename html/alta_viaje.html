@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Viajes Compartidos</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="common.css" />
+	<link rel="stylesheet" href="alta_viaje.css" />
+	
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src=""></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="navegacion.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+</head>
+<body>
+	<main>
+		<hr>
+		<div class="container-fluid">
+			<form class="form-horizontal">
+				<header class="bg-primary"><h3 class="pull-center">Crear Viaje</h3></header>
+				<div class="form-group" id="orgdest">
+					<label for="origen" class="control-label col-xs-3 col-sm-2 col-md-2 col-lg-2">Origen:</label>
+					<div class="col-xs-9 col-sm-9 col-md-3 col-lg-3">
+						<input type="text" class="form-control" id="origen" placeholder="Origen"></input>
+					</div>
+					<label for="destino" class="control-label col-xs-3 col-sm-2 col-md-1 col-lg-1">Destino:</label>
+					<div class="col-xs-9 col-sm-9 col-md-3 col-lg-3">
+						<input type="text" class="form-control" id="destino" placeholder="Destino"></input>
+					</div>
+				</div>
+				<div class="form-group" id="tipo">
+					<label for="tipo" class="control-label col-xs-3 col-sm-2 col-md-2 col-lg-2">Tipo de Viaje:</label>
+					<div class="col-xs-9 col-sm-9 col-md-3 col-lg-3">
+						<select class="form-control" name="" id="tipo">
+							<option value="">Ida</option>
+							<option value="">Ida y Vuelta</option>
+						</select>		
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-6" id="ida">
+						<h3 class="text-center">Ida</h3>
+						<div class="col-md-12" id="infov">
+							<label for="fecha" class="control-label col-md-2">Fecha:</label>
+							<div class="col-md-4">
+								<div class="input-group date form_date">
+									<input type="text" class="form-control" name="fecha" id="fecha">
+									<span class="input-group-addon " onclick="$('#fecha').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+							<label for="vehiculo" class="control-label col-md-2">Vehículo:</label>
+							<div class="col-md-4">	
+								<select class="form-control" name="" id="vehiculo">
+			 						<option value="">Vehículo1</option>
+									<option value="">Vehículo2</option>
+								</select>		
+							</div>
+						</div>
+						
+						<div class="col-md-12" id="asientos">
+							<label for="asientos" class="control-label col-md-2">Asientos libres:</label>
+							<div class="col-md-4">
+								<select class="form-control" name="" id="asientos">
+									<option value="">1</option>
+									<option value="">2</option>
+									<option value="">3</option>
+									<option value="">4</option>
+									<option value="">5</option>
+									<option value="">6</option>
+									<option value="">7</option>
+								</select>		
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6" id="vuelta">
+						<h3 class="text-center">Vuelta</h3>
+						<div class="col-md-12" id="infov">
+							<label for="fecha" class="control-label col-md-2">Fecha:</label>
+							<div class="col-md-4">
+								<div class="input-group date form_date">
+									<input type="text" class="form-control" name="fechahasta" id="fechahasta">
+									<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>					
+								</div>
+							</div>
+							<label for="vehiculo" class="control-label col-md-2">Vehículo:</label>
+							<div class="col-md-4">	
+								<select class="form-control" name="" id="vehiculo">
+			 						<option value="">Vehículo1</option>
+									<option value="">Vehículo2</option>
+								</select>		
+							</div>
+						</div>
+						
+						<div class="col-md-12" id="asientos">
+							<label for="asientos" class="control-label col-md-2">Asientos libres:</label>
+							<div class="col-md-4">
+								<select class="form-control" name="" id="asientos">
+									<option value="">1</option>
+									<option value="">2</option>
+									<option value="">3</option>
+									<option value="">4</option>
+									<option value="">5</option>
+									<option value="">6</option>
+									<option value="">7</option>
+								</select>		
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" id="puntos">
+					<label for="fecha" class="control-label col-xs-4 col-md-4">Puntos Intermedios:</label>
+					<div class="col-xs-4 col-md-4">
+						<input type="text" class="form-control" id="punto" placeholder=""></input>
+						<input type="text" class="form-control" id="punto" placeholder=""></input>
+						<input type="text" class="form-control" id="punto" placeholder=""></input>
+					</div>
+				</div>
+				<div class="form-group">
+				<div class="col-xs-offset-9 col-sm-offset-9 col-md-offset-10">
+					<button class="btn btn-primary">Crear</button>
+				</div>
+			</div>
+			</form>
+    	</div>
+	</main>
+</body>	
+</html>
