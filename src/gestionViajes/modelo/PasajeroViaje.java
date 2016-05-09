@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.Table;
@@ -43,11 +44,17 @@ public class PasajeroViaje implements JSONable {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected ComisionCobrada comision;
 	
-	@JoinColumn(name="id_localidad_bajada")
+	@JoinColumns({
+		@JoinColumn(name="id_localidad_bajada", referencedColumnName="id_localidad"),
+		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje")
+	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected LocalidadViaje localidad_bajada;
 	
-	@JoinColumn(name="id_localidad_subida")
+	@JoinColumns({
+		@JoinColumn(name="id_localidad_subida", referencedColumnName="id_localidad"),
+		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje")
+	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected LocalidadViaje localidad_subida;
 	
