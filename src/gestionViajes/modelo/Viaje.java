@@ -36,18 +36,18 @@ public class Viaje implements JSONable {
 	protected String nombre_amigable;
 	@Column(nullable=false)
 	protected Integer asientos_disponibles;
-	@Column(nullable=false,length=30)
+	@Column(nullable=false)
 	protected Character estado; 		//falta hacer el enum
 	@Column(nullable=false)
 	protected Date fecha_inicio;
 	@Column(nullable=false)
 	protected Date fecha_alta;
-	@Column(nullable=false)
+	@Column(nullable=true)
 	protected Date fecha_finalizacion;
-	@Column(nullable=false)
+	@Column(nullable=true)
 	protected Date fecha_cancelacion;
 
-	@JoinColumn(name="id_vehiculo")
+	@JoinColumn(name="id_maneja")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Maneja conductor_vehiculo;
 	@OneToMany(mappedBy="viaje", cascade=CascadeType.PERSIST)

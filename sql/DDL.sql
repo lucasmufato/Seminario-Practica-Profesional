@@ -124,7 +124,18 @@ CREATE TABLE COMISION_COBRADA (
 	monto DECIMAL (10, 2) NOT NULL,
 	id_comision INTEGER,
 	id_movimiento_saldo INTEGER,
-	id_pasajero_viaje INTEGER
+	id_pasajero_viaje INTEGER,
+
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE CALIFICACION (
+	id INTEGER AUTO_INCREMENT,
+	id_pasajero_viaje INTEGER,
+	calificacion_para_conductor INTEGER,
+	calificacion_para_pasajero INTEGER,
+	participo CHAR(1),
+	id_movimiento_puntos INTEGER,
 
 	PRIMARY KEY (id)
 );
@@ -178,11 +189,11 @@ CREATE TABLE LOCALIDAD_VIAJE (
 
 	PRIMARY KEY (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id),
-	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id)
+	FOREIGN KEY (id_localidad) REFERENCES LOCALIDADES (id)
 );
 
 CREATE TABLE PASAJERO_VIAJE (
-	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id INTEGER AUTO_INCREMENT,
 	id_viaje INTEGER NOT NULL,
 	id_cliente INTEGER NOT NULL,
 	kilometros FLOAT,
@@ -193,11 +204,10 @@ CREATE TABLE PASAJERO_VIAJE (
 	id_localidad_bajada INTEGER NOT NULL,
 	
 	PRIMARY KEY (id),
-	FOREIGN KEY (id_calificacion) REFERENCES CALIFICACION (id),
-	FOREIGN KEY (viaje) REFERENCES VIAJE (id),
-	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id),
+	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id),
+	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario),
 	FOREIGN KEY (id_comision_cobrada) REFERENCES COMISION_COBRADA (id),
-	FOREIGN KEY (id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id),
-	FOREIGN KEY (id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id)
+	FOREIGN KEY (id_viaje, id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad),
+	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)
 );
 

@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="localidadviaje")
+@Table(name="localidad_viaje")
 @IdClass(LocalidadViajeID.class)
 public class LocalidadViaje {
 
