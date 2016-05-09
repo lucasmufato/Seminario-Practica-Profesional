@@ -29,10 +29,10 @@ public class LocalidadViaje {
 	@Column(nullable=false)
 	protected Integer cantidad_pasajeros;
 	
-	@OneToMany(mappedBy="id_localidad_bajada", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="localidad_bajada", cascade=CascadeType.PERSIST)
 	protected List<PasajeroViaje> pasajeros_bajaron= new ArrayList<PasajeroViaje>();
 	
-	@OneToMany(mappedBy="id_localidad_subida", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="localidad_subida", cascade=CascadeType.PERSIST)
 	protected List<PasajeroViaje> pasajeros_subieron= new ArrayList<PasajeroViaje>();
 	
 	public LocalidadViaje(){
