@@ -46,14 +46,14 @@ public class PasajeroViaje implements JSONable {
 	
 	@JoinColumns({
 		@JoinColumn(name="id_localidad_bajada", referencedColumnName="id_localidad"),
-		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje")
+		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje", updatable=false, insertable=false)
 	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected LocalidadViaje localidad_bajada;
 	
 	@JoinColumns({
 		@JoinColumn(name="id_localidad_subida", referencedColumnName="id_localidad"),
-		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje")
+		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje", updatable=false, insertable=false)
 	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected LocalidadViaje localidad_subida;

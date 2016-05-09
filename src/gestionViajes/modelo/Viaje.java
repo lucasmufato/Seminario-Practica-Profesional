@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.OneToMany;
@@ -23,7 +24,7 @@ import javax.persistence.NamedQuery;
 import otros.JSONable;
 
 @NamedQueries({
-@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id_viaje = :id"),//agregada por fede
+@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id= :id"),//agregada por fede
     
 })
 
@@ -50,7 +51,10 @@ public class Viaje implements JSONable {
 	@Column(nullable=true)
 	protected Date fecha_cancelacion;
 
-	@JoinColumn(name="id_maneja")
+	@JoinColumns ({
+		@JoinColumn(name="id_cliente", referencedColumnName="id_usuario"),
+		@JoinColumn(name="id_vehiculo", referencedColumnName="id")
+	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Maneja conductor_vehiculo;
 	@OneToMany(mappedBy="viaje", cascade=CascadeType.PERSIST)
