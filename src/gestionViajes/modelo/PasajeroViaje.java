@@ -63,7 +63,7 @@ public class PasajeroViaje implements JSONable {
 	protected Viaje viaje;
 	
 	public PasajeroViaje(){
-		
+
 	}
 	
 	public Integer getId() {

@@ -16,7 +16,7 @@ import gestionUsuarios.modelo.Cliente;
 import javax.persistence.NamedQuery;
 
 @NamedQueries({
-@NamedQuery(name="Maneja.SearchById",query="SELECT m FROM Maneja m WHERE ( (m.id_conductor= :idc) AND (m.id_vehiculo= :idveh) )"),//agregada por fede	
+@NamedQuery(name="Maneja.SearchById",query="SELECT m FROM Maneja m WHERE ( ('m.id_conductor'= :idc) AND ('m.id_vehiculo'= :idveh) )"),//agregada por fede	
 })
 @Entity
 @Table(name="maneja")

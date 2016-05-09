@@ -23,7 +23,7 @@ import javax.persistence.NamedQuery;
 import otros.JSONable;
 
 @NamedQueries({
-@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id_viaje = :id"),//agregada por fede
+@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE 'v.id_viaje' = :id"),//agregada por fede
     
 })
 

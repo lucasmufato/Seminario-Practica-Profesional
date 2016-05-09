@@ -21,8 +21,8 @@ import org.json.simple.JSONObject;
 import otros.JSONable;
 
 @NamedQueries({
-@NamedQuery(name="Vehiculo.SearchById",query="SELECT veh FROM Maneja veh WHERE ( (m.id_vehiculo= :idveh) )"),//agregada por fede	
-@NamedQuery(name="Vehiculo.PorPatente",query="SELECT veh FROM Maneja veh WHERE ( (m.patente= :patente) )"),//agregada por fede	
+@NamedQuery(name="Vehiculo.SearchById",query="SELECT veh FROM Maneja veh WHERE ( ('m.id_vehiculo'= :idveh) )"),//agregada por fede	
+@NamedQuery(name="Vehiculo.PorPatente",query="SELECT veh FROM Maneja veh WHERE ( ('m.patente'= :patente) )"),//agregada por fede	
 })
 @Entity
 @Table(name="vehiculo")
