@@ -21,12 +21,20 @@ var loadData = function() {
 	sendAjax(sendData,onsuccess);
 }
 
-window.onload=loadData;
+var initUI = function(){
+	loadData();
+	$('[data-toggle="tooltip"]').tooltip(); 
+	
+}
+
+window.onload=initUI;
+
+
 
 var simular = function(){
 	postulantes = [{
 		nombre_usuario: "Carolo4",
-		foto:"upload/foto.jpg",
+		foto:"img/home/administracion_usuarios.png",
 		origen: "San Andres de Giles, Buenos Aires, Argentina",
 		destino: "Carmen de areco, Buenos Aires, Argentina",
 		apellido: "Perez",
@@ -56,7 +64,11 @@ var simular = function(){
 }
 
 var cargarPostulantes = function(){
-	
+	var template = $("#postulante-template").html();
+	postulantes.forEach(function(elem){
+		var html = Mustache.render(template, elem);
+		$("#panel-postulantes").append(html);	
+	});
 }
 
 var sendAjax = function(sendData,callback){

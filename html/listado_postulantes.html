@@ -3,6 +3,7 @@
 <head>
 	<title>Viajes Compartidos</title>
 	<meta charset="utf-8" />
+		<link rel="stylesheet" href="listado_postulantes.css" />
 	<link rel="stylesheet" href="common.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
@@ -10,35 +11,92 @@
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
+	<script type="text/javascript" src="js/mustache.js"></script>
+	
+	<!--
+		El siguiente script no corre (le asigno un type que no existe). 
+		Aqui escribo el codigo dinamico utilizado para crear un postulante. 
+		Luego lo llamo con 
+		$("#postulante-template").html() 
+		y le agrego los parametros que definí mediante Mustache.
+	-->
+	<script id="postulante-template" type="text/template">
+		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-0 col-lg-offset-0" >
+			<div class="panel panel-info">
+				<div class="panel-heading">
+				  <h3 class="panel-title">{{nombre_usuario}}<small> - Postulante</small></h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+					
+						<div class="col-md-3 col-lg-3 " align="center"> 
+							<a href="perfil.html?nombre={{nombre_usuario}}" data-original-title="Ver perfil" data-placement="bottom" data-toggle="tooltip"  class="thumbnail">
+								<img alt="foto de usuario" src="{{foto}}" class="img-responsive" style="max-height: 200px"> 
+							</a>
+						</div>
+						
+						<div class=" col-md-9 col-lg-9 "> 
+							<table class="table table-user-information">
+								<tbody>
+									<tr>
+										<td>Apellido:</td>
+										<td>{{apellido}}</td>
+									</tr>
+									<tr>
+										<td>Nombres:</td>
+										<td>{{nombres}}</td>
+									</tr>
+									<tr>
+										<td>Usuario:</td>
+										<td>{{nombre_usuario}}</td>
+									</tr>
+									<tr>
+										<td>Sube en:</td>
+										<td>{{origen}}</td>
+									</tr>
+									<tr>
+										<td>Baja en:</td>
+										<td>{{destino}}</td>
+									</tr>
+									<tr>
+										<td>Email</td>
+										<td><a href="mailto:{{mail}}">{{mail}}</a></td>
+									</tr>
+										<td>Telefono:</td>
+										<td>{{telefono}}</td>  
+									</tr>
+								</tbody>
+							</table>
+							<div class="btn-group col-xs-12">
+								<button class="btn btn-danger col-xs-6"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
+								<button class="btn btn-success col-xs-6"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
+							</div>
+						</div>
+					</div>
+				</div>
+												<!--
+				<div class="panel-footer">
+
+							<a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+							<span class="pull-right">
+								<a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+								<a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+							</span>
+				</div>
+												-->
+			</div>
+		</div>
+	</script>
 </head>
 
 <body>
 
     <main>
-		<h1 class="text-center">Postulantes</h1>
+		<h1 class="text-center bg-primary">Postulantes</h1>
 		<div class="container-fluid">
-			<div class="table-container col-md-12 col-lg-12">
-				<table id="resultadosviaje" class="table table-bordered table-hover table-condensed">
-					<thead>
-						<tr class="info">
-							<th class="col-lg-8">Pasajero</th>
-							<th class="col-lg-4">Reputación</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
+			<div class="row" id="panel-postulantes">
+				
 			</div>
-			<button class="btn btn-primary col-xs-offset-1 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
-				Ver Perfil
-			</button>
-			<button type="button" class="btn btn-danger col-xs-offset-1 col-sm-offset-4 col-md-offset-5 col-lg-offset-5" data-toggle="modal" data-target=".bs-example-modal-sm">
-				Rechazar
-			</button>	
-			<br><br><br>
-			<button class="btn btn-primary col-xs-offset-1 col-sm-offset-8 col-md-offset-9 col-lg-offset-9">
-				Aceptar
-			</button>
 
 			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
   				<div class="modal-dialog modal-sm">
