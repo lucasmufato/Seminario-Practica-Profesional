@@ -14,12 +14,9 @@ public class DAOViajes extends DataAccesObject {
 
     public DAOViajes(){
     	super();
-    	emfactory= Persistence.createEntityManagerFactory( "Viajes Compartidos" ); 
-    	entitymanager = emfactory.createEntityManager( );
     }
     
 	public Cliente getConductorViaje(Integer id_viaje) {
-		// TODO Auto-generated method stub
                 //agregado de fede
                 Cliente conductor = new Cliente();
                 Viaje v = new Viaje();
@@ -51,6 +48,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 
 	public void nuevoViaje(JSONObject datos) {
+		// TODO Auto-generated method stub
 		/*
 		 * crear viaje, crear localidad_viaje para orige,destino,puntos intermedio
 		 * asignar vehiculo, si tiene vuelta crear viaje de vuelta con los puntos invertidos y la fecha especificada
@@ -78,14 +76,17 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	public Cliente GetConductorViaje(Integer id_viaje){
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	public Vehiculo getVehiculoViaje(Integer id_viaje){
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	public void Cliente_se_postula_en_viaje(Integer id_viaje, Integer id_cliente){
+		// TODO Auto-generated method stub
 		/*
 		 * recuperar cliente
 		 * recuperar viaje
@@ -97,6 +98,8 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	public Integer comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje){
+
+		// TODO Auto-generated method stub
 		/*
 		 * levantar viaje
 		 * viaje.devolver_recorrido(inicio, destino)
@@ -107,6 +110,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	public List<Viaje> buscarViajes(JSONObject busqueda){
+		// TODO Auto-generated method stub
 		//crear query (campos obligatorios: origen, destino,fecha_desde)
 		return null;
 	}
