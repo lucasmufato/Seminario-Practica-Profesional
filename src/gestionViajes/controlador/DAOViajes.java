@@ -32,17 +32,19 @@ public class DAOViajes extends DataAccesObject {
     	 * 		no existe el auto, lo creo
     	 * 		creo la relacion Maneja
     	 */
+    	
     	Integer id_cliente=(Integer) datos.get("conductor");
     	Cliente cliente=(Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
     	if(cliente==null){
     		throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE!");
     	}
-    	String patente= (String) datos.get("patente");
+    	JSONObject datos_vehiculo= (JSONObject) datos.get("vehiculo");
+    	String patente= (String) datos_vehiculo.get("patente");
     	Vehiculo vehiculo = (Vehiculo) this.buscarPorClaveCandidata("Vehiculo", patente);
     	if(vehiculo!=null){
     		throw new ExceptionViajesCompartidos("ERROR: EXISTE UN VEHICULO CON ESA PATENTE");
     	}
-    	JSONObject datos_vehiculo= (JSONObject) datos.get("vehiculo");
+    	
     	entitymanager.getTransaction( ).begin( );
     	vehiculo = new Vehiculo();
     	vehiculo.setAnio( (Integer)datos_vehiculo.get("anio") );
