@@ -56,12 +56,6 @@ data.loadData = function() {
 }
 
 initUI = function() {
-	/* Bootstrap */
-	$('button').addClass('btn');
-	$('table').addClass('table table-hover');
-	$('input, select, textarea').addClass('form-control');
-	$('label').addClass('control-label');
-	/*-----------*/
 	data.loadData();
 };
 
@@ -190,7 +184,7 @@ var cargarConductor = function(){
 	$("#panel-foto-registro img").attr('src',data.conductor.foto_registro);
 	$("#reputacion").text(reputacionStars(data.conductor.reputacion));;
 	$("#nombreConductor").text(data.conductor.nombre_usuario);
-	$("#nombreConductor").attr('href',"perfil.html?=nombre_usuario="+data.conductor.nombre_usuario);
+	$("#nombreConductor").attr('href',"perfil.html?usuario="+data.conductor.nombre_usuario);
 }
 
 function setearViajeComplemento(idComp){
