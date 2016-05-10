@@ -23,7 +23,7 @@ import otros.JSONable;
 @NamedQueries({
 @NamedQuery(name="Vehiculo.SearchById",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.id= :idveh) )"),//agregada por fede	
 @NamedQuery(name="Vehiculo.PorPatente",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.patente= :patente) )"),//agregada por fede	
-@NamedQuery(name="Vehiculo.buscarPorClaveCandidata",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.patente= :clave_candidata) )")//agregada por lucas
+@NamedQuery(name="Vehiculo.buscarPorClaveCandidata",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.patente = :clave_candidata) )")//agregada por lucas
 })
 @Entity
 @Table(name="vehiculo")

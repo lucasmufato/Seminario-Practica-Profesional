@@ -22,7 +22,7 @@ public abstract class DataAccesObject {
     	try{
     		Query qry = entitymanager.createNamedQuery(clase+".buscarPorClaveCandidata");
     		qry.setParameter("clave_candidata", clave_candidata);
-    		return qry.getResultList();
+    		return qry.getSingleResult();
     		}catch(Exception e){
     			e.printStackTrace();
     			return null;
