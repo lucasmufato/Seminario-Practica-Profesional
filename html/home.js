@@ -12,50 +12,23 @@ initUI = function() {
 
 $(document).ready(function(){
 	initUI();
-	aux.clearSelectedRow($('#resultadosviaje tbody')[0]);
+	$("#panel-resultados").hide();
 });
 
 var showViajes = function(jsonData){
-
-	var tbody = $('#resultadosviaje tbody')[0];
-	var tr;
-	
-	tbody.innerHTML = '';
-
-	if (jsonData.viajes){
+	$("#panel-resultados").show();
+	var template = $("#viaje-template").html();
+	var html="";
+	if (jsonData.viajes.length){
 		jsonData.viajes.forEach(function (elem){
-			tr = document.createElement ('TR');
-
-			tr.appendChild (aux.td (elem.origen));
-			tr.appendChild (aux.td (elem.destino));
-			tr.appendChild (aux.td (elem.fecha_inicio));
-			tr.appendChild (aux.td (elem.hora));
-			tr.appendChild (aux.td (aux.estadoString(elem.estado)));
-			tr.appendChild (aux.td (elem.conductor));
-			tr.appendChild (aux.td (aux.reputacionStars(elem.reputacion),"reputacion"));
-
-			var thistr = tr;
-			tr.onclick = function () {
-				aux.clearSelectedRow (tbody);
-				selectedId = elem.id;
-				aux.enableButtons();
-				$(thistr).addClass('info');
-			}
-			tbody.appendChild(tr);
+			html += Mustache.render(template, elem);
 		});
 	}else{
-		var td;
-
-		tr = document.createElement ('TR');
-		td = document.createElement ('TD');
-		td.setAttribute ('colspan', 4);
-		td.textContent = "No se hay resultados para la busqueda";
-		td.className = "warning";
-	
-		tbody.appendChild (tr);
-		tr.appendChild (td);
+		html = 	"<div class='jumbotron'>"
+						+"<h4 class='text-center text-primary'>No hay resultados</h4>"
+					+"</div>"
 	}
-
+	$("#viajes-busqueda").html(html);
 }
 
 var buscarViaje = function(){
@@ -76,7 +49,7 @@ var buscarViaje = function(){
 var verViajeDetallado = function(){
 	var linkViaje = "detalle_viaje.html?id="+selectedId;
 	console.log(linkViaje);
-	window.location = linkViaje;
+	window.open(linkViaje,"_blank");
 }
 
 var sendForm = function (sendData, onsuccess) {
@@ -90,37 +63,45 @@ var sendForm = function (sendData, onsuccess) {
 			"origen" : "Luján",
 			"destino" : "Pilar",
 			"fecha_inicio" : "2016-05-17",
-			"hora" : "20:30", //podria ir incluido en fecha
-			"estado" : "2",
+			//"hora" : "20:30", //podria ir incluido en fecha
+			//"estado" : "2",
 			"conductor" : "Carlos Ruiz",
-			"reputacion" : 3 // yo lo sacaria.
+			//"reputacion" : "3",
+			"precio": "200",
+			"foto":"upload/foto.jpg"
 		},{
 			"id" : 10,
 			"origen" : "Jauregui",
 			"destino" : "La quiaca",
 			"fecha_inicio" : "2016-03-12",
-			"hora" : "12:30", //podria ir incluido en fecha
-			"estado" : "1",
+			//"hora" : "12:30", //podria ir incluido en fecha
+			//"estado" : "1",
 			"conductor" : "Lisandro Pedrera",
-			"reputacion" : 1 // yo lo sacaria.
+			//"reputacion" : "1",
+			"precio": "200",
+			"foto":"upload/foto.jpg"
 		},{
 			"id" : 123,
 			"origen" : "Navarro",
 			"destino" : "Navarro",
 			"fecha_inicio" : "2016-05-17",
-			"hora" : "15:23", //podria ir incluido en fecha
-			"estado" : "4",
+			//"hora" : "15:23", 
+			//"estado" : "4",
 			"conductor" : "Maria Cardenas",
-			"reputacion" : 3 // yo lo sacaria.
+			//"reputacion" : 3,
+			"precio": "456",
+			"foto":"img/home/administracion_usuarios.png"
 		},{
 			"id" : 2,
 			"origen" : "San Luis",
 			"destino" : "Rosario",
 			"fecha_inicio" : "2012-12-27",
-			"hora" : "20:30", //podria ir incluido en fecha
-			"estado" : "3",
+			//"hora" : "20:30", //podria ir incluido en fecha
+			//"estado" : "3",
 			"conductor" : "Renata Lopez",
-			"reputacion" : 5 // yo lo sacaria.
+			//"reputacion" : "5",
+			"precio": "290",
+			"foto":"upload/foto.jpg"
 		}]
 	};
 	onsuccess(jsonData);
@@ -148,13 +129,15 @@ var sendForm = function (sendData, onsuccess) {
 }
 
 aux = {};
+/*
 aux.td = function (text,className){
 	var td = document.createElement('TD');
 	td.appendChild(document.createTextNode(text));
 	if (className != undefined) {td.className = className;}
 	return td;
 }
-
+*/
+/*
 aux.clearSelectedRow = function (tbody) {
 	debugTBODY = tbody;
 	var i = 0;
@@ -166,7 +149,7 @@ aux.clearSelectedRow = function (tbody) {
 	aux.disableButtons ();
 	selectedId = null;
 }
-
+*/
 aux.disableButtons = function () {
 	$('#verViajeButton').prop('disabled', true);
 }

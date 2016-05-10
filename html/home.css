@@ -10,12 +10,11 @@
 	background: white;
 	z-index: 5000;
 }
-
-form header {
+form header{
 	margin-bottom: 1%;
 	margin-top: 0px;
 }
-header h3 {
+header h3,h5 {
 	text-align: center;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
@@ -25,4 +24,34 @@ header h3 {
 	margin-top:2%;
 	padding-bottom:1%;
 	background-color: #ecf0f1;
+}
+
+.conductor{
+	margin-top:15px;
+}
+article{			
+	margin-bottom:2%;
+	border-radius: 5px;
+	cursor:pointer;
+	background-color:#f3f9fc;
+	--background-color: hsl(240, 100%, 99%);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+	transition: box-shadow 0.3s ease-in-out;
+}
+.precio{
+	font-size:1.3em;
+}
+article:hover{
+	background-color: 	#e8f4fa;//#c1e2b3;//hsl(240, 100%, 98%);
+	box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+								  not supported by any browser */
 }
