@@ -179,7 +179,6 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		    //hago el commit del cambio
 		    entitymanager.getTransaction( ).commit( );
 		}catch(Exception e){
-			entitymanager.getTransaction( ).rollback();
 			e.printStackTrace();
 			return false;
 		}

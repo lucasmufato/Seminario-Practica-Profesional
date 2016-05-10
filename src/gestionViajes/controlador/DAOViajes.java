@@ -8,8 +8,11 @@ import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
+
 import otros.DataAccesObject;
 import otros.ExceptionViajesCompartidos;
+import otros.ManejadorErrores;
 
 public class DAOViajes extends DataAccesObject {
 
@@ -56,8 +59,14 @@ public class DAOViajes extends DataAccesObject {
     	vehiculo.setEstado('A');
     	vehiculo.setVerificado('N');
     	
-    	cliente.asignarVehiculo(vehiculo);    	
-    	entitymanager.getTransaction( ).commit( );	
+    	cliente.asignarVehiculo(vehiculo); 
+    	try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+    	
     	return true;
     }
     
