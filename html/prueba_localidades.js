@@ -59,7 +59,7 @@ initMapa = function () {
 	});
 	
 	mapData.directionsService = new google.maps.DirectionsService();
-	mapData.directionsDisplay = new google.maps.DirectionsRenderer();
+	mapData.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	mapData.directionsDisplay.setMap (mapData.map);
 }
 
