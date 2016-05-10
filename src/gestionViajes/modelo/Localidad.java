@@ -4,25 +4,32 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
 
 import otros.JSONable;
 
-@NamedQueries({
-	
-})
 @Entity
 @Table(name="localidad")
+@NamedQueries({
+	@NamedQuery(name="Localidad.autocompletar",query="SELECT l FROM Localidad l WHERE l.nombre LIKE :busqueda AND l.clasificacion='P'")
+})
 public class Localidad implements JSONable {
 
 	@Id
 	protected Integer id;
 	@Column(nullable=false)
-	protected Double latitud;
+	protected Double lat;
 	@Column(nullable=false)
-	protected Double longuitud;
+	protected Double lng;
+	@Column(nullable=false,length=200)
+	protected String nombre;
+	@Column(nullable=true,length=200)
+	protected String nombre_ascii;
+	@Column(nullable=true)
+	protected Character clasificacion;
 	
 	public Localidad(){
 		
@@ -37,19 +44,43 @@ public class Localidad implements JSONable {
 	}
 
 	public Double getLatitud() {
-		return latitud;
+		return lat;
 	}
 
 	public void setLatitud(Double latitud) {
-		this.latitud = latitud;
+		this.lat = latitud;
 	}
 
-	public Double getLonguitud() {
-		return longuitud;
+	public Double getLongitud() {
+		return lng;
 	}
 
-	public void setLonguitud(Double longuitud) {
-		this.longuitud = longuitud;
+	public void setLongitud(Double longitud) {
+		this.lng = longitud;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getNombreAscii() {
+		return nombre_ascii;
+	}
+
+	public void setNombreAscii(String nombre_ascii) {
+		this.nombre_ascii = nombre_ascii;
+	}
+
+	public Character getClasificacion() {
+		return clasificacion;
+	}
+
+	public void setClasificacion(Character clasificacion) {
+		this.clasificacion = clasificacion;
 	}
 
 	@Override

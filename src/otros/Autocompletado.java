@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import gestionUsuarios.controlador.*;
 import gestionUsuarios.modelo.*;
+import gestionViajes.controlador.*;
+import gestionViajes.modelo.*;
 import otros.*;
 
 public class Autocompletado extends HttpServlet {
@@ -45,6 +47,17 @@ public class Autocompletado extends HttpServlet {
 				item.put("name", persona.getNombres()+ " " + persona.getApellidos() + ": " + persona.getNro_doc());
 				encontrados.add(item);
 				
+			}
+		} else if (entity.equals("localidad")) {
+			List<Localidad> resultados;
+			resultados = (List<Localidad>) dao.autocompletar("Localidad", busqueda);
+			for (Localidad localidad: resultados) {
+				JSONObject item = new JSONObject();
+				item.put("id", localidad.getId());
+				item.put("name", localidad.getNombre());
+				item.put("lat", localidad.getLatitud());
+				item.put("lng", localidad.getLongitud());
+				encontrados.add(item);
 			}
 		}
 
