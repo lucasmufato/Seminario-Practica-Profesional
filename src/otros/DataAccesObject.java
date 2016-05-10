@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 
 public abstract class DataAccesObject {
 	
@@ -17,7 +18,17 @@ public abstract class DataAccesObject {
     	this.entitymanager = emfactory.createEntityManager( );
 	}
 	
-
+	public void vaciarTabla(String nombre_tabla){
+		try{
+			this.entitymanager.getTransaction().begin();
+			Query q=this.entitymanager.createQuery("DELETE FROM "+nombre_tabla+" e ");
+			q.executeUpdate();
+			this.entitymanager.getTransaction().commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
     public Object buscarPorClaveCandidata(String clase, Object clave_candidata){
     	try{
     		Query qry = entitymanager.createNamedQuery(clase+".buscarPorClaveCandidata");
@@ -42,39 +53,39 @@ public abstract class DataAccesObject {
 	}
 
 	//guarda en la BD cualquier objeto que le pases, puede explotar por FK, restricciones de la BD, etc
-	public boolean persistir(Object o) {
-		try{
-			 entitymanager.getTransaction( ).begin( );
-			 entitymanager.persist(o);
-			 entitymanager.getTransaction( ).commit( );	
-			 return true;
-		}catch(Exception e){
-			System.out.println("mensaje de causa de la excepcion: "+e.getCause());
-			System.out.println("fin mjs excepcion");
-			e.printStackTrace();
-			return false;
-		}
+	public boolean persistir(Object o) throws ExceptionViajesCompartidos {
+		
+		 entitymanager.getTransaction( ).begin( );
+		 entitymanager.persist(o);
+		 try{
+	    		entitymanager.getTransaction( ).commit( );
+	    		return true;
+	    	}catch(RollbackException e){
+	    		String error= ManejadorErrores.parsearRollback(e);
+	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+	    	}
+		
 	}
 	
 	//borra de la BD el registro con esa PK, la PK puede ser compuesta, como la de PermisoRol
 	//en ese caso su primarkey es un objeto del tipo PermiosRolID seteado con los ID correctos
 	//en caso de claves comunes, se puede pasar un integer y funca bien.
-	public boolean deletePorPrimaryKey(Object o, Object primaryKey){
+	public boolean deletePorPrimaryKey(Object o, Object primaryKey) throws ExceptionViajesCompartidos{
 		try{
 			Object r= entitymanager.find((o).getClass(), primaryKey);
 		    entitymanager.getTransaction( ).begin( );
 		    entitymanager.remove(r);
 		    entitymanager.getTransaction( ).commit( );	
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
+		}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
 	    return true;
 	}	
 
 	// este metodo recibe un objeto, este debe sobreescribir otro en la BD. primero se busca el original por la clave primaria,
 	//y despues al original se le cambian los valores con los del objeto recibido.
-	public boolean actualizar(JSONable o) {
+	public boolean actualizar(JSONable o) throws ExceptionViajesCompartidos {
 		entitymanager.getTransaction( ).begin( );
 		try{
 			Query q2 = entitymanager.createNamedQuery((o).getClass().getSimpleName()+".SearchById");
@@ -82,11 +93,10 @@ public abstract class DataAccesObject {
 		    JSONable original=(JSONable)q2.getSingleResult();		//tengo el valor original
 		    original.SetJSONObject(o.toJSON());						//reemplazo los DATOS del original por los nuevo, el original sigue teniendo su ID
 		    entitymanager.getTransaction( ).commit( );
-		}catch(Exception e){
-			 entitymanager.getTransaction( ).rollback();
-			e.printStackTrace();
-			return false;
-		}
+		}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
 	    return true;
 	}
 	
@@ -98,8 +108,6 @@ public abstract class DataAccesObject {
 		    q2.setParameter("id", o.getPrimaryKey());
 		   nuevo=q2.getSingleResult();
 		}catch(Exception e){
-			 entitymanager.getTransaction( ).rollback();
-			e.printStackTrace();
 			return null;
 		}
 		return nuevo;

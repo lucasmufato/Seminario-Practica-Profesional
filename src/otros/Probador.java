@@ -107,7 +107,7 @@ public class Probador {
 	}
 	
 	@SuppressWarnings("unused")
-	private void inicializar(){
+	private void inicializar() throws ExceptionViajesCompartidos{
 		//este metodo sirve para llenar la BD de instancias!
 		//ejecutar una sola ves por q va a explotar diciendo q ya existen las clases
 		
@@ -216,7 +216,7 @@ public class Probador {
 	    System.out.println(dao.asignarRolAUsuario(4, 1));
 	}
 	
-	public void DAOEliminarClaveCompuesta(){
+	public void DAOEliminarClaveCompuesta() throws ExceptionViajesCompartidos{
 		//para borrar un registro de la tabla intermedia entre usuario y rol
 		dao.deletePorPrimaryKey(new UsuarioRol(), new UsuarioRolID(1,1));
 		//para borrar un registro de la tabla intermedia entre permiso y rol
@@ -239,7 +239,7 @@ public class Probador {
 	}
 
 	@SuppressWarnings("unused")
-	private void DAOActualizar(){ //si actualizas un registro y queda igual q antes, no lo guarda
+	private void DAOActualizar() throws ExceptionViajesCompartidos{ //si actualizas un registro y queda igual q antes, no lo guarda
 		Rol r= new Rol();
 		r.setId_rol(2);
 		r.setDescripcion("mica");
@@ -250,7 +250,7 @@ public class Probador {
 	}
 	
 	@SuppressWarnings("unused")
-	private void DAOpersistir(){
+	private void DAOpersistir() throws ExceptionViajesCompartidos{
 		System.out.println("voy a persistir una entidad");
 		Permiso p = new Permiso();
 		p.setDescripcion("administrar_usuarios");
