@@ -162,5 +162,19 @@ public class Cliente extends Usuario implements JSONable {
 		this.vehiculos.add(maneja);		
 		return true;
 	}
+
+	public boolean puedeManejar(Vehiculo vehiculo) {
+		for(Maneja m: this.vehiculos){
+			//si es el vehiculo q busco
+			if(vehiculo.getId() == m.getVehiculo().getId()){
+				//si todavia puede manejarlo
+				if(m.getFecha_fin()==null){
+					return true;
+				}
+			}
+		}
+		//si llego aca es por q no podia manejar un vehiculo con ese id
+		return false;
+	}
 	
 }

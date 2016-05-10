@@ -10,6 +10,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import gestionUsuarios.modelo.Cliente;
+import gestionViajes.modelo.*;
 import junit.framework.TestCase;
 import otros.ExceptionViajesCompartidos;
 
@@ -37,9 +39,7 @@ public class TestViaje extends TestCase {
 		//este metodo se ejecuta antes de cada "parte" del test, osea antes de cada metodo
 		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno
 		
-		//PODRIA IR CON CODIGO QUE LIMPIE LA BD PARA Q PARA TODOS LOS TEST QUEDE DE LA MISMA FORMA
-		//ASI SI CORRES 2 VECES UN TEST Q CREA UN AUTO, NO VA A EXPLOTAR POR QUE EL AUTO YA EXISTE
-		//QUE EL AUTO EXPLOTE POR Q YA HAY OTRO SERIA OTRO TEST, QUE HAGA LOS 2 AUTOS Y LOS QUIERA GUARDAR
+		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
 		
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
@@ -87,14 +87,24 @@ public class TestViaje extends TestCase {
 	public void testNuevoViajeCorrecto() {
 		//test q envie un json correcto y tendria q andar bien
 		JSONObject json= new JSONObject();
-		this.daoviajes.nuevoViaje(json);
+		try {
+			this.daoviajes.nuevoViaje(json);
+		} catch (ExceptionViajesCompartidos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	public void testNuevoViajeDatosIncorrecto() {
 		//teste que envia un json incorrecto y tendria q mostrar un error de alguna forma
 		JSONObject json= new JSONObject();
-		this.daoviajes.nuevoViaje(json);
+		try {
+			this.daoviajes.nuevoViaje(json);
+		} catch (ExceptionViajesCompartidos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -107,7 +117,42 @@ public class TestViaje extends TestCase {
 	public void testgetConductorViajeIncorrecto() {
 		//test q envie un viaje que no existe
 		JSONObject json= new JSONObject();
-		this.daoviajes.nuevoViaje(json);
+		try {
+			this.daoviajes.nuevoViaje(json);
+		} catch (ExceptionViajesCompartidos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testbuscarManejar() {	//test q buscar en la tabla Maneja
+		
+		//lleno el json con datos q son correctos
+		JSONObject json= new JSONObject();
+		json.put("conductor", 2);
+		JSONObject vehiculo= new JSONObject();
+		vehiculo.put("patente", "abd123");
+		vehiculo.put("anio", 1992);
+		vehiculo.put("modelo", "viejo");
+		vehiculo.put("marca", "mondeo");
+		json.put("vehiculo", vehiculo);
+		
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+			//recupero el vehiculo
+			Cliente c= (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);
+			Vehiculo auto=(Vehiculo)this.daoviajes.buscarPorClaveCandidata("Vehiculo", "abd123");
+			Integer id_auto=auto.getId();
+			//ahora pruebo el metodo 
+			Maneja maneja=(Maneja)this.daoviajes.buscarPorIDCompuesta("Maneja", c, auto);
+			assertNotNull(maneja);
+			System.out.println(maneja);
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

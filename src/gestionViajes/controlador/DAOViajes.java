@@ -101,7 +101,7 @@ public class DAOViajes extends DataAccesObject {
 		
 	}
 
-	public void nuevoViaje(JSONObject datos) {
+	public void nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {
 		// TODO Auto-generated method stub
 		/*
 		 * crear viaje, crear localidad_viaje para orige,destino,puntos intermedio
@@ -112,7 +112,33 @@ public class DAOViajes extends DataAccesObject {
 		 * asignar maneja
 		 * 
 		 */
+		/*
+		EL JSON QUE RECIBE EL METODO TENDRIA LA SIGUIENTE FORMA:
+		 { "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
+		 "VEHICULO": ID_VEHICULO,
+		 "VIAJE": {FECHA_SALIDA, HS_SALIDA, CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE, COSTO_VIAJE},
+		 "VUELTA": {FECHA_SALIDA,HS_SALIDA,CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE},
+		 "CLIENTE":ID_CLIENTE
+		 }
+		*/
+		/*
+		Integer id_cliente= (Integer) datos.get("cliente");
+		Cliente cliente= (Cliente)this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if (cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+		Integer id_vehiculo = (Integer) datos.get("vehiculo");
+		Vehiculo vehiculo = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), id_vehiculo);
+		if(vehiculo==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO NO EXISTE");
+		}
+		//METODO QUE VERIFICA SI UN CLIENTE TIENE UNA RELACION ACTUAL CON ESE VEHICULO
+		if( cliente.puedeManejar(vehiculo)==false ){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
+		}
 		
+		Maneja maneja=(Maneja) this.buscarPorIDCompuesta("Maneja",id_cliente,id_vehiculo);
+		*/
 	}
 
 	public Maneja buscarManeja(Integer id_cliente, Integer id_vehiculo){

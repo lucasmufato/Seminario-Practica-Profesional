@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
+import otros.ExceptionViajesCompartidos;
 public class ServletViaje extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -40,7 +41,11 @@ public class ServletViaje extends HttpServlet {
 		 "CLIENTE":ID_CLIENTE
 		 		 
 		 */
-		daoViajes.nuevoViaje(datos);
+		try {
+			daoViajes.nuevoViaje(datos);
+		} catch (ExceptionViajesCompartidos e) {
+			//ENVIA MENSAJE DE ERROR CON e.getMessage();
+		}
 		return null;
 	}
 	

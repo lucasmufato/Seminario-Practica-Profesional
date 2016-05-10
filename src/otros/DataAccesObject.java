@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
@@ -18,12 +19,31 @@ public abstract class DataAccesObject {
     	this.entitymanager = emfactory.createEntityManager( );
 	}
 	
+	//
+	public Object buscarPorIDCompuesta(String nombre_clase,Object id_1,Object id_2){
+		try{
+			Query q2 = entitymanager.createNamedQuery(nombre_clase+".SearchByIdCompuesto");
+		    q2.setParameter("id_1", id_1);
+		    q2.setParameter("id_2", id_2);
+		    return q2.getSingleResult();
+		}catch(NoResultException e){
+			System.out.println("no hubo resultados");
+			return null;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//ESTE METODO RECIVE EL NOMBRE DE UNA CLASE/TABLA Y LA VACIA DE LA BD
 	public void vaciarTabla(String nombre_tabla){
 		try{
 			this.entitymanager.getTransaction().begin();
 			Query q=this.entitymanager.createQuery("DELETE FROM "+nombre_tabla+" e ");
 			q.executeUpdate();
 			this.entitymanager.getTransaction().commit();
+		}catch(NoResultException e){
+			System.out.println("no hubo resultados");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -34,10 +54,13 @@ public abstract class DataAccesObject {
     		Query qry = entitymanager.createNamedQuery(clase+".buscarPorClaveCandidata");
     		qry.setParameter("clave_candidata", clave_candidata);
     		return qry.getSingleResult();
-    		}catch(Exception e){
-    			e.printStackTrace();
-    			return null;
-    		}
+    	}catch(NoResultException e){
+    		System.out.println("no hubo resultados");
+    		return null;
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		return null;
+    	}
     }
     
     //devuelve una lista con todos los objetos de esa clase
