@@ -18,7 +18,7 @@ import otros.JSONable;
 public class PrecioComision implements JSONable {
 
 	@Id
-	protected Integer id;
+	protected Integer id_comision;
 	protected Date fecha;
 	protected float Monto;
 	

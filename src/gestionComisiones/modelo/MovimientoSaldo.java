@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class MovimientoSaldo {
 	
 	@Id
-	protected Integer id;
+	protected Integer id_movimiento_saldo;
 	protected Date fecha;
 	protected float monto;
 	
@@ -28,11 +28,11 @@ public class MovimientoSaldo {
 	}
 
 	public Integer getId() {
-		return id;
+		return id_movimiento_saldo;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_movimiento_saldo = id;
 	}
 
 	public Date getFecha() {

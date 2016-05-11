@@ -19,7 +19,7 @@ import otros.JSONable;
 public class Localidad implements JSONable {
 
 	@Id
-	protected Integer id;
+	protected Integer id_localidad;
 	@Column(nullable=false)
 	protected Double lat;
 	@Column(nullable=false)
@@ -36,11 +36,11 @@ public class Localidad implements JSONable {
 	}
 	
 	public Integer getId() {
-		return id;
+		return id_localidad;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_localidad = id;
 	}
 
 	public Double getLatitud() {

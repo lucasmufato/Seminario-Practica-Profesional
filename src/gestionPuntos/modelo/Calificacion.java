@@ -18,7 +18,7 @@ import otros.JSONable;
 public class Calificacion implements JSONable {
 
 	@Id
-	protected Integer id;
+	protected Integer id_calificacion;
 	protected Integer calificacion_otorgada;
 	protected Integer calificacion_recibida;
 	protected Character participo;
@@ -33,12 +33,12 @@ public class Calificacion implements JSONable {
 	
 	
 	public Integer getId() {
-		return id;
+		return id_calificacion;
 	}
 
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_calificacion = id;
 	}
 
 

@@ -27,9 +27,12 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-3 col-lg-3" align="center">
-									<img alt="Foto Perfil" src="http://img129.imagevenue.com/loc893/th_43867_perro_con_peluca_122_893lo.jpg" class="img-circle img-responsive" style="max-height: 200px"> 
 									<div class="col-md-12">
 										<p id="reputacion" class="reputacion">★★★★★</p>
+									</div>
+									<img id="foto_perfil" alt="Foto Perfil" src="http://img129.imagevenue.com/loc893/th_43867_perro_con_peluca_122_893lo.jpg" class="img-circle img-responsive" style="max-height: 200px">
+									<div>
+										<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_perfil" accept="image/*"></span>
 									</div>
 								</div>
 								<div class=" col-md-9 col-lg-9 ">
@@ -57,15 +60,15 @@
 											</tr>
 											<tr>
 												<td><strong>Domicilio:</strong></td>
-												<td><input type="text" class="form-control" placeholder="Plataforma 9 3/4" disabled></td>
+												<td><input type="text" class="form-control" placeholder="" value="Plataforma 9 3/4" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>E-mail:</strong></td>
-												<td><input type="text" class="form-control" placeholder="prueba189635@gmail.com" disabled></td>
+												<td><input type="text" class="form-control" placeholder="" value="prueba189635@gmail.com" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Teléfono:</strong></td>
-												<td><input type="text" class="form-control" placeholder="2222444466" disabled></td>
+												<td><input type="text" class="form-control" placeholder="" value="2222444466" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Sexo:</strong></td>
@@ -73,17 +76,21 @@
 											</tr>
 											<tr>
 												<td><strong>Registro de conducir:</strong></td>
-												<td><img alt="Foto Registro" src="http://www.venado24.com.ar/archivos24/uploads/2015/08/disp96-01.jpg" class="img-responsive" style="max-height: 160px"> </td>
-											</tr>
-
+												<td align="center">
+												<img alt="Foto Registro" src="http://www.venado24.com.ar/archivos24/uploads/2015/08/disp96-01.jpg" class="img-responsive" style="max-height: 160px">
+												<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_registro" accept="image/*"></span>
+												</td>
+											</tr>	
 										</tbody>
 									</table>
-									<button class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span> Puntos</button>
-									<button class="btn btn-success"><span class="glyphicon glyphicon-piggy-bank"></span> Saldo</button>
 	                			</div>
 							</div>
+							<div align="center">
+								<button class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span> Puntos</button>
+								<button class="btn btn-success"><span class="glyphicon glyphicon-piggy-bank"></span> Saldo</button>
+							</div>
 	            		</div>
-						<div class="panel-footer">
+						<div class="panel-footer clearfix">
 							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Desactivar Cuenta</button>
 							<span class="pull-right">
 								<button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							

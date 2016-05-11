@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Viajes Compartidos</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="common.css" />
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="calificar_usuarios.css">
+
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="calificar_usuarios.js"></script>
+	<script type="text/javascript" src="navegacion.js"></script>
+	<script type="text/javascript" src="js/mustache.js"></script>
+
+	<script id="postulante-template" type="text/template">
+			<div class="panel panel-{{color_panel}}">
+				<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#postulante-{{nombre_usuario}}" aria-expanded="true">
+					<div  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
+					  <h3 class="panel-title">{{nombre_usuario}}</h3>
+					</div>
+				</div>
+				<div class="panel-body collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}">
+					<div class="row">
+						<div class="col-md-3 col-lg-3 " align="center"> 
+							<a href="perfil.html?usuario={{nombre_usuario}}" data-original-title="Ver perfil" data-placement="bottom" data-toggle="tooltip"  class="thumbnail">
+								<img alt="foto de usuario" src="{{foto}}" class="img-responsive" style="max-height: 200px"> 
+							</a>
+						</div>
+						<div class=" col-md-9 col-lg-9 "> 
+							<div class="estrellitas form-group col-md-9 col-lg-9">
+								<label for="clasifica" class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Calificación: </label>
+								<p class="clasificacion col-xs-4 col-sm-2 col-md-5 col-lg-5" id="clasifica">
+									<input id="radio1" type="radio" name="estrellas" value="5">
+									<label for="radio1">★</label>
+									<input id="radio2" type="radio" name="estrellas" value="4">
+									<label for="radio2">★</label>
+									<input id="radio3" type="radio" name="estrellas" value="3">
+									<label for="radio3">★</label>
+									<input id="radio4" type="radio" name="estrellas" value="2">
+									<label for="radio4">★</label>
+									<input id="radio5" type="radio" name="estrellas" value="1">
+									<label for="radio5">★</label>
+				 				</p>
+							</div>
+							<div class="form-group col-md-9 col-lg-9">
+								<label class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Deje un comentario:</label>
+								<div class="col-xs-4 col-sm-2 col-md-5 col-lg-5">
+									<textarea class="form-control" rows="4"></textarea>
+								</div>
+							</div>
+							{{#es_pendiente}}
+							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
+								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante()"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
+								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante()"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
+							</div>
+							{{/es_pendiente}}
+						</div>
+					</div>
+				</div>
+												<!--
+				<div class="panel-footer">
+
+							<a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+							<span class="pull-right">
+								<a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+								<a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+							</span>
+				</div>
+												-->
+			</div>
+	</script>
+</head>
+
+<body>
+
+    <main>
+				<!--<div class="estrellitas form-group col-md-9 col-lg-9">
+					<label for="clasifica" class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Calificación: </label>
+					<p class="clasificacion col-xs-4 col-sm-2 col-md-5 col-lg-5" id="clasifica">
+						<input id="radio1" type="radio" name="estrellas" value="5">
+						<label for="radio1">★</label>
+						<input id="radio2" type="radio" name="estrellas" value="4">
+						<label for="radio2">★</label>
+						<input id="radio3" type="radio" name="estrellas" value="3">
+						<label for="radio3">★</label>
+						<input id="radio4" type="radio" name="estrellas" value="2">
+						<label for="radio4">★</label>
+						<input id="radio5" type="radio" name="estrellas" value="1">
+						<label for="radio5">★</label>
+	 				</p>
+				</div>
+				<div class="form-group col-md-9 col-lg-9">
+					<label class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Deje un comentario:</label>
+					<div class="col-xs-4 col-sm-2 col-md-5 col-lg-5">
+						<textarea class="form-control" rows="4"></textarea>
+					</div>
+				</div> -->
+		lahdjkashdak
+    </main>
+
+</div>
+
+</body>	
+</html>

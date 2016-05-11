@@ -25,7 +25,7 @@ import otros.JSONable;
 public class PasajeroViaje implements JSONable {
 
 	@Id
-	protected Integer id;
+	protected Integer id_pasajero_viaje;
 	@Column(nullable=true)
 	protected float kilometros;
 
@@ -67,11 +67,11 @@ public class PasajeroViaje implements JSONable {
 	}
 	
 	public Integer getId() {
-		return id;
+		return id_pasajero_viaje;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_pasajero_viaje = id;
 	}
 
 	public float getKilometros() {

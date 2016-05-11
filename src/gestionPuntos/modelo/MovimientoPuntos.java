@@ -17,7 +17,7 @@ import gestionUsuarios.modelo.Cliente;
 public class MovimientoPuntos {
 	
 	@Id
-	protected Integer id;
+	protected Integer id_movimiento_puntos;
 	protected Cliente cliente;
 	protected Date fecha;
 	protected Integer monto;
@@ -27,11 +27,11 @@ public class MovimientoPuntos {
 	}
 
 	public Integer getId() {
-		return id;
+		return id_movimiento_puntos;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_movimiento_puntos = id;
 	}
 
 	public Cliente getCliente() {
