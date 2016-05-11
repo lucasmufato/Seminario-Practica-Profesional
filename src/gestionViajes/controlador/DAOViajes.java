@@ -1,7 +1,12 @@
 package gestionViajes.controlador;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import gestionUsuarios.modelo.*;
@@ -101,7 +106,7 @@ public class DAOViajes extends DataAccesObject {
 		
 	}
 
-	public void nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {
+	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {
 		// TODO Auto-generated method stub
 		/*
 		 * crear viaje, crear localidad_viaje para orige,destino,puntos intermedio
@@ -121,14 +126,14 @@ public class DAOViajes extends DataAccesObject {
 		 "CLIENTE":ID_CLIENTE
 		 }
 		*/
-		/*
+		
 		Integer id_cliente= (Integer) datos.get("cliente");
 		Cliente cliente= (Cliente)this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if (cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
 		}
-		Integer id_vehiculo = (Integer) datos.get("vehiculo");
-		Vehiculo vehiculo = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), id_vehiculo);
+		String id_vehiculo = (String) datos.get("vehiculo");
+		Vehiculo vehiculo = (Vehiculo) this.buscarPorClaveCandidata("Vehiculo", id_vehiculo);
 		if(vehiculo==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO NO EXISTE");
 		}
@@ -136,14 +141,104 @@ public class DAOViajes extends DataAccesObject {
 		if( cliente.puedeManejar(vehiculo)==false ){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
 		}
+		this.entitymanager.getTransaction().begin();
+		//pongo quien es el conductor del viaje y en q vehiculo
+		Maneja maneja= this.buscarManeja(cliente, vehiculo);
+		Viaje viaje= new Viaje();
+		viaje.setConductor_vehiculo(maneja);
+		//seteo los otros datos
+		viaje.setFecha_inicio((Date) datos.get("fecha_inicio"));
+		viaje.setFecha_alta(new Date((new java.util.Date()).getTime()));
+		viaje.setFecha_cancelacion(null);
+		viaje.setFecha_finalizacion(null);
+		viaje.setEstado('a');		//falta hacer los enum	
 		
-		Maneja maneja=(Maneja) this.buscarPorIDCompuesta("Maneja",id_cliente,id_vehiculo);
-		*/
+		viaje.setAsientos_disponibles((Integer) datos.get("cantidad_asientos"));
+		viaje.setNombre_amigable((String) datos.get("nombre_amigable"));
+		//viaje.setCosto_viaje((String)datos.get("costo_viaje"));		//falta en viaje
+		
+		//creo el recorrido (lista de localidades) que tiene el viaje
+		// le JSON datos tiene un JSON que se llama localidades, q tiene origen, destino y todos los puntos intermedios
+		JSONObject localidades =(JSONObject) datos.get("localidades");
+		if(localidades==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTAN TODAS LAS LOCALIDADES DEL VIAJE");
+		}
+		Integer id_origen = (Integer) localidades.get("origen");
+		if(id_origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL ORIGEN DEL VIAJE");
+		}
+		Integer id_destino = (Integer) localidades.get("destino");
+		if(id_destino==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DESTINO DEL VIAJE");
+		}
+		JSONArray intermedios = (JSONArray) localidades.get("intermedios");
+		ArrayList<Localidad> recorrido= new ArrayList<Localidad>();
+		//armo la lista de localidades en ORDEN
+		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_origen) );
+		if(intermedios!=null){
+			for(Object o: intermedios){
+				recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), o) );			
+			}
+		}
+		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino) );
+		viaje.crearRecorrido(recorrido);
+		
+		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso
+		//los datos de la misma
+		JSONObject vuelta=(JSONObject) datos.get("vuelta");
+		if(vuelta!=null){
+			try{
+				this.entitymanager.persist(viaje);
+	    		entitymanager.getTransaction( ).commit( );	
+	    	}catch(RollbackException e){
+	    		String error= ManejadorErrores.parsearRollback(e);
+	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+	    	}
+			entitymanager.getTransaction().begin();
+			viaje.crearTuVuelta(vuelta);
+			try{
+	    		entitymanager.getTransaction( ).commit( );	
+	    	}catch(RollbackException e){
+	    		String error= ManejadorErrores.parsearRollback(e);
+	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+	    	}
+		}else{
+			viaje.setViaje_complementario(null);
+			this.entitymanager.persist(viaje);
+			try{
+	    		entitymanager.getTransaction( ).commit( );	
+	    	}catch(RollbackException e){
+	    		String error= ManejadorErrores.parsearRollback(e);
+	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+	    	}
+		}
+		
+
+		
+		return true;
+		
+		/*
+		 * if(vuelta!=null){
+			viaje.crearTuVuelta(vuelta);
+		}else{
+			viaje.setViaje_complementario(null);
+		}
+		this.entitymanager.persist(viaje);
+
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		return true;
+		 */
 	}
 
-	public Maneja buscarManeja(Integer id_cliente, Integer id_vehiculo){
+	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){
 		//podria ser resuelto por un buscar por pk compuesta en el DAO general
 		//agregado fede
+		/*
                 Maneja conductor_vehiculo = new Maneja();    
                 Query qry = entitymanager.createNamedQuery("Maneja.SearchById");
     		qry.setParameter("id_cliente",id_cliente);
@@ -152,6 +247,10 @@ public class DAOViajes extends DataAccesObject {
                 
                 
 		return conductor_vehiculo;
+		*/
+		//NO TE ENOJES FEDE, ESTE ESTA PROBADO, SI QUIERES PROBA EL TUYO Y REEMPLAZA A ESTE
+		Maneja maneja=(Maneja) this.buscarPorIDCompuesta("Maneja",id_cliente,id_vehiculo);
+		return maneja;
                 //fin fede
 	}
 	
@@ -220,5 +319,15 @@ public class DAOViajes extends DataAccesObject {
 	public void rechazarPasajero(Integer id_cliente_postulante, Integer id_viaje) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
+	public void borrarRelacionesEntreViajes() {
+		this.entitymanager.getTransaction().begin();
+		List<Viaje> viajes=this.selectAll("Viaje");
+		for(Viaje v: viajes){
+			v.setViaje_complementario(null);
+		}
+		this.entitymanager.getTransaction().commit();
 	}
 }

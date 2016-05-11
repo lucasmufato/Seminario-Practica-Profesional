@@ -39,6 +39,12 @@ public class LocalidadViaje {
 		
 	}
 
+	public LocalidadViaje(Viaje viaje, Localidad localidad) {
+		this.localidad=localidad;
+		this.viaje=viaje;
+		this.cantidad_pasajeros=0;
+	}
+
 	public Viaje getViaje() {
 		return viaje;
 	}

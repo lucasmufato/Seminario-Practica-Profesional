@@ -17,7 +17,7 @@ import gestionUsuarios.modelo.Cliente;
 public class Pago {
 	
 	@Id
-	protected Integer id;
+	protected Integer id_pago;
 	protected Date fecha;
 	protected float monto;
 	
@@ -29,11 +29,11 @@ public class Pago {
 	}
 
 	public Integer getId() {
-		return id;
+		return id_pago;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_pago = id;
 	}
 
 	public Date getFecha() {

@@ -21,7 +21,7 @@ import org.json.simple.JSONObject;
 import otros.JSONable;
 
 @NamedQueries({
-@NamedQuery(name="Vehiculo.SearchById",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.id= :idveh) )"),//agregada por fede	
+@NamedQuery(name="Vehiculo.SearchById",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.id_vehiculo= :idveh) )"),//agregada por fede	
 @NamedQuery(name="Vehiculo.PorPatente",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.patente= :patente) )"),//agregada por fede	
 @NamedQuery(name="Vehiculo.buscarPorClaveCandidata",query="SELECT veh FROM Vehiculo veh WHERE ( (veh.patente = :clave_candidata) )")//agregada por lucas
 })
@@ -32,7 +32,7 @@ public class Vehiculo implements JSONable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorVehiculo")
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorVehiculo", sequenceName = "sequence")
-	protected Integer id;
+	protected Integer id_vehiculo;
 	@Column(name="anio",nullable=false,length=10)
 	protected Integer anio;
 	@Column(nullable=false,length=30)
@@ -80,11 +80,11 @@ public class Vehiculo implements JSONable {
 	}
 	
 	public Integer getId() {
-		return id;
+		return id_vehiculo;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_vehiculo = id;
 	}
 
 	public Integer getAnio() {

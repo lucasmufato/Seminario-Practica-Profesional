@@ -88,7 +88,7 @@ CREATE TABLE PERMISO_ROL (
 );
 
 CREATE TABLE LOCALIDAD (
-	id INTEGER NOT NULL,
+	id_localidad INTEGER NOT NULL,
 	nombre VARCHAR (200),
 	nombre_ascii VARCHAR (200),
 	nombres_alternativos VARCHAR(10000),
@@ -109,7 +109,7 @@ CREATE TABLE LOCALIDAD (
 	fecha_modificacion DATE,
 
 
-	PRIMARY KEY (id)
+	PRIMARY KEY (id_localidad)
 );
 
 CREATE TABLE LOCALIDAD_CLASIFICACION (
@@ -120,28 +120,28 @@ CREATE TABLE LOCALIDAD_CLASIFICACION (
 );
 
 CREATE TABLE COMISION_COBRADA (
-	id INTEGER AUTO_INCREMENT,
+	id_comision_cobrada INTEGER AUTO_INCREMENT,
 	monto DECIMAL (10, 2) NOT NULL,
 	id_comision INTEGER,
 	id_movimiento_saldo INTEGER,
 	id_pasajero_viaje INTEGER,
 
-	PRIMARY KEY (id)
+	PRIMARY KEY (id_comision_cobrada)
 );
 
 CREATE TABLE CALIFICACION (
-	id INTEGER AUTO_INCREMENT,
+	id_calificacion INTEGER AUTO_INCREMENT,
 	id_pasajero_viaje INTEGER,
 	calificacion_para_conductor INTEGER,
 	calificacion_para_pasajero INTEGER,
 	participo CHAR(1),
 	id_movimiento_puntos INTEGER,
 
-	PRIMARY KEY (id)
+	PRIMARY KEY (id_calificacion)
 );
 
 CREATE TABLE VEHICULO (
-	id INTEGER NOT NULL AUTO_INCREMENT,
+	id_vehiculo INTEGER NOT NULL AUTO_INCREMENT,
 	anio INTEGER NOT NULL,
 	marca VARCHAR(30) NOT NULL,
 	modelo VARCHAR(30) NOT NULL,
@@ -150,25 +150,24 @@ CREATE TABLE VEHICULO (
 	estado CHAR(1) NOT NULL,
 	fecha_verificacion DATE,
 
-	PRIMARY KEY (id),
+	PRIMARY KEY (id_vehiculo),
 	UNIQUE (patente)
 );
 
 CREATE TABLE MANEJA (
-	id INTEGER NOT NULL AUTO_INCREMENT,
 	id_cliente INTEGER NOT NULL,
 	id_vehiculo INTEGER NOT NULL,
-	fecha_inicio DATE,
+	fecha_inicio DATE NOT NULL,
 	fecha_fin DATE,
 	
 
-	PRIMARY KEY (id),
+	PRIMARY KEY (id_cliente,id_vehiculo,fecha_inicio),
 	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario),
-	FOREIGN KEY (id_vehiculo) REFERENCES VEHICULO (id)
+	FOREIGN KEY (id_vehiculo) REFERENCES VEHICULO (id_vehiculo)
 );
 
 CREATE TABLE VIAJE (
-	id INTEGER NOT NULL AUTO_INCREMENT,
+	id_viaje INTEGER NOT NULL AUTO_INCREMENT,
 	nombre_amigable VARCHAR(30),
 	asientos_disponibles INTEGER NOT NULL,
 	estado CHAR(1) NOT NULL,
@@ -176,10 +175,16 @@ CREATE TABLE VIAJE (
 	fecha_alta DATETIME NOT NULL,
 	fecha_finalizacion DATETIME,
 	fecha_cancelacion DATETIME,
-	id_maneja INTEGER,
+	id_vehiculo INTEGER NOT NULL,
+    id_cliente INTEGER NOT NULL,
+    fecha_inicio_maneja DATE NOT NULL,
+    viaje_complementario INTEGER,
 	
-	PRIMARY KEY (id),
-	FOREIGN KEY (id_maneja) REFERENCES MANEJA (id)
+	PRIMARY KEY (id_viaje),
+	FOREIGN KEY (id_vehiculo) REFERENCES MANEJA (id_vehiculo),
+    FOREIGN KEY (id_cliente) REFERENCES MANEJA (id_cliente),
+    FOREIGN KEY (fecha_inicio_maneja) REFERENCES MANEJA (fecha_inicio),
+    FOREIGN KEY (viaje_complementario) REFERENCES VIAJE (id_viaje)
 );
 
 CREATE TABLE LOCALIDAD_VIAJE (
@@ -188,12 +193,12 @@ CREATE TABLE LOCALIDAD_VIAJE (
 	cantidad_pasajeros INTEGER NOT NULL,
 
 	PRIMARY KEY (id_viaje, id_localidad),
-	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id),
-	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id)
+	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje),
+	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad)
 );
 
 CREATE TABLE PASAJERO_VIAJE (
-	id INTEGER AUTO_INCREMENT,
+	id_pasajero_viaje INTEGER AUTO_INCREMENT,
 	id_viaje INTEGER NOT NULL,
 	id_cliente INTEGER NOT NULL,
 	kilometros FLOAT,
@@ -203,10 +208,10 @@ CREATE TABLE PASAJERO_VIAJE (
 	id_localidad_subida INTEGER NOT NULL,
 	id_localidad_bajada INTEGER NOT NULL,
 	
-	PRIMARY KEY (id),
-	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id),
+	PRIMARY KEY (id_pasajero_viaje),
+	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje),
 	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario),
-	FOREIGN KEY (id_comision_cobrada) REFERENCES COMISION_COBRADA (id),
+	FOREIGN KEY (id_comision_cobrada) REFERENCES COMISION_COBRADA (id_comision_cobrada),
 	FOREIGN KEY (id_viaje, id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)
 );

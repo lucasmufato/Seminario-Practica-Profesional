@@ -5,7 +5,13 @@ import javax.persistence.RollbackException;
 public class ManejadorErrores {
 
 	public static String parsearRollback(RollbackException e) {
-		String error=e.getCause().getCause().getMessage();
+		String error;
+		try{
+			error=e.getCause().getCause().getMessage();
+		}catch(NullPointerException e1){
+			error=e.getCause().getLocalizedMessage();
+		}
+		
 		//en la variable queda un string como: " Column 'patente' cannot be null "
 		// o uno como: " Duplicate entry 'abd123' for key 'patente' "
 		// a medida que aparescan mas errores de JPA se van a ir agregando
@@ -41,7 +47,7 @@ public class ManejadorErrores {
 				return error_parseado;
 			}
 		}
-		return "error no parseado! :=000";
+		return "error no parseado!: "+e;
 	}
 
 }

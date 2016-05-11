@@ -1,6 +1,8 @@
 package gestionViajes.modelo;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +16,7 @@ import javax.persistence.Table;
 
 import gestionUsuarios.modelo.Cliente;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 @NamedQueries({	
 //@NamedQuery(name="Maneja.SearchById",query="SELECT m FROM Maneja m WHERE ( (m.id_conductor= :idc) AND (m.id_vehiculo= :idveh) )"),//agregada por fede	
@@ -32,13 +35,14 @@ public class Maneja {
 	@JoinColumn(name="id_vehiculo")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Vehiculo vehiculo;
-	
-	@Column(nullable=false)
+	@Id
+	@Column(name="FECHA_INICIO",nullable=false)
 	protected Date fecha_inicio;
 	@Column(nullable=true)
 	protected Date fecha_fin;
 	
-	
+	@OneToMany(mappedBy="conductor_vehiculo", cascade=CascadeType.PERSIST)
+	protected List<Viaje> viajes= new ArrayList<Viaje>();
 	
 	public Maneja(){
 		
