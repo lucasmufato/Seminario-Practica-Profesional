@@ -74,7 +74,7 @@ var simular = function(json){
 	data.viaje = {
 		id: data.viaje.id ,
 		nombre_amigable: "Un alto viaje",
-		estado: "2",
+		estado: "3",
 		tipo: "ida",
 		id_viaje_complemento: "4",
 		origen: "Lujan",
@@ -82,6 +82,7 @@ var simular = function(json){
 		fecha: "12/09/2016",
 		hora: "20:30",
 		precio: "30",
+		participantes: "1",
 		recorrido: ["Lujan", "Rodriguez","Moreno"]
 	};
 	data.conductor = {
@@ -101,9 +102,10 @@ var simular = function(json){
 		foto: "upload/auto.jpg"
 	};
 	data.usuario_logueado = {
-		es_conductor: true,
-		es_pasajero: false,
-		es_seguidor: true
+		es_conductor: false,
+		es_pasajero: true,
+		es_seguidor: false,
+		ha_calificado: false
 	};	
 	cargarViaje();
 	cargarConductor();
@@ -116,35 +118,71 @@ var configurarUi = function(){
 	var esConductor = data.usuario_logueado.es_conductor;
 	var esPasajero = data.usuario_logueado.es_pasajero;
 	var esSeguidor = data.usuario_logueado.es_seguidor;
+	var haCalificado = data.usuario_logueado.ha_calificado;
+
 	var estado = data.viaje.estado;
-	if (estado != 2){ //si no esta en "no iniciado"
-		$("#botonera-conductor").hide();
-		$("#botonera-pasajero").hide();
-	} else if (esConductor){
-		$("#botonera-conductor").show();
-		$("#botonera-pasajero").hide();
-	} else {
-		$("#botonera-conductor").hide();
-		if (esPasajero){
-				$("#botonera-pasajero").show();
-				$("#btnSeguir").hide();
-				$("#btnDejarSeguir").hide();
-				$("#btnParticipar").hide();
-				$("#btnCancelarParticipacion").show();	
-		}else{
-			if (esSeguidor){
-				$("#btnDejarSeguir").show();
-				$("#btnSeguir").hide();
-			} else{
-				$("#btnDejarSeguir").hide();
-				$("#btnSegir").show();		
+	
+	/*
+	ESTADOS:
+		case '1': return "Terminado";
+		case '2': return "No iniciado";
+		case '3': return "Iniciado";
+		case '4': return "Cancelado";
+	*/
+	if (esPasajero || esConductor){
+		$("#botonera-cliente").hide();
+		if (esConductor){
+			$("#botonera-conductor").show();
+			$("#botonera-pasajero").hide();
+			
+			//Boton finalizar solo si esta en iniciado
+			if (estado == "3"){
+				$("#btnViajeFinalizado").show();
+				$("#btnCalificar").hide();
+			}else{
+				$("#btnViajeFinalizado").hide();
+
+				//solo califica si hay pasajeros
+				if (data.viaje.participantes > 0){
+					if (haCalificado){
+						$("#btnCalificar").hide();
+					}else{
+						$("#btnCalificar").show();
+					}
+				}else{
+					$("#btnCalificar").hide();
+				}
 			}
-			$("#btnParticipar").show();
-			$("#btnCancelarParticipacion").hide();	
+		}else if (esPasajero){
+			$("#botonera-conductor").hide();
+			$("#botonera-pasajero").show();
+		}
+	} else {
+		$("#btnCalificar").hide();
+		$("#botonera-conductor").hide();
+		$("#botonera-pasajero").hide();
+		$("#botonera-cliente").show();
+		if (esSeguidor){
+			$("#btnDejarSeguir").show();
+			$("#btnSeguir").hide();
+		} else{
+			$("#btnDejarSeguir").hide();
+			$("#btnSegir").show();		
 		}
 	}
-
-
+	if (estado=="4"){//cancelado
+		$("#botonera-conductor").hide();
+		$("#botonera-pasajero").hide();
+		$("#botonera-cliente").hide();
+		$("#btnCalificar").hide();
+	} else if(estado == "3"){//iniciado
+		
+	} else if(estado == "2"){ //no_iniciado
+		$("#btnCalificar").hide();
+	} else if(estado == "1"){ //terminado
+		$("#botonera-conductor").hide();
+		$("#botonera-pasajero").hide();
+	}
 }
 
 var cargarVehiculo = function(){
@@ -196,7 +234,7 @@ function setearViajeComplemento(idComp){
 
 var mostrarVentanaParticipar = function(){
 	cargarTramos(data.viaje.recorrido);
-	$('#modalParticipar').modal('show');
+	$('#modal-participar').modal('show');
 }
 
 var cargarTramos = function(recorrido){
@@ -300,7 +338,7 @@ var cancelarParticipacion = function(){
 		closeModal(modalName);
 		var sendJson = {
 			action: "cancelar_participacion",
-			id_viaje: data.viaje.id
+			id_viaje: data.viaje.id,
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
@@ -311,7 +349,7 @@ var cancelarParticipacion = function(){
 		}
 		sendAjax(sendJson,onsuccess);
 	}
-	var msg = "Al presionar en 'Cancelar Participación' usted será sancionado"
+	var msg = "Al presionar en 'Confirmar Cancelación' usted será sancionado"
 		+" y podría perder su cuenta temporalmente."
 	var btn = document.createElement("BUTTON");       
 	btn.className="btn btn-danger dinamico";
@@ -324,6 +362,34 @@ var cancelarParticipacion = function(){
 var modificarViaje = function(){
 	window.open("modificar_viaje.html?id="+data.viaje.id,"_blank");
 }
+var cancelarViaje = function(){
+	var modalName='warning';
+	var confirmarCancelacion = function(){
+		closeModal(modalName);
+		var sendJson = {
+			action: "cancelar_viaje",
+			id_viaje: data.viaje.id
+		}
+		var onsuccess = function(jsonData){
+			if (jsonData.result){
+				window.open("home.html","_blank");
+			}else{
+				errorMessage(jsonData.msg);
+			}
+		}
+		sendAjax(sendJson,onsuccess);
+	}
+	var msg = "Al presionar en 'Confirmar Cancelación' usted podría recibir una sanción"
+		+" en caso de que existieran pasajeros inscriptos al viaje."
+	var btn = document.createElement("BUTTON");       
+	btn.className="btn btn-danger dinamico";
+	btn.innerHTML = 'Confirmar cancelación';
+	btn.name = "confirmarCancelacion";
+	btn.onclick=confirmarCancelacion;
+	modalButton(modalName,btn);
+	modalMessage(modalName,msg);
+}
+
 var verPostulantes = function(){
 	// si hiciera un modal
 	/*
@@ -343,6 +409,28 @@ var verPostulantes = function(){
 	
 	//si lo redirijo a listado_postulantes.html
 	window.open("listado_postulantes.html?id="+data.viaje.id,"_blank");
+}
+
+var calificar = function(){
+	console.log("calificar");
+	window.open("calificar.html?id="+data.viaje.id,"_blank");
+}
+
+var viajeFinalizado = function(){
+	console.log("viaje finalizado");
+	var sendJson = {
+		action: "finalizar_viaje",
+		id_viaje: data.viaje.id
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			data.loadData();
+			calificar();
+		}else{
+			errorMessage(jsonData.msg);
+		}
+	}
+	sendAjax(sendJson,onsuccess);
 }
 
 var customAlert = function(panel,elemento,msg){

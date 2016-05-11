@@ -14,7 +14,7 @@ import otros.JSONable;
 @Entity
 @Table(name="localidad")
 @NamedQueries({
-	@NamedQuery(name="Localidad.autocompletar",query="SELECT l FROM Localidad l WHERE l.nombre LIKE :busqueda AND 'l.clasificacion'='P'")
+	@NamedQuery(name="Localidad.autocompletar",query="SELECT l FROM Localidad l WHERE l.nombre LIKE :busqueda AND l.clasificacion='P'")
 })
 public class Localidad implements JSONable {
 
