@@ -1,5 +1,8 @@
 package gestionViajes.controlador;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -39,6 +42,18 @@ public class ServletViaje extends HttpServlet {
 		 }
 		 EL SERVLET MEDIANTE LA COOKIE AGREGA AL JSON EL DATO
 		 "CLIENTE":ID_CLIENTE
+		 		
+		 String fecha = (String) datos.get("fecha_salida");
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        java.util.Date parsed=null;
+		try {
+			parsed = format.parse(fecha);
+		} catch (ParseException e) {
+			throw new ExceptionViajesCompartidos("ERROR: FECHA MAL INGRESADA");
+		}
+        Date fecha2 = new java.sql.Date(parsed.getTime());
+        fecha2.setHours(hs_salida);
+		String hs_salida=(String) datos.get("hs_salida");		 
 		 		 
 		 */
 		try {

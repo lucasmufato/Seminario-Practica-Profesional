@@ -17,7 +17,7 @@ import otros.JSONable;
 public class Comision implements JSONable {
 
 	@Id
-	protected Integer id;
+	protected Integer id_comision;
 	protected float limite_superior;
 	protected float limite_inferior;
 	
@@ -29,11 +29,11 @@ public class Comision implements JSONable {
 	}
 	
 	public Integer getId() {
-		return id;
+		return id_comision;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId(Integer id_comision) {
+		this.id_comision = id_comision;
 	}
 
 	public float getLimite_superior() {

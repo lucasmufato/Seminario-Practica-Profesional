@@ -2,6 +2,9 @@ package gestionViajes.controlador;
 
 import static org.junit.Assert.*;
 
+import java.sql.Date;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,7 +43,9 @@ public class TestViaje extends TestCase {
 		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno
 		
 		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
-		
+		this.daoviajes.vaciarTabla("LocalidadViaje");
+		this.daoviajes.borrarRelacionesEntreViajes();
+		this.daoviajes.vaciarTabla("Viaje");
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
 	}
@@ -84,17 +89,136 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
-	public void testNuevoViajeCorrecto() {
+	public void testNuevoViajeCorrectoSINVUELTA() {
 		//test q envie un json correcto y tendria q andar bien
-		JSONObject json= new JSONObject();
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
 		try {
-			this.daoviajes.nuevoViaje(json);
-		} catch (ExceptionViajesCompartidos e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
 		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		int i=0;
+		i++;
 	}
 	
+	@Test
+	public void testNuevoViajeCorrectoCONVUELTA() {
+		//test q envie un json correcto y tendria q andar bien
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		JSONObject vuelta = new JSONObject();
+		vuelta.put("fecha_inicio",new Date((new java.util.Date()).getTime()) );
+		vuelta.put("cantidad_asientos", 2);
+		vuelta.put("nombre_amigable", "prueba viaje");
+		json2.put("vuelta", vuelta);
+		
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		int i=0;
+		i++;
+	}
+	
+	@Test
+	public void testNuevoViajeINcorrectoSINVUELTA(){
+		//el viaje se crea sin localidades
+		boolean bandera=false;
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+		JSONObject json2 = this.crearViaje();
+		json2.remove("localidades");
+		try {
+			this.daoviajes.nuevoViaje(json2);
+			fail("no tiro exception");
+		} catch (ExceptionViajesCompartidos e) {
+			bandera=true;
+		}
+		assertTrue(bandera);
+	}
+	
+	@Test
+	public void testNuevoViajeINcorrectoSINVUELTA3(){
+		//el viaje se crea sin destino
+		boolean bandera=false;
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+		JSONObject json2 = this.crearViaje();
+		JSONObject json3= (JSONObject) json2.get("localidades");
+		json3.remove("destino");
+		try {
+			this.daoviajes.nuevoViaje(json2);
+			fail("no tiro exception");
+		} catch (ExceptionViajesCompartidos e) {
+			String msj_error=e.getMessage();
+			if(msj_error.contains("error no parseado")){
+				fail("no se parseo bien el error");
+			}else{
+				bandera=true;				
+			}
+			
+		}
+		assertTrue(bandera);
+	}
+	
+	@Test
+	public void testNuevoViajeINcorrectoSINVUELTA2(){
+		//el viaje se crea con id_destino= 1 (no existe esa localidad) 
+		boolean bandera=false;
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+		JSONObject json2 = this.crearViaje();
+		JSONObject json3= (JSONObject) json2.get("localidades");
+		json3.remove("destino");
+		json3.put("destino", 1);
+		try {
+			this.daoviajes.nuevoViaje(json2);
+			fail("no tiro exception");
+		} catch (ExceptionViajesCompartidos e) {
+			String msj_error=e.getMessage();
+			if(msj_error.contains("error no parseado")){
+				fail("no se parseo bien el error");
+			}else{
+				bandera=true;				
+			}
+			
+		}
+		assertTrue(bandera);
+	}
+	/*
 	@Test
 	public void testNuevoViajeDatosIncorrecto() {
 		//teste que envia un json incorrecto y tendria q mostrar un error de alguna forma
@@ -106,6 +230,7 @@ public class TestViaje extends TestCase {
 			e.printStackTrace();
 		}
 	}
+	*/
 	
 	@Test
 	public void testgetConductorViajeCorrecto() {
@@ -113,6 +238,7 @@ public class TestViaje extends TestCase {
 		
 	}
 	
+	/*
 	@Test
 	public void testgetConductorViajeIncorrecto() {
 		//test q envie un viaje que no existe
@@ -124,21 +250,14 @@ public class TestViaje extends TestCase {
 			e.printStackTrace();
 		}
 	}
+	*/
 	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testbuscarManejar() {	//test q buscar en la tabla Maneja
 		
-		//lleno el json con datos q son correctos
-		JSONObject json= new JSONObject();
-		json.put("conductor", 2);
-		JSONObject vehiculo= new JSONObject();
-		vehiculo.put("patente", "abd123");
-		vehiculo.put("anio", 1992);
-		vehiculo.put("modelo", "viejo");
-		vehiculo.put("marca", "mondeo");
-		json.put("vehiculo", vehiculo);
-		
+		//json con datos de vehiculo
+		JSONObject json= crearVehiculo();
 		try {
 			//creo los datos en la tabla maneja
 			assertTrue(this.daoviajes.NuevoVehiculo(json) );
@@ -159,15 +278,8 @@ public class TestViaje extends TestCase {
 	@Test
 	public void testNuevoAutoCorrecto() {	//test q envie un usuario q existe, y vehiculo con datos bien.
 		
-		//lleno el json con datos q son correctos
-		JSONObject json= new JSONObject();
-		json.put("conductor", 2);
-		JSONObject vehiculo= new JSONObject();
-		vehiculo.put("patente", "abd123");
-		vehiculo.put("anio", 1992);
-		vehiculo.put("modelo", "viejo");
-		vehiculo.put("marca", "mondeo");
-		json.put("vehiculo", vehiculo);
+		//json con datos de vehiculo
+		JSONObject json= crearVehiculo();
 		
 		try {
 			//pruebo que el metodo devuelva true
@@ -185,11 +297,7 @@ public class TestViaje extends TestCase {
 		boolean bandera= false;
 		JSONObject json= new JSONObject();
 		json.put("conductor", 2);
-		JSONObject vehiculo= new JSONObject();
-		vehiculo.put("patente", "abd123");
-		vehiculo.put("anio", 1992);
-		vehiculo.put("modelo", "viejo");
-		vehiculo.put("marca", "mondeo");
+		JSONObject vehiculo= crearVehiculo();
 		json.put("vehiculo", vehiculo);
 		
 		try {
@@ -207,14 +315,9 @@ public class TestViaje extends TestCase {
 	public void testNuevoAutoINCorrecto2() {	
 		//test q envia un usuarios q no existe
 		boolean bandera=false;
-		JSONObject json= new JSONObject();
-		json.put("conductor", 88);
-		JSONObject vehiculo= new JSONObject();
-		vehiculo.put("patente", "abd123");
-		vehiculo.put("anio", 1992);
-		vehiculo.put("modelo", "viejo");
-		vehiculo.put("marca", "mondeo");
-		json.put("vehiculo", vehiculo);
+		JSONObject json= crearVehiculo();
+		json.remove("conductor");
+		json.put("conductor", -1);
 		
 		try {
 			this.daoviajes.NuevoVehiculo(json);
@@ -223,6 +326,50 @@ public class TestViaje extends TestCase {
 			bandera=true;
 		}
 		assertTrue(bandera);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject crearVehiculo(){
+		JSONObject json= new JSONObject();
+		json.put("conductor", 2);
+		JSONObject vehiculo= new JSONObject();
+		vehiculo.put("patente", "abd123");
+		vehiculo.put("anio", 1992);
+		vehiculo.put("modelo", "viejo");
+		vehiculo.put("marca", "mondeo");
+		json.put("vehiculo", vehiculo);
+		return json;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject crearViaje(){
+		
+		/*
+		{ "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
+			 "VEHICULO": ID_VEHICULO,
+			 "VIAJE": {FECHA_inicio, HS_SALIDA, CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE, COSTO_VIAJE},
+			 "VUELTA": {FECHA_SALIDA,HS_SALIDA,CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE},
+			 "CLIENTE":ID_CLIENTE
+			 }
+		*/
+		
+		JSONObject json2 = new JSONObject();
+		json2.put("vehiculo", "abd123");
+		json2.put("cliente", 2);
+		json2.put("fecha_inicio",new Date((new java.util.Date()).getTime()) );
+		json2.put("cantidad_asientos", 2);
+		json2.put("nombre_amigable", "prueba viaje");
+		JSONObject localidades= new JSONObject();
+		localidades.put("origen",3427200 );
+		localidades.put("destino",3427205 );
+		JSONArray intermedio= new JSONArray();
+		intermedio.add(3427201);
+		intermedio.add(3427202);
+		intermedio.add(3427203);
+		intermedio.add(3427204);
+		localidades.put("intermedios", intermedio);
+		json2.put("localidades", localidades);
+		return json2;
 	}
 	
 }

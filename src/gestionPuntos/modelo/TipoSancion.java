@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class TipoSancion {
 
 	@Id
-	protected Integer id;
+	protected Integer id_tipo_sancion;
 	protected String descripcion;
 	protected Integer dias_sancion;
 	
@@ -26,11 +26,11 @@ public class TipoSancion {
 	}
 
 	public Integer getId() {
-		return id;
+		return id_tipo_sancion;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_tipo_sancion = id;
 	}
 
 	public String getDescripcion() {

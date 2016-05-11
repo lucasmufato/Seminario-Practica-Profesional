@@ -17,7 +17,7 @@ import gestionUsuarios.modelo.Cliente;
 public class Sancion {
 	
 	@Id
-	protected Integer id;
+	protected Integer id_sancion;
 	
 	protected Date fecha_inicio;
 	protected Date fecha_fin;
@@ -31,11 +31,11 @@ public class Sancion {
 	}
 
 	public Integer getId() {
-		return id;
+		return id_sancion;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_sancion = id;
 	}
 
 	public Date getFecha_inicio() {

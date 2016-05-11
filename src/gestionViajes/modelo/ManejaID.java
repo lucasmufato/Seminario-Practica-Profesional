@@ -1,15 +1,25 @@
 package gestionViajes.modelo;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 public class ManejaID implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Integer cliente;
 	private Integer vehiculo;
+	private Date fecha_inicio;
 	
 	public ManejaID(){
 		
+	}
+	
+	public Date getFecha_inicio() {
+		return fecha_inicio;
+	}
+
+	public void setFecha_inicio(Date fecha_inicio) {
+		this.fecha_inicio = fecha_inicio;
 	}
 	
 	public ManejaID(Integer id_cliente, Integer id_vehiculo){

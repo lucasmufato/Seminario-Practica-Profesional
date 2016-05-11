@@ -18,7 +18,7 @@ import otros.JSONable;
 public class Cupon implements JSONable {
 	
 	@Id
-	protected Integer id;
+	protected Integer id_cupon;
 	protected Character estado;
 	protected Date fecha_caduca;
 	
@@ -31,11 +31,11 @@ public class Cupon implements JSONable {
 	}
 	
 	public Integer getId() {
-		return id;
+		return id_cupon;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.id_cupon = id;
 	}
 
 	public Character getEstado() {
