@@ -10,3 +10,6 @@
 .table-user-information > tbody > tr > td {
     border-top: 0;
 }
+#reputacion {
+	font-size: 2em;
+}
