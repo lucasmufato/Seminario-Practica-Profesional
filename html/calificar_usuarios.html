@@ -3,71 +3,53 @@
 <head>
 	<title>Viajes Compartidos</title>
 	<meta charset="utf-8" />
-		<link rel="stylesheet" href="listado_postulantes.css" />
 	<link rel="stylesheet" href="common.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-	<script type="text/javascript" src="listado_postulantes.js"></script>
+	<link rel="stylesheet" href="calificar_usuarios.css">
+
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="calificar_usuarios.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
-	
-	<!--
-		El siguiente script no corre (le asigno un type que no existe). 
-		Aqui escribo el codigo dinamico utilizado para crear un postulante. 
-		Luego lo llamo con 
-		$("#postulante-template").html() 
-		y le agrego los parametros que definí mediante Mustache.
-	-->
+
 	<script id="postulante-template" type="text/template">
 			<div class="panel panel-{{color_panel}}">
 				<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#postulante-{{nombre_usuario}}" aria-expanded="true">
 					<div  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
-					  <h3 class="panel-title">{{nombre_usuario}} - {{estado_string}}</h3>
+					  <h3 class="panel-title">{{nombre_usuario}}</h3>
 					</div>
 				</div>
 				<div class="panel-body collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}">
 					<div class="row">
-					
 						<div class="col-md-3 col-lg-3 " align="center"> 
 							<a href="perfil.html?usuario={{nombre_usuario}}" data-original-title="Ver perfil" data-placement="bottom" data-toggle="tooltip"  class="thumbnail">
 								<img alt="foto de usuario" src="{{foto}}" class="img-responsive" style="max-height: 200px"> 
 							</a>
 						</div>
-						
 						<div class=" col-md-9 col-lg-9 "> 
-							<table class="table table-user-information">
-								<tbody>
-									<tr>
-										<td>Apellido:</td>
-										<td>{{apellido}}</td>
-									</tr>
-									<tr>
-										<td>Nombres:</td>
-										<td>{{nombres}}</td>
-									</tr>
-									<tr>
-										<td>Usuario:</td>
-										<td>{{nombre_usuario}}</td>
-									</tr>
-									<tr>
-										<td>Sube en:</td>
-										<td>{{origen}}</td>
-									</tr>
-									<tr>
-										<td>Baja en:</td>
-										<td>{{destino}}</td>
-									</tr>
-									<tr>
-										<td>Email</td>
-										<td><a href="mailto:{{mail}}">{{mail}}</a></td>
-									</tr>
-										<td>Telefono:</td>
-										<td>{{telefono}}</td>  
-									</tr>
-								</tbody>
-							</table>
+							<div class="estrellitas form-group col-md-9 col-lg-9">
+								<label for="clasifica" class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Calificación: </label>
+								<p class="clasificacion col-xs-4 col-sm-2 col-md-5 col-lg-5" id="clasifica">
+									<input id="radio1" type="radio" name="estrellas" value="5">
+									<label for="radio1">★</label>
+									<input id="radio2" type="radio" name="estrellas" value="4">
+									<label for="radio2">★</label>
+									<input id="radio3" type="radio" name="estrellas" value="3">
+									<label for="radio3">★</label>
+									<input id="radio4" type="radio" name="estrellas" value="2">
+									<label for="radio4">★</label>
+									<input id="radio5" type="radio" name="estrellas" value="1">
+									<label for="radio5">★</label>
+				 				</p>
+							</div>
+							<div class="form-group col-md-9 col-lg-9">
+								<label class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Deje un comentario:</label>
+								<div class="col-xs-4 col-sm-2 col-md-5 col-lg-5">
+									<textarea class="form-control" rows="4"></textarea>
+								</div>
+							</div>
 							{{#es_pendiente}}
 							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
 								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante()"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
@@ -94,39 +76,28 @@
 <body>
 
     <main>
-		<div class="container-fluid">
-			<header class="">
-				<button class="btn btn-success btn-sm" onclick="verViaje()"><i class="glyphicon glyphicon-open"></i> Viaje</button>
-				<h3 class="text-center  bg-primary ">Postulantes</h3>
-			</header>
-
-			<div class="row " id="panel-postulantes">
-				<div class="jumbotron">
-				  <h4 class="text-center text-primary">Aún sin postulantes</h4>
+				<!--<div class="estrellitas form-group col-md-9 col-lg-9">
+					<label for="clasifica" class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Calificación: </label>
+					<p class="clasificacion col-xs-4 col-sm-2 col-md-5 col-lg-5" id="clasifica">
+						<input id="radio1" type="radio" name="estrellas" value="5">
+						<label for="radio1">★</label>
+						<input id="radio2" type="radio" name="estrellas" value="4">
+						<label for="radio2">★</label>
+						<input id="radio3" type="radio" name="estrellas" value="3">
+						<label for="radio3">★</label>
+						<input id="radio4" type="radio" name="estrellas" value="2">
+						<label for="radio4">★</label>
+						<input id="radio5" type="radio" name="estrellas" value="1">
+						<label for="radio5">★</label>
+	 				</p>
 				</div>
-			</div>
-
-			<div id="modal-error" class="modal fade">
-				<div class="modal-dialog modal-sm">
-					<div class="modal-content panel-danger">
-						<div class="modal-header panel-heading" >
-							<button type="button" class="close" onclick="closeModal('error')">&times;</button>
-							<h3 class="dialog-title"> Ha ocurrido un error</h3>
-						</div><!-- modal-header -->
-						<div class="modal-body">
-							<div id="error-message">
-								Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
-							</div>
-						</div><!-- modal-body -->
-
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" onclick="closeModal('error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
-						</div><!-- .modal-footer -->
-					</div><!-- .modal-content -->
-				</div><!-- .modal-dialog -->
-			</div><!-- .modal -->
-		</div>
-
+				<div class="form-group col-md-9 col-lg-9">
+					<label class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Deje un comentario:</label>
+					<div class="col-xs-4 col-sm-2 col-md-5 col-lg-5">
+						<textarea class="form-control" rows="4"></textarea>
+					</div>
+				</div> -->
+		lahdjkashdak
     </main>
 
 </div>
