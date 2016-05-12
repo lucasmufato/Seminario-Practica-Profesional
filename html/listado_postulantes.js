@@ -94,10 +94,12 @@ var cargarPostulantes = function(){
 	$("#panel-postulantes").html(html);
 }
 
-var aceptarPostulante = function(){
+var aceptarPostulante = function(nombre_usuario){
+	console.log(nombre_usuario);
 	var sendData = {
 		action: "aceptar_postulante",
-		"id": idViaje
+		"id": idViaje,
+		"nombre_usuario": nombre_usuario
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
@@ -110,10 +112,11 @@ var aceptarPostulante = function(){
 	}	
 	sendAjax(sendData,onsuccess);
 }
-var rechazarPostulante = function(){
+var rechazarPostulante = function(nombre_usuario){
 	var sendData = {
 		action: "rechazar_postulante",
-		"id": idViaje
+		"id": idViaje,
+		"nombre_usuario": nombre_usuario
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){

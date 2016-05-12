@@ -70,8 +70,8 @@
 							</table>
 							{{#es_pendiente}}
 							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
-								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante()"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
-								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante()"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
+								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante('{{nombre_usuario}}')"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
+								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante('{{nombre_usuario}}')"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
 							</div>
 							{{/es_pendiente}}
 						</div>

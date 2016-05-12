@@ -27,4 +27,5 @@ initUI = function() {
     	todayBtn: true
 	});
 };
+
 //window.onload = initUI;

@@ -3,19 +3,19 @@
 <head>
 	<title>Mis Viajes</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" href="common.css" />
+	<link rel="stylesheet" href="mis_viajes.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
-	<link rel="stylesheet" href="common.css" />
-	<link rel="stylesheet" href="mis_viajes.css" />
 	
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="mis_viajes.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
+	<script type="text/javascript" src="calendarios.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
-	<script type="text/javascript" src="calendarios.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
 	
 	<script id="viaje-template" type="text/template">
@@ -60,7 +60,7 @@
 	<main>
 		<div class="container-fluid">
 				<header class="col-xs-12 bg-primary">
-						<h3 class="col-xs-10" align="center" >Mis Viajes</h3>
+						<h3 class="pull-center col-xs-10">Mis Viajes</h3>
 						<div class="pull-right">
 							<span class="clickable alinear col-xs-2" data-toggle="collapse" data-target="#formFilter"  aria-expanded="false"  aria-controls="formFilter">
 								<i class="glyphicon glyphicon-filter"  data-toggle="tooltip" title="Filtrar viajes" data-container="body"></i>
@@ -88,7 +88,7 @@
 					<div class="form-group">
 						<label for="origen-destino" class="control-label col-xs-2 col-sm-3 col-sm-offset-0 col-xs-offset-1">Origen/Destino:</label>
 						<div class="col-xs-3 col-sm-3 col-lg-2">
-							<input type="text" class="form-control" name="origen-destino" placeholder="Origen/Destino"></input>
+							<input type="text" class="form-control" name="origen-destino" placeholder="Origen/Destino">
 						</div>
 					<!-- BOTON  -->
 						<div class="col-xs-3 col-md-3 col-lg-2 col-lg-offset-3 col-xs-offset-2 col-md-offset-2">
@@ -98,8 +98,5 @@
 				</form>
 		</div>
     </main>
-
-</div>
-
 </body>	
 </html>

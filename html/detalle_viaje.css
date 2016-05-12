@@ -8,3 +8,15 @@
 .panel .panel-body{
 	background-color: #ecf0f1;
 }
+
+.mapa{
+	height: 300px;
+	margin:auto;
+	border: 10px groove #ecf0f1;
+}
+.subpanel{
+	margin:auto;
+	margin-top:20px;
+		margin-bottom:20px;
+	--border: 5px groove #ecf0f1;
+}

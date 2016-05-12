@@ -11,7 +11,10 @@
 	<link rel="stylesheet" href="detalle_viaje.css" />
 
 	<script type="text/javascript" src="jquery.js"></script>
-    <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg&callback=initMap"></script>
+    <!--
+		Probando que cargue mapa despues de que cargue toda la pantalla
+		<script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg&callback=initMap"></script>
+	-->
 	<script type="text/javascript" src="detalle_viaje.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
@@ -28,46 +31,51 @@
 						<h3 class="panel-title">Detalle del Viaje</h3>
 					</div>
 					<div class="panel-body collapse in" id="collapseViaje">
-						<div class="col-sm-8 row">
-							<div class="col-sm-12 row">
+						<div class="col-md-12 col-sm-12 col-xs-12 row mapa" id="mapa">
+							<a href="img/home/mapa.png" class="thumbnail">
+							<img src="img/home/mapa.png" alt="camino"></a>
+						</div>
+												
+						<div class="col-sm-12 col-md-8 col-lg-8 row subpanel">
+							<div class="col-xs-12 row">
 								<label class="col-sm-3">Tipo:</label> 
 								<p id="tipo" class="col-sm-6">Ida/Vuelta</p>
 							</div>
-							<div class="col-sm-6 row">
+							<div class="col-xs-6 row">
 								<label class="col-sm-6">Estado:</label> 
 								<p id="estado" class="col-sm-6"></p>
 							</div>
-							<div class="col-sm-6 row">
+							<div class="col-xs-6 row">
 								<label class="col-sm-6">Origen:</label> 
 								<div class="col-sm-6">
 									<p id="origen">Moreno</p>
 								</div>
 							</div>
-							<div class="col-sm-6 row">
+							<div class="col-xs-6 row">
 								<label class="col-sm-6">Destino:</label> 
 								<div class="col-sm-6">
 									<p id="destino">Luján</p>
 								</div>
 							</div>
-							<div class="col-sm-6 row">
+							<div class="col-xs-6 row">
 								<label class="col-sm-6">Fecha:</label> 
 								<div class="col-sm-6">
 									<p id="fecha">28/10/2016</p>
 								</div>
 							</div>
-							<div class="col-sm-6 row">
+							<div class="col-xs-6 row">
 								<label class="col-sm-6">Hora:</label> 
 								<div class="col-sm-6">
 									<p id="hora">10:00</p>
 								</div>
 							</div>
-							<div class="col-sm-6 row">
+							<div class="col-xs-6 row">
 								<label class="col-sm-6">Precio:</label> 
 								<div class="col-sm-6">
 									<p id="precio">100</p>
 								</div>
 							</div>
-							<div class="col-sm-12 row">
+							<div class="col-xs-12 row">
 								<label class="col-sm-3">Recorrido:</label> 
 								<div class="col-sm-9 row">
 									<ol id="recorrido" class="list-inline">
@@ -75,31 +83,28 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-4 row" id="mapa" style="height: 300px">
-							<a href="img/home/mapa.png" class="thumbnail">
-							<img src="img/home/mapa.png" alt="camino"></a>
+						<div class="col-md-4 col-lg-4 subpanel">
+							<div id="botonera-pasajero" class=" btn-group">
+								<button type="button" class="btn-block btn btn-danger" id="btnCancelarParticipacion" onclick="cancelarParticipacion();"><span class="glyphicon glyphicon-remove"></span> <small>Cancelar Participación</small></button>
+							</div>
+							<div id="botonera-conductor" class=" btn-group">
+								<button type="button" class="btn-block btn btn-primary " onclick="modificarViaje();" id="btnModificar"><span class="glyphicon glyphicon-pencil"></span> Modificar</button>
+								<button type="button" class="btn-block btn btn-primary " onclick="verPostulantes();" id="btnPostulantes"><span class="glyphicon glyphicon-eye-open"></span> Ver Postulantes</button>
+								<button type="button" class="btn-block btn btn-success" id="btnViajeFinalizado" onclick="viajeFinalizado();"><span class="glyphicon glyphicon-check"></span> Viaje Finalizado</button>							
+								<button type="button" class="btn-block btn btn-danger" id="btnCancelarViaje" onclick="cancelarViaje();"><span class="glyphicon glyphicon-remove"></span> <small>Cancelar viaje</small></button>							
+							</div>
+							<div id="botonera-cliente" class=" btn-group">
+								<button type="button" class="btn-block  btn btn-success" id="btnParticipar" onclick="mostrarVentanaParticipar();"><span class="glyphicon glyphicon-ok"></span> Participar</button>
+								<button type="button" class="btn-block btn btn-info" onclick="seguirViaje();" id="btnSeguir"><span class="glyphicon glyphicon-thumbs-up"></span> Seguir</button>
+								<button type="button" class="btn-block btn btn-info" onclick="dejarDeSeguirViaje();" id="btnDejarSeguir"><span class="glyphicon glyphicon-thumbs-down"></span> <small>Dejar de seguir</small></button>
+							</div>
+							<button type="button" class="btn-block btn btn-success pull-right" id="btnCalificar" onclick="calificar();"><span class="glyphicon glyphicon-star"></span> Calificar</button>
 						</div>
-						
-						<div class="col-xs-8 col-xs-offset-4 row">
-							<div id="botonera-pasajero">
-								<button type="button" class="btn btn-danger" id="btnCancelarParticipacion" onclick="cancelarParticipacion();"><span class="glyphicon glyphicon-remove"></span> Cancelar Participación</button>
-							</div>
-							<div id="botonera-conductor">
-								<button type="button" class="btn btn-primary " onclick="modificarViaje();" id="btnModificar"><span class="glyphicon glyphicon-pencil"></span> Modificar</button>
-								<button type="button" class="btn btn-primary " onclick="verPostulantes();" id="btnPostulantes"><span class="glyphicon glyphicon-eye-open"></span> Ver Postulantes</button>
-								<button type="button" class="btn btn-success" id="btnViajeFinalizado" onclick="viajeFinalizado();"><span class="glyphicon glyphicon-check"></span> Viaje Finalizado</button>							
-								<button type="button" class="btn btn-danger" id="btnCancelarViaje" onclick="cancelarViaje();"><span class="glyphicon glyphicon-remove"></span> Cancelar viaje</button></div>							
-							</div>
-							<div id="botonera-cliente">
-								<button type="button" class="btn btn-success" id="btnParticipar" onclick="mostrarVentanaParticipar();"><span class="glyphicon glyphicon-ok"></span> Participar</button>
-								<button type="button" class="btn btn-info" onclick="seguirViaje();" id="btnSeguir"><span class="glyphicon glyphicon-thumbs-up"></span> Seguir</button>
-								<button type="button" class="btn btn-info" onclick="dejarDeSeguirViaje();" id="btnDejarSeguir"><span class="glyphicon glyphicon-thumbs-down"></span> Dejar de seguir</button>
-							</div>
-							<button type="button" class="btn btn-success pull-right" id="btnCalificar" onclick="calificar();"><span class="glyphicon glyphicon-star"></span> Calificar</button>
-						</div>
+
 					</div>
 				</div>
 			</div>
+		</div>
 
 <!-- COMENTADO HASTA SER IMPLEMENTADO
 					<div class="panel panel-default" id="comentarios">

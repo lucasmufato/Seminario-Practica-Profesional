@@ -57,16 +57,23 @@ data.loadData = function() {
 
 initUI = function() {
 	data.loadData();
+	loadMap();
 };
-
 window.onload=initUI;
 
-initMap = function() {
-map = new google.maps.Map(document.getElementById('mapa'), {
-	center: {lat: -34.5774135, lng: -59.0909557},
-	drawingControl: false,
-	zoom: 16
-});
+function loadMap() {
+  var script = document.createElement("script");
+  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg&callback=initMap";
+  document.body.appendChild(script);
+}
+
+
+var initMap = function() {
+	map = new google.maps.Map(document.getElementById('mapa'), {
+		center: {lat: -34.5774135, lng: -59.0909557},
+		drawingControl: false,
+		zoom: 16
+	});
 }
 
 var simular = function(json){
@@ -102,8 +109,8 @@ var simular = function(json){
 		foto: "upload/auto.jpg"
 	};
 	data.usuario_logueado = {
-		es_conductor: false,
-		es_pasajero: true,
+		es_conductor: true,
+		es_pasajero: false,
 		es_seguidor: false,
 		ha_calificado: false
 	};	
