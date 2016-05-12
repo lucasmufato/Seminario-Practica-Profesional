@@ -25,13 +25,12 @@ public class DAOViajes extends DataAccesObject {
     	super();
     }
     
-    public boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{
+    public boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{	//tiene tests
     	
     	/* estructura del JSON datos:
     	 * { "CONDUCTOR": ID_USUARIO,
     	 * "VEHICULO":{FOTO,MARCA,MODELO, PATENTE,ANIO,AIRE_ACOND,SEGURO} FOTO,AIRE_ACOND Y SEGURO NO ESTAN EN EL DIAGRAMA DE CLASE, Q SE HACE?
     	 * }
-    	 * 
     	 * pasos a seguir:
     	 * recupero el cliente, si no existe tiro error
     	 * verifico si existe el auto (verifico por patente que es unique)
@@ -75,6 +74,7 @@ public class DAOViajes extends DataAccesObject {
     	return true;
     }
     
+    /*
 	public Cliente getConductorViaje(Integer id_viaje) {
                 //agregado de fede
                 Cliente conductor = new Cliente();
@@ -83,14 +83,13 @@ public class DAOViajes extends DataAccesObject {
     		qry.setParameter("id_viaje", id_viaje);
     		v =(Viaje)qry.getSingleResult();
                 Maneja conductor_maneja = v.getConductor_vehiculo();
-                conductor = conductor_maneja.getCliente(); 
-                
+                conductor = conductor_maneja.getCliente();        
 		return conductor;
                 //fin agregado fede
 	}
+	*/
 	
 	public Vehiculo getAutoViaje(Integer id_viaje) {
-		// TODO Auto-generated method stub
                 //agregado de fede
                 Cliente conductor = new Cliente();
                 Viaje v = new Viaje();
@@ -106,8 +105,7 @@ public class DAOViajes extends DataAccesObject {
 		
 	}
 
-	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {
-		// TODO Auto-generated method stub
+	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {		//tiene tests
 		/*
 		 * crear viaje, crear localidad_viaje para orige,destino,puntos intermedio
 		 * asignar vehiculo, si tiene vuelta crear viaje de vuelta con los puntos invertidos y la fecha especificada
@@ -183,17 +181,17 @@ public class DAOViajes extends DataAccesObject {
 		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino) );
 		viaje.crearRecorrido(recorrido);
 		
-		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso
-		//los datos de la misma
+		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
 		JSONObject vuelta=(JSONObject) datos.get("vuelta");
-		if(vuelta!=null){
-			try{
+		if(vuelta!=null){ 
+			try{	//SI EL VIAJE TIENE VUELTA, GUARDO EL PRIMER VIAJE EN LA BD
 				this.entitymanager.persist(viaje);
 	    		entitymanager.getTransaction( ).commit( );	
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
 	    	}
+			//HAGO OTRA TRANSACCION, Y AHI LE DIGO AL VIAJE Q CREE SU VUELTA, Y LO GUARDO EN LA BD (EL NUEVO VIAJE SE GUARDA POR PERSIST EN CASCADA)
 			entitymanager.getTransaction().begin();
 			viaje.crearTuVuelta(vuelta);
 			try{
@@ -202,7 +200,7 @@ public class DAOViajes extends DataAccesObject {
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
 	    	}
-		}else{
+		}else{		//SI EL VIAJE NO TIENE VUELTA, LA SETEO COMO NULA, Y GUARDO EL VIAJE
 			viaje.setViaje_complementario(null);
 			this.entitymanager.persist(viaje);
 			try{
@@ -212,27 +210,7 @@ public class DAOViajes extends DataAccesObject {
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
 	    	}
 		}
-		
-
-		
 		return true;
-		
-		/*
-		 * if(vuelta!=null){
-			viaje.crearTuVuelta(vuelta);
-		}else{
-			viaje.setViaje_complementario(null);
-		}
-		this.entitymanager.persist(viaje);
-
-		try{
-    		entitymanager.getTransaction( ).commit( );	
-    	}catch(RollbackException e){
-    		String error= ManejadorErrores.parsearRollback(e);
-    		throw new ExceptionViajesCompartidos("ERROR: "+error);
-    	}
-		return true;
-		 */
 	}
 
 	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){
@@ -254,14 +232,22 @@ public class DAOViajes extends DataAccesObject {
                 //fin fede
 	}
 	
-	public Cliente GetConductorViaje(Integer id_viaje){
-		// TODO Auto-generated method stub
-		return null;
+	public Cliente getConductorViaje(Integer id_viaje){		//tiene test
+		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			return null;		// o puede tirar una exception
+		}else{
+			return viaje.getConductor_vehiculo().getCliente();
+		}	
 	}
 	
-	public Vehiculo getVehiculoViaje(Integer id_viaje){
-		// TODO Auto-generated method stub
-		return null;
+	public Vehiculo getVehiculoViaje(Integer id_viaje){		//tiene test
+		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			return null;		// o puede tirar una exception
+		}else{
+			return viaje.getConductor_vehiculo().getVehiculo();
+		}
 	}
 	
 	public void Cliente_se_postula_en_viaje(Integer id_viaje, Integer id_cliente){
@@ -291,6 +277,9 @@ public class DAOViajes extends DataAccesObject {
 	public List<Viaje> buscarViajes(JSONObject busqueda){
 		// TODO Auto-generated method stub
 		//crear query (campos obligatorios: origen, destino,fecha_desde)
+		
+		
+		
 		return null;
 	}
 	

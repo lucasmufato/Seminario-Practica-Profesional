@@ -221,11 +221,21 @@ public class AdministracionUsuarios extends HttpServlet {
 
 		persona = new Persona (recibida);
 		if (request.getParameter("action").equals("new")) {
-			salida.put ("result",dao.persistir(persona));
-			salida.put ("msg", "Se han guardado los datos de la persona");
+			try {
+				salida.put ("result", dao.persistir(persona));
+				salida.put ("msg", "Se han guardado los datos de la persona");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		} else {
-			salida.put ("result",dao.actualizar(persona));
-			salida.put ("msg", "No se ha podido guardar los datos de la persona");
+			try {
+				salida.put ("result",dao.actualizar(persona));
+				salida.put ("msg", "No se ha podido guardar los datos de la persona");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		}
 		/* TODO: Agregar los datos guardados en la base de datos */
 		return salida;
@@ -256,11 +266,21 @@ public class AdministracionUsuarios extends HttpServlet {
 
 		usuario = new Usuario (recibido);
 		if (request.getParameter("action").equals("new")) {
-			salida.put ("result",dao.persistirUsuarioConPersona(usuario,Integer.parseInt(request.getParameter("id_persona"))));
-			salida.put ("msg", "Se ha guardado los datos del usuario");
+			try {
+				salida.put ("result",dao.persistirUsuarioConPersona(usuario,Integer.parseInt(request.getParameter("id_persona"))));
+				salida.put ("msg", "Se ha guardado los datos del usuario");
+			} catch (Exception e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		} else {
-			salida.put ("result",dao.actualizar(usuario));
-			salida.put ("msg", "No se ha podido guardar los datos del usuario");
+			try {
+				salida.put ("result",dao.actualizar(usuario));
+				salida.put ("msg", "No se ha podido guardar los datos del usuario");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		}
 		return salida;
 	}
@@ -287,11 +307,21 @@ public class AdministracionUsuarios extends HttpServlet {
 
 		rol = new Rol(recibido);
 		if (request.getParameter("action").equals("new")) {
-			salida.put ("result",dao.persistir(rol));
-			salida.put ("msg", "Se ha guardado los datos del rol");
+			try {
+				salida.put ("result",dao.persistir(rol));
+				salida.put ("msg", "Se ha guardado los datos del rol");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		} else {
-			salida.put ("result",dao.actualizar(rol));
-			salida.put ("msg", "No se ha podido guardar los datos del rol");
+			try {
+				salida.put ("result",dao.actualizar(rol));
+				salida.put ("msg", "No se ha podido guardar los datos del rol");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		}
 		return salida;
 	}
@@ -312,11 +342,21 @@ public class AdministracionUsuarios extends HttpServlet {
 
 		permiso = new Permiso(recibido);
 		if(request.getParameter("action").equals("new")) {
-			salida.put ("result",dao.persistir(permiso));
-			salida.put ("msg", "Se ha guardado los datos del permiso");
+			try {
+				salida.put ("result",dao.persistir(permiso));
+				salida.put ("msg", "Se ha guardado los datos del permiso");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		} else {
-			salida.put ("result",dao.actualizar(permiso));
-			salida.put ("msg", "No se ha podido guardar los datos del permiso");
+			try {
+				salida.put ("result",dao.actualizar(permiso));
+				salida.put ("msg", "No se ha podido guardar los datos del permiso");
+			} catch (ExceptionViajesCompartidos e) {
+				salida.put ("result", false);
+				salida.put ("msg", e.getMessage());
+			}
 		}
 		return salida;
 	}
