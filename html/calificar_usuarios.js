@@ -33,11 +33,17 @@ window.onload=initUI;
 
 var simular = function(){
 	postulantes = [{
+		estado: "1", //1: pendiente, 2: viajo, 3: no viajo
 		nombre_usuario: "Carolo4",
+		foto:"img/home/administracion_usuarios.png"
 	},{
+		estado: "2", //1: pendiente, 2: viajo, 3: no viajo
 		nombre_usuario: "KarinaK100",
+		foto:"img/home/administracion_usuarios.png"
 	},{
+		estado: "3", //1: pendiente, 2: viajo, 3: no viajo
 		nombre_usuario: "RodolfoU",
+		foto:"img/home/administracion_usuarios.png"
 	}];
 	if (postulantes.length) cargarPostulantes();
 }
@@ -86,22 +92,6 @@ var aceptarPostulante = function(){
 	}	
 	sendAjax(sendData,onsuccess);
 }
-var rechazarPostulante = function(){
-	var sendData = {
-		action: "rechazar_postulante",
-		"id": idViaje
-	}
-	var onsuccess = function(jsonData){
-		if(jsonData.result){
-			$('.loadingScreen').fadeOut();
-			postulantes = jsonData.postulantes;
-			cargarPostulantes();
-		} else {
-			modalMessage("error",jsonData.msg,"Rechazar postulante");
-		}
-	}	
-	sendAjax(sendData,onsuccess);
-}
 
 var verViaje = function(){
 	window.open("detalle_viaje.html?id="+idViaje,"_blank");
@@ -129,9 +119,9 @@ var sendAjax = function(sendData,callback){
 
 var estadoString = function (caracter) {
 	switch (caracter) {
-		case '1': return "Postulado";
-		case '2': return "Aceptado";
-		case '3': return "Rechazado";
+		case '1': return "Pendiente";
+		case '2': return "Viajo";
+		case '3': return "No viajo";
 		case null: return "No especificado";
 		default: return "Desconocido";
 	}

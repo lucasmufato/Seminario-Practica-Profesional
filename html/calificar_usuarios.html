@@ -18,7 +18,7 @@
 			<div class="panel panel-{{color_panel}}">
 				<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#postulante-{{nombre_usuario}}" aria-expanded="true">
 					<div  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
-					  <h3 class="panel-title">{{nombre_usuario}}</h3>
+					  <h3 class="panel-title">{{nombre_usuario}} - {{estado_string}}</h3>
 					</div>
 				</div>
 				<div class="panel-body collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}">
@@ -29,9 +29,20 @@
 							</a>
 						</div>
 						<div class=" col-md-9 col-lg-9 "> 
-							<div class="estrellitas form-group col-md-9 col-lg-9">
-								<label for="clasifica" class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Calificación: </label>
-								<p class="clasificacion col-xs-4 col-sm-2 col-md-5 col-lg-5" id="clasifica">
+							<!-- SELECT-->
+							<div class="form-group col-md-12 col-lg-12">
+								<label for="confirmacion" class="control-label col-md-4">¿Realizó el viaje?</label>
+								<div class="col-md-8">	
+									<select class="form-control" name="" id="confirmacion">
+				 						<option value="">Sí</option>
+										<option value="">No</option>
+									</select>		
+								</div>
+							</div>	
+							<!-- Puntuacion -->
+							<div class="estrellitas form-group col-md-12 col-lg-12">
+								<label for="clasifica" class="text-right control-label col-md-4 col-lg-4">Calificación: </label>
+								<p class="clasificacion col-md-8 col-lg-8" id="clasifica">
 									<input id="radio1" type="radio" name="estrellas" value="5">
 									<label for="radio1">★</label>
 									<input id="radio2" type="radio" name="estrellas" value="4">
@@ -44,15 +55,15 @@
 									<label for="radio5">★</label>
 				 				</p>
 							</div>
-							<div class="form-group col-md-9 col-lg-9">
-								<label class="text-right control-label col-xs-8 col-sm-2 col-md-4 col-lg-4">Deje un comentario:</label>
-								<div class="col-xs-4 col-sm-2 col-md-5 col-lg-5">
+							<!-- COMENTARIOS -->
+							<div class="form-group col-md-12 col-lg-12">
+								<label class="text-right control-label col-md-4 col-lg-4">Deje un comentario:</label>
+								<div class="col-md-8 col-lg-8">
 									<textarea class="form-control" rows="4"></textarea>
 								</div>
 							</div>
 							{{#es_pendiente}}
 							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
-								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante()"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
 								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante()"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
 							</div>
 							{{/es_pendiente}}
@@ -97,7 +108,38 @@
 						<textarea class="form-control" rows="4"></textarea>
 					</div>
 				</div> -->
-		lahdjkashdak
+		<div class="container-fluid">
+			<header class="">
+				<button class="btn btn-success btn-sm" onclick="verViaje()"><i class="glyphicon glyphicon-open"></i> Viaje</button>
+				<h3 class="text-center  bg-primary ">Calificación</h3>
+			</header>
+
+			<div class="row " id="panel-postulantes">
+				<div class="jumbotron">
+				  <h4 class="text-center text-primary">Sin calificaciones pendientes</h4>
+				</div>
+			</div>
+
+			<div id="modal-error" class="modal fade">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content panel-danger">
+						<div class="modal-header panel-heading" >
+							<button type="button" class="close" onclick="closeModal('error')">&times;</button>
+							<h3 class="dialog-title"> Ha ocurrido un error</h3>
+						</div><!-- modal-header -->
+						<div class="modal-body">
+							<div id="error-message">
+								Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
+							</div>
+						</div><!-- modal-body -->
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" onclick="closeModal('error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+						</div><!-- .modal-footer -->
+					</div><!-- .modal-content -->
+				</div><!-- .modal-dialog -->
+			</div><!-- .modal -->
+		</div>
     </main>
 
 </div>
