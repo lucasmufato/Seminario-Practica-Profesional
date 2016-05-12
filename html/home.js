@@ -1,5 +1,3 @@
-var selectedId = null;
-
 var viajes = [];
 
 initUI = function() {
