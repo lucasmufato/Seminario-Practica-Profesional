@@ -181,9 +181,7 @@ CREATE TABLE VIAJE (
     viaje_complementario INTEGER,
 	
 	PRIMARY KEY (id_viaje),
-	FOREIGN KEY (id_vehiculo) REFERENCES MANEJA (id_vehiculo),
-    FOREIGN KEY (id_cliente) REFERENCES MANEJA (id_cliente),
-    FOREIGN KEY (fecha_inicio_maneja) REFERENCES MANEJA (fecha_inicio),
+	FOREIGN KEY (id_cliente, id_vehiculo, fecha_inicio_maneja) REFERENCES MANEJA (id_cliente, id_vehiculo, fecha_inicio),
     FOREIGN KEY (viaje_complementario) REFERENCES VIAJE (id_viaje)
 );
 
