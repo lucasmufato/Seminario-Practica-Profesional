@@ -79,6 +79,7 @@ function changePage(page){
 	var template = $("#viaje-template").html();
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
 		if (viajes[i]){
+			viajes[i].reputacion_stars = aux.reputacionStars(viajes[i].reputacion);
 		    html += Mustache.render(template, viajes[i]);
 		}
     }
@@ -146,7 +147,7 @@ var sendForm = function (sendData, onsuccess) {
 			//"hora" : "20:30", //podria ir incluido en fecha
 			//"estado" : "2",
 			"conductor" : "Carlos Ruiz",
-			//"reputacion" : "3",
+			"reputacion" : "3",
 			"precio": "200",
 			"foto":"upload/foto.jpg"
 		},{
@@ -157,7 +158,7 @@ var sendForm = function (sendData, onsuccess) {
 			//"hora" : "12:30", //podria ir incluido en fecha
 			//"estado" : "1",
 			"conductor" : "Lisandro Pedrera",
-			//"reputacion" : "1",
+			"reputacion" : "1",
 			"precio": "200",
 			"foto":""
 		},{
@@ -168,7 +169,7 @@ var sendForm = function (sendData, onsuccess) {
 			//"hora" : "15:23", 
 			//"estado" : "4",
 			"conductor" : "Maria Cardenas",
-			//"reputacion" : 3,
+			"reputacion" : 3,
 			"precio": "456",
 			"foto":"img/home/administracion_usuarios.png"
 		},{
@@ -179,7 +180,7 @@ var sendForm = function (sendData, onsuccess) {
 			//"hora" : "20:30", //podria ir incluido en fecha
 			//"estado" : "3",
 			"conductor" : "Renata Lopez",
-			//"reputacion" : "5",
+			"reputacion" : "5",
 			"precio": "290",
 			"foto":"upload/foto.jpg"
 		}]
@@ -212,27 +213,6 @@ var sendForm = function (sendData, onsuccess) {
 }
 
 aux = {};
-/*
-aux.td = function (text,className){
-	var td = document.createElement('TD');
-	td.appendChild(document.createTextNode(text));
-	if (className != undefined) {td.className = className;}
-	return td;
-}
-*/
-/*
-aux.clearSelectedRow = function (tbody) {
-	debugTBODY = tbody;
-	var i = 0;
-
-	while (i < tbody.childNodes.length) {
-		$(tbody.childNodes[i]).removeClass('info');
-		i++;
-	}
-	aux.disableButtons ();
-	selectedId = null;
-}
-*/
 aux.disableButtons = function () {
 	$('#verViajeButton').prop('disabled', true);
 }

@@ -1,14 +1,16 @@
 .container-fluid{
 	margin-top:10px;
 }
+/*
  #Info{
    border:-color: #aaaaaa;
    border-width: 0.5px;
    border-style: solid;
    margin-right: -2px;
    margin-left: -2px;
+   margin-top:1%;
 }
-
+*/
 
 .clickable{
 	cursor: pointer;   

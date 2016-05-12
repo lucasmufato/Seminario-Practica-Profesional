@@ -36,6 +36,7 @@ var simular = function(){
 		estado: "1", //1: postulado, 2: aceptado, 3: rechazado
 		nombre_usuario: "Carolo4",
 		foto:"img/home/administracion_usuarios.png",
+		reputacion:"1",
 		origen: "San Andres de Giles, Buenos Aires, Argentina",
 		destino: "Carmen de areco, Buenos Aires, Argentina",
 		apellido: "Perez",
@@ -46,6 +47,7 @@ var simular = function(){
 		estado: "2", //1: postulado, 2: aceptado, 3: rechazado
 		nombre_usuario: "KarinaK100",
 		foto:"upload/foto.jpg",
+		reputacion:"2",
 		origen: "Navarro, Buenos Aires, Argentina",
 		destino: "Rosario, Santa Fe, Argentina",
 		apellido: "Krenz",
@@ -56,6 +58,7 @@ var simular = function(){
 		estado: "3",
 		nombre_usuario: "RodolfoU",
 		foto:"upload/foto.jpg",
+		reputacion:"3",
 		origen: "Rosario, Santa Fe, Argentina",
 		destino: "Montevideo, Uruguay",
 		apellido: "Uber",
@@ -73,6 +76,7 @@ var cargarPostulantes = function(){
 	postulantes.forEach(function(elem){
 		elem.estado_string = estadoString(elem.estado);
 		elem.color_panel = colorPanel(elem.estado);
+		elem.reputacion_stars = reputacionStars(elem.reputacion);
 		if (elem.es_pendiente = elem.estado == 1){
 			htmlPendientes += Mustache.render(template, elem);
 		}else{
@@ -172,6 +176,14 @@ var colorPanel = function(caracter){
 		case null: return "default";
 		default: return "default";
 	}
+}
+var reputacionStars = function(caracter){
+	var stars = "";
+	while (caracter > 0){
+		stars += "★";
+		caracter--;
+	}
+	return stars;
 }
 
 var modalMessage = function (modalName,textMsg,titleMsg) {

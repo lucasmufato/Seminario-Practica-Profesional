@@ -59,43 +59,77 @@
 <body>
 	<main>
 		<div class="container-fluid">
-				<header class="col-xs-12 bg-primary">
-						<h3 class="pull-center col-xs-10">Mis Viajes</h3>
-						<div class="pull-right">
-							<span class="clickable alinear col-xs-2" data-toggle="collapse" data-target="#formFilter"  aria-expanded="false"  aria-controls="formFilter">
-								<i class="glyphicon glyphicon-filter"  data-toggle="tooltip" title="Filtrar viajes" data-container="body"></i>
-							</span>
-						</div>
-				</header>
-				<form class="form-horizontal collapse" id="formFilter" onsubmit="console.log('envio desde html'); return false">
+			<header class="col-xs-12 bg-primary">
+					<h3 class="col-xs-10">Mis Viajes</h3>
+					<div class="pull-right">
+						<span class="clickable alinear col-xs-2" data-toggle="collapse" data-target="#formFilter"  aria-expanded="false"  aria-controls="formFilter">
+							<i class="glyphicon glyphicon-filter"  data-toggle="tooltip" title="Filtrar viajes" data-container="body"></i>
+						</span>
+					</div>
+			</header>
+			<form class="form-horizontal collapse" id="formFilter" onsubmit="console.log('envio desde html'); return false">
 
-					<div class="form-group">
-						<label for="fechadesde" class="control-label col-xs-2 col-xs-offset-1 col-sm-3 col-sm-offset-0">Desde:</label>
-						<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
-							<div class="input-group date form_date">
-								<input type="text" class="form-control" name="fechadesde"  placeholder="Fecha desde" id="fechadesde">
-								<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-						</div>
-						<label for="fechahasta" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Hasta:</label>
-						<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
-							<div class="input-group date form_date">
-								<input type="text" class="form-control" placeholder="Fecha hasta" name="fechahasta" id="fechahasta">
-								<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>					
-							</div>
+				<div class="form-group">
+					<label for="fechadesde" class="control-label col-xs-2 col-xs-offset-1 col-sm-3 col-sm-offset-0">Desde:</label>
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+						<div class="input-group date form_date">
+							<input type="text" class="form-control" name="fechadesde"  placeholder="Fecha desde" id="fechadesde">
+							<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="origen-destino" class="control-label col-xs-2 col-sm-3 col-sm-offset-0 col-xs-offset-1">Origen/Destino:</label>
-						<div class="col-xs-3 col-sm-3 col-lg-2">
-							<input type="text" class="form-control" name="origen-destino" placeholder="Origen/Destino">
-						</div>
-					<!-- BOTON  -->
-						<div class="col-xs-3 col-md-3 col-lg-2 col-lg-offset-3 col-xs-offset-2 col-md-offset-2">
-							<button class="btn btn-block btn-primary " type="submit"><span class="glyphicon glyphicon-filter"></span> Filtrar</button>
+					<label for="fechahasta" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Hasta:</label>
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+						<div class="input-group date form_date">
+							<input type="text" class="form-control" placeholder="Fecha hasta" name="fechahasta" id="fechahasta">
+							<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>					
 						</div>
 					</div>
-				</form>
+				</div>
+				<div class="form-group">
+					<label for="origen-destino" class="control-label col-xs-2 col-sm-3 col-sm-offset-0 col-xs-offset-1">Origen/Destino:</label>
+					<div class="col-xs-3 col-sm-3 col-lg-2">
+						<input type="text" class="form-control" name="origen-destino" placeholder="Origen/Destino">
+					</div>
+				<!-- BOTON  -->
+					<div class="col-xs-3 col-md-3 col-lg-2 col-lg-offset-3 col-xs-offset-2 col-md-offset-2">
+						<button class="btn btn-block btn-primary " type="submit"><span class="glyphicon glyphicon-filter"></span> Filtrar</button>
+					</div>
+				</div>
+			</form>
+			<article class="col-sm-12 col-lg-12">
+				<div class="col-sm-12 row" id="Info">
+					<div class="col-sm-6 row">
+						<label class="col-sm-6">Usuario Conductor:</label> 
+						<div class="col-sm-6">
+							<p id="nombreConductor">Pepito</p>
+						</div>
+					</div>
+					<div class="col-sm-6 row">
+						<label class="col-sm-6">Nombre de Viaje:</label> 
+						<div class="col-sm-6">
+							<p id="nombreViaje">Diario</p>
+						</div>
+					</div>
+					<div class="col-sm-6 row">
+						<label class="col-sm-6">Origen:</label> 
+						<div class="col-sm-6">
+							<p id="origen">Moreno</p>
+						</div>
+					</div>
+					<div class="col-sm-6 row">
+						<label class="col-sm-6">Destino:</label> 
+						<div class="col-sm-6">
+							<p id="destino">Luján</p>
+						</div>
+					</div>
+					<div class="col-sm-6 row">
+						<label class="col-sm-6">Fecha:</label> 
+						<div class="col-sm-6">
+							<p id="fecha">28/10/2016</p>
+						</div>
+					</div>
+				</div>
+			</article>
 		</div>
     </main>
 </body>	
