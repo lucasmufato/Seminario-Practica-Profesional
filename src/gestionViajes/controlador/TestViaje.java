@@ -55,38 +55,6 @@ public class TestViaje extends TestCase {
 		//este metodo se ejecuta despues de cada parte del test
 		//O SE PUEDE PONER ACA EL CODIGO PARA VACIAR LA BD
 	}
-
-	@Ignore		//ignoro el test, si lo quiere probar reemplazenlo por @Test
-	public void testEjemplo() {
-		//test data
-		int num= 5;
-		String temp= null;
-		String str= "Junit is working fine";
-		
-		//SI ALGO DA FALLO A MITAD DEL METODO DEL TEST, ESTE DEJA DE EJECUTARSE Y QUEDA COMO FALLO
-		//SE PUEDE PROBAR CAMBIADO UNA LETRA DE LA FRASE DE ABAJO
-		
-		//check for equality
-		assertEquals("Junit is working fine", str);
-		
-		//check for false condition
-		assertFalse(num > 6);
-		
-		//check for not null value
-		assertNotNull(str);
-		
-		//count the number of test cases
-		System.out.println("No of Test Case = "+ this.countTestCases());
-		
-		//test getName 
-		String name= this.getName();
-		System.out.println("Test Case Name = "+ name);
-		
-		//test setName
-		this.setName("testNewAdd");
-		String newName= this.getName();
-		System.out.println("Updated Test Case Name = "+ newName);
-	}
 	
 	@Test
 	public void testNuevoViajeCorrectoSINVUELTA() {
@@ -218,39 +186,37 @@ public class TestViaje extends TestCase {
 		}
 		assertTrue(bandera);
 	}
-	/*
-	@Test
-	public void testNuevoViajeDatosIncorrecto() {
-		//teste que envia un json incorrecto y tendria q mostrar un error de alguna forma
-		JSONObject json= new JSONObject();
-		try {
-			this.daoviajes.nuevoViaje(json);
-		} catch (ExceptionViajesCompartidos e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	*/
 	
 	@Test
-	public void testgetConductorViajeCorrecto() {
-		//test q envie un viaje que existe
+	public void testgetConductorYVehiculoViajeCorrecto() {
+		//teste que crear un vehiculo, lo asocia a un viaje, y despues obtiene los datos del cliente y vehiculo de ese viaje
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+		JSONObject json_viaje = this.crearViaje();		
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json_viaje) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
 		
+		Viaje viaje=null;	//metodo para recuperar el viaje
+		
+		assertNotNull(this.daoviajes.getVehiculoViaje(viaje.getId_viaje()));
+		assertNotNull(this.daoviajes.getConductorViaje(viaje.getId_viaje()));
 	}
 	
-	/*
 	@Test
-	public void testgetConductorViajeIncorrecto() {
-		//test q envie un viaje que no existe
-		JSONObject json= new JSONObject();
-		try {
-			this.daoviajes.nuevoViaje(json);
-		} catch (ExceptionViajesCompartidos e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testgetConductorYVehiculoViajeINCorrecto() {
+		//teste que trata de obtener los datos de un viaje q no existe
+		
+		assertNull(this.daoviajes.getVehiculoViaje(1));
+		assertNull(this.daoviajes.getConductorViaje(1));
 	}
-	*/
 	
 	@SuppressWarnings("unchecked")
 	@Test
@@ -343,7 +309,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearViaje(){
-		
 		/*
 		{ "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
 			 "VEHICULO": ID_VEHICULO,
@@ -352,7 +317,6 @@ public class TestViaje extends TestCase {
 			 "CLIENTE":ID_CLIENTE
 			 }
 		*/
-		
 		JSONObject json2 = new JSONObject();
 		json2.put("vehiculo", "abd123");
 		json2.put("cliente", 2);
