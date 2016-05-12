@@ -35,7 +35,7 @@ var simular = function(){
 	postulantes = [{
 		estado: "1", //1: pendiente, 2: viajo, 3: no viajo
 		nombre_usuario: "Carolo4",
-		foto:"img/home/administracion_usuarios.png"
+		foto:"img/home/administracion_usuarios.png" //ACA HABRIA QUE AGREGAR COMENTARIO Y VALORACION?
 	},{
 		estado: "2", //1: pendiente, 2: viajo, 3: no viajo
 		nombre_usuario: "KarinaK100",
@@ -57,8 +57,14 @@ var cargarPostulantes = function(){
 		elem.color_panel = colorPanel(elem.estado);
 		if (elem.es_pendiente = elem.estado == 1){
 			htmlPendientes += Mustache.render(template, elem);
-		}else{
-			htmlNoPendientes += Mustache.render(template, elem);
+		} else {
+			if (elem.es_viajo = elem.estado == 2){
+				htmlNoPendientes += Mustache.render(template, elem);
+			} else {
+				if (elem.es_viajo = elem.estado == 3){
+					htmlNoPendientes += Mustache.render(template, elem);
+				}
+			}
 		}
 	});
 	if (htmlPendientes != "" && htmlNoPendientes != ""){

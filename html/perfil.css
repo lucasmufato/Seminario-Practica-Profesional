@@ -6,12 +6,12 @@
     border-top: 0;
 }
 
-
 .table-user-information > tbody > tr > td {
     border-top: 0;
 }
-#reputacion {
+.reputacion {
 	font-size: 2em;
+    color: orange;
 }
 .tabla input[disabled] {
 	background-color: transparent;
