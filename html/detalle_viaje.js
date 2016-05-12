@@ -3,6 +3,7 @@ data.viaje = {};
 data.viaje.id = getUrlVars()["id"];
 data.conductor = {};
 data.vehiculo = {};
+data.localidades = [];
 data.comentarios = {};
 data.usuario_logueado = {};
 
@@ -38,6 +39,7 @@ data.loadData = function() {
 			data.viaje = jsonData.viaje;
 			data.conductor = jsonData.conductor;
 			data.vehiculo = jsonData.vehiculo;
+			data.localidades = jsonData.localidades;
 			data.comentarios = jsonData.comentarios;
 			data.usuario_logueado = jsonData.usuario_logueado;
 			cargarViaje();
@@ -84,13 +86,13 @@ var simular = function(json){
 		estado: "3",
 		tipo: "ida",
 		id_viaje_complemento: "4",
-		origen: "Lujan",
-		destino: "Moreno",
+		origen: "324",
+		destino: "880",
 		fecha: "12/09/2016",
 		hora: "20:30",
 		precio: "30",
 		participantes: "1",
-		recorrido: ["Lujan", "Rodriguez","Moreno"]
+		recorrido: ["324", "112","880"]
 	};
 	data.conductor = {
 		nombre_usuario: "Juanc23",
@@ -108,8 +110,24 @@ var simular = function(json){
 		verificado: "S",
 		foto: "upload/auto.jpg"
 	};
+	data.localidades = [{
+		id: "324",
+		nombre: "Lujan",
+		lat: "",
+		lng: "" 
+	},{
+		id: "112",
+		nombre: "Rodriguez",
+		lat: "",
+		lng: "" 
+	},{
+		id: "880",
+		nombre: "Moreno",
+		lat: "",
+		lng: "" 
+	}];
 	data.usuario_logueado = {
-		es_conductor: true,
+		es_conductor: false,
 		es_pasajero: false,
 		es_seguidor: false,
 		ha_calificado: false
@@ -211,13 +229,13 @@ var cargarViaje = function(){
 	setearViajeComplemento(data.viaje.id_viaje_complemento);
 
 	$("#estado").text(estadoString (data.viaje.estado));
-	$("#origen").text(data.viaje.origen);
-	$("#destino").text(data.viaje.destino);
+	$("#origen").text(localidadNombre (data.viaje.origen));
+	$("#destino").text(localidadNombre (data.viaje.destino));
 	$("#fecha").text(data.viaje.fecha);
 	$("#hora").text(data.viaje.hora);
 	$("#precio").text("$"+data.viaje.precio);
 	data.viaje.recorrido.forEach(function(elem){
-		$("#recorrido").append('<li>'+elem+'</li>');
+		$("#recorrido").append('<li>'+localidadNombre(elem)+'</li>');
 	});
 
 }
@@ -250,7 +268,7 @@ var cargarTramos = function(recorrido){
 	$(queryOrigen+","+queryDestino).empty();
 	for (var i=0; i<recorrido.length; i++){
 		var valor = recorrido[i];
-		var texto = (i+1)+" - "+valor;
+		var texto = (i+1)+" - "+localidadNombre(recorrido[i]);
 		var op = createOp(valor,texto);
 		if (i == 0){
 			//agrego primer elemento solo a origen
@@ -446,6 +464,16 @@ var customAlert = function(panel,elemento,msg){
 	$(elemento).change(function(){
 		$(panel).empty();
 	});
+}
+
+var localidadNombre = function(id){
+	var nombre = "";
+	data.localidades.forEach(function(elem){
+		if (elem.id == id){
+			nombre = elem.nombre;
+		}
+	});
+	return nombre;
 }
 
 var estadoString = function (caracter) {
