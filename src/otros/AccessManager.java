@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import gestionUsuarios.controlador.*;
+import gestionUsuarios.modelo.Usuario;
 public class AccessManager {
 	
 	
@@ -46,9 +47,21 @@ public class AccessManager {
 		cookie.setMaxAge(60*60*24*365); // tiempo de vida de cookie en segundos
 		response.addCookie(cookie);
 	}
+
+	public static String nombreUsuario(HttpServletRequest request) {
+		return ValorCookie(request);
+	}
+
+	public static int getIdUsuario(HttpServletRequest request) {
+		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
+		Usuario usuario = (Usuario) dao.buscarPorClaveCandidata("Usuario", nombreUsuario(request));
+		return usuario.getId_usuario();
+	}
+
 	public static String ValorCookie(HttpServletRequest request) {
 		return getCookieUsuario(request).getValue();
 	}
+
 	public static boolean EliminarCookie(HttpServletRequest request, HttpServletResponse response){
 		Cookie c = getCookieUsuario(request);
 		if (c!=null){

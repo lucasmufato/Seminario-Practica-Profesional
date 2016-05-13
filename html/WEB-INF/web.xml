@@ -34,4 +34,13 @@
         <servlet-name>autocompletado</servlet-name>
         <url-pattern>/autocompletado</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>viajes</servlet-name>
+        <servlet-class>gestionViajes.controlador.ServletViaje</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>viajes</servlet-name>
+        <url-pattern>/viajes</url-pattern>
+    </servlet-mapping>
 </web-app>
