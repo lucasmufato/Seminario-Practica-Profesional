@@ -94,6 +94,7 @@ var calificarPendiente = function(nombre_usuario){
 	console.log($("#confirmacion_"+nombre_usuario).val());
 	console.log($("input:radio[name=estrellas_"+nombre_usuario+"]:checked").val());
 	console.log($("#comments_"+nombre_usuario).val());
+	completos(nombre_usuario);
 	var sendData = {
 		action: "calificar_pendiente",
 		id: idViaje,
@@ -175,6 +176,19 @@ var mostrarParticipacion = function (caracter) {
 		case 'n': return "No participó en el viaje";
 	}
 }
+
+var completos = function(nombre_usuario){
+	var confirmacion = $("#confirmacion_"+nombre_usuario).val();
+	var valoracion = $("input:radio[name=estrellas_"+nombre_usuario+"]:checked").val();
+	var comentario = $("#comments_"+nombre_usuario).val();
+	if (valoracion == undefined || comentario == ""){
+		var msg = "Falta completar información";
+		modalMessage("error", msg, "Error");
+		return false;
+	}
+	return true;
+}
+
 
 var modalMessage = function (modalName,textMsg,titleMsg) {
 	$('#'+modalName+'-message').text(textMsg);
