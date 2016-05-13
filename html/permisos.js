@@ -1,5 +1,7 @@
 data={};
 data.permisos=[];
+data.usuario={};
+data.roles=[];
 
 $(document).ready(function(){
 	esconderFuncionalidades();
@@ -18,6 +20,9 @@ function getPermisosUsuario() {
 	var callback = function (jsonData){
 		if (jsonData.result){
 			data.permisos = jsonData.permisos;
+			data.usuario = jsonData.usuario;
+			data.roles = jsonData.roles;
+			cargarBotones();
 			mostrarFunciones();
 		}else if (jsonData.redirect != undefined){
 			window.location = jsonData.redirect;
@@ -42,8 +47,16 @@ function send(sendData,callback){
 		}
 	});
 }
+var cargarBotones = function(){
+	$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuario.nombre_usuario);
+	$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuario.nombre_usuario);
+	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuario.nombre_usuario);
+}
 function mostrarFunciones(){
 	console.log("Permisos que me traje: ",data.permisos);
+		console.log("roles que me traje: ",data.roles);
+	console.log("usuario que me traje: ",data.usuario);
+
 	if (data.permisos){
 		var permiso=0;
 		for (permiso in data.permisos){
@@ -57,15 +70,3 @@ function mostrarFunciones(){
 		}
 	}
 }
-/*
-function getCookie(nombreCookie) {
-    var nombre = nombreCookie + "=";
-    var propiedadesCookies = document.cookie.split(';');
-    for(var i=0; i<propiedadesCookies.length; i++) {
-        var c = propiedadesCookies[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(nombre) == 0) return c.substring(nombre.length,c.length);
-    }
-    return "";
-}
-*/

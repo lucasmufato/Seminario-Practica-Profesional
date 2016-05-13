@@ -91,16 +91,20 @@ initMap = function() {
 
 var cargarRutaEnMapa = function(){
 	mapData.marcadores = [];
-
-	data.localidades.forEach(function(item){
+	var i=1; //para que label de los marcadores muestre secuencia
+	data.viaje.recorrido.forEach(function(id){
+		var item = localidadPorId(id);
+		
 		mapData.marcadores.push(new google.maps.Marker({
 				position: {
 					lat: parseFloat(item.lat),
 					lng: parseFloat(item.lng)
 				},
 				map: mapData.map,
-				title: item.nombre
+				title: item.nombre,
+				label: i.toString()
 			}));
+		i++;
 	});
 
 	pedirRuta();
@@ -523,7 +527,15 @@ var customAlert = function(panel,elemento,msg){
 		$(panel).empty();
 	});
 }
-
+var localidadPorId = function(id){
+	var l;
+	data.localidades.forEach(function(elem){
+		if (elem.id == id){
+			l = elem;
+		}
+	});
+	return l;
+}
 var localidadNombre = function(id){
 	var nombre = "";
 	data.localidades.forEach(function(elem){

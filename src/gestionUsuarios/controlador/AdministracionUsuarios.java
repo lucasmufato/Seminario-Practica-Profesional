@@ -471,8 +471,14 @@ public class AdministracionUsuarios extends HttpServlet {
 	private JSONObject getPermisosUsuario (HttpServletRequest request) {		
 		JSONObject salida = new JSONObject ();
 		if (AccessManager.EstaLogueado(request)){
-			JSONArray permisos = dao.NombrePermisosDeUnUsuario(AccessManager.ValorCookie(request));
+			JSONObject usuario = new JSONObject();
+			String nombreUsuario = AccessManager.ValorCookie(request);
+			usuario.put("nombre_usuario", nombreUsuario);
+			JSONArray roles = dao.NombreRolUsuario(nombreUsuario);
+			JSONArray permisos = dao.NombrePermisosDeUnUsuario(nombreUsuario);
 			salida.put ("result", true);
+			salida.put("usuario", usuario);
+			salida.put("roles", roles);
 			salida.put("permisos", permisos);
 		}else{
 			salida.put ("result", false);
