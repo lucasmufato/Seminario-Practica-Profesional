@@ -67,14 +67,17 @@
 								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante()"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
 							</div>
 							{{/es_pendiente}}
-							{{#es_viajo}}
+							{{#es_listo}}
+								<div class="col-md-12">
+									<p><strong>{{participacion}}</strong></p>
+								</div>
 								<div class="col-md-12" align="center">
-										<p class="reputacion">★★★★★</p>
+										<p class="reputacion">{{cantidad_estrellas}}</p>
 									</div>
 								<div class="col-md-12">
-									<p class="comentario">Acá va el comentario</p>
+									<p class="comentario">{{comentario}}</p>
 								</div>
-							{{/es_viajo}}
+							{{/es_listo}}
 						</div>
 					</div>
 				</div>

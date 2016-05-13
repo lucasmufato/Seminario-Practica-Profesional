@@ -4,8 +4,8 @@ var postulantes = [];
 var loadData = function() {
 
 	var sendData = {
-		action: "ver_postulantes",
-		"id": idViaje
+		action: "ver_calificar_pendientes",
+		id: idViaje
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
@@ -33,17 +33,26 @@ window.onload=initUI;
 
 var simular = function(){
 	postulantes = [{
-		estado: "1", //1: pendiente, 2: viajo, 3: no viajo
+		estado: "1", //1: sin_calificar, 2: calificado,
 		nombre_usuario: "Carolo4",
-		foto:"img/home/administracion_usuarios.png" //ACA HABRIA QUE AGREGAR COMENTARIO Y VALORACION?
+		foto:"img/home/administracion_usuarios.png",
+		participo: "",
+		valoracion: "",
+		comentario: ""
 	},{
-		estado: "2", //1: pendiente, 2: viajo, 3: no viajo
+		estado: "2", //1: sin_calificar, 2: calificado,
 		nombre_usuario: "KarinaK100",
-		foto:"img/home/administracion_usuarios.png"
+		foto:"img/home/administracion_usuarios.png",
+		participo: "s",
+		valoracion: "4",
+		comentario: "viajo todo bien"
 	},{
-		estado: "3", //1: pendiente, 2: viajo, 3: no viajo
+		estado: "2", //1: sin_calificar, 2: calificado,
 		nombre_usuario: "RodolfoU",
-		foto:"img/home/administracion_usuarios.png"
+		foto:"img/home/administracion_usuarios.png",
+		participo: "n",
+		valoracion: "0",
+		comentario: "no viajo!"
 	}];
 	if (postulantes.length) cargarPostulantes();
 }
@@ -55,15 +64,13 @@ var cargarPostulantes = function(){
 	postulantes.forEach(function(elem){
 		elem.estado_string = estadoString(elem.estado);
 		elem.color_panel = colorPanel(elem.estado);
+		elem.cantidad_estrellas = mostrarEstrellas(elem.valoracion);
+		elem.participacion = mostrarParticipacion(elem.participo);
 		if (elem.es_pendiente = elem.estado == 1){
 			htmlPendientes += Mustache.render(template, elem);
 		} else {
-			if (elem.es_viajo = elem.estado == 2){
+			if (elem.es_listo = elem.estado == 2){
 				htmlNoPendientes += Mustache.render(template, elem);
-			} else {
-				if (elem.es_viajo = elem.estado == 3){
-					htmlNoPendientes += Mustache.render(template, elem);
-				}
 			}
 		}
 	});
@@ -82,10 +89,12 @@ var cargarPostulantes = function(){
 	$("#panel-postulantes").html(html);
 }
 
-var aceptarPostulante = function(){
+var calificarPendiente = function(){
 	var sendData = {
-		action: "aceptar_postulante",
-		"id": idViaje
+		action: "calificar_pendiente",
+		id: idViaje,
+
+
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
@@ -93,7 +102,7 @@ var aceptarPostulante = function(){
 			postulantes = jsonData.postulantes;
 			cargarPostulantes();
 		} else {
-			modalMessage("error",jsonData.msg,"Aceptar postulante");
+			modalMessage("error",jsonData.msg,"Calificar");
 		}
 	}	
 	sendAjax(sendData,onsuccess);
@@ -125,9 +134,8 @@ var sendAjax = function(sendData,callback){
 
 var estadoString = function (caracter) {
 	switch (caracter) {
-		case '1': return "Pendiente";
-		case '2': return "Viajo";
-		case '3': return "No viajo";
+		case '1': return "No Calificado";
+		case '2': return "Calificado";
 		case null: return "No especificado";
 		default: return "Desconocido";
 	}
@@ -136,10 +144,28 @@ var estadoString = function (caracter) {
 var colorPanel = function(caracter){
 	switch (caracter) {
 		case '1': return "info";
-		case '2': return "success";
-		case '3': return "danger";
+		case '2': return "default";
 		case null: return "default";
 		default: return "default";
+	}
+}
+
+var mostrarEstrellas = function (caracter) {
+	switch(caracter){
+		case '1': return "★"; 
+		case '2': return "★★"; 
+		case '3': return "★★★"; 
+		case '4': return "★★★★"; 
+		case '5': return "★★★★★";
+		case null: return "";
+		default: return "";
+	}
+}
+
+var mostrarParticipacion = function (caracter) {
+	switch(caracter) {
+		case 's': return "Participó en el viaje";
+		case 'n': return "No participó en el viaje";
 	}
 }
 
@@ -157,7 +183,7 @@ var closeModal = function (name) {
 function getUrlVars() {
 	var vars = {};
 	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-		vars[key] = value;
+		vars[key] = value; //ESTO ES CHINO?
 	});
 	return vars;
 }
