@@ -33,13 +33,14 @@ public abstract class DataAccesObject {
 			e.printStackTrace();
 			return null;
 		}
-	}
+	}	
 	
 	//ESTE METODO RECIVE EL NOMBRE DE UNA CLASE/TABLA Y LA VACIA DE LA BD
 	public void vaciarTabla(String nombre_tabla){
 		try{
 			this.entitymanager.getTransaction().begin();
 			Query q=this.entitymanager.createQuery("DELETE FROM "+nombre_tabla+" e ");
+			//Query q=this.entitymanager.createQuery("TRUNCATE TABLE "+nombre_tabla+" e ");
 			q.executeUpdate();
 			this.entitymanager.getTransaction().commit();
 		}catch(NoResultException e){

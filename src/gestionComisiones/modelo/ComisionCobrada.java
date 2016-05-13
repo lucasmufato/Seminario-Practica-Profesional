@@ -20,6 +20,7 @@ public class ComisionCobrada implements JSONable {
 	@Id
 	protected Integer id_comision_cobrada;
 	protected float monto;
+	protected EstadoComisionCobrada estado;
 	
 	protected Comision comision;
 	protected MovimientoSaldo movimiento_saldo;

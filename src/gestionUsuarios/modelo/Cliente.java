@@ -28,6 +28,8 @@ public class Cliente extends Usuario implements JSONable {
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.PERSIST)
 	protected List<Maneja> vehiculos= new ArrayList<Maneja>();
 	
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.PERSIST)
+	protected List<Notificacion> notificaciones= new ArrayList<Notificacion>();
 	
 	public Cliente(){
 		super();
@@ -175,6 +177,18 @@ public class Cliente extends Usuario implements JSONable {
 		}
 		//si llego aca es por q no podia manejar un vehiculo con ese id
 		return false;
+	}
+
+	public List<Notificacion> getNotificaciones() {
+		return notificaciones;
+	}
+
+	public void setNotificaciones(List<Notificacion> notificaciones) {
+		this.notificaciones = notificaciones;
+	}
+	
+	public void enviarNotificacion(Notificacion notificacion){
+		this.notificaciones.add(notificacion);
 	}
 	
 }

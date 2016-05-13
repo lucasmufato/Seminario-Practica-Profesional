@@ -21,7 +21,7 @@ public class Calificacion implements JSONable {
 	protected Integer id_calificacion;
 	protected Integer calificacion_otorgada;
 	protected Integer calificacion_recibida;
-	protected Character participo;
+	protected EstadoClasificacion participo;
 	
 	protected MovimientoPuntos movimiento_puntos;
 	
@@ -62,12 +62,12 @@ public class Calificacion implements JSONable {
 	}
 
 
-	public Character getParticipo() {
+	public EstadoClasificacion getParticipo() {
 		return participo;
 	}
 
 
-	public void setParticipo(Character participo) {
+	public void setParticipo(EstadoClasificacion participo) {
 		this.participo = participo;
 	}
 

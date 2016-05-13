@@ -149,7 +149,7 @@ public class DAOViajes extends DataAccesObject {
 		viaje.setFecha_alta(new Date((new java.util.Date()).getTime()));
 		viaje.setFecha_cancelacion(null);
 		viaje.setFecha_finalizacion(null);
-		viaje.setEstado('a');		//falta hacer los enum	
+		viaje.setEstado(EstadoViaje.no_iniciado);		//falta hacer los enum	
 		
 		viaje.setAsientos_disponibles((Integer) datos.get("cantidad_asientos"));
 		viaje.setNombre_amigable((String) datos.get("nombre_amigable"));
@@ -250,8 +250,15 @@ public class DAOViajes extends DataAccesObject {
 		}
 	}
 	
-	public void Cliente_se_postula_en_viaje(Integer id_viaje, Integer id_cliente){
-		// TODO Auto-generated method stub
+	public boolean Cliente_se_postula_en_viaje(JSONObject json) throws ExceptionViajesCompartidos{//no testeado todavia
+		/*
+		 * JSON{
+		 * "CLIENTE":ID_CLIENTE,
+		 * "VIAJE":ID_VIAJE,
+		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * } 
+		 */
 		/*
 		 * recuperar cliente
 		 * recuperar viaje
@@ -260,6 +267,47 @@ public class DAOViajes extends DataAccesObject {
 		 * crear_comision_por_pasajero estado pendiente
 		 * 
 		 */
+		Integer id_cliente= (Integer) json.get("cliente");
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: CLIENTE NO ENCONTRADO");
+		}
+		Integer id_viaje = (Integer) json.get("viaje");
+		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRAD");
+		}
+		Integer id_subida= (Integer) json.get("localidad_subida");
+		Localidad localidad_subida= (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_subida);
+		if(localidad_subida==null){
+			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA NO EXISTE");
+		}
+		Integer id_bajada= (Integer) json.get("localidad_bajada");
+		Localidad localidad_bajada= (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_bajada);
+		if(localidad_bajada==null){
+			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE BAJADA NO EXISTE");
+		}
+		if(viaje.getEstado()==EstadoViaje.cancelado || viaje.getEstado()==EstadoViaje.finalizado){
+			throw new ExceptionViajesCompartidos("ERROR: NO PUEDE POSTULARSE A UN VIAJE FINALIZADO/CANCELADO");
+		}
+		if( cliente.getId_usuario()==viaje.getConductor_vehiculo().getCliente().getId_usuario() ){
+			throw new ExceptionViajesCompartidos("ERROR: NO PUEDES UNIRTE COMO PASAJERO A UN VIAJE QUE VOS MISMO CREASTE");
+		}
+		if (!viaje.contiene_localidades_en_orden(localidad_subida,localidad_bajada)){
+			throw new ExceptionViajesCompartidos("ERROR: NO LA LOCALIDAD DE SUBIDA ES DESPUES DE LA DE BAJADA");
+		}
+		this.entitymanager.getTransaction().begin();
+		PasajeroViaje pasajero= new PasajeroViaje();
+		pasajero.setCalificacion(null);
+		pasajero.setCliente(cliente);
+		pasajero.setEstado(EstadoPasajeroViaje.postulado);
+		pasajero.setKilometros(0);			//TODO falta hacer la parte de los kilometros
+		pasajero.setComision(null);			// y de calcular la comision
+		
+		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
+		this.entitymanager.persist(pasajero);
+		this.entitymanager.getTransaction().commit();
+		return true;
 	}
 	
 	public Integer comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje){
@@ -309,8 +357,19 @@ public class DAOViajes extends DataAccesObject {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public List<Notificacion> notificacionesPorCliente(Integer id_cliente){
+		//TODO
+		return null;
+	}
+	
+	public boolean tieneNotificaciones(Integer id_cliente){
+		//TODO
+		return false;
+	}
 
 	//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
+	@Deprecated		//le puse q es deprecated para q no lo vaya a usar sin querer y hacer boleta la BD jjajajajaja
 	public void borrarRelacionesEntreViajes() {
 		this.entitymanager.getTransaction().begin();
 		List<Viaje> viajes=this.selectAll("Viaje");

@@ -25,6 +25,7 @@ public class Sancion {
 	protected Cliente cliente;
 	protected MovimientoPuntos movimiento_puntos;
 	protected TipoSancion tipo_sancion;
+	protected EstadoSancion estado;
 	
 	public Sancion(){
 		

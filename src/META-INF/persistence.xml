@@ -13,6 +13,7 @@
 		<class>gestionPuntos.modelo.Sancion</class>
 		<class>gestionPuntos.modelo.TipoSancion</class>
 		<class>gestionUsuarios.modelo.Cliente</class>
+		<class>gestionUsuarios.modelo.Notificacion</class>
 		<class>gestionUsuarios.modelo.Permiso</class>
 		<class>gestionUsuarios.modelo.PermisoRol</class>
 		<class>gestionUsuarios.modelo.PermisoRolID</class>

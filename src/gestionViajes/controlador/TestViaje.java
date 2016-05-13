@@ -3,6 +3,7 @@ package gestionViajes.controlador;
 import static org.junit.Assert.*;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -294,6 +295,55 @@ public class TestViaje extends TestCase {
 		assertTrue(bandera);
 	}
 	
+	@Test
+	public void testNuevoPasajeroViajeCorrecto() {
+		//test q envie un json correcto y tendria q andar bien
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject crearPostulante() {
+		/*
+		 * JSON{
+		 * "CLIENTE":ID_CLIENTE,
+		 * "VIAJE":ID_VIAJE,
+		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * } 
+		 */
+		JSONObject json =new JSONObject();
+		json.put("cliente", 3);
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		json.put("viaje", viaje.getId_viaje());
+		json.put("localidad_subida", 3427200);
+		json.put("localidad_bajada", 3427205);
+		return json;
+	}
+
 	@SuppressWarnings("unchecked")
 	private JSONObject crearVehiculo(){
 		JSONObject json= new JSONObject();

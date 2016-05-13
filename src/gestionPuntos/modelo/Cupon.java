@@ -19,7 +19,7 @@ public class Cupon implements JSONable {
 	
 	@Id
 	protected Integer id_cupon;
-	protected Character estado;
+	protected EstadoCupon estado;
 	protected Date fecha_caduca;
 	
 	protected Beneficio beneficio;
@@ -38,11 +38,11 @@ public class Cupon implements JSONable {
 		this.id_cupon = id;
 	}
 
-	public Character getEstado() {
+	public EstadoCupon getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Character estado) {
+	public void setEstado(EstadoCupon estado) {
 		this.estado = estado;
 	}
 

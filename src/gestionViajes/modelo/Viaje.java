@@ -46,7 +46,7 @@ public class Viaje implements JSONable {
 	@Column(nullable=false)
 	protected Integer asientos_disponibles;
 	@Column(nullable=false)
-	protected Character estado; 		//falta hacer el enum
+	protected EstadoViaje estado; 		//falta hacer el enum
 	@Column(nullable=false)
 	protected Date fecha_inicio;
 	@Column(nullable=false)
@@ -77,22 +77,48 @@ public class Viaje implements JSONable {
 		for(Localidad l: arreglo_de_localidades){
 			this.localidades.add(new LocalidadViaje(this,l) );
 		}
-		return false;
+		return true;
 	}
 	
 	public void aniadir_localidad( Localidad loc1, Localidad loc2){
-		
+		// TODO		nose de donde salio este metodo(lucas)
 	}
 	
-	public void aniadir_pasajeroViaje (Integer id_cliente, Localidad subida, Localidad bajada){
-		//el pasajeroViaje se crea con estado POSTULADO
+	public boolean aniadir_pasajeroViaje (PasajeroViaje cliente, Localidad subida, Localidad bajada) throws ExceptionViajesCompartidos{
+		this.pasajeros.add(cliente);
+		cliente.setLocalidad_bajada(this.contiene_localidad(bajada));
+		cliente.setLocalidad_subida(this.contiene_localidad(subida));
+		cliente.setViaje(this);
+		
+		// TODO
+		return true;
+	}
+	
+	public LocalidadViaje contiene_localidad(Localidad localidad){
+		//recorro la lista de localidadesViaje, comparando por id, si tiene la localidad, te devuelve LocalidadViaje
+		Integer cantidad_iteraciones= this.localidades.size();
+		Integer index=0;
+		while(index<cantidad_iteraciones){
+			if( this.localidades.get(index).getLocalidad().getId() == localidad.getId() ){
+				return this.localidades.get(index);
+			}
+			index++;
+		}
+		return null;
 	}
 	
 	public List<Localidad> devolver_recorrido_desde_hasta(Localidad desde, Localidad hasta){
+		// TODO
 		return null;
 	}
 	
 	public PasajeroViaje recuperar_pasajeroViaje_por_cliente(Cliente cliente){
+		// TODO
+		return null;
+	}
+	
+	public List<Localidad> recuperarOrigenYDestino(){
+		// TODO
 		return null;
 	}
 	
@@ -152,11 +178,11 @@ public class Viaje implements JSONable {
 		return fecha_finalizacion;
 	}
 
-	public Character getEstado() {
+	public EstadoViaje getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Character estado) {
+	public void setEstado(EstadoViaje estado) {
 		this.estado = estado;
 	}
 
@@ -238,7 +264,7 @@ public class Viaje implements JSONable {
 		mi_vuelta.setFecha_alta(new Date((new java.util.Date()).getTime()));
 		// le pongo al viaje los datos propios que se repiten
 		mi_vuelta.setConductor_vehiculo(this.getConductor_vehiculo());
-		mi_vuelta.setEstado('A');
+		mi_vuelta.setEstado(EstadoViaje.no_iniciado);
 		mi_vuelta.setFecha_cancelacion(null);
 		mi_vuelta.setFecha_finalizacion(null);
 		//hago la relacion con sigo mismo
@@ -254,6 +280,34 @@ public class Viaje implements JSONable {
 			nuevo_recorrido.add(this.localidades.get(index).getLocalidad());
 		}
 		mi_vuelta.crearRecorrido(nuevo_recorrido);
+	}
+
+	public boolean contiene_localidades_en_orden(Localidad primer_localidad, Localidad segunda_localidad) {
+		//si el primero == segundo, va a decir q estan en orden
+		boolean encontre_primero=false;
+		Integer cantidad_iteraciones= this.localidades.size();
+		Integer index=0;
+		
+		while(index<cantidad_iteraciones){
+			if( this.localidades.get(index).getLocalidad().getId() == primer_localidad.getId() ){
+				//cuando encuentro el primero seteo la bandera
+				encontre_primero=true;
+			}else{
+				if( this.localidades.get(index).getLocalidad().getId() == segunda_localidad.getId() ){
+					//cuando encuentro el segundo pregunte si ya habia encontrado al primer
+					if(encontre_primero){
+						//si lo habia encontrado al primero significa q estan en orden
+						return true;
+					}else{
+						//si no lo habia encontrado, entonces encontre al segundo antes, y no estan en orden
+						return false;
+					}
+				}
+			}
+			
+			index++;
+		}
+		return false;
 	}
 
 }

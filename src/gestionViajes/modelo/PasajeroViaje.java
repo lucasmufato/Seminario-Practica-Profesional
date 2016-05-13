@@ -30,7 +30,7 @@ public class PasajeroViaje implements JSONable {
 	protected float kilometros;
 
 	@Column(nullable=false)
-	protected Character estado;		//falta hacer el enum	
+	protected EstadoPasajeroViaje estado;
 	
 	@JoinColumn(name="id_calificacion")
 	@ManyToOne(cascade=CascadeType.PERSIST)
@@ -64,14 +64,6 @@ public class PasajeroViaje implements JSONable {
 	
 	public PasajeroViaje(){
 
-	}
-	
-	public Integer getId() {
-		return id_pasajero_viaje;
-	}
-
-	public void setId(Integer id) {
-		this.id_pasajero_viaje = id;
 	}
 
 	public float getKilometros() {
@@ -128,6 +120,22 @@ public class PasajeroViaje implements JSONable {
 
 	public void setLocalidad_subida(LocalidadViaje localidad_subida) {
 		this.localidad_subida = localidad_subida;
+	}
+
+	public Integer getId_pasajero_viaje() {
+		return id_pasajero_viaje;
+	}
+
+	public void setId_pasajero_viaje(Integer id_pasajero_viaje) {
+		this.id_pasajero_viaje = id_pasajero_viaje;
+	}
+
+	public EstadoPasajeroViaje getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoPasajeroViaje estado) {
+		this.estado = estado;
 	}
 
 	@Override
