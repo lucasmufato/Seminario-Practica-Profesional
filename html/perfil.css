@@ -22,14 +22,8 @@
 	height: auto;
 	color: #000;
 }
-.tabla input[disabled]::-webkit-input-placeholder {
-    color: #333;
-}
-.tabla input[disabled]::-moz-placeholder {
-    color: #333;
-}
-.tabla .filterable .filters input[disabled]:-ms-input-placeholder {
-    color: #333;
+.tabla td {
+    color: #000;
 }
 .btn-file {
     position: relative;
@@ -56,5 +50,11 @@
 
 .panel{
     background-color: #ecf0f1;
+}
+header h3 {
+    text-align: center;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-top: 1px;
 }
 
