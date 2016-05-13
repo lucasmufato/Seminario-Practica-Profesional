@@ -89,11 +89,18 @@ var cargarPostulantes = function(){
 	$("#panel-postulantes").html(html);
 }
 
-var calificarPendiente = function(){
+var calificarPendiente = function(nombre_usuario){
+	console.log(nombre_usuario);
+	console.log($("#confirmacion_"+nombre_usuario).val());
+	console.log($("input:radio[name=estrellas_"+nombre_usuario+"]:checked").val());
+	console.log($("#comments_"+nombre_usuario).val());
 	var sendData = {
 		action: "calificar_pendiente",
 		id: idViaje,
-
+		nombre_usuario: nombre_usuario,
+		confirmacion: $("#confirmacion_"+nombre_usuario).val(),
+		valoracion: $("input:radio[name=estrellas_"+nombre_usuario+"]:checked").val(),
+		comentario: $("#comments_"+nombre_usuario).val()
 
 	}
 	var onsuccess = function(jsonData){
@@ -183,7 +190,7 @@ var closeModal = function (name) {
 function getUrlVars() {
 	var vars = {};
 	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-		vars[key] = value; //ESTO ES CHINO?
+		vars[key] = value;
 	});
 	return vars;
 }
