@@ -1,4 +1,4 @@
-var nombre_usuario = getUrlVars["usuario"];
+var nombre_usuario = getUrlVars()["usuario"];
 var viajes = [];
 
 var sendAjax = function(sendData,callback){
@@ -45,6 +45,16 @@ var initUI = function(){
 	ocultarPaneles();
 	loadData();
 	$('[data-toggle="tooltip"]').tooltip(); 
+	$('#fechadesde, #fechahasta').datetimepicker({
+        format: 'yyyy-mm-dd',
+    	language: "es",
+    	startView: 3,
+    	minView: 2,
+    	maxView: 2,
+		clearBtn: true,
+    	autoclose: true,
+    	todayBtn: true
+	});
 }
 
 var ocultarPaneles = function(){
@@ -95,14 +105,30 @@ var simular = function(){
 	showViajes();
 }
 
+var filterer = function(item){
+	var rctOrigenDestino = $('#formFilter input[name=origen-destino]').val().toLowerCase();
+	var rctFechaDesde = $('#formFilter input[name=fechadesde]').val();
+	var rctFechaHasta = $('#formFilter input[name=fechahasta]').val();
+	
+	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(rctFechaDesde); 
+	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(rctFechaHasta); 
+	
+	var fecha = new Date(item.fecha_inicio);
+	return (item.destino.toLowerCase().contains(rctOrigenDestino) || item.origen.toLowerCase().contains(rctOrigenDestino))
+			&& (fecha > rctFechaDesde || rctFechaDesde==="") 
+			&& (fecha < rctFechaHasta || rctFechaHasta==="");
+}
+
 var showViajes = function(){
 	$("#panel-mis-viajes").show();
-	if (viajes.length){
+	if (viajes.filter(filterer).length){
+		$("#busqueda-paginacion").show();
 		autogeneratePages();
 		changePage(1);
 	}else{
+		var msg = (viajes.length)? "No hay viajes": "Aun no ha realizado Viajes" ;
 		var html = 	"<div class='jumbotron'>"
-						+"<h4 class='text-center text-primary'>Aun no ha realizado viajes</h4>"
+						+"<h4 class='text-center text-primary'>"+msg+"</h4>"
 					+"</div>"
 		$("#busqueda-paginacion").hide();
 		$("#mis-viajes").html(html);
@@ -142,21 +168,15 @@ function changePage(page){
 
     var btn_prev = $("#previous-page");
     var btn_next = $("#next-page");
-    var listing_table = $("#mis-viajes");
+
  
     // Validate page
     if (page < 1) page = 1;
     if (page > numPages()) page = numPages();
 
-    var html = "";
-	var template = $("#viaje-template").html();
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
-		if (viajes[i]){
-			viajes[i].reputacion_stars = reputacionStars(viajes[i].reputacion);
-		    html += Mustache.render(template, viajes[i]);
-		}
+		generarHtmlViaje(i);
     }
-    listing_table.html(html);
 	
 	$( "#busqueda-paginacion").find(".active").removeClass("active");
 	$( "#busqueda-paginacion li:eq("+page+")" ).addClass("active");
@@ -174,7 +194,7 @@ function changePage(page){
     }
 }
 function numPages(){
-    return Math.ceil(viajes.length / records_per_page);
+    return Math.ceil(viajes.filter(filterer).length / records_per_page);
 }
 function prevPage(){
     if (current_page > 1) {
@@ -192,10 +212,22 @@ function nextPage(){
 
 ///////////fin-paginacion//////////
 
+var generarHtmlViaje = function(indiceViaje){
+	if (indiceViaje % records_per_page == 0) $("#mis-viajes").html("");
+	var viaje = viajes.filter(filterer)[indiceViaje];
+	if (viaje){
+		var template = $("#viaje-template").html();
+		viaje.reputacion_stars = reputacionStars(viaje.reputacion);
+		$("#mis-viajes").append(Mustache.render(template, viaje));
+	}
+}
+
 var toggleFilter = function(){
 	if ($("#formFilter").is(":visible")){
+		$("#formFilter input").attr("disabled",true);
 		$("#formFilter").slideUp();
 	}else{
+		$("#formFilter input").attr("disabled",false);
 		$("#formFilter").slideDown();
 	}
 }
@@ -212,6 +244,19 @@ reputacionStars = function(caracter){
 
 // funciones robadas
 
+/* Para navegadores viejos */
+if (Array.prototype.includes == undefined) {
+	Array.prototype.includes = function (item) {
+		return this.indexOf(item) != -1;
+	}
+}
+
+if (String.prototype.contains == undefined) {
+	String.prototype.contains = function (item) {
+		return this.indexOf(item) != -1;
+	}
+}
+
 function getUrlVars() {
 	var vars = {};
 	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -219,3 +264,4 @@ function getUrlVars() {
 	});
 	return vars;
 }
+
