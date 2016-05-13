@@ -42,11 +42,12 @@ data.loadData = function() {
 			data.localidades = jsonData.localidades;
 			data.comentarios = jsonData.comentarios;
 			data.usuario_logueado = jsonData.usuario_logueado;
+			configurarUi();
 			cargarViaje();
 			cargarVehiculo();
 			cargarComentarios();
 			cargarConductor();
-			configurarUi();
+			
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
 		}
@@ -58,10 +59,13 @@ data.loadData = function() {
 }
 
 initUI = function() {
-	data.loadData();
+	data.loadData();	
 	loadMap();
+
 };
 window.onload=initUI;
+
+////carga de mapa///////
 
 function loadMap() {
   var script = document.createElement("script");
@@ -69,14 +73,68 @@ function loadMap() {
   document.body.appendChild(script);
 }
 
-
-var initMap = function() {
-	map = new google.maps.Map(document.getElementById('mapa'), {
+mapData = {
+	marcadores: []
+}
+initMap = function() {
+	mapData.map = new google.maps.Map(document.getElementById('mapa'), {
 		center: {lat: -34.5774135, lng: -59.0909557},
 		drawingControl: false,
 		zoom: 16
 	});
+
+	mapData.directionsService = new google.maps.DirectionsService();
+	mapData.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+	mapData.directionsDisplay.setMap (mapData.map);
+	cargarRutaEnMapa();
 }
+
+var cargarRutaEnMapa = function(){
+	mapData.marcadores = [];
+
+	data.localidades.forEach(function(item){
+		mapData.marcadores.push(new google.maps.Marker({
+				position: {
+					lat: parseFloat(item.lat),
+					lng: parseFloat(item.lng)
+				},
+				map: mapData.map,
+				title: item.nombre
+			}));
+	});
+
+	pedirRuta();
+}
+
+var pedirRuta = function () {
+	var origen = mapData.marcadores[0];
+	var destino = mapData.marcadores[mapData.marcadores.length-1];
+
+	var solicitud = {
+		origin: origen.position,
+		destination: destino.position,
+		travelMode:google.maps.TravelMode.DRIVING,
+		waypoints: listarPuntosIntermedios()
+	};
+
+  mapData.directionsService.route(solicitud, function(result, status) {
+	console.log ("Se ha recibido respuesta");
+	DEBUGresult=result;
+    if (status == google.maps.DirectionsStatus.OK) {
+      mapData.directionsDisplay.setDirections(result);
+    }
+  });
+}
+
+var listarPuntosIntermedios = function () {
+	var puntos = [];
+	for (i=1; i<mapData.marcadores.length-1; i++) {
+		puntos.push({location:mapData.marcadores[i].position});
+	}
+	return puntos;
+}
+
+////fin carga mapa///
 
 var simular = function(json){
 	console.log("id: ",json.id);
@@ -113,29 +171,29 @@ var simular = function(json){
 	data.localidades = [{
 		id: "324",
 		nombre: "Lujan",
-		lat: "",
-		lng: "" 
+		lat: "-34.5703",
+		lng: "-59.105" 
 	},{
 		id: "112",
 		nombre: "Rodriguez",
-		lat: "",
-		lng: "" 
+		lat: "-34.6084",
+		lng: "-58.9525" 
 	},{
 		id: "880",
 		nombre: "Moreno",
-		lat: "",
-		lng: "" 
+		lat: "-34.634",
+		lng: "-58.7914" 
 	}];
 	data.usuario_logueado = {
 		es_conductor: false,
 		es_pasajero: false,
 		es_seguidor: false,
 		ha_calificado: false
-	};	
+	};		
+	configurarUi();
 	cargarViaje();
 	cargarConductor();
 	cargarVehiculo();
-	configurarUi();
 }
 
 var configurarUi = function(){
