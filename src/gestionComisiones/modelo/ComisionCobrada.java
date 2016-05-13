@@ -1,7 +1,13 @@
 package gestionComisiones.modelo;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.Table;
 
@@ -18,12 +24,22 @@ import otros.JSONable;
 public class ComisionCobrada implements JSONable {
 	
 	@Id
+	@GeneratedValue(strategy= GenerationType.AUTO)
+	@Column(name="ID_COMISION_COBRADA")
 	protected Integer id_comision_cobrada;
+	@Column(name="MONTO",nullable=false)
 	protected float monto;
+	@Column(name="ESTADO",nullable=false)
 	protected EstadoComisionCobrada estado;
 	
+	@JoinColumn(name="ID_COMISION")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Comision comision;
+	@JoinColumn(name="ID_MOVIMIENTO_SALDO")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected MovimientoSaldo movimiento_saldo;
+	@JoinColumn(name="ID_PASAJERO_VIAJE")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected PasajeroViaje pasajero_viaje;
 	
 	public ComisionCobrada(){

@@ -14,7 +14,7 @@ INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, de
 -- este metodo le da al user administrador el rol super_usuario
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, CURRENT_DATE);
 
--- LES ASIGNO A LOS USUARIO CREO PARA LAS PRUEBAS EL ROL DE CLIENTE
+-- LES ASIGNO A LOS USUARIO Q CREO PARA LAS PRUEBAS EL ROL DE CLIENTE
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (2, 2, CURRENT_DATE);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (3, 2, CURRENT_DATE);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (4, 2, CURRENT_DATE);

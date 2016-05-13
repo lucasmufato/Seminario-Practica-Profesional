@@ -9,6 +9,9 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import gestionComisiones.modelo.ComisionCobrada;
+import gestionPuntos.modelo.Calificacion;
+import gestionPuntos.modelo.EstadoClasificacion;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 import javax.persistence.Persistence;
@@ -305,8 +308,29 @@ public class DAOViajes extends DataAccesObject {
 		pasajero.setComision(null);			// y de calcular la comision
 		
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
+		
+		//	TODO la parte de crear la comision
+		ComisionCobrada comisionCobrada = new ComisionCobrada();
+		comisionCobrada.setMonto(0);
+		comisionCobrada.setMovimiento_saldo(null);
+		comisionCobrada.setComision(null);
+		comisionCobrada.setPasajero_viaje(null);
+		
+		// TODO la parte de calificacion bien
+		Calificacion calificacion = new Calificacion();
+		calificacion.setMovimiento_puntos(null);
+		calificacion.setParticipo(EstadoClasificacion.pendiente_ambos);
+		calificacion.setPasajero_viaje(null);
+		
+		//le asigno la calificacion y la comision al pasajero
+		pasajero.setCalificacion(calificacion);
+		pasajero.setComision(comisionCobrada);
+
+		this.entitymanager.persist(calificacion);
+		this.entitymanager.persist(comisionCobrada);
 		this.entitymanager.persist(pasajero);
 		this.entitymanager.getTransaction().commit();
+
 		return true;
 	}
 	

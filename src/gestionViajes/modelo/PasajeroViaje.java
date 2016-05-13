@@ -40,7 +40,7 @@ public class PasajeroViaje implements JSONable {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Cliente cliente;
 	
-	@JoinColumn(name="id_comision")
+	@JoinColumn(name="id_comision_cobrada")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected ComisionCobrada comision;
 	

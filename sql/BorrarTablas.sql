@@ -26,4 +26,6 @@ drop table sancion;
 drop table sponsor;
 drop table tipo_sancion;
 drop table tipo_sancion_sancion;
+drop table notificacion;
+drop table sequence;
 SET FOREIGN_KEY_CHECKS = 1; 

@@ -122,6 +122,7 @@ CREATE TABLE LOCALIDAD_CLASIFICACION (
 CREATE TABLE COMISION_COBRADA (
 	id_comision_cobrada INTEGER AUTO_INCREMENT,
 	monto DECIMAL (10, 2) NOT NULL,
+    estado CHAR(1),
 	id_comision INTEGER,
 	id_movimiento_saldo INTEGER,
 	id_pasajero_viaje INTEGER,
@@ -213,4 +214,3 @@ CREATE TABLE PASAJERO_VIAJE (
 	FOREIGN KEY (id_viaje, id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)
 );
-

@@ -1,7 +1,13 @@
 package gestionPuntos.modelo;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.Table;
 
@@ -18,13 +24,21 @@ import otros.JSONable;
 public class Calificacion implements JSONable {
 
 	@Id
+	@GeneratedValue(strategy= GenerationType.AUTO)
+	@Column(name="ID_CALIFICACION")
 	protected Integer id_calificacion;
-	protected Integer calificacion_otorgada;
-	protected Integer calificacion_recibida;
+	@Column(name="CALIFICACION_PARA_CONDUCTOR",nullable=true)
+	protected Integer calificacion_para_conductor;
+	@Column(name="CALIFICACION_PARA_PASAJERO",nullable=true)
+	protected Integer calificacion_para_pasajero;
+	@Column(name="PARTICIPO",nullable=false)
 	protected EstadoClasificacion participo;
 	
+	@JoinColumn(name="ID_MOVIMIENTO_PUNTOS")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected MovimientoPuntos movimiento_puntos;
-	
+	@JoinColumn(name="ID_PASAJERO_VIAJE")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected PasajeroViaje pasajero_viaje;
 	
 	public Calificacion(){
@@ -32,6 +46,36 @@ public class Calificacion implements JSONable {
 	}
 	
 	
+	public Integer getId_calificacion() {
+		return id_calificacion;
+	}
+
+
+	public void setId_calificacion(Integer id_calificacion) {
+		this.id_calificacion = id_calificacion;
+	}
+
+
+	public Integer getCalificacion_para_conductor() {
+		return calificacion_para_conductor;
+	}
+
+
+	public void setCalificacion_para_conductor(Integer calificacion_para_conductor) {
+		this.calificacion_para_conductor = calificacion_para_conductor;
+	}
+
+
+	public Integer getCalificacion_para_pasajero() {
+		return calificacion_para_pasajero;
+	}
+
+
+	public void setCalificacion_para_pasajero(Integer calificacion_para_pasajero) {
+		this.calificacion_para_pasajero = calificacion_para_pasajero;
+	}
+
+
 	public Integer getId() {
 		return id_calificacion;
 	}
@@ -40,27 +84,6 @@ public class Calificacion implements JSONable {
 	public void setId(Integer id) {
 		this.id_calificacion = id;
 	}
-
-
-	public Integer getCalificacion_otorgada() {
-		return calificacion_otorgada;
-	}
-
-
-	public void setCalificacion_otorgada(Integer calificacion_otorgada) {
-		this.calificacion_otorgada = calificacion_otorgada;
-	}
-
-
-	public Integer getCalificacion_recibida() {
-		return calificacion_recibida;
-	}
-
-
-	public void setCalificacion_recibida(Integer calificacion_recibida) {
-		this.calificacion_recibida = calificacion_recibida;
-	}
-
 
 	public EstadoClasificacion getParticipo() {
 		return participo;

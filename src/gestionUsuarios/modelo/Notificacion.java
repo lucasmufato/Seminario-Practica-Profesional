@@ -19,7 +19,7 @@ public class Notificacion {
 	@GeneratedValue(strategy= GenerationType.AUTO)		//pruebo como es el tema con generationType.auto
 	@Column(name="ID_NOTIFICACION")
 	protected Integer id_notificacion;
-	@Column(name="FECHA",nullable=false,length=30)
+	@Column(name="FECHA",nullable=false)
 	protected Date fecha;
 	@Column(name="TEXTO",nullable=false,length=200)
 	protected String texto;
