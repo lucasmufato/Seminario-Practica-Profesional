@@ -15,7 +15,6 @@
 	<script type="text/javascript" src="mis_viajes.js"></script>
 	
 	<script type="text/javascript" src="navegacion.js"></script>
-	<script type="text/javascript" src="calendarios.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
@@ -50,7 +49,7 @@
 							</span>
 						</div>
 				</header>
-				<form class="form-horizontal col-xs-12" id="formFilter" onsubmit="console.log('envio desde html'); return false">
+				<form class="form-horizontal col-xs-12" id="formFilter" onsubmit="showViajes(); return false">
 
 					<div class="form-group">
 						<label for="fechadesde" class="control-label col-xs-2 col-xs-offset-1 col-sm-3 col-sm-offset-0">Desde:</label>
@@ -83,7 +82,6 @@
 				<div id="panel-mis-viajes" class="col-xs-12">
 					<div id="mis-viajes">
 						<!-- viajes generados dinamicamente-->
-						<p>asd</p>
 					</div>	
 					<nav>
 					  <ul class="pagination pull-right" id="busqueda-paginacion">
