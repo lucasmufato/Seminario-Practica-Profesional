@@ -41,10 +41,36 @@ public class ServletViaje extends HttpServlet {
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
 
+		/* TODO: comprobar permisos */	
 
 		if (entity.equals ("viaje")) {
 			if (action.equals ("new")) {
 				respuesta = this.nuevo_viaje (request);
+			}
+		} else {
+			respuesta = new JSONObject();
+			respuesta.put ("result", false);
+			respuesta.put ("msg", "No implementado");
+		}
+		respuesta.put("entity", entity);
+		respuesta.put("action", action);
+
+		System.out.println (respuesta);
+		writer.println (respuesta);
+	}
+	
+	@Override
+	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
+		JSONObject respuesta = new JSONObject();
+		PrintWriter writer = response.getWriter();
+		String action = request.getParameter("action");
+		String entity = request.getParameter("entity");
+
+		/* TODO: comprobar permisos */	
+
+		if (entity.equals ("viaje")) {
+			if (action.equals("detalle")) {
+				respuesta = this.ver_viaje_detallado (request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -194,9 +220,63 @@ public class ServletViaje extends HttpServlet {
 		return null;
 	}
 	
-	public JSONObject ver_viaje_detallado(Integer id_viaje){
-		daoViajes.getConductorViaje( id_viaje);
-		daoViajes.getAutoViaje( id_viaje);
+	public JSONObject ver_viaje_detallado(HttpServletRequest request) {
+		int id_viaje;
+		JSONObject salida = new JSONObject();
+		Viaje viaje = null;
+		Cliente usuario_logueado = null;
+
+		try {
+			usuario_logueado = (Cliente) daoUsuarios.buscarPorClaveCandidata ("Cliente", AccessManager.nombreUsuario(request));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "No se ha iniciado sesion como un cliente valido");
+			return salida;
+		}
+		
+		try {
+			id_viaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "id_viaje invalido");
+			return salida;
+		}
+		
+		viaje = daoViajes.getViajeById(id_viaje);
+		
+		if (viaje == null) {
+			salida.put("result", false);
+			salida.put("msg", "Viaje no valido");
+			return salida;
+		}
+		
+		salida.put("viaje", viaje.toJSON());
+		JSONArray localidades = new JSONArray();
+		for (Localidad loc: viaje.getLocalidadesComoListLocalidad()) {
+			localidades.add (loc.toJSON());
+		}
+		
+		salida.put("localidades", localidades);
+		salida.put("vehiculo", viaje.getVehiculo().toJSON());
+		
+		Cliente conductor = viaje.getConductor();
+		JSONObject json_conductor = new JSONObject();
+		json_conductor.put("id", conductor.getId_usuario());
+		json_conductor.put("nombre_usuario", conductor.getNombre_usuario());
+		json_conductor.put("reputacion", conductor.getReputacion());
+		json_conductor.put("foto", conductor.getFoto());
+		json_conductor.put("foto_registro", conductor.getFoto_registro());
+		salida.put("conductor", json_conductor);
+		
+		JSONObject json_logged = new JSONObject();
+		json_logged.put("es_conductor", (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario()));
+		json_logged.put("es_pasajero", viaje.getPasajerosComoListCliente().contains(usuario_logueado)); //NO SE SI ESTO FUNCIONA
+		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
+		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
+		salida.put("usuario_logueado", json_logged);
+		
+		return salida;
+	}
 		/*
 		 EL JSON DE LA RESPUESTA DEBERIA TENER:
 		 
@@ -211,8 +291,6 @@ public class ServletViaje extends HttpServlet {
 		 }
 		 
 		 */
-		return null;
-	}
 	
 	public JSONObject cliente_se_postula_a_viaje(Integer id_viaje, Integer id_localidad_subida, Integer id_localidad_bajada){
 		//saco el id del cliente mediante la cookie

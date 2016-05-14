@@ -346,6 +346,11 @@ public class DAOViajes extends DataAccesObject {
 		return null;
 	}
 	
+	public Viaje getViajeById(Integer id_viaje) {
+		Viaje viaje;
+		viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		return viaje;
+	}
 	public List<Viaje> buscarViajes(JSONObject busqueda){
 		// TODO Auto-generated method stub
 		//crear query (campos obligatorios: origen, destino,fecha_desde)

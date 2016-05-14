@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import gestionUsuarios.modelo.Cliente;
 import javax.persistence.NamedQuery;
@@ -146,6 +147,14 @@ public class Viaje implements JSONable {
 		return pasajeros;
 	}
 
+	public List<Cliente> getPasajerosComoListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for(PasajeroViaje pas: pasajeros) {
+			lista.add(pas.getCliente());
+		}
+		return lista;
+	}
+
 	public void setPasajeros(List<PasajeroViaje> pasajeros) {
 		this.pasajeros = pasajeros;
 	}
@@ -210,6 +219,14 @@ public class Viaje implements JSONable {
 		return conductor_vehiculo;
 	}
 
+	public Cliente getConductor() {
+		return this.conductor_vehiculo.getCliente();
+	}
+	
+	public Vehiculo getVehiculo() {
+		return this.conductor_vehiculo.getVehiculo();
+	}
+
 	public void setConductor_vehiculo(Maneja conductor_vehiculo) {
 		this.conductor_vehiculo = conductor_vehiculo;
 	}
@@ -221,6 +238,14 @@ public class Viaje implements JSONable {
 	public void setLocalidades(List<LocalidadViaje> localidades) {
 		this.localidades = localidades;
 	}
+	
+	public List<Localidad> getLocalidadesComoListLocalidad() { // Nombre confuso
+		List<Localidad> lista = new ArrayList<Localidad>();
+		for(LocalidadViaje locv: this.localidades) {
+			lista.add(locv.getLocalidad());
+		}
+		return lista;
+	}
 
 	@Override
 	public void SetJSONObject(JSONObject json) {
@@ -230,8 +255,39 @@ public class Viaje implements JSONable {
 
 	@Override
 	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject json_viaje = new JSONObject();
+		json_viaje.put("id", this.getId_viaje());
+		json_viaje.put("nombre_amigable", this.getNombre_amigable());
+		json_viaje.put("estado", this.getEstado().toString());
+		if (this.getViaje_complementario() == null) {
+			json_viaje.put("tipo", "ida");
+		} else {
+			json_viaje.put("tipo", "ida_vuelta");
+			json_viaje.put("id_viaje_complementario", this.getViaje_complementario().getId_viaje());
+		}
+		List<LocalidadViaje> locs = this.getLocalidades();
+		JSONArray recorrido = new JSONArray();
+		for (LocalidadViaje locviaje: locs) {
+			recorrido.add (locviaje.getLocalidad().getId());
+		}
+
+		// WARNING: recorrido debe tener al menos dos puntos o va a fallar
+		json_viaje.put("recorrido", recorrido);
+		json_viaje.put("origen", recorrido.get(0));
+		json_viaje.put("destino", recorrido.get(recorrido.size()-1));
+		json_viaje.put("fecha", (this.getFecha_inicio()));
+		json_viaje.put("fecha_inicio", (this.getFecha_inicio()));
+		json_viaje.put("fecha_alta", (this.getFecha_alta()));
+		json_viaje.put("fecha_cancelacion", (this.getFecha_cancelacion()));
+		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion()));
+		/* NOTAS: 
+			agregar precio,
+			fecha es redundante con fecha_inicio
+			hora debe estar dentro de fecha
+			cantidad de pasajeros
+		*/
+		
+		return json_viaje;
 	}
 
 	@Override

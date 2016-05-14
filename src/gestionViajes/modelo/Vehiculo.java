@@ -135,8 +135,17 @@ public class Vehiculo implements JSONable {
 
 	@Override
 	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject json = new JSONObject();
+		json.put("id", this.getId());
+		json.put("marca", this.getMarca());
+		json.put("modelo", this.getModelo());
+		json.put("anio", this.getAnio());
+		json.put("patente", this.getPatente());
+		//json.put("aire", this.getAire());
+		//json.put("seguro", this.getSeguro());
+		json.put("verificado", this.getVerificado());
+		//json.put("foto", this.getFoto());
+		return json;
 	}
 
 	@Override

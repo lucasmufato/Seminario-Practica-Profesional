@@ -91,8 +91,12 @@ public class Localidad implements JSONable {
 
 	@Override
 	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject json = new JSONObject();
+		json.put("id", this.getId());
+		json.put("nombre", this.getNombre());
+		json.put("lat", this.getLatitud());
+		json.put("lng", this.getLongitud());
+		return json;
 	}
 
 	@Override
