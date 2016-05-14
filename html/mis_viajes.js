@@ -50,10 +50,10 @@ var initUI = function(){
     	language: "es",
     	startView: 3,
     	minView: 2,
-    	maxView: 2,
+    	maxView: 2,    
+		autoclose: true,
+    	todayBtn: true,
 		clearBtn: true,
-    	autoclose: true,
-    	todayBtn: true
 	});
 }
 

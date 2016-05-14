@@ -8,7 +8,8 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="perfil.css">
-	<link rel="stylesheet" href="confirmar_finalizacion_viaje.css">
+
+	<script type="text/javascript" src="perfil.js"></script>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
@@ -31,7 +32,7 @@
 							<div class="row">
 								<div class="col-md-3 col-lg-3" align="center">
 									<div class="col-md-12">
-										<p class="reputacion">★★★★★</p>
+										<p class="reputacion" id="reputacion">--</p>
 									</div>
 									<img id="foto_perfil" alt="Foto Perfil" src="http://img129.imagevenue.com/loc893/th_43867_perro_con_peluca_122_893lo.jpg" class="img-circle img-responsive" style="max-height: 200px">
 									<div>
@@ -39,52 +40,52 @@
 									</div>
 								</div>
 								<div class=" col-md-9 col-lg-9 ">
-									<table class="table table-user-information">
+									<table class="table table-user-information" id="table-perfil">
 										<tbody class="tabla">
 											<tr>
 												<td><strong>Usuario:</strong></td>
-												<td>Lucho85</td>
+												<td id="nombre_usuario">Lucho85</td>
 											</tr>
 											<tr>
 												<td><strong>Apellido:</strong></td>
-												<td>García</td>
+												<td id="apellidos">García</td>
 											</tr>
 											<tr>
 												<td><strong>Nombre:</strong></td>
-												<td>Lucho</td>
+												<td id="nombres">Lucho</td>
 											</tr>
 											<tr>
 												<td><strong>Tipo de documento:</strong></td>
-												<td>DNI</td>
+												<td id="tipo_doc">DNI</td>
 											</tr>
 											<tr>
 												<td><strong>Nro de documento:</strong></td>
-												<td>31649728</td>
+												<td id="nro_doc">31649728</td>
 											</tr>
 											<tr>
 												<td><strong>Fecha Nacimiento:</strong></td>
-												<td>05/05/85</td>
+												<td id="fecha_nacimiento">05/05/85</td>
 											</tr>
 											<tr>
 												<td><strong>Domicilio:</strong></td>
-												<td><input type="text" class="form-control" placeholder="" value="Plataforma 9 3/4" disabled></td>
+												<td><input name="domicilio" type="text" class="form-control" placeholder="" value="Plataforma 9 3/4" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>E-mail:</strong></td>
-												<td><input type="text" class="form-control" placeholder="" value="prueba189635@gmail.com" disabled></td>
+												<td><input name="mail" type="text" class="form-control" placeholder="" value="prueba189635@gmail.com" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Teléfono:</strong></td>
-												<td><input type="text" class="form-control" placeholder="" value="2222444466" disabled></td>
+												<td><input name="telefono" type="text" class="form-control" placeholder="" value="2222444466" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Sexo:</strong></td>
-												<td>Masculino</td>
+												<td id="sexo">Masculino</td>
 											</tr>
 											<tr>
 												<td><strong>Registro de conducir:</strong></td>
 												<td align="center">
-												<img alt="Foto Registro" src="http://www.venado24.com.ar/archivos24/uploads/2015/08/disp96-01.jpg" class="img-responsive" style="max-height: 160px">
+												<img id="foto_registro" alt="Foto Registro" src="http://www.venado24.com.ar/archivos24/uploads/2015/08/disp96-01.jpg" class="img-responsive" style="max-height: 160px">
 												<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_registro" accept="image/*"></span>
 												</td>
 											</tr>	
@@ -100,7 +101,7 @@
 						<div class="panel-footer clearfix">
 							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Desactivar Cuenta</button>
 							<span class="pull-right">
-								<button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
+								<button class="btn btn-primary" onclick="activarModificar();"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
 							</span>
 						</div>
 					</div>

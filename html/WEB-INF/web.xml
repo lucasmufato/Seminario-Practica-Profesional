@@ -43,4 +43,13 @@
         <servlet-name>viajes</servlet-name>
         <url-pattern>/viajes</url-pattern>
     </servlet-mapping>
+	
+	<servlet>
+        <servlet-name>perfil</servlet-name>
+        <servlet-class>gestionUsuarios.controlador.Perfil</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>perfil</servlet-name>
+        <url-pattern>/perfil</url-pattern>
+    </servlet-mapping>
 </web-app>
