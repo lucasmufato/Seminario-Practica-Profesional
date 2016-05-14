@@ -43,9 +43,11 @@ public class ServletViaje extends HttpServlet {
 
 		/* TODO: comprobar permisos */	
 
-		if (entity.equals ("viaje")) {
-			if (action.equals ("new")) {
+		if (entity != null && entity.equals ("viaje")) {
+			if (action != null && action.equals ("new")) {
 				respuesta = this.nuevo_viaje (request);
+			} else if (action != null && action.equals("detalle")) {
+				respuesta = this.ver_viaje_detallado (request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -68,8 +70,8 @@ public class ServletViaje extends HttpServlet {
 
 		/* TODO: comprobar permisos */	
 
-		if (entity.equals ("viaje")) {
-			if (action.equals("detalle")) {
+		if (entity != null && entity.equals ("viaje")) {
+			if (action != null && action.equals("detalle")) {
 				respuesta = this.ver_viaje_detallado (request);
 			}
 		} else {
@@ -274,6 +276,7 @@ public class ServletViaje extends HttpServlet {
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
 		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
 		salida.put("usuario_logueado", json_logged);
+		salida.put("result", true);
 		
 		return salida;
 	}

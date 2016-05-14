@@ -275,14 +275,12 @@ public class Viaje implements JSONable {
 		json_viaje.put("recorrido", recorrido);
 		json_viaje.put("origen", recorrido.get(0));
 		json_viaje.put("destino", recorrido.get(recorrido.size()-1));
-		json_viaje.put("fecha", (this.getFecha_inicio()));
-		json_viaje.put("fecha_inicio", (this.getFecha_inicio()));
-		json_viaje.put("fecha_alta", (this.getFecha_alta()));
-		json_viaje.put("fecha_cancelacion", (this.getFecha_cancelacion()));
-		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion()));
+		json_viaje.put("fecha_inicio", (this.getFecha_inicio() != null)? this.getFecha_inicio().toString().toString(): null);
+		json_viaje.put("fecha_alta", (this.getFecha_alta() != null)? this.getFecha_alta().toString(): null);
+		json_viaje.put("fecha_cancelacion", (this.getFecha_cancelacion() != null)? this.getFecha_cancelacion().toString(): null);
+		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion() != null)? this.getFecha_finalizacion().toString(): null);
 		/* NOTAS: 
 			agregar precio,
-			fecha es redundante con fecha_inicio
 			hora debe estar dentro de fecha
 			cantidad de pasajeros
 		*/

@@ -9,9 +9,8 @@ data.usuario_logueado = {};
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
-	/*
 	$.ajax({
-		url: '/viaje', 
+		url: '/viajes', 
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -24,14 +23,14 @@ var sendAjax = function(sendData,callback){
 			window.alert (err3);
 		}
 	});
-	*/
 }
 
 
 data.loadData = function() {
 	var sendData = {
-		action: "ver_viaje",
-		"id": data.viaje.id
+		entity: "viaje",
+		action: "detalle",
+		"id_viaje": data.viaje.id
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
@@ -45,15 +44,17 @@ data.loadData = function() {
 			configurarUi();
 			cargarViaje();
 			cargarVehiculo();
-			cargarComentarios();
+			//cargarComentarios();
 			cargarConductor();
+			cargarRutaEnMapa();
+			
 			
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
 		}
 	}
 	
-	simular(sendData);
+	//simular(sendData);
 	
 	sendAjax(sendData,onsuccess);
 }
@@ -90,6 +91,10 @@ initMap = function() {
 }
 
 var cargarRutaEnMapa = function(){
+	if(data.viaje.recorrido == undefined) {
+		// Esto puede suceder si el mapa se carga antes que los datos del viaje
+		return null;
+	}
 	mapData.marcadores = [];
 	var i=1; //para que label de los marcadores muestre secuencia
 	data.viaje.recorrido.forEach(function(id){
@@ -150,7 +155,7 @@ var simular = function(json){
 		id_viaje_complemento: "4",
 		origen: "324",
 		destino: "880",
-		fecha: "12/09/2016",
+		fecha_inicio: "12/09/2016",
 		hora: "20:30",
 		precio: "30",
 		participantes: "1",
@@ -198,6 +203,7 @@ var simular = function(json){
 	cargarViaje();
 	cargarConductor();
 	cargarVehiculo();
+	cargarRutaEnMapa();
 }
 
 var configurarUi = function(){
@@ -293,7 +299,7 @@ var cargarViaje = function(){
 	$("#estado").text(estadoString (data.viaje.estado));
 	$("#origen").text(localidadNombre (data.viaje.origen));
 	$("#destino").text(localidadNombre (data.viaje.destino));
-	$("#fecha").text(data.viaje.fecha);
+	$("#fecha").text(data.viaje.fecha_inicio);
 	$("#hora").text(data.viaje.hora);
 	$("#precio").text("$"+data.viaje.precio);
 	data.viaje.recorrido.forEach(function(elem){
