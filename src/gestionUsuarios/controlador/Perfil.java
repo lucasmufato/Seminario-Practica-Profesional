@@ -31,7 +31,6 @@ public class Perfil extends HttpServlet {
 		if (!AccessManager.EstaLogueado(request)){
 			this.printDeniedRedirect(writer,"acceso_denegado.html");
 		} else if (!perfilAceptado(request)){
-			System.out.println("Denegado! :(");
 			this.printDeniedRedirect(writer,"perfil.html");
 		}else{
 			System.out.println("Entre!");
@@ -48,19 +47,14 @@ public class Perfil extends HttpServlet {
 	private boolean perfilAceptado(HttpServletRequest request) {
 		String perfilVisitado = request.getParameter("usuario_perfil");
 		if (perfilVisitado == null){ // cuando ingresa a perfil.html se lo acepta siempre
-			System.out.println("sin param");
 			return true;
 		}else if (dao.buscarUsuarioPorNombre(perfilVisitado) == null){ // si no existe usuario, arafue
-			System.out.println("no existe usuario");
 			return false;
 		}else if (AccessManager.hasRol(request, "super_usuario")) { // el super usuario puede visitar cualquier perfil
-			System.out.println("es superu");
 			return true;
 		} else if (AccessManager.hasRol(request,"sponsor")){ // sponsor solo es aceptado si visita su propio perfil
-			System.out.println("es sponsor");
-			return AccessManager.nombreUsuario(request) == perfilVisitado;
+			return AccessManager.nombreUsuario(request).equals(perfilVisitado);
 		}else if (AccessManager.hasRol(request, "cliente")){ //se lo acepta solo si es cliente y visita a otro cliente
-			System.out.println("es cliente");
 			return dao.usuarioHasRol(perfilVisitado, "cliente");
 		}			
 		return false;
