@@ -320,4 +320,41 @@ public class ServletViaje extends HttpServlet {
 		}
 		return null;
 	}
+
+	public JSONObject ver_viajes_de_usuario (HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		JSONArray json_viajes = new JSONArray();
+		int id_usuario = AccessManager.getIdUsuario(request);
+		
+		if (id_usuario < 0) {
+			salida.put ("result", false);
+			salida.put ("msg", "Nombre de usuario no valido");
+			return salida;
+		}
+
+		List<Viaje> viajes = daoViajes.listarViajesPorConductor(id_usuario);
+
+		for (Viaje viaje: viajes) {
+			JSONObject jtmp = new JSONObject();
+			jtmp.put("id", viaje.getId_viaje());
+			
+			/* SEGUIR 
+			Tiene que quedar como esto:
+			"id" : 3,
+			"origen" : "Luján",
+			"destino" : "Pilar",
+			"fecha_inicio" : "2016-05-17",
+			"conductor" : "Carlos Ruiz",
+			"reputacion" : "3",
+			"precio": "200",
+			"foto":"upload/foto.jpg"
+			*/
+
+			json_viajes.add(jtmp);
+		}
+
+		/* SEGUIR */
+		
+		return null;
+	}
 }

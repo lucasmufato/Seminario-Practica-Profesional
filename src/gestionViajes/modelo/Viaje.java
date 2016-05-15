@@ -30,6 +30,7 @@ import otros.JSONable;
 
 @NamedQueries({
 	@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id_viaje= :id"),//agregada por fede
+	@NamedQuery(name="Viaje.SearchByConductor",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT m FROM Maneja m WHERE v.conductor_vehiculo=m AND m.cliente= :conductor)"),
 	@NamedQuery(name="Viaje.todos",query="SELECT v FROM Viaje v"),
 })
 

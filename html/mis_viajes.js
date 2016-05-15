@@ -23,6 +23,7 @@ var sendAjax = function(sendData,callback){
 var loadData = function() {
 
 	var sendData = {
+		entity: "viaje",
 		action: "ver_mis_viajes",
 		nombre_usuario: nombre_usuario,
 	}
