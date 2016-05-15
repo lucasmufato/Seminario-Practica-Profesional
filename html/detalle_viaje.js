@@ -605,6 +605,9 @@ var errorMessage = function (textMsg) {
 }
 var modalMessage = function (modalName,textMsg,titleMsg) {
 	$('#'+modalName+'-message').text(textMsg);
+	if (titleMsg){
+		$('#modal-'+modalName +" .dialog-title").text(titleMsg);
+	}
 	$('#modal-'+modalName).modal('show');
 }
 var modalButton = function(modalName,btn){
