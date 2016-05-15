@@ -323,38 +323,44 @@ public class ServletViaje extends HttpServlet {
 
 	public JSONObject ver_viajes_de_usuario (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
-		JSONArray json_viajes = new JSONArray();
-		int id_usuario = AccessManager.getIdUsuario(request);
+		try {
+			JSONArray json_viajes = new JSONArray();
+			int id_usuario = AccessManager.getIdUsuario(request);
+			
+			if (id_usuario < 0) {
+				salida.put ("result", false);
+				salida.put ("msg", "Nombre de usuario no valido");
+				return salida;
+			}
+
+			List<Viaje> viajes = daoViajes.listarViajesPorConductor(id_usuario);
 		
-		if (id_usuario < 0) {
-			salida.put ("result", false);
-			salida.put ("msg", "Nombre de usuario no valido");
+			//AGREGAR LOS VIAJES COMO PASAJERO!
+			//viajes.addAll( daoViajes.listarViajesPorPasajero(id_usuario));
+
+			for (Viaje viaje: viajes) {
+				JSONObject jtmp = new JSONObject();
+				jtmp.put("id", viaje.getId_viaje());
+				jtmp.put("origen", viaje.getOrigen().getNombre());
+				jtmp.put("destino", viaje.getDestino().getNombre());
+				jtmp.put("fecha_inicio", viaje.getFecha_inicio());
+				jtmp.put("conductor", viaje.getConductor().getNombre_usuario());
+				jtmp.put("reputacion", viaje.getConductor().getReputacion());
+//				jtmp.put("precio", viaje.getPrecio());
+				jtmp.put("foto", viaje.getConductor().getFoto());
+
+				json_viajes.add(jtmp);
+			}
+			salida.put("viajes", json_viajes);
+			salida.put("result", true);
+
+		/* SEGUIR */
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Error interno del servidor");
 			return salida;
 		}
 
-		List<Viaje> viajes = daoViajes.listarViajesPorConductor(id_usuario);
-
-		for (Viaje viaje: viajes) {
-			JSONObject jtmp = new JSONObject();
-			jtmp.put("id", viaje.getId_viaje());
-			
-			/* SEGUIR 
-			Tiene que quedar como esto:
-			"id" : 3,
-			"origen" : "Luján",
-			"destino" : "Pilar",
-			"fecha_inicio" : "2016-05-17",
-			"conductor" : "Carlos Ruiz",
-			"reputacion" : "3",
-			"precio": "200",
-			"foto":"upload/foto.jpg"
-			*/
-
-			json_viajes.add(jtmp);
-		}
-
-		/* SEGUIR */
-		
-		return null;
+		return salida;
 	}
 }

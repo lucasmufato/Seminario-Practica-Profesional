@@ -248,6 +248,22 @@ public class Viaje implements JSONable {
 		return lista;
 	}
 
+	public Localidad getOrigen() {
+		try {
+			return localidades.get(0).getLocalidad();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public Localidad getDestino() {
+		try {
+			return localidades.get(localidades.size()-1).getLocalidad();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	@Override
 	public void SetJSONObject(JSONObject json) {
 		// TODO Auto-generated method stub
