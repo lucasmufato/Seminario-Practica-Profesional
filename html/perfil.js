@@ -52,7 +52,7 @@ var sendAjax = function(sendData,callback){
 	});
 }
 var loadData = function() {
-
+	
 	var sendData = {
 		usuario_perfil: usuario_perfil
 	}
@@ -95,6 +95,9 @@ var initUI = function(){
 window.onload=initUI;
 
 var cargarPerfil = function(){
+	//Limpio UI
+	$("#panel-perfil").empty();
+
 	// TRADUZCO DATA
 	if (data.cliente){
 		data.cliente.foto_revisada = data.cliente.foto || "img/perfil/default.png";
@@ -107,6 +110,44 @@ var cargarPerfil = function(){
 	// GENERO HTML DINAMICO
 	var template = $("#perfil-template").html();
 	$("#panel-perfil").append(Mustache.render(template,data));
+	
+	setearEventos();
+}
+
+function setearEventos(){
+	$("input[type='file']").change(function(){
+		readURL(this);
+	});
+	$('#foto_perfil').load(function() {
+		var imageSrc = $(this).attr("src");
+		if (imageSrc != data.cliente.foto){
+			enviarFoto("perfil",imageSrc);
+		}
+	});
+	$('#foto_registro').load(function() {
+		var imageSrc = $(this).attr("src");
+		if (imageSrc != data.cliente.foto_registro){
+			enviarFoto("registro",imageSrc);
+		}
+	});
+}
+
+var enviarFoto = function(atributo, src){
+	var sendData = {
+		nombre_usuario : data.usuario.nombre_usuario,
+		action : "modificar_imagen"
+	}
+	if (atributo == "registro"){
+		sendData.foto_registro = src;
+	} else if (atributo == "perfil"){
+		sendData.foto = src;
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			loadData();
+		} 
+	}
+	sendAjax(sendData,onsuccess);
 }
 
 var activarModificar = function(){
@@ -140,6 +181,45 @@ var reputacionStars = function(caracter){
 		caracter--;
 	}
 	return stars;
+}
+
+//img
+var imagenValida = function(file){
+	var maxTam = 1500000; // tamano maximo 1.5MB
+	if (file.size >= maxTam){
+		modalMessage("error", "Archivo es demasiado grande", "Modificar Imagen");
+		return false;
+	}
+    if (file.type.indexOf("image") == -1){
+		modalMessage("error", "Debe seleccionar una imagen", "Modificar Imagen");
+		return false;
+	}	
+	return true;
+}
+
+function readURL(input) {
+	var id = $(input).attr("name");
+    if (input.files && input.files[0] && imagenValida(input.files[0])) {
+		var reader = new FileReader();
+
+		reader.onload = function (e) {
+			$("#"+id).attr('src', e.target.result).show();
+		}
+
+		reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// modal
+var modalMessage = function (modalName,textMsg,titleMsg) {
+	$('#'+modalName+'-message').text(textMsg);
+	if (titleMsg){
+		$('#modal-'+modalName +" .dialog-title").text(titleMsg);
+	}
+	$('#modal-'+modalName).modal('show');
+}
+var closeModal = function (name) {
+	$('#modal-' + name).modal('hide');
 }
 
 // funciones robadas
