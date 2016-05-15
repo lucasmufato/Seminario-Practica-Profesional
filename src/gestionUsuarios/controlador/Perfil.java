@@ -175,8 +175,9 @@ public class Perfil extends HttpServlet {
 		
 		if (accion.equals("modificar_imagen")){
 			out = modificarImagen(request);
+		}else if(accion.equals("mail_existe")){
+			out = validarMail(request);
 		}
-		
 		
 		if (out == null) {
 			out = new JSONObject();
@@ -188,6 +189,20 @@ public class Perfil extends HttpServlet {
 		writer.println (out);
 	}
 
+	private JSONObject validarMail(HttpServletRequest request) throws IOException {
+		JSONObject salida = new JSONObject ();	
+		String mail = request.getParameter("mail");
+		String mailActual = dao.buscarUsuarioPorNombre(AccessManager.nombreUsuario(request)).getEmail();
+		if (mail.equals(mailActual) || !dao.mailExiste(mail)){
+			salida.put ("es_valido", true);
+			salida.put("result", true);
+		}else{
+			salida.put ("es_valido", false); 
+			salida.put("result", true);
+		}
+		return salida;
+	}
+	
 	private JSONObject modificarImagen(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		// nombre de usuario a quiene se le modifica la imagen

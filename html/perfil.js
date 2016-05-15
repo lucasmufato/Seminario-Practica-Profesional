@@ -120,15 +120,76 @@ function setearEventos(){
 	});
 	$('#foto_perfil').load(function() {
 		var imageSrc = $(this).attr("src");
-		if (imageSrc != data.cliente.foto){
+		if (imageSrc != data.cliente.foto && imageSrc != data.cliente.foto_revisada){
 			enviarFoto("perfil",imageSrc);
 		}
 	});
 	$('#foto_registro').load(function() {
 		var imageSrc = $(this).attr("src");
-		if (imageSrc != data.cliente.foto_registro){
+		if (imageSrc != data.cliente.foto_registro && imageSrc != data.cliente.foto_registro_revisada){
 			enviarFoto("registro",imageSrc);
 		}
+	});
+	$("table input").blur(validarCampoObligatorio);
+	$("table input[name='mail']").blur(validarMail);
+}
+
+var validarCampoObligatorio = function(){
+	var input = $(this);
+	if (input.val().length==0){
+		customAlert(input, "Completar campo obligatorio");
+	}else{
+		customAlertSuccess(input);
+	}
+}
+var validarMail = function(){
+  var inputMail = $(this);
+  var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (inputMail.val().length > 0){
+    if (!regex.test(inputMail.val())){
+		customAlert(inputMail,"Mail no válido");
+	}else{
+		var sendData = {
+		  action: 'mail_existe',
+		  mail: inputMail.val(),
+		};
+		var onsuccess = function(jsonData){
+			if (jsonData.result)
+				if (jsonData.es_valido){
+					customAlertSuccess(inputMail);				
+				}else{
+					customAlert(inputMail, "Mail existente");
+				}
+		}
+		sendAjax(sendData,onsuccess);
+	}
+  }
+}
+
+var customAlert = function(elemento,msg){
+	var mensaje = msg;
+	$(elemento).popover({
+		trigger: 'manual',
+		placement: 'top',
+		content: function() {
+			console.log("adentro: ",mensaje);
+			return mensaje;
+		}
+	});
+	console.log(msg);
+	$(elemento).popover("show");
+	$(elemento).closest("tr").removeClass('has-success').addClass('has-error');
+	
+	$(elemento).focus(function(){
+		$(elemento).popover("destroy");
+		$(elemento).closest("tr").removeClass('has-error')
+	});
+}
+var customAlertSuccess = function(elemento){
+	$(elemento).closest("tr").removeClass('has-error').addClass('has-success');
+
+	$(elemento).focus(function(){
+		$(elemento).closest("tr").removeClass('has-success')
 	});
 }
 
@@ -152,6 +213,25 @@ var enviarFoto = function(atributo, src){
 
 var activarModificar = function(){
 	$("#table-perfil input").attr("disabled",false);
+	generarNuevosBotones();
+}
+
+var generarNuevosBotones = function(){
+	var btnGuardar = "<button class='btn btn-success' onclick='modificarPerfil();'>"
+		+"<span class='glyphicon glyphicon-check'></span> Guardar"
+		+"</button>";
+	var btnCancelar = "<button class='btn btn-danger' onclick='cancelarModificar();'>"
+		+"<span class='glyphicon glyphicon-remove'></span> Cancelar"
+		+"</button>";
+	var html = "<div class='btn-group'>"+btnCancelar+btnGuardar+"</div>";
+	$("#botonera-modificar-cliente-"+data.usuario.nombre_usuario).html(html);
+}
+
+var cancelarModificar = function(){
+	cargarPerfil();
+}
+var modificarPerfil = function(){
+	console.log("modificarPerfil");
 }
 
 var tipoDocString = function(caracter){
