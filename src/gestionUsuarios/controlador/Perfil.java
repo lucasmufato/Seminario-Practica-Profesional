@@ -172,11 +172,11 @@ public class Perfil extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		String accion = request.getParameter("action");
 
-		/*
-		if (accion.equals("cargar_perfil")){
-			out = cargarPerfil(request,response);
+		
+		if (accion.equals("modificar_imagen")){
+			out = modificarImagen(request);
 		}
-		*/
+		
 		
 		if (out == null) {
 			out = new JSONObject();
@@ -186,6 +186,81 @@ public class Perfil extends HttpServlet {
 		out.put("action", accion);
 		System.out.println("Lo que mando al js: "+out);
 		writer.println (out);
+	}
+
+	private JSONObject modificarImagen(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		// nombre de usuario a quiene se le modifica la imagen
+		String nombreUsuario = request.getParameter("nombre_usuario");
+		
+		// tomo cliente para guardarme la foto vieja y eliminarla
+		Cliente c = dao.clientePorNombre(nombreUsuario);
+		
+		// foto de perfil nueva
+		String foto = request.getParameter("foto");
+		
+		// foto de registro nueva
+		String foto_registro = request.getParameter("foto_registro");
+
+		//objeto que mando al dao para subir la imagen
+		JSONObject objetoImagen = new JSONObject();
+		boolean bandera=false;
+		
+		// chequeo qué imagen se desea modificar
+		if (foto != null){
+			//antes de subir archivo guardo url de imagen anterior para eliminar si operacion es exitosa
+			String anteriorImagen = c.getFoto();
+			
+			objetoImagen.put("imagen", this.subirArchivo(foto));
+			objetoImagen.put("usuario", nombreUsuario);
+			
+			//subo imagen
+			bandera = dao.subirFotoCliente(objetoImagen);
+			
+			//elimino imagen anterior
+			if (bandera){
+				this.eliminarArchivo(anteriorImagen);
+			}
+		}
+		if (foto_registro != null){
+			//antes de subir archivo guardo url de imagen anterior para eliminar si operacion es exitosa
+			String anteriorImagen = c.getFoto_registro();
+			
+			objetoImagen.put("imagen", this.subirArchivo(foto_registro));
+			objetoImagen.put("usuario", nombreUsuario);
+			
+			//subo imagen
+			bandera = dao.subirFotoRegistro(objetoImagen);
+			
+			//elimino imagen anterior
+			if (bandera){
+				this.eliminarArchivo(anteriorImagen);
+			}
+		}
+		
+		if (bandera){
+			respuesta.put ("result", true);
+			respuesta.put ("msg", "Imagen guardada");
+		}else{
+			respuesta.put ("result", false);
+			respuesta.put ("msg", "Error al guardar la imagen");
+		}
+		
+		return respuesta;
+	}
+	
+	private String subirArchivo(String archivo) {
+		if (!archivo.isEmpty() && archivo != null){
+			archivo = FileManager.uploadImage(getServletContext().getRealPath("/"), archivo);
+		}
+		return archivo;
+	}
+	private boolean eliminarArchivo(String archivo) {
+		boolean bandera = false;
+		if (!archivo.isEmpty() && archivo != null){
+			FileManager.modifyImage(getServletContext().getRealPath("/"), archivo);
+		}
+		return bandera;
 	}
 
 	public void destroy()

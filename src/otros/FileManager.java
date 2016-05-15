@@ -35,6 +35,11 @@ public class FileManager {
 			return "";
 		}
 	}
+
+	public static boolean modifyImage(String realPath, String archivo) {
+		File file = new File(realPath+archivo);
+		return file.delete();
+	}
 	
 	private static void createDirectory(String pathReal, String directorioRaiz) {
 		File directorio = new File(pathReal+directorioRaiz);
@@ -89,4 +94,5 @@ public class FileManager {
 		}
 		
 	}
+
 }

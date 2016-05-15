@@ -154,10 +154,8 @@ public class Registro extends HttpServlet {
 		boolean bandera=false;
 		String campo = request.getParameter("campo");
 		if (campo.equals("foto_registro")){
-			System.out.println("Subiendo foto registro");
 			bandera = dao.subirFotoRegistro(foto);
 		}else if(campo.equals("foto")){
-			System.out.println("Subiendo foto");
 			bandera = dao.subirFotoCliente(foto);
 		}
 		System.out.println("servlet: foto subida");
