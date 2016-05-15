@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Modificar Viaje</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="css/magicsuggest.css" />
+	<link rel="stylesheet" href="common.css" />
+	<link rel="stylesheet" href="modificar_viaje.css" />
+	
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="navegacion.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+	<script type="text/javascript" src="calendarios.js"></script>
+</head>
+<body>
+	<main>
+		<div class="container-fluid">
+			<form id="form-mod-viaje" class="form-horizontal">
+				<header class="bg-primary"><h3 class="pull-center">Modificar viaje</h3></header>
+				<div class="form-group">
+					<div class="col-md-6">
+						<label for="nombre_amigable" class="control-label col-md-4">Nombre:</label>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="nombre" name="nombre_amigable" placeholder="Nombre"></input>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="vehiculo" class="control-label col-md-4">Vehículo:</label>
+						<div class="col-md-6">	
+							<select class="form-control" name="vehiculo" id="vehiculo">
+			 					<option value="abc123">Vehículo1</option>
+								<option value="abc123">Vehículo2</option>
+							</select>			
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-6">
+						<label for="origen" class="control-label col-md-4">Origen:</label>
+						<div class="col-md-6">
+							<input type="text" class="form-control localidad-origen-input" id="origen" name="origen" placeholder="Origen"></input>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="destino" class="control-label col-md-4">Destino:</label>
+						<div class="col-md-6">
+							<input type="text" class="form-control localidad-destino-input" id="destino" name="destino" placeholder="Destino"></input>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-6">
+						<label for="precio" class="control-label col-md-4">Precio Estimado:</label>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="precio" name="precio" placeholder="Precio"></input>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="puntos" class="control-label col-md-4">Puntos Intermedios:</label>
+						<div class="col-md-6">
+						  	<input type="text" class="form-control localidad-intermedias-input" id="punto" name="puntos" placeholder=""></input>
+						</div>
+	  				</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-md-12">
+						<h3 class="text-center">Recorrido</h3>
+					</div>
+						<div class="col-xs-10 col-xs-offset-1" style="height:300px" id="divMapa"></div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-md-6">
+						<label for="tipo_viaje" class="control-label col-md-4">Tipo de Viaje:</label>
+						<div class="col-md-6">
+							<select class="form-control" name="tipo_viaje" id="tipo">
+								<option value="ida">Ida</option>
+								<option value="ida_vuelta">Ida y Vuelta</option>
+							</select>		
+						</div>
+					</div>
+					<div class="col-md-12">
+						<h3 class="text-center">Ida</h3>
+					</div>
+					<div class="col-md-6">
+						<label for="fecha" class="control-label col-md-4">Fecha:</label>
+						<div class="col-md-6">
+							<div class="input-group date form_date">
+								<input type="text" class="form-control" name="fecha-ida" id="fecha">
+								<span class="input-group-addon " onclick="$('#fecha').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="asientos-ida" class="control-label col-md-4">Asientos libres:</label>
+						<div class="col-md-6">
+							<select class="form-control" name="asientos-ida" id="asientos">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+							</select>		
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-md-12">
+						<h3 class="text-center">Vuelta</h3>
+					</div>
+					<div class="col-md-6">
+						<label for="fecha" class="control-label col-md-4">Fecha:</label>
+						<div class="col-md-6">
+							<div class="input-group date form_date">
+								<input type="text" class="form-control" name="fecha-vuelta" id="fecha">
+								<span class="input-group-addon " onclick="$('#fecha').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="asientos-vuelta" class="control-label col-md-4">Asientos libres:</label>
+						<div class="col-md-6">
+							<select class="form-control" name="asientos-vuelta" id="asientos">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+							</select>		
+						</div>
+					</div>
+				</div>
+
+			
+				<div class="form-group">
+					<div class="col-xs-offset-7 col-sm-offset-9 col-md-offset-10">
+						<button class="btn btn-primary" id="boton" ><span class="glyphicon glyphicon-edit"></span> Modificar</button>
+					</div>
+				</div>
+
+			</form>
+    	</div>
+	</main>
+</body>	
+</html>
