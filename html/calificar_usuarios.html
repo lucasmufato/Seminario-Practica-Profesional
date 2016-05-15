@@ -21,7 +21,9 @@
 					  <h3 class="panel-title">{{nombre_usuario}} - {{estado_string}}</h3>
 					</div>
 				</div>
-				<div class="panel-body collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}">
+				<!-- PARA QUE NO APAREZCAN EXPANDIDOS
+				<div class="panel-body collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}"> -->
+				<div class="panel-body collapse" id="postulante-{{nombre_usuario}}">
 					<div class="row">
 						<div class="col-md-3 col-lg-3 " align="center">
 							<a href="perfil.html?usuario={{nombre_usuario}}" data-original-title="Ver perfil" data-placement="bottom" data-toggle="tooltip"  class="thumbnail">
@@ -93,6 +95,37 @@
 												-->
 			</div>
 	</script>
+	<script id="misCalificaciones-template" type="text/template">
+			<div class="panel panel-{{color_panel}}">
+				<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#miCalificacionDe-{{nombre_usuario}}" aria-expanded="true">
+					<div  data-toggle="tooltip" data-original-title="Extender/Contraer" data-placement="top">
+					  <h3 class="panel-title">Calificación de {{nombre_usuario}}</h3>
+					</div>
+				</div>
+				<div class="panel-body collapse" id="miCalificacionDe-{{nombre_usuario}}">
+					<div class="row">
+						<div class="col-md-3 col-lg-3 " align="center">
+							<a href="perfil.html?usuario={{nombre_usuario}}" data-original-title="Ver perfil" data-placement="bottom" data-toggle="tooltip"  class="thumbnail">
+								<img alt="foto de usuario" src="{{foto}}" class="img-responsive" style="max-height: 200px"> 
+							</a>
+						</div>
+						<div class=" col-md-9 col-lg-9 "> 
+							{{#es_mc}}
+								<div class="col-md-12">
+									<p><strong>{{participacion}}</strong></p>
+								</div>
+								<div class="col-md-12" align="center">
+										<p class="reputacion">{{cantidad_estrellas}}</p>
+									</div>
+								<div class="col-md-12">
+									<p class="comentario">{{comentario_recibido}}</p>
+								</div>
+							{{/es_mc}}
+						</div>
+					</div>
+				</div>
+			</div>
+	</script>
 </head>
 
 <body>
@@ -101,7 +134,7 @@
 		<div class="container-fluid">
 			<header class="">
 				<button class="btn btn-success btn-sm" onclick="verViaje()"><i class="glyphicon glyphicon-open"></i> Viaje</button>
-				<h3 class="text-center  bg-primary ">Calificación</h3>
+				<h3 class=" titulo text-center  bg-primary ">Calificaciones pendientes y dadas</h3>
 			</header>
 
 			<div class="row " id="panel-postulantes">
@@ -109,8 +142,13 @@
 				  <h4 class="text-center text-primary">Sin calificaciones pendientes</h4>
 				</div>
 			</div>
-
 		
+			<h3 class="titulo text-center  bg-primary ">Mis calificaciones</h3>
+			<div class="row " id="panel-calif">
+				<div class="jumbotron">
+				  <h4 class="text-center text-primary">Sin calificaciones recibidas</h4>
+				</div>
+			</div>
 			
 			<div id="modal-error" class="modal fade">
 				<div class="modal-dialog modal-sm">

@@ -74,6 +74,16 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		return jarray;
 	}
     
+    public boolean usuarioHasRol(String nombreUsuario, String nombreRol){
+    	Usuario lu= this.buscarUsuarioPorNombre(nombreUsuario);
+		List<UsuarioRol>roles=lu.getRoles();
+		for(UsuarioRol ur: roles){
+			if (ur.getRol().getNombre_rol().equals(nombreRol)){
+				return true;
+			}
+		}
+		return false;
+    }
 
 	public Usuario buscarUsuarioPorNombre(String nombre_usuario) {
     	try{

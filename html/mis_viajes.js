@@ -51,10 +51,10 @@ var initUI = function(){
     	language: "es",
     	startView: 3,
     	minView: 2,
-    	maxView: 2,
+    	maxView: 2,    
+		autoclose: true,
+    	todayBtn: true,
 		clearBtn: true,
-    	autoclose: true,
-    	todayBtn: true
 	});
 }
 
@@ -108,16 +108,22 @@ var simular = function(){
 
 var filterer = function(item){
 	var rctOrigenDestino = $('#formFilter input[name=origen-destino]').val().toLowerCase();
+	var rctConductor = $('#formFilter input[name=conductor]').val().toLowerCase();
 	var rctFechaDesde = $('#formFilter input[name=fechadesde]').val();
 	var rctFechaHasta = $('#formFilter input[name=fechahasta]').val();
+	var rctPrecioDesde = Number($('#formFilter input[name=preciodesde]').val());
+	var rctPrecioHasta = Number($('#formFilter input[name=preciohasta]').val());
 	
 	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(rctFechaDesde); 
 	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(rctFechaHasta); 
-	
+
 	var fecha = new Date(item.fecha_inicio);
 	return (item.destino.toLowerCase().contains(rctOrigenDestino) || item.origen.toLowerCase().contains(rctOrigenDestino))
-			&& (fecha > rctFechaDesde || rctFechaDesde==="") 
-			&& (fecha < rctFechaHasta || rctFechaHasta==="");
+			&& (item.conductor.toLowerCase().contains(rctConductor))
+			&& (fecha >= rctFechaDesde || rctFechaDesde==="") 
+			&& (fecha <= rctFechaHasta || rctFechaHasta==="")
+			&& (item.precio >= rctPrecioDesde || rctPrecioDesde==0) 
+			&& (item.precio <= rctPrecioHasta || rctPrecioHasta==0);
 }
 
 var showViajes = function(){

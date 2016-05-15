@@ -8,10 +8,246 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="perfil.css">
-	<link rel="stylesheet" href="confirmar_finalizacion_viaje.css">
+
+	<script type="text/javascript" src="js/mustache.js"></script>
+	<script type="text/javascript" src="perfil.js"></script>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
+	
+		<script id="perfil-template" type="text/template">
+			{{#cliente}}
+			<div class="row">
+      			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">{{usuario.nombre_usuario}}</h3>
+						</div> 
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-3 col-lg-3" align="center">
+									<div class="col-md-12">
+										<p class="reputacion" id="reputacion">{{cliente.reputacion_stars}}</p>
+									</div>
+									<img id="foto_perfil" alt="Foto Perfil" src="{{cliente.foto_revisada}}" class="img-circle img-responsive" style="max-height: 200px">
+									{{#usuario_logueado.es_perfil_propio}}
+									<div>
+										<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_perfil" accept="image/*"></span>
+									</div>
+									{{/usuario_logueado.es_perfil_propio}}
+								</div>
+								<div class=" col-md-9 col-lg-9 ">
+									<table class="table table-user-information" id="table-perfil">
+										<tbody class="tabla">
+											<tr>
+												<td><strong>Usuario:</strong></td>
+												<td id="nombre_usuario">{{usuario.nombre_usuario}}</td>
+											</tr>
+											<tr>
+												<td><strong>Apellido:</strong></td>
+												<td id="apellidos">{{persona.apellidos}}</td>
+											</tr>
+											<tr>
+												<td><strong>Nombre:</strong></td>
+												<td id="nombres">{{persona.nombres}}</td>
+											</tr>
+											<tr>
+												<td><strong>Tipo de documento:</strong></td>
+												<td id="tipo_doc">{{persona.tipo_doc_string}}</td>
+											</tr>
+											<tr>
+												<td><strong>Nro de documento:</strong></td>
+												<td id="nro_doc">{{persona.nro_doc}}</td>
+											</tr>
+											<tr>
+												<td><strong>Fecha Nacimiento:</strong></td>
+												<td id="fecha_nacimiento">{{persona.fecha_nacimiento}}</td>
+											</tr>
+											<tr>
+												<td><strong>Domicilio:</strong></td>
+												<td><input name="domicilio" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled></td>
+											</tr>
+											<tr>
+												<td><strong>E-mail:</strong></td>
+												<td><input name="mail" type="text" class="form-control" placeholder="" value="{{usuario.mail}}" disabled></td>
+											</tr>
+											<tr>
+												<td><strong>Teléfono:</strong></td>
+												<td><input name="telefono" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled></td>
+											</tr>
+											<tr>
+												<td><strong>Sexo:</strong></td>
+												<td id="sexo">{{persona.sexo_string}}</td>
+											</tr>
+											{{#usuario_logueado.es_perfil_propio}}
+											<tr>
+												<td><strong>Registro de conducir:</strong></td>
+												<td align="center">
+												<img id="foto_registro" alt="Foto Registro" src="{{cliente.foto_registro_revisada}}" class="img-responsive" style="max-height: 160px">
+												<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_registro" accept="image/*"></span>
+												</td>
+											</tr>	
+											{{/usuario_logueado.es_perfil_propio}}
+										</tbody>
+									</table>
+	                			</div>
+							</div>
+							{{#usuario_logueado.es_perfil_propio}}
+							<div align="center">
+								<button class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span> Puntos</button>
+								<button class="btn btn-success"><span class="glyphicon glyphicon-piggy-bank"></span> Saldo</button>
+							</div>
+							{{/usuario_logueado.es_perfil_propio}}
+	            		</div>
+						{{#usuario_logueado.es_perfil_propio}}
+						<div class="panel-footer clearfix">
+							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Desactivar Cuenta</button>
+							<span class="pull-right">
+								<button class="btn btn-primary" onclick="activarModificar();"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
+							</span>
+						</div>
+						{{/usuario_logueado.es_perfil_propio}}
+					</div>
+				</div>
+			</div>
+			{{/cliente}}
+			{{#super_usuario}}
+			<div class="row">
+      			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h3 class="panel-title">{{usuario.nombre_usuario}} - Administrador</h3>
+						</div> 
+						<div class="panel-body bg-success">
+							<table class="table table-user-information" id="table-perfil">
+								<tbody class="tabla">
+									<tr>
+										<td><strong>Usuario:</strong></td>
+										<td id="nombre_usuario">{{usuario.nombre_usuario}}</td>
+									</tr>
+									<tr>
+										<td><strong>Apellido:</strong></td>
+										<td id="apellidos">{{persona.apellidos}}</td>
+									</tr>
+									<tr>
+										<td><strong>Nombre:</strong></td>
+										<td id="nombres">{{persona.nombres}}</td>
+									</tr>
+									<tr>
+										<td><strong>Tipo de documento:</strong></td>
+										<td id="tipo_doc">{{persona.tipo_doc_string}}</td>
+									</tr>
+									<tr>
+										<td><strong>Nro de documento:</strong></td>
+										<td id="nro_doc">{{persona.nro_doc}}</td>
+									</tr>
+									<tr>
+										<td><strong>Fecha Nacimiento:</strong></td>
+										<td id="fecha_nacimiento">{{persona.fecha_nacimiento}}</td>
+									</tr>
+									<tr>
+										<td><strong>Domicilio:</strong></td>
+										<td><input name="domicilio" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>E-mail:</strong></td>
+										<td><input name="mail" type="text" class="form-control" placeholder="" value="{{usuario.mail}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>Teléfono:</strong></td>
+										<td><input name="telefono" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>Sexo:</strong></td>
+										<td id="sexo">{{persona.sexo_string}}</td>
+									</tr>	
+								</tbody>
+							</table>
+	            		</div>
+					</div>
+				</div>
+			</div>
+			{{/super_usuario}}
+			{{#sponsor}}
+			<div class="row">
+      			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1">
+					<div class="panel panel-warning">
+						<div class="panel-heading">
+							<h3 class="panel-title">{{sponsor.nombre}} - Sponsor</h3>
+						</div> 
+						<div class="panel-body bg-warning">
+							<table class="table table-user-information" id="table-perfil">
+								<tbody class="tabla">
+									<tr>
+										<td><strong>Nombre Asociación:</strong></td>
+										<td id="nombre_asociacion">{{sponsor.nombre}}</td>
+									</tr>
+									<tr>
+										<td><strong>CUIT:</strong></td>
+										<td><input name="cuit" type="text" class="form-control" placeholder="" value="{{sponsor.cuit}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>Rubro:</strong></td>
+										<td id="rubro">{{sponsor.rubro}}</td>
+									</tr>	
+									<tr>
+										<td><strong>Teléfono Asociación:</strong></td>
+										<td id="telefono_asociacion">{{sponsor.telefono}}</td>
+									</tr>
+									<tr>
+										<td><strong>Domicilio Asociación:</strong></td>
+										<td id="domicilio_asociacion">{{sponsor.domicilio}}</td>
+									</tr>	
+									<tr>
+										<td><strong>Usuario:</strong></td>
+										<td id="nombre_usuario">{{usuario.nombre_usuario}}</td>
+									</tr>
+									<tr>
+										<td><strong>Apellido:</strong></td>
+										<td id="apellidos">{{persona.apellidos}}</td>
+									</tr>
+									<tr>
+										<td><strong>Nombre:</strong></td>
+										<td id="nombres">{{persona.nombres}}</td>
+									</tr>
+									<tr>
+										<td><strong>Tipo de documento:</strong></td>
+										<td id="tipo_doc">{{persona.tipo_doc_string}}</td>
+									</tr>
+									<tr>
+										<td><strong>Nro de documento:</strong></td>
+										<td id="nro_doc">{{persona.nro_doc}}</td>
+									</tr>
+									<tr>
+										<td><strong>Fecha Nacimiento:</strong></td>
+										<td id="fecha_nacimiento">{{persona.fecha_nacimiento}}</td>
+									</tr>
+									<tr>
+										<td><strong>Domicilio:</strong></td>
+										<td><input name="domicilio" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>E-mail:</strong></td>
+										<td><input name="mail" type="text" class="form-control" placeholder="" value="{{usuario.mail}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>Teléfono:</strong></td>
+										<td><input name="telefono" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled></td>
+									</tr>
+									<tr>
+										<td><strong>Sexo:</strong></td>
+										<td id="sexo">{{persona.sexo_string}}</td>
+									</tr>									
+								</tbody>
+							</table>
+	            		</div>
+					</div>
+				</div>
+			</div>
+			{{/sponsor}}
+
+	</script>
+
 </head>
 
 <body>
@@ -21,90 +257,8 @@
 			<header>
 				<h3 class="text-center  bg-primary ">Datos del perfil</h3>
 			</header>
-      		<div class="row">
-      			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 toppad">
-					<div class="panel panel-primary">
-						<!--<div class="panel-heading">
-							<h3 class="panel-title">Lucho85</h3>
-						</div> -->
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-3 col-lg-3" align="center">
-									<div class="col-md-12">
-										<p class="reputacion">★★★★★</p>
-									</div>
-									<img id="foto_perfil" alt="Foto Perfil" src="http://img129.imagevenue.com/loc893/th_43867_perro_con_peluca_122_893lo.jpg" class="img-circle img-responsive" style="max-height: 200px">
-									<div>
-										<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_perfil" accept="image/*"></span>
-									</div>
-								</div>
-								<div class=" col-md-9 col-lg-9 ">
-									<table class="table table-user-information">
-										<tbody class="tabla">
-											<tr>
-												<td><strong>Usuario:</strong></td>
-												<td>Lucho85</td>
-											</tr>
-											<tr>
-												<td><strong>Apellido:</strong></td>
-												<td>García</td>
-											</tr>
-											<tr>
-												<td><strong>Nombre:</strong></td>
-												<td>Lucho</td>
-											</tr>
-											<tr>
-												<td><strong>Tipo de documento:</strong></td>
-												<td>DNI</td>
-											</tr>
-											<tr>
-												<td><strong>Nro de documento:</strong></td>
-												<td>31649728</td>
-											</tr>
-											<tr>
-												<td><strong>Fecha Nacimiento:</strong></td>
-												<td>05/05/85</td>
-											</tr>
-											<tr>
-												<td><strong>Domicilio:</strong></td>
-												<td><input type="text" class="form-control" placeholder="" value="Plataforma 9 3/4" disabled></td>
-											</tr>
-											<tr>
-												<td><strong>E-mail:</strong></td>
-												<td><input type="text" class="form-control" placeholder="" value="prueba189635@gmail.com" disabled></td>
-											</tr>
-											<tr>
-												<td><strong>Teléfono:</strong></td>
-												<td><input type="text" class="form-control" placeholder="" value="2222444466" disabled></td>
-											</tr>
-											<tr>
-												<td><strong>Sexo:</strong></td>
-												<td>Masculino</td>
-											</tr>
-											<tr>
-												<td><strong>Registro de conducir:</strong></td>
-												<td align="center">
-												<img alt="Foto Registro" src="http://www.venado24.com.ar/archivos24/uploads/2015/08/disp96-01.jpg" class="img-responsive" style="max-height: 160px">
-												<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_registro" accept="image/*"></span>
-												</td>
-											</tr>	
-										</tbody>
-									</table>
-	                			</div>
-							</div>
-							<div align="center">
-								<button class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span> Puntos</button>
-								<button class="btn btn-success"><span class="glyphicon glyphicon-piggy-bank"></span> Saldo</button>
-							</div>
-	            		</div>
-						<div class="panel-footer clearfix">
-							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Desactivar Cuenta</button>
-							<span class="pull-right">
-								<button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
-							</span>
-						</div>
-					</div>
-				</div>
+			<div id="panel-perfil">
+				
 			</div>
 		</div>
     </main>
