@@ -95,32 +95,18 @@ var initUI = function(){
 window.onload=initUI;
 
 var cargarPerfil = function(){
-	//
-	// Mañana esto lo paso a mustache y desaparece
-	//
+	// TRADUZCO DATA
 	if (data.cliente){
-		$("#reputacion").text(reputacionStars(data.cliente.reputacion));
-		$("#foto_perfil").attr("src",data.cliente.foto);
-		$("#foto_registro").attr("src",data.cliente.foto_registro);
-	}else if (data.super_usuario){
-		console.log("hola");
-		$("#reputacion").parent().hide();
-		$("#foto_perfil").parent().hide();
-		$("#foto_registro").parent().parent().hide();
+		data.cliente.foto_revisada = data.cliente.foto || "img/perfil/default.png";
+		data.cliente.foto_registro_revisada = data.cliente.foto_registro || "img/perfil/sin_registro.jpg";
+		data.cliente.reputacion_stars =  reputacionStars(data.cliente.reputacion);
 	}
+	data.persona.tipo_doc_string = tipoDocString(data.persona.tipo_doc);
+	data.persona.sexo_string = sexoString(data.persona.sexo);
 	
-	$("#nombre_usuario").text(data.usuario.nombre_usuario);
-	$("#apellidos").text(data.persona.apellidos);
-	$("#nombres").text(data.persona.nombres);
-	$("#tipo_doc").text(tipoDocString(data.persona.tipo_doc));
-	$("#nro_doc").text(data.persona.nro_doc);
-	$("#table-perfil input[name='domicilio']").val(data.persona.domicilio);
-	$("#table-perfil input[name='domicilio']").attr("value",data.persona.domicilio);
-	$("#table-perfil input[name='mail']").val(data.usuario.mail);
-	$("#table-perfil input[name='mail']").attr("value",data.usuario.mail);
-	$("#table-perfil input[name='telefono']").val(data.persona.telefono);
-	$("#table-perfil input[name='telefono']").attr("value",data.persona.telefono);
-	$("#sexo").text(sexoString(data.persona.sexo));
+	// GENERO HTML DINAMICO
+	var template = $("#perfil-template").html();
+	$("#panel-perfil").append(Mustache.render(template,data));
 }
 
 var activarModificar = function(){
