@@ -3,9 +3,8 @@ var viajes = [];
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
-	/*
 	$.ajax({
-		url: '/viaje', 
+		url: '/viajes', 
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -18,7 +17,6 @@ var sendAjax = function(sendData,callback){
 			window.alert (err3);
 		}
 	});
-	*/
 }
 var loadData = function() {
 
@@ -36,7 +34,7 @@ var loadData = function() {
 			window.location = jsonData.redirect;
 		}
 	}
-	simular();
+	//simular();
 	
 	sendAjax(sendData,onsuccess);
 	

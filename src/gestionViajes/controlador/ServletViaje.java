@@ -48,6 +48,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.nuevo_viaje (request);
 			} else if (action != null && action.equals("detalle")) {
 				respuesta = this.ver_viaje_detallado (request);
+			} else if (action != null && action.equals("ver_mis_viajes")) {
+				respuesta = this.ver_mis_viajes (request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -321,7 +323,7 @@ public class ServletViaje extends HttpServlet {
 		return null;
 	}
 
-	public JSONObject ver_viajes_de_usuario (HttpServletRequest request) {
+	public JSONObject ver_mis_viajes (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
 		try {
 			JSONArray json_viajes = new JSONArray();
@@ -343,7 +345,7 @@ public class ServletViaje extends HttpServlet {
 				jtmp.put("id", viaje.getId_viaje());
 				jtmp.put("origen", viaje.getOrigen().getNombre());
 				jtmp.put("destino", viaje.getDestino().getNombre());
-				jtmp.put("fecha_inicio", viaje.getFecha_inicio());
+				jtmp.put("fecha_inicio", (viaje.getFecha_inicio().toString()));
 				jtmp.put("conductor", viaje.getConductor().getNombre_usuario());
 				jtmp.put("reputacion", viaje.getConductor().getReputacion());
 //				jtmp.put("precio", viaje.getPrecio());
