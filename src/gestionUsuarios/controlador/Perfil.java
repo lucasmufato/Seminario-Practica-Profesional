@@ -234,7 +234,9 @@ public class Perfil extends HttpServlet {
 			
 			//elimino imagen anterior
 			if (bandera){
-				this.eliminarArchivo(anteriorImagen);
+				if (anteriorImagen != null){
+					this.eliminarArchivo(anteriorImagen);
+				}
 			}
 		}
 		if (foto_registro != null){
@@ -249,7 +251,9 @@ public class Perfil extends HttpServlet {
 			
 			//elimino imagen anterior
 			if (bandera){
-				this.eliminarArchivo(anteriorImagen);
+				if (anteriorImagen != null){
+					this.eliminarArchivo(anteriorImagen);
+				}
 			}
 		}
 		
