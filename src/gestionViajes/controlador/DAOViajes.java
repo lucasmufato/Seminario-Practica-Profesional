@@ -367,6 +367,13 @@ public class DAOViajes extends DataAccesObject {
 		return null;
 	}
 
+	public List<Viaje> listarViajesPorConductor(Integer id_conductor) {
+		Cliente conductor = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_conductor);
+		Query qry = entitymanager.createNamedQuery("Viaje.SearchByConductor");
+    	qry.setParameter("conductor", conductor);
+		return (List<Viaje>)qry.getResultList();
+	}
+
 	public void nombreAmigablePorViaje(Integer id_viaje) {
 		// TODO Auto-generated method stub
 		
