@@ -16,6 +16,15 @@ public class AccessManager {
 
 	}
 	
+	public static boolean hasRol(HttpServletRequest request, String nombreRol){
+		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
+		if (EstaLogueado(request)) {
+			JSONArray roles = dao.NombreRolUsuario(nombreUsuario(request));
+			return tieneValor(roles,"nombre_rol",nombreRol);
+		}
+		return false;
+	}
+	
 	public static boolean HasPermiso(HttpServletRequest request, String nombrePermiso) {
 		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
 		System.out.println("En AccessManager - HasPermiso");

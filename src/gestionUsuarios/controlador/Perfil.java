@@ -2,6 +2,7 @@ package gestionUsuarios.controlador;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -27,70 +28,145 @@ public class Perfil extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 
 		response.setContentType("application/json");
-
-		if (AccessManager.EstaLogueado(request)){
-			this.printAccept(writer, request);
+		if (!AccessManager.EstaLogueado(request)){
+			this.printDeniedRedirect(writer,"acceso_denegado.html");
+		} else if (!perfilAceptado(request)){
+			System.out.println("Denegado! :(");
+			this.printDeniedRedirect(writer,"perfil.html");
 		}else{
-			this.printDeniedRedirect(writer);
+			System.out.println("Entre!");
+			this.printAccept(writer, request);
 		}
 	}
 	
-	private JSONObject cargarPerfil(HttpServletRequest request) {
-		JSONObject respuesta = new JSONObject();
-		
-		String usuario_perfil = request.getParameter("usuario_perfil");
-		String usuario_logueado_nombre = AccessManager.nombreUsuario(request); 
-		
-		// Si no se establecio que perfil se visita, se visita el perfil propio del usuario logueado
-		usuario_perfil = (usuario_perfil != null)? usuario_perfil : usuario_logueado_nombre;
-		
-		//Cargo respuesta con data del usuario logueado
-		JSONObject usuario_logueado = new JSONObject(); 
-		usuario_logueado.put("es_perfil_propio", usuario_perfil == usuario_logueado_nombre);
-		respuesta.put("usuario_logueado", usuario_logueado);
-		
-		// Data del perfil del cliente visitado
-		Cliente c = dao.clientePorNombre(usuario_perfil);
-		JSONObject cliente = new JSONObject();
-		cliente.put("mail", c.getEmail());
-		cliente.put("nombre_usuario", c.getNombre_usuario());
-		cliente.put("foto", c.getFoto());
-		cliente.put("foto_registro", c.getFoto_registro());
-		cliente.put("reputacion", c.getReputacion());
-		
-		// Data de la persona
-		Persona p = c.getPersona();
-		cliente.put("nombres", p.getNombres());
-		cliente.put("apellidos", p.getApellidos());
-		cliente.put("tipo_doc", p.getTipo_doc());
-		cliente.put("nro_doc", p.getNro_doc());
-		cliente.put("telefono", p.getTelefono());
-		cliente.put("domicilio", p.getDomicilio());
-		cliente.put("sexo", p.getSexo().toString());
-		cliente.put("fecha_nacimiento", p.getFecha_nacimiento().toString());
-
-		respuesta.put("cliente", cliente);
-		return respuesta;
+	/*
+	 * Funcion para aceptar o no a un usuario visitando perfil de otro.
+	 * Si es admin, puede visitar cualquier perfil, se lo acepta siempre.
+	 * Si es Cliente, solo puede ver perfil de otros clientes.
+	 * Si es Sponsor no puede ver perfiles de nadie salvo de si mismo.
+	 */
+	private boolean perfilAceptado(HttpServletRequest request) {
+		String perfilVisitado = request.getParameter("usuario_perfil");
+		if (perfilVisitado == null){ // cuando ingresa a perfil.html se lo acepta siempre
+			System.out.println("sin param");
+			return true;
+		}else if (dao.buscarUsuarioPorNombre(perfilVisitado) == null){ // si no existe usuario, arafue
+			System.out.println("no existe usuario");
+			return false;
+		}else if (AccessManager.hasRol(request, "super_usuario")) { // el super usuario puede visitar cualquier perfil
+			System.out.println("es superu");
+			return true;
+		} else if (AccessManager.hasRol(request,"sponsor")){ // sponsor solo es aceptado si visita su propio perfil
+			System.out.println("es sponsor");
+			return AccessManager.nombreUsuario(request) == perfilVisitado;
+		}else if (AccessManager.hasRol(request, "cliente")){ //se lo acepta solo si es cliente y visita a otro cliente
+			System.out.println("es cliente");
+			return dao.usuarioHasRol(perfilVisitado, "cliente");
+		}			
+		return false;
 	}
 	
 	private void printAccept(PrintWriter writer, HttpServletRequest request) {
-		JSONObject resultado;
+		JSONObject resultado = new JSONObject();
+		
+		//Tomo el nombre de usuario del perfil que se esta visitando
+		String usuarioVisitado = getNombreUsuarioVisitado(request);
+		
+		//Cargo data de la persona del perfil visitado
+		resultado.put("persona",this.getPersona(usuarioVisitado));
+		
+		//Cargo data del usuario del perfil visitado
+		resultado.put("usuario",this.getUsuario(usuarioVisitado));
+		
+		//Cargo data del usuario que visita perfil
+		resultado.put("usuario_logueado", getUsuarioLogueado(request));
+		
+		// Cargo data segun el rol del perfil visitado
+		if (dao.usuarioHasRol(usuarioVisitado, "super_usuario")){
+			// NADA, SOLO TIENE DATOS DE PERSONA Y CLIENTE POR AHORa
+			// LE pongo un json para que no me de null en el js
+			
+			resultado.put("super_usuario",new JSONObject());
+		}
+		
+		// Asumo que no se es cliente y sponsor a la vez.
+		if (dao.usuarioHasRol(usuarioVisitado, "cliente")){
+			resultado.put("cliente",this.getCliente(usuarioVisitado));
+		}else if (dao.usuarioHasRol(usuarioVisitado, "sponsor")){
+			resultado.put("sponsor",this.getSponsor(usuarioVisitado));
+		}
+		
 
-		resultado = cargarPerfil(request);
+
 		resultado.put("result", true);
 
 		writer.println(resultado);
 	}
 
+	private String getNombreUsuarioVisitado(HttpServletRequest request) {
+		String u = request.getParameter("usuario_perfil");
+		// Si no se establecio que perfil se visita, se visita el perfil propio del usuario logueado
+		return (u == null)? AccessManager.nombreUsuario(request) : u;
+	}
 
-	private void printDeniedRedirect (PrintWriter writer) {
+	private JSONObject getSponsor(String perfilUsuario) {
+		JSONObject sponsor = new JSONObject();
+		//SIN IMPLEMENTAR
+		return sponsor;
+	}
+
+	private void printDeniedRedirect (PrintWriter writer, String url) {
 		JSONObject resultado;
 
 		resultado = new JSONObject();
 		resultado.put("result", false);
-		resultado.put("redirect", "acceso_denegado.html");
+		resultado.put("redirect", url);
 
 		writer.println(resultado);
+	}
+	
+	private JSONObject getUsuarioLogueado(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		String usuario_perfil = this.getNombreUsuarioVisitado(request);
+		String usuario_logueado_nombre = AccessManager.nombreUsuario(request); 
+		
+		respuesta.put ("es_perfil_propio",usuario_perfil.equals(usuario_logueado_nombre));
+		
+		return respuesta;
+	}
+
+	private JSONObject getCliente(String perfilUsuario) {
+		Cliente c = dao.clientePorNombre(perfilUsuario);
+		JSONObject cliente = new JSONObject();
+		cliente.put("foto", c.getFoto());
+		cliente.put("foto_registro", c.getFoto_registro());
+		cliente.put("reputacion", c.getReputacion());
+		return cliente;
+	}
+
+	private JSONObject getUsuario(String perfilUsuario) {
+		Usuario u = dao.buscarUsuarioPorNombre(perfilUsuario);
+		JSONObject usuario = new JSONObject();
+		usuario.put("mail", u.getEmail());
+		usuario.put("nombre_usuario", u.getNombre_usuario());
+		return usuario;
+	}
+
+	private JSONObject getPersona(String perfilUsuario) {
+		Persona p = dao.buscarUsuarioPorNombre(perfilUsuario).getPersona();
+
+		JSONObject persona = new JSONObject();
+		persona.put("nombres", p.getNombres());
+		persona.put("apellidos", p.getApellidos());
+		persona.put("tipo_doc", p.getTipo_doc());
+		persona.put("nro_doc", p.getNro_doc());
+		persona.put("telefono", p.getTelefono());
+		persona.put("domicilio", p.getDomicilio());
+		persona.put("sexo", p.getSexo().toString());
+		persona.put("fecha_nacimiento", p.getFecha_nacimiento().toString());
+
+		return persona;
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

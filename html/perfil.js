@@ -1,9 +1,8 @@
 var usuario_perfil = getUrlVars()["usuario"];
 var data = {}
 
-data.cliente = {
+data.persona = {
 /*
-	nombre_usuario : "Lucho85",
 	apellidos: "Garcia",
 	nombres: "Lucho",
 	tipo_doc: "1" ,
@@ -13,13 +12,27 @@ data.cliente = {
 	domicilio: "25 de mayo, 1168",
 	telefono: "425563"
 	*/
+}
+data.usuario = {
+	/*
+	nombre_usuario : "Lucho85",
+	mail= "usu@hotmail.com"
+	*/
 };
-
+data.cliente = {
+	/*
+	reputacion: 3,
+	foto: upload/foto.jpg,
+	foto_registro: sarasa.png
+	*/
+}
 data.usuario_logueado = {
-/*
+	/*
 	es_perfil_propio: true
 	*/
 };
+data.sponsor= {};
+data.super_usuario = {};
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
@@ -45,9 +58,14 @@ var loadData = function() {
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
+			console.log("Me traje: ",jsonData);
 			$('.loadingScreen').fadeOut();	
 			data.usuario_logueado = jsonData.usuario_logueado;
 			data.cliente = jsonData.cliente;
+			data.sponsor = jsonData.sponsor;
+			data.super_usuario = jsonData.super_usuario; // El admin no tiene datos propios asi que esto quedara vacio.
+			data.persona = jsonData.persona;
+			data.usuario = jsonData.usuario;
 			cargarPerfil();
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
@@ -77,22 +95,32 @@ var initUI = function(){
 window.onload=initUI;
 
 var cargarPerfil = function(){
-	console.log("Cargando Perfil");
-	$("#reputacion").text(reputacionStars(data.cliente.reputacion));
-	$("#foto_perfil").attr("src",data.cliente.foto);
-	$("#nombre_usuario").text(data.cliente.nombre_usuario);
-	$("#apellidos").text(data.cliente.apellidos);
-	$("#nombres").text(data.cliente.nombres);
-	$("#tipo_doc").text(tipoDocString(data.cliente.tipo_doc));
-	$("#nro_doc").text(data.cliente.nro_doc);
-	$("#table-perfil input[name='domicilio']").val(data.cliente.domicilio);
-	$("#table-perfil input[name='domicilio']").attr("value",data.cliente.domicilio);
-	$("#table-perfil input[name='mail']").val(data.cliente.mail);
-	$("#table-perfil input[name='mail']").attr("value",data.cliente.mail);
-	$("#table-perfil input[name='telefono']").val(data.cliente.telefono);
-	$("#table-perfil input[name='telefono']").attr("value",data.cliente.telefono);
-	$("#sexo").text(sexoString(data.cliente.sexo));
-	$("#foto_registro").attr("src",data.cliente.foto_registro);
+	//
+	// Mañana esto lo paso a mustache y desaparece
+	//
+	if (data.cliente){
+		$("#reputacion").text(reputacionStars(data.cliente.reputacion));
+		$("#foto_perfil").attr("src",data.cliente.foto);
+		$("#foto_registro").attr("src",data.cliente.foto_registro);
+	}else if (data.super_usuario){
+		console.log("hola");
+		$("#reputacion").parent().hide();
+		$("#foto_perfil").parent().hide();
+		$("#foto_registro").parent().parent().hide();
+	}
+	
+	$("#nombre_usuario").text(data.usuario.nombre_usuario);
+	$("#apellidos").text(data.persona.apellidos);
+	$("#nombres").text(data.persona.nombres);
+	$("#tipo_doc").text(tipoDocString(data.persona.tipo_doc));
+	$("#nro_doc").text(data.persona.nro_doc);
+	$("#table-perfil input[name='domicilio']").val(data.persona.domicilio);
+	$("#table-perfil input[name='domicilio']").attr("value",data.persona.domicilio);
+	$("#table-perfil input[name='mail']").val(data.usuario.mail);
+	$("#table-perfil input[name='mail']").attr("value",data.usuario.mail);
+	$("#table-perfil input[name='telefono']").val(data.persona.telefono);
+	$("#table-perfil input[name='telefono']").attr("value",data.persona.telefono);
+	$("#sexo").text(sexoString(data.persona.sexo));
 }
 
 var activarModificar = function(){
