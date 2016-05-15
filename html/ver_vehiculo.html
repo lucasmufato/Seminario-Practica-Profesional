@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Viajes Compartidos</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="common.css" />
+	
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="ver_vehiculo.css">
+
+	<script type="text/javascript" src="js/mustache.js"></script>
+	<script type="text/javascript" src="ver_vehiculo.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="navegacion.js"></script>
+
+	<script id="perfil-template" type="text/template">
+			
+	</script>
+</head>
+
+<body>
+
+    <main>
+		<div class="container-fluid">
+			<header>
+				<h3 class="text-center  bg-primary ">Datos del vehículo</h3>
+			</header>
+			<div id="panel-vehiculo">
+				<div class="row">
+      			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Patente de vehículo - IGH 888</h3>
+						</div> 
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-3 col-lg-3" align="center">
+									<img id="foto_vehiculo" alt="Foto Vehiculo" src="http://www.coches.com/fotos_historicas/ford/Focus/med_ford_focus-2014_r3.jpg.pagespeed.ce.JW0wSPihZv.jpg" class="img-responsive" style="max-height: 200px">
+									<div>
+										<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_vehiculo" accept="image/*"></span>
+									</div>
+								</div>
+								<div class=" col-md-9 col-lg-9 ">
+									<table class="table table-user-information" id="table-vehiculo">
+										<tbody class="tabla">
+											<tr>
+												<td><strong>Patente:</strong></td>
+												<td id="patente">IGH 888</td>
+											</tr>
+											<tr>
+												<td><strong>Marca:</strong></td>
+												<td id="marca">Ford</td>
+											</tr>
+											<tr>
+												<td><strong>Modelo:</strong></td>
+												<td id="modelo">Focus</td>
+											</tr>
+											<tr>
+												<td><strong>Color:</strong></td>
+												<td id="color">Azul</td>
+											</tr>
+											<tr>
+												<td><strong>Año:</strong></td>
+												<td id="anio">2010</td>
+											</tr>
+											<tr>
+												<td><strong>Cantidad de asientos:</strong></td>
+												<td id="cantidad de asientos">4</td>
+											</tr>
+											<tr>
+												<td><strong>Seguro:</strong></td>
+												<td><input name="seguro" type="text" class="form-control" placeholder="" value="Si" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+											</tr>
+											<tr>
+												<td><strong>Aire acondicionado:</strong></td>
+												<td><input name="aire_acondicionado" type="text" class="form-control" value="Si" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+											</tr>
+										</tbody>
+									</table>
+	                			</div>
+							</div>
+							<div align="center">
+								<button class="btn btn-primary"><span class="glyphicon glyphicon-eye-open"></span> Conductores</button>
+							</div>
+	            		</div>
+						<div class="panel-footer clearfix">
+							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Eliminar vehículo</button>
+							<span class="pull-right" id="botonera-modificar-cliente-{{usuario.nombre_usuario}}">
+								<button class="btn btn-primary" onclick="activarModificar();"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		
+		<div id="modal-error" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-danger">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" onclick="closeModal('error')">&times;</button>
+						<h3 class="dialog-title"> Ha ocurrido un error</h3>
+					</div><!-- modal-header -->
+					<div class="modal-body">
+						<div id="error-message">
+							Ha ocurrido un error. <!-- Esto sera modificado desde javascript -->
+						</div>
+					</div><!-- modal-body -->
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" onclick="closeModal('error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+					</div><!-- .modal-footer -->
+				</div><!-- .modal-content -->
+			</div><!-- .modal-dialog -->
+		</div><!-- .modal -->
+    </main>
+
+</div>
+
+</body>	
+</html>
