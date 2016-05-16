@@ -3,6 +3,7 @@ package gestionViajes.controlador;
 import static org.junit.Assert.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -96,7 +97,7 @@ public class TestViaje extends TestCase {
 
 		JSONObject json2 = this.crearViaje();
 		JSONObject vuelta = new JSONObject();
-		vuelta.put("fecha_inicio",new Date((new java.util.Date()).getTime()) );
+		vuelta.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
 		vuelta.put("cantidad_asientos", 2);
 		vuelta.put("nombre_amigable", "prueba viaje");
 		json2.put("vuelta", vuelta);
@@ -208,7 +209,9 @@ public class TestViaje extends TestCase {
 			fail(e.getMessage());
 		}
 		
-		Viaje viaje=null;	//metodo para recuperar el viaje
+		//se que en cada etapa del test hay un solo viaje, asi q recupero solo ese viaje
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
 		
 		assertNotNull(this.daoviajes.getVehiculoViaje(viaje.getId_viaje()));
 		assertNotNull(this.daoviajes.getConductorViaje(viaje.getId_viaje()));
@@ -325,6 +328,8 @@ public class TestViaje extends TestCase {
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}
+		int i=0;
+		i++;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -356,6 +361,10 @@ public class TestViaje extends TestCase {
 		vehiculo.put("anio", 1992);
 		vehiculo.put("modelo", "viejo");
 		vehiculo.put("marca", "mondeo");
+		vehiculo.put("seguro", 'C');
+		vehiculo.put("color","arcoiris");
+		vehiculo.put("aire", 'S');
+		vehiculo.put("asientos",5);
 		json.put("vehiculo", vehiculo);
 		return json;
 	}
@@ -373,7 +382,7 @@ public class TestViaje extends TestCase {
 		JSONObject json2 = new JSONObject();
 		json2.put("vehiculo", "abd123");
 		json2.put("cliente", 2);
-		json2.put("fecha_inicio",new Date((new java.util.Date()).getTime()) );
+		json2.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
 		json2.put("cantidad_asientos", 2);
 		json2.put("nombre_amigable", "prueba viaje");
 		JSONObject localidades= new JSONObject();

@@ -1,6 +1,7 @@
 package gestionViajes.controlador;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class DAOViajes extends DataAccesObject {
     	
     	/* estructura del JSON datos:
     	 * { "CONDUCTOR": ID_USUARIO,
-    	 * "VEHICULO":{FOTO,MARCA,MODELO, PATENTE,ANIO,AIRE_ACOND,SEGURO} FOTO,AIRE_ACOND Y SEGURO NO ESTAN EN EL DIAGRAMA DE CLASE, Q SE HACE?
+    	 * "VEHICULO":{FOTO,MARCA,MODELO, PATENTE,ANIO,AIRE_ACOND,SEGURO,foto,seguro, aire, asientos}
     	 * }
     	 * pasos a seguir:
     	 * recupero el cliente, si no existe tiro error
@@ -62,7 +63,12 @@ public class DAOViajes extends DataAccesObject {
     	vehiculo.setMarca( (String)datos_vehiculo.get("marca") );
     	vehiculo.setModelo( (String)datos_vehiculo.get("modelo") );
     	vehiculo.setPatente( (String)datos_vehiculo.get("patente") );
-    	//estos los pongo por q los pide la BD, abria q ir haciendo los enum
+    	vehiculo.setAire_acondicionado( (Character) datos_vehiculo.get("aire"));
+    	vehiculo.setColor((String) datos_vehiculo.get("color"));
+    	vehiculo.setCantidad_asientos( (Integer) datos_vehiculo.get("asientos"));
+    	vehiculo.setSeguro( (Character) datos_vehiculo.get("seguro"));
+    	//vehiculo.setFoto(foto);		//TODO falta guardar la foto del auto
+    	
     	vehiculo.setEstado('A');
     	vehiculo.setVerificado('N');
     	
@@ -148,8 +154,8 @@ public class DAOViajes extends DataAccesObject {
 		Viaje viaje= new Viaje();
 		viaje.setConductor_vehiculo(maneja);
 		//seteo los otros datos
-		viaje.setFecha_inicio((Date) datos.get("fecha_inicio"));
-		viaje.setFecha_alta(new Date((new java.util.Date()).getTime()));
+		viaje.setFecha_inicio((Timestamp) datos.get("fecha_inicio"));
+		viaje.setFecha_alta(new Timestamp((new java.util.Date()).getTime()));
 		viaje.setFecha_cancelacion(null);
 		viaje.setFecha_finalizacion(null);
 		viaje.setEstado(EstadoViaje.no_iniciado);		//falta hacer los enum	
@@ -330,7 +336,19 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.persist(comisionCobrada);
 		this.entitymanager.persist(pasajero);
 		this.entitymanager.getTransaction().commit();
-
+		this.entitymanager.getTransaction().begin();
+		
+		//creo la notificacion que le va a llegar al conductor de ese viaje, informandole que tiene un postulante
+		Notificacion notificacion= new Notificacion();
+		notificacion.setCliente(viaje.getConductor());
+		notificacion.setEstado(EstadoNotificacion.no_leido);
+		notificacion.setFecha(new Date((new java.util.Date()).getTime()) ); 			//TODO modificar fecha
+		notificacion.setTexto("El usuario: "+cliente.getNombre_usuario()+
+				" se ha postulado para participar en tu viaje: "+viaje.getNombre_amigable());
+		this.entitymanager.persist(notificacion);
+		calificacion.setPasajero_viaje(pasajero);
+		comisionCobrada.setPasajero_viaje(pasajero);
+		this.entitymanager.getTransaction().commit();
 		return true;
 	}
 	

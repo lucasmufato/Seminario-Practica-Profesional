@@ -1,6 +1,6 @@
 package gestionViajes.modelo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +46,17 @@ public class Vehiculo implements JSONable {
 	@Column(nullable=false)
 	protected Character estado;	//falta hacer el enum
 	@Column(nullable=true)
-	protected Date fecha_verificacion;
+	protected Timestamp fecha_verificacion;
+	@Column(nullable=true)
+	protected String color;
+	@Column(nullable=false)
+	protected Integer cantidad_asientos;
+	@Column(nullable=true)
+	protected Character aire_acondicionado;
+	@Column(nullable=false)
+	protected Character seguro;
+	@Column(nullable=true)
+	protected String foto;
 	
 	@OneToMany(mappedBy="vehiculo", cascade=CascadeType.PERSIST)
 	protected List<Maneja> conductores = new ArrayList<Maneja>();
@@ -71,11 +81,11 @@ public class Vehiculo implements JSONable {
 		this.modelo = modelo;
 	}
 
-	public Date getFecha_verificacion() {
+	public Timestamp getFecha_verificacion() {
 		return fecha_verificacion;
 	}
 
-	public void setFecha_verificacion(Date fecha_verificacion) {
+	public void setFecha_verificacion(Timestamp fecha_verificacion) {
 		this.fecha_verificacion = fecha_verificacion;
 	}
 	
@@ -127,12 +137,61 @@ public class Vehiculo implements JSONable {
 		this.conductores = conductores;
 	}
 
+	public Integer getId_vehiculo() {
+		return id_vehiculo;
+	}
+
+	public void setId_vehiculo(Integer id_vehiculo) {
+		this.id_vehiculo = id_vehiculo;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public Integer getCantidad_asientos() {
+		return cantidad_asientos;
+	}
+
+	public void setCantidad_asientos(Integer cantidad_asientos) {
+		this.cantidad_asientos = cantidad_asientos;
+	}
+
+	public Character getAire_acondicionado() {
+		return aire_acondicionado;
+	}
+
+	public void setAire_acondicionado(Character aire_acondicionado) {
+		this.aire_acondicionado = aire_acondicionado;
+	}
+
+	public Character getSeguro() {
+		return seguro;
+	}
+
+	public void setSeguro(Character seguro) {
+		this.seguro = seguro;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 	@Override
 	public void SetJSONObject(JSONObject json) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
@@ -141,10 +200,10 @@ public class Vehiculo implements JSONable {
 		json.put("modelo", this.getModelo());
 		json.put("anio", this.getAnio());
 		json.put("patente", this.getPatente());
-		//json.put("aire", this.getAire());
-		//json.put("seguro", this.getSeguro());
+		json.put("aire", this.getAire_acondicionado());
+		json.put("seguro", this.getSeguro());
 		json.put("verificado", this.getVerificado().toString());
-		//json.put("foto", this.getFoto());
+		json.put("foto", this.getFoto());
 		return json;
 	}
 

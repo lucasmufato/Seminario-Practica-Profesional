@@ -150,7 +150,12 @@ CREATE TABLE VEHICULO (
 	verificado CHAR(1) NOT NULL,
 	estado CHAR(1) NOT NULL,
 	fecha_verificacion DATE,
-
+	color VARCHAR(20),
+    cantidad_asientos INTEGER NOT NULL,
+    aire_acondicionado CHAR(1),
+    seguro CHAR(1) NOT NULL,
+    foto VARCHAR(120),
+    
 	PRIMARY KEY (id_vehiculo),
 	UNIQUE (patente)
 );
