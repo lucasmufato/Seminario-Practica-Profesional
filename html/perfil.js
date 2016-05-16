@@ -1,36 +1,10 @@
 var usuario_perfil = getUrlVars()["usuario"];
 var data = {}
 
-data.persona = {
-/*
-	apellidos: "Garcia",
-	nombres: "Lucho",
-	tipo_doc: "1" ,
-	nro_doc: "36071223",
-	fecha_nacimiento: "23/04/1992", 
-	sexo: "1",
-	domicilio: "25 de mayo, 1168",
-	telefono: "425563"
-	*/
-}
-data.usuario = {
-	/*
-	nombre_usuario : "Lucho85",
-	mail= "usu@hotmail.com"
-	*/
-};
-data.cliente = {
-	/*
-	reputacion: 3,
-	foto: upload/foto.jpg,
-	foto_registro: sarasa.png
-	*/
-}
-data.usuario_logueado = {
-	/*
-	es_perfil_propio: true
-	*/
-};
+data.persona = {}
+data.usuario = {};
+data.cliente = {}
+data.usuario_logueado = {};
 data.sponsor= {};
 data.super_usuario = {};
 
@@ -130,8 +104,117 @@ function setearEventos(){
 			enviarFoto("registro",imageSrc);
 		}
 	});
-	$("table input").blur(validarCampoObligatorio);
-	$("table input[name='mail']").blur(validarMail);
+	$("#tableCliente input").blur(validarCampoObligatorio);
+	$("#tableCliente input[name='mail-cliente']").blur(validarMail);
+	$("#tableCliente input[name='pass-cliente']").blur(validarPass);
+	$("#tableCliente input[name=sexo]").blur(validarSexo);
+}
+
+var enviarFoto = function(atributo, src){
+	var sendData = {
+		nombre_usuario : data.usuario.nombre_usuario,
+		action : "modificar_imagen"
+	}
+	if (atributo == "registro"){
+		sendData.foto_registro = src;
+	} else if (atributo == "perfil"){
+		sendData.foto = src;
+	}
+	var onsuccess = function(jsonData){
+		if (jsonData.result){
+			loadData();
+		} 
+	}
+	sendAjax(sendData,onsuccess);
+}
+
+var activarModificar = function(){
+	$("#table-perfil input").attr("disabled",false);
+	generarNuevosBotones();
+}
+
+var generarNuevosBotones = function(){
+	var btnGuardar = "<button class='btn btn-success' onclick='modificarPerfilCliente();'>"
+		+"<span class='glyphicon glyphicon-check'></span> Guardar"
+		+"</button>";
+	var btnCancelar = "<button class='btn btn-danger' onclick='cancelarModificar();'>"
+		+"<span class='glyphicon glyphicon-remove'></span> Cancelar"
+		+"</button>";
+	var html = "<div class='btn-group'>"+btnCancelar+btnGuardar+"</div>";
+	$("#botonera-modificar-cliente-"+data.usuario.nombre_usuario).html(html);
+}
+
+var cancelarModificar = function(){
+	cargarPerfil();
+}
+
+var desactivarCuenta = function(){
+	var modalName='warning';
+	var confirmar = function(){
+		closeModal(modalName);
+		var sendJson = {
+			action: "desactivar_cuenta",
+			nombre_usuario: data.usuario.nombre_usuario
+		}
+		var onsuccess = function(jsonData){
+			if (jsonData.result){
+				window.location = jsonData.redirect;
+			}else{
+				modalMessage("error",jsonData.msg,"Desactivar Cuenta");
+			}
+		}
+		sendAjax(sendJson,onsuccess);
+	}
+	var msg = "¿Esta seguro que desea desactivar su cuenta? Esta acción no puede deshacerse";
+	var title= "Desactivar Cuenta";
+	var btn = document.createElement("BUTTON");       
+	btn.className="btn btn-danger dinamico";
+	btn.innerHTML = "<span class='glyphicon glyphicon-tint'></span>"+" Confirmar";
+	btn.name = "confirmar";
+	btn.onclick=confirmar;
+	modalButton(modalName,btn);
+	modalMessage(modalName,msg,title);
+}
+
+var modificarPerfilCliente = function(){
+	if (esValido()){
+		var sendData = {
+			action: "modificar_cliente",
+			nombre_usuario: data.usuario.nombre_usuario,
+			usuario:{},
+			persona:{},
+			cliente:{}
+		}
+		sendData.usuario.mail = $("table input[name=mail-cliente]").val();
+		sendData.usuario.pass = $("table input[name=pass-cliente]").val();
+		sendData.persona.domicilio = $("table input[name=domicilio-cliente]").val();
+		sendData.persona.telefono = $("table input[name=telefono-cliente]").val();
+		sendData.persona.apellidos = $("table input[name=apellidos-cliente]").val();
+		sendData.persona.nombres = $("table input[name=nombres-cliente]").val();
+		sendData.persona.fecha_nacimiento = $("#tableCliente input[name=fecha_nacimiento]").val();
+		sendData.persona.sexo = sexoCaracter($("#tableCliente input[name=sexo]").val());
+
+		var onsuccess = function(jsonData){
+			if (jsonData.result){
+				loadData();
+			} else{
+				modalMessage("error", jsonData.msg, "Modificar perfil");
+			}
+		}
+		
+		sendAjax(sendData,onsuccess);
+	}else{
+		$("body").get(0).scrollIntoView();
+	}
+	
+}
+
+//validaciones//
+
+var esValido = function(){
+	//$("table"+" input").focus();
+	//$("table"+" input").last().blur();
+	return $("table").find(".has-error").length == 0;
 }
 
 var validarCampoObligatorio = function(){
@@ -166,17 +249,36 @@ var validarMail = function(){
   }
 }
 
+var validarPass = function(){
+	var inputPass = $(this);
+	if (inputPass.val().length > 0){
+		if (inputPass.val().length<6){
+			customAlert(inputPass,"Mínimo 6 caracteres");
+		}
+	}
+}
+
+var validarSexo = function(){
+	var inputSexo = $(this);
+	var valor = inputSexo.val().toLowerCase();
+	if (valor.length > 0){
+		if (valor == "masculino" || valor == "femenino" || valor == "otro"){
+			customAlertSuccess(inputSexo);
+		}else{
+			customAlert(inputSexo,"Valores válidos son: 'Masculino', 'Femenino' y 'Otro'");
+		}
+	}
+}
+
 var customAlert = function(elemento,msg){
 	var mensaje = msg;
 	$(elemento).popover({
 		trigger: 'manual',
 		placement: 'top',
 		content: function() {
-			console.log("adentro: ",mensaje);
 			return mensaje;
 		}
 	});
-	console.log(msg);
 	$(elemento).popover("show");
 	$(elemento).closest("tr").removeClass('has-success').addClass('has-error');
 	
@@ -192,47 +294,7 @@ var customAlertSuccess = function(elemento){
 		$(elemento).closest("tr").removeClass('has-success')
 	});
 }
-
-var enviarFoto = function(atributo, src){
-	var sendData = {
-		nombre_usuario : data.usuario.nombre_usuario,
-		action : "modificar_imagen"
-	}
-	if (atributo == "registro"){
-		sendData.foto_registro = src;
-	} else if (atributo == "perfil"){
-		sendData.foto = src;
-	}
-	var onsuccess = function(jsonData){
-		if (jsonData.result){
-			loadData();
-		} 
-	}
-	sendAjax(sendData,onsuccess);
-}
-
-var activarModificar = function(){
-	$("#table-perfil input").attr("disabled",false);
-	generarNuevosBotones();
-}
-
-var generarNuevosBotones = function(){
-	var btnGuardar = "<button class='btn btn-success' onclick='modificarPerfil();'>"
-		+"<span class='glyphicon glyphicon-check'></span> Guardar"
-		+"</button>";
-	var btnCancelar = "<button class='btn btn-danger' onclick='cancelarModificar();'>"
-		+"<span class='glyphicon glyphicon-remove'></span> Cancelar"
-		+"</button>";
-	var html = "<div class='btn-group'>"+btnCancelar+btnGuardar+"</div>";
-	$("#botonera-modificar-cliente-"+data.usuario.nombre_usuario).html(html);
-}
-
-var cancelarModificar = function(){
-	cargarPerfil();
-}
-var modificarPerfil = function(){
-	console.log("modificarPerfil");
-}
+////////////////
 
 var tipoDocString = function(caracter){
 	switch (caracter) {
@@ -252,6 +314,16 @@ var sexoString = function(caracter){
 		case '': return "No especificado";
 		case null: return "No especificado";
 		default: return "Desconocido";
+	}
+}
+var sexoCaracter = function(sexo){
+	switch (sexo.toLowerCase()) {
+		case 'otro': return "O";
+		case 'femenino': return "F";
+		case 'masculino': return "M";
+		case '': return "";
+		case null: return "";
+		default: return "";
 	}
 }
 var reputacionStars = function(caracter){
@@ -291,6 +363,14 @@ function readURL(input) {
 }
 
 // modal
+
+//eliminar elementos de modal que fueron generados dinamicamente
+$(document).on('hide.bs.modal', function (e) {
+  $(".dinamico").each(function(){
+	$(this).remove();
+  });
+});
+
 var modalMessage = function (modalName,textMsg,titleMsg) {
 	$('#'+modalName+'-message').text(textMsg);
 	if (titleMsg){
@@ -301,7 +381,9 @@ var modalMessage = function (modalName,textMsg,titleMsg) {
 var closeModal = function (name) {
 	$('#modal-' + name).modal('hide');
 }
-
+var modalButton = function(modalName,btn){
+	$('#modal-'+modalName+' .modal-footer').append(btn);
+}
 // funciones robadas
 
 function getUrlVars() {

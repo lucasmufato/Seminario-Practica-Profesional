@@ -63,16 +63,20 @@ public class ControladorLogin extends HttpServlet {
 		String user = request.getParameter("usuario");
 		String pass = request.getParameter("pass");
 		JSONObject salida = new JSONObject ();	
-		if (dao.isUsuarioPass(user,pass)) {
+		
+		if (!dao.isUsuarioPass(user,pass)){
+			salida.put("result", false);
+			salida.put ("msg", "<p>Usuario o contrase&ntilde;a incorrectas.</p>");
+		}else if (!dao.isUsuarioActivo(user)){
+			salida.put("result", false);
+			salida.put ("msg", "<p>Cuenta desactivada.</p>");
+		}else{
 			//agrego cookie
 			AccessManager.SetearCookie(response,user);
 			System.out.println("Usuario logueado");
 			salida.put ("result", true); 
 			salida.put ("msg", "El usuario se ha logueado correctamente.");
 			salida.put("redirect", "home.html");
-		}else{
-			salida.put("result", false);
-			salida.put ("msg", "<p>Usuario o contrase&ntilde;a incorrectas.</p>");
 		}
 		return salida;
 	}

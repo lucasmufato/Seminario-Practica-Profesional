@@ -58,6 +58,17 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     	}
 	}
     
+    //metodo que verficia que un usuario este activo
+    public boolean isUsuarioActivo(String nombreUsuario){
+    	Usuario u = this.buscarUsuarioPorNombre(nombreUsuario);
+    	if (u!=null){
+    		System.out.println("");
+    		System.out.println("estado: "+u.getEstado()+" comparacion: "+u.getEstado().toString().equals("A"));
+    		System.out.println("");
+    		return u.getEstado().toString().equals("A");
+    	}
+    	return false;
+    }
     
     //devuele un JSONArray con:
     // 	rol1, rol2, rol3..
@@ -335,7 +346,5 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     }
     
 	//-------------------------------------------fin de la parte de registro de clientes----------------------------------------------
-	//-------------------------------------------parte generalizada-------------------------------------------------------------------------
-							//se paso esta parte a la clase DataAccesObject
 
 }

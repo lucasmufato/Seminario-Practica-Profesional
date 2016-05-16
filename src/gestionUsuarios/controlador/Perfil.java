@@ -2,6 +2,9 @@ package gestionUsuarios.controlador;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.*;
@@ -144,6 +147,7 @@ public class Perfil extends HttpServlet {
 		JSONObject usuario = new JSONObject();
 		usuario.put("mail", u.getEmail());
 		usuario.put("nombre_usuario", u.getNombre_usuario());
+		usuario.put("pass", u.getPassword());
 		return usuario;
 	}
 
@@ -177,6 +181,10 @@ public class Perfil extends HttpServlet {
 			out = modificarImagen(request);
 		}else if(accion.equals("mail_existe")){
 			out = validarMail(request);
+		}else if (accion.equals("modificar_cliente")){
+			out = modificarCliente(request);
+		}else if (accion.equals("desactivar_cuenta")){
+			out = desactivarCuenta(request,response);
 		}
 		
 		if (out == null) {
@@ -187,6 +195,138 @@ public class Perfil extends HttpServlet {
 		out.put("action", accion);
 		System.out.println("Lo que mando al js: "+out);
 		writer.println (out);
+	}
+
+	private JSONObject desactivarCuenta(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject respuesta = new JSONObject();
+		String nombreUsuario = request.getParameter("nombre_usuario");
+		if (nombreUsuario == null || nombreUsuario.equals("")){
+			respuesta.put("result", false);
+			respuesta.put("msg", "El nombre de usuario se encuentra vacio o es nulo");
+			return respuesta;
+		}
+		Usuario u = dao.buscarUsuarioPorNombre(nombreUsuario);
+		if (u == null){
+			respuesta.put("result", false);
+			respuesta.put("msg", "El usuario ha desactivar no se encuentra registrado en el sistema");
+			return respuesta;
+		}
+		if (!dao.isUsuarioActivo(nombreUsuario)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "El usuario ya se encuentra desactivado");
+			return respuesta;
+		}
+		Character inactivo = "B".charAt(0);
+		u.setEstado(inactivo);
+		try {
+			dao.persistir(u);
+		} catch (ExceptionViajesCompartidos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			respuesta.put("result", false);
+			respuesta.put("msg", "Su cuenta no ha podido ser desactivada. Vuelva a intentarlo más tarde.");
+			return respuesta;
+		}
+		if (!AccessManager.EliminarCookie(request, response)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Usted no se encuentra logueado.");
+			return respuesta;
+		}
+		
+		// Esta linea podria solucionar el bug pero ocasiona un comportamiento aun mas particular
+	    //request.getSession().invalidate();
+		
+		respuesta.put("redirect", "index.html");
+		respuesta.put("result", true);
+		respuesta.put("msg", "Su cuenta ha sido desactivado correctamente");
+		return respuesta;
+	}
+
+	private JSONObject modificarCliente(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		if (setPersona(request)){
+			if (setUsuario(request)){
+				if (setCliente(request)){
+					respuesta.put("result",true);
+					respuesta.put("msg","El perfil ha sido modificado correctamente");
+				}else{
+					respuesta.put("result",false);
+					respuesta.put("msg","Error al cargar datos de cliente");
+				}
+			}else{
+				respuesta.put("result",false);
+				respuesta.put("msg","Error al cargar datos de usuario");
+			}
+		}else{
+			respuesta.put("result",false);
+			respuesta.put("msg","Error al cargar datos de persona");
+		}
+		return respuesta;
+	}
+
+	private boolean setCliente(HttpServletRequest request) {
+		// AUN NO SE MODIFICAN DATOS DE CLIENTE
+		return true;
+	}
+
+	private boolean setUsuario(HttpServletRequest request) {
+		String mail = request.getParameter("usuario[mail]");
+		String nombreUsuario = request.getParameter("nombre_usuario");
+		String pass = request.getParameter("usuario[pass]");
+		Usuario u = dao.buscarUsuarioPorNombre(nombreUsuario);
+		if (mail != null && nombreUsuario!=null){
+			u.setEmail(mail);
+			u.setPassword(pass);;
+			try {
+				dao.persistir(u);
+				return true;
+			} catch (ExceptionViajesCompartidos e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
+
+	private boolean setPersona(HttpServletRequest request) {
+		String nombreUsuario = request.getParameter("nombre_usuario");
+		String apellidos = request.getParameter("persona[apellidos]");
+		String nombres = request.getParameter("persona[nombres]");
+		String domicilio = request.getParameter("persona[domicilio]");
+		String telefono = request.getParameter("persona[telefono]");
+		String fecha_nacimiento = request.getParameter("persona[fecha_nacimiento]");
+		Character sexo = request.getParameter("persona[sexo]").charAt(0);
+		if (nombreUsuario!=null){
+			Persona p = dao.buscarUsuarioPorNombre(nombreUsuario).getPersona();
+			if (p != null){
+				if (domicilio!=null) p.setDomicilio(domicilio);
+				if (telefono!=null) p.setTelefono(telefono);
+				if (apellidos!=null) p.setApellidos(apellidos);
+				if (nombres!=null) p.setNombres(nombres);
+				if (fecha_nacimiento!=null) p.setFecha_nacimiento(toDate(fecha_nacimiento));
+				if (sexo!=null) p.setSexo(sexo);
+				try {
+					dao.persistir(p);
+					return true;
+				} catch (ExceptionViajesCompartidos e) {
+					e.printStackTrace();
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	private Date toDate(String fecha_nacimiento) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date parsed=null;
+		try {
+			parsed = format.parse(fecha_nacimiento);
+		} catch (ParseException e) {
+			//this.fecha_nacimiento=null;
+			e.printStackTrace();
+		}
+        return new java.sql.Date(parsed.getTime());
 	}
 
 	private JSONObject validarMail(HttpServletRequest request) throws IOException {

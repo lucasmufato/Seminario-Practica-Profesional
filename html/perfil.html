@@ -4,16 +4,20 @@
 	<title>Viajes Compartidos</title>
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="common.css" />
-	
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="perfil.css">
-
+		
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+	<script type="text/javascript" src="calendarios.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
 	<script type="text/javascript" src="perfil.js"></script>
-	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
+	
 	
 		<script id="perfil-template" type="text/template">
 			{{#cliente}}
@@ -38,18 +42,24 @@
 								</div>
 								<div class=" col-md-9 col-lg-9 ">
 									<table class="table table-user-information" id="table-perfil">
-										<tbody class="tabla">
+										<tbody class="tabla" id="tableCliente">
 											<tr>
 												<td><strong>Usuario:</strong></td>
 												<td id="nombre_usuario">{{usuario.nombre_usuario}}</td>
 											</tr>
+											{{#usuario_logueado.es_perfil_propio}}
+											<tr>
+												<td><strong>Contraseña:</strong></td>
+												<td><input name="pass-cliente" type="text" class="form-control" value="{{usuario.pass}}" disabled></td>
+											</tr>
+											{{/usuario_logueado.es_perfil_propio}}
 											<tr>
 												<td><strong>Apellido:</strong></td>
-												<td id="apellidos">{{persona.apellidos}}</td>
+												<td><input name="apellidos-cliente" type="text" class="form-control" value="{{persona.apellidos}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Nombre:</strong></td>
-												<td id="nombres">{{persona.nombres}}</td>
+												<td><input name="nombres-cliente" type="text" class="form-control" value="{{persona.nombres}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Tipo de documento:</strong></td>
@@ -61,23 +71,30 @@
 											</tr>
 											<tr>
 												<td><strong>Fecha Nacimiento:</strong></td>
-												<td id="fecha_nacimiento">{{persona.fecha_nacimiento}}</td>
+												<td><input type="date" class="form-control" name="fecha_nacimiento" value="{{persona.fecha_nacimiento}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Domicilio:</strong></td>
-												<td><input name="domicilio" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+												<td><input name="domicilio-cliente" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
 											</tr>
 											<tr>
 												<td><strong>E-mail:</strong></td>
-												<td><input name="mail" type="text" class="form-control" value="{{usuario.mail}}" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+												<td><input name="mail-cliente" type="text" class="form-control" value="{{usuario.mail}}" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
 											</tr>
 											<tr>
 												<td><strong>Teléfono:</strong></td>
-												<td><input name="telefono" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled  data-placement="top" data-trigger="manual" data-content=""></td>
+												<td><input name="telefono-cliente" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled  data-placement="top" data-trigger="manual" data-content=""></td>
 											</tr>
 											<tr>
 												<td><strong>Sexo:</strong></td>
-												<td id="sexo">{{persona.sexo_string}}</td>
+												<td id="sexo">
+													<input list="sex" class="form-control" name="sexo" value="{{persona.sexo_string}}" disabled>
+													<datalist id="sex">
+														<option value="Masculino"></option>
+														<option value="Femenino"></option>
+														<option value="Otro"></option>
+													</datalist>
+												</td>
 											</tr>
 											{{#usuario_logueado.es_perfil_propio}}
 											<tr>
@@ -101,7 +118,7 @@
 	            		</div>
 						{{#usuario_logueado.es_perfil_propio}}
 						<div class="panel-footer clearfix">
-							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Desactivar Cuenta</button>
+							<button class="btn btn-danger" onclick="desactivarCuenta();"><span class="glyphicon glyphicon-remove"></span> Desactivar Cuenta</button>
 							<span class="pull-right" id="botonera-modificar-cliente-{{usuario.nombre_usuario}}">
 								<button class="btn btn-primary" onclick="activarModificar();"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
 							</span>
@@ -277,6 +294,23 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" onclick="closeModal('error')"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+					</div><!-- .modal-footer -->
+				</div><!-- .modal-content -->
+			</div><!-- .modal-dialog -->
+		</div><!-- .modal -->
+		<div id="modal-warning" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-warning">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" onclick="closeModal('warning')">&times;</button>
+						<h3 class="dialog-title"> Atención</h3>
+					</div><!-- modal-header -->
+					<div class="modal-body">
+						<div id="warning-message">
+							Usuario debe saber esto <!-- Esto sera modificado desde javascript -->
+						</div>					</div><!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" onclick="closeModal('warning');"> Cerrar</button>
 					</div><!-- .modal-footer -->
 				</div><!-- .modal-content -->
 			</div><!-- .modal-dialog -->
