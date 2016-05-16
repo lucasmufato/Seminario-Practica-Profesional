@@ -62,9 +62,6 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     public boolean isUsuarioActivo(String nombreUsuario){
     	Usuario u = this.buscarUsuarioPorNombre(nombreUsuario);
     	if (u!=null){
-    		System.out.println("");
-    		System.out.println("estado: "+u.getEstado()+" comparacion: "+u.getEstado().toString().equals("A"));
-    		System.out.println("");
     		return u.getEstado().toString().equals("A");
     	}
     	return false;

@@ -10,6 +10,7 @@ $(document).ready(function(){
 
 function esconderFuncionalidades(){
   $("#panel-admin").hide();
+  $("#panel-cliente").hide();
 }
 
 function getPermisosUsuario() {
@@ -48,15 +49,27 @@ function send(sendData,callback){
 	});
 }
 var cargarBotones = function(){
-	$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuario.nombre_usuario);
-	$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuario.nombre_usuario);
+	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
+	//$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuario.nombre_usuario);
+	//$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuario.nombre_usuario);
 	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuario.nombre_usuario);
 }
 function mostrarFunciones(){
 	console.log("Permisos que me traje: ",data.permisos);
 		console.log("roles que me traje: ",data.roles);
 	console.log("usuario que me traje: ",data.usuario);
-
+	if (data.roles){
+		for (var i=0; i<data.roles.length;i++){
+			var rol = data.roles[i].nombre_rol.toLowerCase();
+			if (rol == "cliente"){
+				  $("#panel-cliente").show();
+			}
+			if (rol == "super_usuario"){
+				  $("#panel-admin").show();
+			}
+		}
+	}
+	/*
 	if (data.permisos){
 		var permiso=0;
 		for (permiso in data.permisos){
@@ -69,4 +82,5 @@ function mostrarFunciones(){
 			}
 		}
 	}
+	*/
 }
