@@ -1,6 +1,6 @@
 package gestionViajes.modelo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class Maneja {
 	protected Vehiculo vehiculo;
 	@Id
 	@Column(name="FECHA_INICIO",nullable=false)
-	protected Date fecha_inicio;
+	protected Timestamp fecha_inicio;
 	@Column(nullable=true)
-	protected Date fecha_fin;
+	protected Timestamp fecha_fin;
 	
 	@OneToMany(mappedBy="conductor_vehiculo", cascade=CascadeType.PERSIST)
 	protected List<Viaje> viajes= new ArrayList<Viaje>();
@@ -51,7 +51,7 @@ public class Maneja {
 	public Maneja(Cliente cliente2, Vehiculo vehiculo2) {
 		this.cliente=cliente2;
 		this.vehiculo=vehiculo2;
-		this.fecha_inicio=  new Date((new java.util.Date()).getTime());
+		this.fecha_inicio=  new Timestamp((new java.util.Date()).getTime());
 		this.fecha_fin=null;
 	}
 
@@ -71,19 +71,19 @@ public class Maneja {
 		this.vehiculo = vehiculo;
 	}
 
-	public Date getFecha_inicio() {
+	public Timestamp getFecha_inicio() {
 		return fecha_inicio;
 	}
 
-	public void setFecha_inicio(Date fecha_inicio) {
+	public void setFecha_inicio(Timestamp fecha_inicio) {
 		this.fecha_inicio = fecha_inicio;
 	}
 
-	public Date getFecha_fin() {
+	public Timestamp getFecha_fin() {
 		return fecha_fin;
 	}
 
-	public void setFecha_fin(Date fecha_fin) {
+	public void setFecha_fin(Timestamp fecha_fin) {
 		this.fecha_fin = fecha_fin;
 	}
 }

@@ -1,6 +1,6 @@
 package gestionViajes.modelo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,13 +50,13 @@ public class Viaje implements JSONable {
 	@Column(nullable=false)
 	protected EstadoViaje estado; 		//falta hacer el enum
 	@Column(nullable=false)
-	protected Date fecha_inicio;
+	protected Timestamp fecha_inicio;
 	@Column(nullable=false)
-	protected Date fecha_alta;
+	protected Timestamp fecha_alta;
 	@Column(nullable=true)
-	protected Date fecha_finalizacion;
+	protected Timestamp fecha_finalizacion;
 	@Column(nullable=true)
-	protected Date fecha_cancelacion;
+	protected Timestamp fecha_cancelacion;
 
 	@JoinColumns ({
 		@JoinColumn(name="id_cliente", referencedColumnName="id_cliente"),
@@ -136,11 +136,11 @@ public class Viaje implements JSONable {
 		this.id_viaje = id;
 	}
 
-	public Date getFecha_inicio() {
+	public Timestamp getFecha_inicio() {
 		return fecha_inicio;
 	}
 
-	public void setFecha_inicio(Date fecha_inicio) {
+	public void setFecha_inicio(Timestamp fecha_inicio) {
 		this.fecha_inicio = fecha_inicio;
 	}
 
@@ -176,15 +176,15 @@ public class Viaje implements JSONable {
 		this.asientos_disponibles = asientos_disponibles;
 	}
 
-	public Date getFecha_alta() {
+	public Timestamp getFecha_alta() {
 		return fecha_alta;
 	}
 
-	public void setFecha_alta(Date fecha_alta) {
+	public void setFecha_alta(Timestamp fecha_alta) {
 		this.fecha_alta = fecha_alta;
 	}
 
-	public Date getFecha_finalizacion() {
+	public Timestamp getFecha_finalizacion() {
 		return fecha_finalizacion;
 	}
 
@@ -196,15 +196,15 @@ public class Viaje implements JSONable {
 		this.estado = estado;
 	}
 
-	public void setFecha_finalizacion(Date fecha_finalizacion) {
+	public void setFecha_finalizacion(Timestamp fecha_finalizacion) {
 		this.fecha_finalizacion = fecha_finalizacion;
 	}
 
-	public Date getFecha_cancelacion() {
+	public Timestamp getFecha_cancelacion() {
 		return fecha_cancelacion;
 	}
 
-	public void setFecha_cancelacion(Date fecha_cancelacion) {
+	public void setFecha_cancelacion(Timestamp fecha_cancelacion) {
 		this.fecha_cancelacion = fecha_cancelacion;
 	}
 
@@ -326,13 +326,13 @@ public class Viaje implements JSONable {
 		}else{
 			mi_vuelta.setNombre_amigable(this.nombre_amigable+"_vuelta");
 		}
-		Date f= (Date) vuelta.get("fecha_inicio");
+		Timestamp f= (Timestamp) vuelta.get("fecha_inicio");
 		if(f!=null){
 			mi_vuelta.setFecha_inicio(f);
 		}else{
 			throw new ExceptionViajesCompartidos("ERROR: FALTA LA FECHA DE INICIO DEL VIAJE DE VUELTA");
 		}
-		mi_vuelta.setFecha_alta(new Date((new java.util.Date()).getTime()));
+		mi_vuelta.setFecha_alta(new Timestamp((new java.util.Date()).getTime()));
 		// le pongo al viaje los datos propios que se repiten
 		mi_vuelta.setConductor_vehiculo(this.getConductor_vehiculo());
 		mi_vuelta.setEstado(EstadoViaje.no_iniciado);

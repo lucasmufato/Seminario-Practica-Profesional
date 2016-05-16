@@ -3,11 +3,14 @@ package gestionViajes.modelo;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
@@ -25,6 +28,8 @@ import otros.JSONable;
 public class PasajeroViaje implements JSONable {
 
 	@Id
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorPermiso")
+	@SequenceGenerator(allocationSize=1, schema="pruebajpa",  name="MySequenceGeneratorPasajeroViaje", sequenceName = "sequence")
 	protected Integer id_pasajero_viaje;
 	@Column(nullable=true)
 	protected float kilometros;
