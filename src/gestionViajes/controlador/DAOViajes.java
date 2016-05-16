@@ -190,6 +190,15 @@ public class DAOViajes extends DataAccesObject {
 		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino) );
 		viaje.crearRecorrido(recorrido);
 		
+		//TODO parte para asignarle a cada localidad la distancia con la siguiente
+		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
+		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
+			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
+			lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+		}
+		Integer ultimo=lista_localidad_viaje.size();
+		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+		
 		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
 		JSONObject vuelta=(JSONObject) datos.get("vuelta");
 		if(vuelta!=null){ 
@@ -221,7 +230,12 @@ public class DAOViajes extends DataAccesObject {
 		}
 		return true;
 	}
-
+	
+	protected Double distanciaEntreLocalidades(Localidad localidad1, Localidad localidad2){
+		//TODO todo el metodo para calcular distancia entre las 2 localidades
+		return 2.2;
+	}
+	
 	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){
 		//podria ser resuelto por un buscar por pk compuesta en el DAO general
 		//agregado fede
