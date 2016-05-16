@@ -109,6 +109,34 @@ public class Viaje implements JSONable {
 		return null;
 	}
 	
+	//metodo que devuelve la cantidad de KM o metros, que tiene una parte o todo un recorrido,
+	public Double calcularKM(Localidad localidad_subida, Localidad localidad_bajada) throws ExceptionViajesCompartidos {
+		if( !this.contiene_localidades_en_orden(localidad_subida, localidad_bajada) ){
+			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA NO ES ANTERIOR A LA DE BAJADA");
+		}
+		
+		boolean encontrado=false;
+		boolean entremedio=false;
+		int index=0;
+		Double distancia=0.0;
+		
+		while(!encontrado){
+			if ( this.localidades.get(index).getLocalidad()==localidad_subida ){
+				entremedio=true;
+			}
+			if(entremedio){	//si estoy entre la localidad de subida y la de bajada cuento los KMs
+				distancia+=this.localidades.get(index).kms_a_localidad_siguiente;
+			}
+			if (this.localidades.get(index).getLocalidad() == localidad_bajada){
+				entremedio=false;
+				encontrado=true;
+			}
+			index++;
+		}
+		
+		return distancia;
+	}
+	
 	public List<Localidad> devolver_recorrido_desde_hasta(Localidad desde, Localidad hasta){
 		// TODO
 		return null;

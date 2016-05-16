@@ -1,8 +1,18 @@
 package gestionComisiones.modelo;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
@@ -17,12 +27,19 @@ import otros.JSONable;
 public class Comision implements JSONable {
 
 	@Id
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorComision")
+	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorComision", sequenceName = "sequence")
 	protected Integer id_comision;
+	@Column(nullable=false)
 	protected float limite_superior;
+	@Column(nullable=false)
 	protected float limite_inferior;
 	
+	@JoinColumn(name="PRECIO_COMISION")
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected PrecioComision precio_comision;
-	protected ComisionCobrada comision_cobrada;
+	@OneToMany(mappedBy="comision", cascade=CascadeType.PERSIST)
+	protected List<ComisionCobrada> comisiones_cobradas;
 	
 	public Comision(){
 		
@@ -60,12 +77,20 @@ public class Comision implements JSONable {
 		this.precio_comision = precio_comision;
 	}
 
-	public ComisionCobrada getComision_cobrada() {
-		return comision_cobrada;
+	public Integer getId_comision() {
+		return id_comision;
 	}
 
-	public void setComision_cobrada(ComisionCobrada comision_cobrada) {
-		this.comision_cobrada = comision_cobrada;
+	public void setId_comision(Integer id_comision) {
+		this.id_comision = id_comision;
+	}
+
+	public List<ComisionCobrada> getComisiones_cobradas() {
+		return comisiones_cobradas;
+	}
+
+	public void setComisiones_cobradas(List<ComisionCobrada> comisiones_cobradas) {
+		this.comisiones_cobradas = comisiones_cobradas;
 	}
 
 	@Override
@@ -84,6 +109,14 @@ public class Comision implements JSONable {
 	public Object getPrimaryKey() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public static ComisionCobrada NuevaComisionCobrada(Double km) {
+		ComisionCobrada cc= new ComisionCobrada();
+		cc.setMonto(30);
+		cc.setComision(null);
+		// TODO Auto-generated method stub
+		return 	cc;
 	}
 
 }

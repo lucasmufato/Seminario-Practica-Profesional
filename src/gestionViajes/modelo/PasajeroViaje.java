@@ -32,7 +32,7 @@ public class PasajeroViaje implements JSONable {
 	@SequenceGenerator(allocationSize=1, schema="pruebajpa",  name="MySequenceGeneratorPasajeroViaje", sequenceName = "sequence")
 	protected Integer id_pasajero_viaje;
 	@Column(nullable=true)
-	protected float kilometros;
+	protected Double kilometros;
 
 	@Column(nullable=false)
 	protected EstadoPasajeroViaje estado;
@@ -71,11 +71,11 @@ public class PasajeroViaje implements JSONable {
 
 	}
 
-	public float getKilometros() {
+	public Double getKilometros() {
 		return kilometros;
 	}
 
-	public void setKilometros(float kilometros) {
+	public void setKilometros(Double kilometros) {
 		this.kilometros = kilometros;
 	}
 
