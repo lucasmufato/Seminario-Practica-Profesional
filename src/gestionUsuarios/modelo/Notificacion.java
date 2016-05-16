@@ -1,6 +1,6 @@
 package gestionUsuarios.modelo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,24 +8,40 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.json.simple.JSONObject;
+
+import otros.JSONable;
+
+@NamedQueries({
+	@NamedQuery(name="Notificacion.todos",query="SELECT n FROM Notificacion n"),
+	@NamedQuery(name="Notificacion.porUsuario",query="SELECT n FROM Notificacion n where n.cliente= :id_cliente"),
+	@NamedQuery(name="Notificacion.NoLeidasPorUsuario",query="SELECT n FROM Notificacion n where (n.cliente= :id_cliente) AND (n.estado= gestionUsuarios.modelo.EstadoNotificacion.no_leido)"),
+	@NamedQuery(name="Notificacion.cantidadNoLeidaPorUsuario",query="SELECT COUNT(n.id_notificacion) FROM Notificacion n where (n.cliente= :id_cliente) AND (n.estado= gestionUsuarios.modelo.EstadoNotificacion.no_leido)"),
+	@NamedQuery(name="Notificacion.SearchById",query="SELECT n FROM Notificacion n WHERE n.id_notificacion = :id"),
+})
 
 @Entity
 @Table(name="notificacion")
-public class Notificacion {
+public class Notificacion implements JSONable {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)		//pruebo como es el tema con generationType.auto
 	@Column(name="ID_NOTIFICACION")
 	protected Integer id_notificacion;
 	@Column(name="FECHA",nullable=false)
-	protected Date fecha;
+	protected Timestamp fecha;
 	@Column(name="TEXTO",nullable=false,length=200)
 	protected String texto;
-	@Column(name="ESTADO",nullable=false,length=10)
-	protected EstadoNotificacion estado;
+	@Column(name="ESTADO",nullable=false,length=1)
+	protected EstadoNotificacion estado;		
 	
+	@JoinColumn(name="ID_CLIENTE")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Cliente cliente;
 	
@@ -41,11 +57,11 @@ public class Notificacion {
 		this.id_notificacion = id_notificacion;
 	}
 
-	public Date getFecha() {
+	public Timestamp getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
 	}
 
@@ -71,6 +87,28 @@ public class Notificacion {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	@Override
+	public void SetJSONObject(JSONObject json) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("id_notificacion", this.id_notificacion);
+		json.put("fecha",this.fecha);
+		json.put("texto", this.texto);
+		json.put("estado", this.estado);
+		return null;
+	}
+
+	@Override
+	public Object getPrimaryKey() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

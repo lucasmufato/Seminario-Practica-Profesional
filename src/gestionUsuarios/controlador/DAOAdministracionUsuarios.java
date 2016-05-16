@@ -342,6 +342,41 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     		}
     }
     
+    public List<Notificacion> getNotificaciones(Integer id_usuario){
+    	Cliente c= (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_usuario);
+    	Query qry = entitymanager.createNamedQuery("Notificacion.porUsuario");
+		qry.setParameter("id_cliente", c);
+		List<Notificacion> notificaciones = qry.getResultList();
+    	return notificaciones;
+    }
+    
+    public List<Notificacion> getNotificacionesNoLeidas(Integer id_usuario){
+    	Cliente c= (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_usuario);
+    	Query qry = entitymanager.createNamedQuery("Notificacion.NoLeidasPorUsuario");
+		qry.setParameter("id_cliente", c);
+		List<Notificacion> notificaciones = qry.getResultList();
+    	return notificaciones;
+    }
+    
+    public Integer getCantidadNotificacionesNoLeidas(Integer id_usuario){
+    	Cliente c= (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_usuario);
+    	Query qry = entitymanager.createNamedQuery("Notificacion.cantidadNoLeidaPorUsuario");
+		qry.setParameter("id_cliente", c);
+		Long cantidad =(Long) qry.getSingleResult();
+    	return cantidad.intValue();
+    }
+    
+    public boolean SetNotificacionesLeidas(Integer id_usuario, List<Integer> lista_id_notificaciones){
+    	Cliente c= (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_usuario);
+    	this.entitymanager.getTransaction().begin();
+    	for(Integer i:lista_id_notificaciones){
+    		Notificacion n=(Notificacion) this.buscarPorPrimaryKey(new Notificacion(), i);
+    		n.setEstado(EstadoNotificacion.leido);
+    	}
+    	this.entitymanager.getTransaction().commit();
+    	return true;
+    }
+    
 	//-------------------------------------------fin de la parte de registro de clientes----------------------------------------------
 
 }

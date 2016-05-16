@@ -342,7 +342,7 @@ public class DAOViajes extends DataAccesObject {
 		Notificacion notificacion= new Notificacion();
 		notificacion.setCliente(viaje.getConductor());
 		notificacion.setEstado(EstadoNotificacion.no_leido);
-		notificacion.setFecha(new Date((new java.util.Date()).getTime()) ); 			//TODO modificar fecha
+		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 			//TODO modificar fecha
 		notificacion.setTexto("El usuario: "+cliente.getNombre_usuario()+
 				" se ha postulado para participar en tu viaje: "+viaje.getNombre_amigable());
 		this.entitymanager.persist(notificacion);
