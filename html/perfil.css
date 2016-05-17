@@ -57,4 +57,32 @@ header h3 {
     padding-bottom: 0.5em;
     margin-top: 1px;
 }
+/* POP TOOLTIP*/
+  .popover-error {
+      border: 2px dotted red;
+  }
+  /* Popover Header */
+.popover-title-error {
+ /*no hay title*/
+}
+/* Popover Body */
+.popover-content-error {
+	background-color: #D9534F;
+	color: white;
+}
+/* Popover Arrow */
+.arrow-error {
+  border-top-color: red !important ;
+}
 
+.popover-success {
+      border: 2px dotted green;
+  }
+.popover-content-success {
+	background-color: #5cb85c;
+	color: white;
+	padding:3px 6px 3px 6px;
+}
+.arrow-success {
+  border-left-color: #5cb85c !important ;
+}

@@ -104,7 +104,7 @@ function setearEventos(){
 			enviarFoto("registro",imageSrc);
 		}
 	});
-	$("#tableCliente input").blur(validarCampoObligatorio);
+	$("#tableCliente input").not(".validar").blur(validarCampoObligatorio);
 	$("#tableCliente input[name='mail-cliente']").blur(validarMail);
 	$("#tableCliente input[name='pass-cliente']").blur(validarPass);
 	$("#tableCliente input[name=sexo]").blur(validarSexo);
@@ -246,6 +246,8 @@ var validarMail = function(){
 		}
 		sendAjax(sendData,onsuccess);
 	}
+  }else{
+	customAlert(inputMail, "Completar campo obligatorio");
   }
 }
 
@@ -254,7 +256,11 @@ var validarPass = function(){
 	if (inputPass.val().length > 0){
 		if (inputPass.val().length<6){
 			customAlert(inputPass,"Mínimo 6 caracteres");
+		}else{
+			customAlertSuccess(inputPass);
 		}
+	} else{
+		customAlert(inputPass, "Completar campo obligatorio");
 	}
 }
 
@@ -267,14 +273,23 @@ var validarSexo = function(){
 		}else{
 			customAlert(inputSexo,"Valores válidos son: 'Masculino', 'Femenino' y 'Otro'");
 		}
+	}else{
+		customAlert(inputSexo, "Completar campo obligatorio");
 	}
 }
 
 var customAlert = function(elemento,msg){
 	var mensaje = msg;
+	var popoverTemplate = ['<div class="popover-error popover">',
+        '<div class="arrow arrow-error"></div>',
+        '<div class="popover-content popover-content-error">',
+        '</div>',
+        '</div>'].join('');
 	$(elemento).popover({
+		animation: true,
 		trigger: 'manual',
 		placement: 'top',
+		template: popoverTemplate,
 		content: function() {
 			return mensaje;
 		}
@@ -288,9 +303,26 @@ var customAlert = function(elemento,msg){
 	});
 }
 var customAlertSuccess = function(elemento){
+	var popoverTemplate = ['<div class="popover-success popover">',
+        '<div class="arrow arrow-success"></div>',
+        '<div class="popover-content popover-content-success">',
+        '</div>',
+        '</div>'].join('');
+	$(elemento).popover({
+		animation: true,
+		trigger: 'manual',
+		placement: 'left',
+		template: popoverTemplate,
+		html:true,
+		content: function() {
+			return "<span class='glyphicon glyphicon-ok'></span>";
+		}
+	});
+	$(elemento).popover("show");
 	$(elemento).closest("tr").removeClass('has-error').addClass('has-success');
 
 	$(elemento).focus(function(){
+		$(elemento).popover("destroy");
 		$(elemento).closest("tr").removeClass('has-success')
 	});
 }

@@ -1,9 +1,10 @@
 data={};
-data.permisos=[];
-data.usuario={};
-data.roles=[];
+data.permisosp=[];
+data.usuariop={};
+data.rolesp=[];
 
 $(document).ready(function(){
+	console.log("hola");
 	esconderFuncionalidades();
 	getPermisosUsuario();
 });
@@ -20,9 +21,9 @@ function getPermisosUsuario() {
 	};
 	var callback = function (jsonData){
 		if (jsonData.result){
-			data.permisos = jsonData.permisos;
-			data.usuario = jsonData.usuario;
-			data.roles = jsonData.roles;
+			data.permisosp = jsonData.permisos;
+			data.usuariop = jsonData.usuario;
+			data.rolesp = jsonData.roles;
 			cargarBotones();
 			mostrarFunciones();
 		}else if (jsonData.redirect != undefined){
@@ -50,18 +51,18 @@ function send(sendData,callback){
 }
 var cargarBotones = function(){
 	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
-	//$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuario.nombre_usuario);
-	//$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuario.nombre_usuario);
-	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuario.nombre_usuario);
+	//$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuariop.nombre_usuario);
 }
 function mostrarFunciones(){
-	console.log("Permisos que me traje: ",data.permisos);
-		console.log("roles que me traje: ",data.roles);
-	console.log("usuario que me traje: ",data.usuario);
-	$("#dropdown-usuario").html(data.usuario.nombre_usuario+" ");
-	if (data.roles){
-		for (var i=0; i<data.roles.length;i++){
-			var rol = data.roles[i].nombre_rol.toLowerCase();
+	console.log("Permisos que me traje: ",data.permisosp);
+		console.log("roles que me traje: ",data.rolesp);
+	console.log("usuario que me traje: ",data.usuariop);
+	$("#dropdown-usuario").html(data.usuariop.nombre_usuario+" ");
+	if (data.rolesp){
+		for (var i=0; i<data.rolesp.length;i++){
+			var rol = data.rolesp[i].nombre_rol.toLowerCase();
 			if (rol == "cliente"){
 				  $("#panel-cliente").show();
 				  makeListDropdown(rol);
@@ -74,11 +75,11 @@ function mostrarFunciones(){
 		}
 	}
 	/*
-	if (data.permisos){
+	if (data.permisosp){
 		var permiso=0;
-		for (permiso in data.permisos){
-			var nombrePermiso=data.permisos[permiso]["nombre_permiso"];
-			var estadoPermiso=data.permisos[permiso]["estado"];
+		for (permiso in data.permisosp){
+			var nombrePermiso=data.permisosp[permiso]["nombre_permiso"];
+			var estadoPermiso=data.permisosp[permiso]["estado"];
 			if (nombrePermiso && estadoPermiso=="A"){
 				if (nombrePermiso == "administrar_usuarios"){
 					$("#panel-admin").show();
