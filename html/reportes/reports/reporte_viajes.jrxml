@@ -3,8 +3,9 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="my_query" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[select * from viaje]]>
+		<![CDATA[$P!{my_query}]]>
 	</queryString>
 	<field name="id_viaje" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>

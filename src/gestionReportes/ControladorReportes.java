@@ -94,7 +94,7 @@ public class ControladorReportes extends HttpServlet {
 		JSONObject respuesta = new JSONObject();
 		
 		ServletContext context = this.getServletConfig().getServletContext();
-		String path = context.getRealPath("/reportes/reports/report3.jrxml");
+		String path = context.getRealPath("/reportes/reports/reporte_viajes.jrxml");
 
 		//compilo reporte
 		if (!this.compilarReporte(path)){
@@ -103,14 +103,17 @@ public class ControladorReportes extends HttpServlet {
 			return respuesta;
 		}
 		//creo archivo de reporte
-		String reportFileName = context.getRealPath("/reportes/reports/report3.jasper");
+		String reportFileName = context.getRealPath("/reportes/reports/reporte_viajes.jasper");
 		if (!this.existeReporteCompilado(reportFileName)){
 			respuesta.put("msg", "El reporte no se encuentra compilado");
 			respuesta.put("result", false);
 			return respuesta;
 		}
 		//relleno con datos
-		JasperPrint jasperPrint = this.fillReporte(reportFileName);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("my_query", "select v.id_viaje from viaje v where v.id_viaje = 1");
+
+		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
 		if (jasperPrint == null){
 			respuesta.put("msg", "No se pudo rellenar el reporte con datos");
 			respuesta.put("result", false);
@@ -136,31 +139,29 @@ public class ControladorReportes extends HttpServlet {
 		return reportFile.exists();
 	}
 
-	private JasperPrint fillReporte(String reportFileName) {
+	private JasperPrint fillReporte(String reportFileName, Map<String, Object> parameters) {
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		//parameters.put("ReportTitle", "Address Report");
-		//parameters.put("BaseDir", reportFile.getParentFile());
-					
 		JasperPrint jasperPrint;
+		Connection conexion = this.getConexion();
 		try {
 			jasperPrint = JasperFillManager.fillReport(
 				reportFileName, 
 				parameters, 
-				this.getConexion()
+				conexion
 			);
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.cerrarConexion(conexion);
 			return null;
 		}
-					
+		this.cerrarConexion(conexion);
 		return jasperPrint;
 	}
 
 	private boolean compilarReporte(String path) {
 		try {
-			JasperCompileManager.compileReportToFile(path);
+			String string = JasperCompileManager.compileReportToFile(path);
 		} catch (JRException e) {
 			e.printStackTrace();
 			return false;
@@ -194,5 +195,10 @@ public class ControladorReportes extends HttpServlet {
 			return connection;
 		}
 	}
-	
+	private void cerrarConexion(Connection connection){
+		if (connection != null){ 
+			try {connection.close();} 
+			catch (SQLException e) {e.printStackTrace();}
+		}
+	}
 }
