@@ -27,19 +27,23 @@
 			<frame>
 				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="f176f297-7fc2-4127-9503-52d78a218d70"/>
 				<staticText>
-					<reportElement x="20" y="20" width="321" height="43" forecolor="#FFFFFF" uuid="f46a3163-d9f4-4846-8886-16cc51e974ae"/>
-					<textElement>
-						<font size="34" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Viajes Compartidos]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="395" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="723a4f5c-e121-45e1-a5a6-696c9f56b23e"/>
+					<reportElement x="395" y="63" width="180" height="20" forecolor="#FFFFFF" uuid="723a4f5c-e121-45e1-a5a6-696c9f56b23e"/>
 					<textElement textAlignment="Right">
 						<font size="14" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Reporte de Viajes]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="120" y="20" width="321" height="43" forecolor="#FFFFFF" uuid="f46a3163-d9f4-4846-8886-16cc51e974ae"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Viajes Compartidos]]></text>
+				</staticText>
+				<image>
+					<reportElement x="20" y="7" width="138" height="76" uuid="271384e4-5462-4a53-8b1e-dda7e67977b7"/>
+					<imageExpression><![CDATA["vc.png"]]></imageExpression>
+				</image>
 			</frame>
 		</band>
 	</title>

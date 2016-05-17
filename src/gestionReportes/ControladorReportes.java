@@ -111,7 +111,7 @@ public class ControladorReportes extends HttpServlet {
 		}
 		//relleno con datos
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("my_query", "select v.id_viaje from viaje v where v.id_viaje = 1");
+		parameters.put("my_query", "select * from viaje v where v.id_viaje = 1");
 
 		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
 		if (jasperPrint == null){
