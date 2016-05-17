@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <head>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
-	<link rel="stylesheet" type="text/css" href="common.css" />
-	<script type="application/javascript" src="jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="/common.css" />
+	<script type="application/javascript" src="/jquery.js"></script>
 	<script type="application/javascript">
 		toggleSidebar = function () {
 			$('body').toggleClass("sidebar-on");
@@ -18,7 +18,7 @@
         <div class="navbar-header">
           <button type="button" class="navbar-toggle pull-left collapsed glyphicon glyphicon-menu-hamburger" onclick="toggleSidebar()">
           </button>
-          <a class="navbar-brand" href="home.html"><span class="glyphicon glyphicon-home"></span> Viajes compartidos</a>
+          <a class="navbar-brand" href="/home.html"><span class="glyphicon glyphicon-home"></span> Viajes compartidos</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
 			<!--<a href="/login" class=" navbar-right btn"><span class="glyphicon glyphicon-off"></span> Salir</a>-->
@@ -26,11 +26,13 @@
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="dropdown-usuario"></span> <span class="caret"></span></a>
 				<ul class="dropdown-menu" id="dropdown-menu">
-					<li><a href="perfil.html">Mi perfil</a></li>
-					<li><a href="mis_viajes.html">Mis viajes</a></li>
-					<li><a href="mis_vehiculos.html">Mis vehículos</a></li>
+					<!--ESTO LO SOBRE ESCRIBE PERMISOS.JS
+					<li><a href="/perfil.html">Mi perfil</a></li>
+					<li><a href="/mis_viajes.html">Mis viajes</a></li>
+					<li><a href="/mis_vehiculos.html">Mis vehículos</a></li>
 					<li role="separator" class="divider"></li>
 					<li><a href="/login"><span class="glyphicon glyphicon-off"></span> Salir</a></li>
+					-->
 				</ul>
 			</li>
           </ul>
@@ -42,17 +44,17 @@
 
 	<sidebar id="common-sidebar">
 		<nav>
-			<img src="img/navegacion/vc.svg" alt="Viajes compartidos">
+			<img src="/img/navegacion/vc.svg" alt="Viajes compartidos">
 			<div id="panel-cliente">
 				<hr>
 				<div class="btn-group-vertical col-xs-12">
-					<a href="alta_viaje.html" class="btn btn-success" id="link-alta-viaje">Crear Viaje <span class="glyphicon glyphicon-road"></span></a>
+					<a href="/alta_viaje.html" class="btn btn-success" id="link-alta-viaje">Crear Viaje <span class="glyphicon glyphicon-road"></span></a>
 				</div>
 				<hr class="col-xs-12">
 				<div class="btn-group-vertical col-xs-12">
-					<a href="perfil.html" class="btn btn-primary" id="link-mi-perfil">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
-					<a href="mis_vehiculos.html" class="btn btn-primary" id="link-mis-vehiculos">Mis Vehiculos <span class="glyphicon glyphicon-plane"></span></a>
-					<a href="mis_viajes.html" class="btn btn-primary" id="link-mis-viajes">Mis viajes <span class="glyphicon glyphicon-globe"></span></a>
+					<a href="/perfil.html" class="btn btn-primary" id="link-mi-perfil">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
+					<a href="/mis_vehiculos.html" class="btn btn-primary" id="link-mis-vehiculos">Mis Vehiculos <span class="glyphicon glyphicon-plane"></span></a>
+					<a href="/mis_viajes.html" class="btn btn-primary" id="link-mis-viajes">Mis viajes <span class="glyphicon glyphicon-globe"></span></a>
 				</div>
 				<hr class="col-xs-12">
 				<div class="btn-group-vertical col-xs-12">
@@ -63,8 +65,8 @@
 			<div id="panel-admin">
 				<hr class="col-xs-12">
 				<div class="btn-group-vertical col-xs-12">
-					<a href="perfil.html" class="btn btn-primary" id="link-mi-perfil">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
-					<a href="abm.html" class="btn btn-primary">Administrar Usuarios <span class="glyphicon glyphicon-wrench"></span></a>
+					<a href="/perfil.html" class="btn btn-primary" id="link-mi-perfil">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
+					<a href="/abm.html" class="btn btn-primary">Administrar Usuarios <span class="glyphicon glyphicon-wrench"></span></a>
 				</div>
 			</div>
 		</nav>

@@ -51,9 +51,9 @@ function send(sendData,callback){
 }
 var cargarBotones = function(){
 	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
-	//$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuariop.nombre_usuario);
-	//$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuariop.nombre_usuario);
-	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mi-perfil").attr("href","/perfil.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mis-viajes").attr("href","/mis_viajes.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mis-vehiculos").attr("href","/mis_vehiculos.html?usuario="+data.usuariop.nombre_usuario);
 }
 function mostrarFunciones(){
 	console.log("Permisos que me traje: ",data.permisosp);
@@ -91,13 +91,13 @@ function mostrarFunciones(){
 }
 
 var makeListDropdown = function(rol){
-	var html = 	"<li><a href='perfil.html'>Mi perfil</a></li>"
+	var html = 	"<li><a href='/perfil.html'>Mi perfil</a></li>"
 	
 	if (rol == "cliente"){
-		html += "<li><a href='mis_viajes.html'>Mis viajes</a></li>"+
-				"<li><a href='mis_vehiculos.html'>Mis vehículos</a></li>";
+		html += "<li><a href='/mis_viajes.html'>Mis viajes</a></li>"+
+				"<li><a href='/mis_vehiculos.html'>Mis vehículos</a></li>";
 	} else if (rol == "super_usuario"){
-		html += "<li><a href='abm.html'>Administrar usuarios</a></li>";
+		html += "<li><a href='/abm.html'>Administrar usuarios</a></li>";
 	}
 	
 	html += "<li role='separator' class='divider'></li>"+
