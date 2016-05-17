@@ -63,7 +63,6 @@ public class Viaje implements JSONable {
 		@JoinColumn(name="id_vehiculo", referencedColumnName="id_vehiculo"),
 		@JoinColumn(name="fecha_inicio_maneja", referencedColumnName="fecha_inicio"),
 	})
-	
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Maneja conductor_vehiculo;
 	@OneToMany(mappedBy="viaje", cascade=CascadeType.PERSIST)
@@ -77,7 +76,8 @@ public class Viaje implements JSONable {
 	
 	public boolean crearRecorrido(List<Localidad> arreglo_de_localidades){
 		for(Localidad l: arreglo_de_localidades){
-			this.localidades.add(new LocalidadViaje(this,l) );
+			LocalidadViaje lv = new LocalidadViaje(this,l);
+			this.localidades.add(lv);
 		}
 		return true;
 	}
@@ -107,6 +107,34 @@ public class Viaje implements JSONable {
 			index++;
 		}
 		return null;
+	}
+	
+	//metodo que devuelve la cantidad de KM o metros, que tiene una parte o todo un recorrido,
+	public Double calcularKM(Localidad localidad_subida, Localidad localidad_bajada) throws ExceptionViajesCompartidos {
+		if( !this.contiene_localidades_en_orden(localidad_subida, localidad_bajada) ){
+			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA NO ES ANTERIOR A LA DE BAJADA");
+		}
+		
+		boolean encontrado=false;
+		boolean entremedio=false;
+		int index=0;
+		Double distancia=0.0;
+		
+		while(!encontrado){
+			if ( this.localidades.get(index).getLocalidad()==localidad_subida ){
+				entremedio=true;
+			}
+			if(entremedio){	//si estoy entre la localidad de subida y la de bajada cuento los KMs
+				distancia+=this.localidades.get(index).kms_a_localidad_siguiente;
+			}
+			if (this.localidades.get(index).getLocalidad() == localidad_bajada){
+				entremedio=false;
+				encontrado=true;
+			}
+			index++;
+		}
+		
+		return distancia;
 	}
 	
 	public List<Localidad> devolver_recorrido_desde_hasta(Localidad desde, Localidad hasta){
@@ -351,6 +379,17 @@ public class Viaje implements JSONable {
 			nuevo_recorrido.add(this.localidades.get(index).getLocalidad());
 		}
 		mi_vuelta.crearRecorrido(nuevo_recorrido);
+		
+		//agrego los valores de KM de que tengo en el viaje y se los pongo a la vuelta, en sentido inverso
+		List<LocalidadViaje> lista_localidad_viaje=mi_vuelta.getLocalidades();
+		int j=0;
+		for(int i=(lista_localidad_viaje.size()-1);i>=0;i--){
+			lista_localidad_viaje.get(j).setKms_a_localidad_siguiente( this.localidades.get(i).getKms_a_localidad_siguiente() );
+			j++;
+		}
+		Integer ultimo=lista_localidad_viaje.size();
+		//lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+		
 	}
 
 	public boolean contiene_localidades_en_orden(Localidad primer_localidad, Localidad segunda_localidad) {

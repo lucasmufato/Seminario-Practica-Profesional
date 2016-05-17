@@ -1,9 +1,10 @@
 data={};
-data.permisos=[];
-data.usuario={};
-data.roles=[];
+data.permisosp=[];
+data.usuariop={};
+data.rolesp=[];
 
 $(document).ready(function(){
+	console.log("hola");
 	esconderFuncionalidades();
 	getPermisosUsuario();
 });
@@ -20,9 +21,9 @@ function getPermisosUsuario() {
 	};
 	var callback = function (jsonData){
 		if (jsonData.result){
-			data.permisos = jsonData.permisos;
-			data.usuario = jsonData.usuario;
-			data.roles = jsonData.roles;
+			data.permisosp = jsonData.permisos;
+			data.usuariop = jsonData.usuario;
+			data.rolesp = jsonData.roles;
 			cargarBotones();
 			mostrarFunciones();
 		}else if (jsonData.redirect != undefined){
@@ -50,31 +51,35 @@ function send(sendData,callback){
 }
 var cargarBotones = function(){
 	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
-	//$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuario.nombre_usuario);
-	//$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuario.nombre_usuario);
-	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuario.nombre_usuario);
+	//$("#link-mi-perfil").attr("href","perfil.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mis-viajes").attr("href","mis_viajes.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mis-vehiculos").attr("href","xxx.html?usuario="+data.usuariop.nombre_usuario);
 }
 function mostrarFunciones(){
-	console.log("Permisos que me traje: ",data.permisos);
-		console.log("roles que me traje: ",data.roles);
-	console.log("usuario que me traje: ",data.usuario);
-	if (data.roles){
-		for (var i=0; i<data.roles.length;i++){
-			var rol = data.roles[i].nombre_rol.toLowerCase();
+	console.log("Permisos que me traje: ",data.permisosp);
+		console.log("roles que me traje: ",data.rolesp);
+	console.log("usuario que me traje: ",data.usuariop);
+	$("#dropdown-usuario").html(data.usuariop.nombre_usuario+" ");
+	if (data.rolesp){
+		for (var i=0; i<data.rolesp.length;i++){
+			var rol = data.rolesp[i].nombre_rol.toLowerCase();
 			if (rol == "cliente"){
 				  $("#panel-cliente").show();
+				  makeListDropdown(rol);
 			}
 			if (rol == "super_usuario"){
 				  $("#panel-admin").show();
+				  $("#link-mi-perfil").show();
+				  makeListDropdown(rol);
 			}
 		}
 	}
 	/*
-	if (data.permisos){
+	if (data.permisosp){
 		var permiso=0;
-		for (permiso in data.permisos){
-			var nombrePermiso=data.permisos[permiso]["nombre_permiso"];
-			var estadoPermiso=data.permisos[permiso]["estado"];
+		for (permiso in data.permisosp){
+			var nombrePermiso=data.permisosp[permiso]["nombre_permiso"];
+			var estadoPermiso=data.permisosp[permiso]["estado"];
 			if (nombrePermiso && estadoPermiso=="A"){
 				if (nombrePermiso == "administrar_usuarios"){
 					$("#panel-admin").show();
@@ -83,4 +88,19 @@ function mostrarFunciones(){
 		}
 	}
 	*/
+}
+
+var makeListDropdown = function(rol){
+	var html = 	"<li><a href='perfil.html'>Mi perfil</a></li>"
+	
+	if (rol == "cliente"){
+		html += "<li><a href='mis_viajes.html'>Mis viajes</a></li>"+
+				"<li><a href='mis_vehiculos.html'>Mis vehículos</a></li>";
+	} else if (rol == "super_usuario"){
+		html += "<li><a href='abm.html'>Administrar usuarios</a></li>";
+	}
+	
+	html += "<li role='separator' class='divider'></li>"+
+			"<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>";
+	$("#dropdown-menu").html(html);
 }

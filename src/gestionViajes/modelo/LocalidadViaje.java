@@ -23,11 +23,13 @@ public class LocalidadViaje {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Viaje viaje;
 	@Id
-	@JoinColumn(name="id_localidad")
+	@JoinColumn(name="ID_LOCALIDAD")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Localidad localidad;
-	@Column(nullable=false)
+	@Column(nullable=false,name="CANTIDAD_PASAJEROS")
 	protected Integer cantidad_pasajeros;
+	@Column(nullable=false,name="KMS_A_LOCALIDAD_SIGUIENTE")
+	protected Double kms_a_localidad_siguiente;
 	
 	@OneToMany(mappedBy="localidad_bajada", cascade=CascadeType.PERSIST)
 	protected List<PasajeroViaje> pasajeros_bajaron= new ArrayList<PasajeroViaje>();
@@ -67,6 +69,30 @@ public class LocalidadViaje {
 
 	public void setCantidad_pasajeros(Integer cantidad_pasajeros) {
 		this.cantidad_pasajeros = cantidad_pasajeros;
+	}
+
+	public Double getKms_a_localidad_siguiente() {
+		return kms_a_localidad_siguiente;
+	}
+
+	public void setKms_a_localidad_siguiente(Double kms_a_localidad_siguiente) {
+		this.kms_a_localidad_siguiente = kms_a_localidad_siguiente;
+	}
+
+	public List<PasajeroViaje> getPasajeros_bajaron() {
+		return pasajeros_bajaron;
+	}
+
+	public void setPasajeros_bajaron(List<PasajeroViaje> pasajeros_bajaron) {
+		this.pasajeros_bajaron = pasajeros_bajaron;
+	}
+
+	public List<PasajeroViaje> getPasajeros_subieron() {
+		return pasajeros_subieron;
+	}
+
+	public void setPasajeros_subieron(List<PasajeroViaje> pasajeros_subieron) {
+		this.pasajeros_subieron = pasajeros_subieron;
 	}
 	
 }

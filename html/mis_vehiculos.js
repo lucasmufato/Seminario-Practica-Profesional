@@ -48,7 +48,7 @@ var simular = function(){
 		marca: "ford",
 		modelo: "focus",
 		color: "azul",
-		año: "2010",
+		anio: "2010",
 		patente: "ifg 999",
 		seguro: "si",
 		aire: "si",
@@ -60,7 +60,7 @@ var simular = function(){
 		marca: "ford",
 		modelo: "focus",
 		color: "gris",
-		año: "2010",
+		anio: "2010",
 		patente: "ifg 111",
 		seguro: "si",
 		aire: "si",
@@ -72,7 +72,7 @@ var simular = function(){
 		marca: "ford",
 		modelo: "focus",
 		color: "gris",
-		año: "2010",
+		anio: "2010",
 		patente: "ifg 222",
 		seguro: "si",
 		aire: "si",
@@ -84,7 +84,7 @@ var simular = function(){
 		marca: "ford",
 		modelo: "focus",
 		color: "gris",
-		año: "2010",
+		anio: "2010",
 		patente: "ifg 444",
 		seguro: "si",
 		aire: "si",
@@ -95,6 +95,7 @@ var simular = function(){
 	}];
 	if (vehiculos.length) {
 		cargarVehiculos();
+		//cargarAsociados();
 	}
 }
 
@@ -108,17 +109,19 @@ var clientePorId = function(id){
 	return l.nombre_usuario;
 }
 
+var cargarAsociados = function(elem) {
+	elem.cliente_vinculado.forEach(function(cli){
+		console.log(clientePorId(cli));
+		html += $("#clientes_asociados").append('<li>'+clientePorId(cli)+'</li>');
+	});
+}
+
 var cargarVehiculos = function(){
 	var template = $("#vehiculo-template").html();
 	var htmlVehiculosVerificados = "";
 	var htmlVehiculosNoVerificados = "";
 	vehiculos.forEach(function(elem){
 		elem.color = panelColor(elem.vehiculo_verificado);
-		console.log(elem);
-		elem.cliente_vinculado.forEach(function(cli){
-			console.log(clientePorId(cli));
-			$("#clientes_asociados").append('<li>'+clientePorId(cli)+'</li>');
-		});
 		if (elem.es_verificado = elem.vehiculo_verificado == "s"){
 			htmlVehiculosVerificados += Mustache.render(template, elem);
 		}else{

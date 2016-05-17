@@ -10,6 +10,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import gestionComisiones.modelo.Comision;
 import gestionComisiones.modelo.ComisionCobrada;
 import gestionPuntos.modelo.Calificacion;
 import gestionPuntos.modelo.EstadoClasificacion;
@@ -190,6 +191,15 @@ public class DAOViajes extends DataAccesObject {
 		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino) );
 		viaje.crearRecorrido(recorrido);
 		
+		//TODO parte para asignarle a cada localidad la distancia con la siguiente
+		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
+		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
+			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
+			lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+		}
+		Integer ultimo=lista_localidad_viaje.size();
+		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+		
 		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
 		JSONObject vuelta=(JSONObject) datos.get("vuelta");
 		if(vuelta!=null){ 
@@ -221,7 +231,12 @@ public class DAOViajes extends DataAccesObject {
 		}
 		return true;
 	}
-
+	
+	protected Double distanciaEntreLocalidades(Localidad localidad1, Localidad localidad2){
+		//TODO todo el metodo para calcular distancia entre las 2 localidades
+		return 2.2;
+	}
+	
 	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){
 		//podria ser resuelto por un buscar por pk compuesta en el DAO general
 		//agregado fede
@@ -303,23 +318,23 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: NO PUEDES UNIRTE COMO PASAJERO A UN VIAJE QUE VOS MISMO CREASTE");
 		}
 		if (!viaje.contiene_localidades_en_orden(localidad_subida,localidad_bajada)){
-			throw new ExceptionViajesCompartidos("ERROR: NO LA LOCALIDAD DE SUBIDA ES DESPUES DE LA DE BAJADA");
+			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA ESTA DESPUES QUE LA DE BAJADA");
 		}
 		this.entitymanager.getTransaction().begin();
 		PasajeroViaje pasajero= new PasajeroViaje();
 		pasajero.setCalificacion(null);
 		pasajero.setCliente(cliente);
 		pasajero.setEstado(EstadoPasajeroViaje.postulado);
-		pasajero.setKilometros(0);			//TODO falta hacer la parte de los kilometros
-		pasajero.setComision(null);			// y de calcular la comision
+		
+		Double km = viaje.calcularKM(localidad_subida,localidad_bajada); 
+		pasajero.setKilometros(km);			
+		pasajero.setComision(null);			
 		
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
 		
 		//	TODO la parte de crear la comision
-		ComisionCobrada comisionCobrada = new ComisionCobrada();
-		comisionCobrada.setMonto(0);
+		ComisionCobrada comisionCobrada = Comision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
 		comisionCobrada.setMovimiento_saldo(null);
-		comisionCobrada.setComision(null);
 		comisionCobrada.setPasajero_viaje(null);
 		
 		// TODO la parte de calificacion bien
@@ -336,22 +351,24 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.persist(comisionCobrada);
 		this.entitymanager.persist(pasajero);
 		this.entitymanager.getTransaction().commit();
+		//hago un guardado anterior por que no puedo vincular doblemente al pasajero con la calificacion y a la calificacion con el pasajero
 		this.entitymanager.getTransaction().begin();
 		
 		//creo la notificacion que le va a llegar al conductor de ese viaje, informandole que tiene un postulante
 		Notificacion notificacion= new Notificacion();
 		notificacion.setCliente(viaje.getConductor());
 		notificacion.setEstado(EstadoNotificacion.no_leido);
-		notificacion.setFecha(new Date((new java.util.Date()).getTime()) ); 			//TODO modificar fecha
+		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
 		notificacion.setTexto("El usuario: "+cliente.getNombre_usuario()+
 				" se ha postulado para participar en tu viaje: "+viaje.getNombre_amigable());
 		this.entitymanager.persist(notificacion);
+		//ahora que ya tengo guardado el pasajero en la BD, la calificacion y la comision tiene una entidad a la cual apuntar
 		calificacion.setPasajero_viaje(pasajero);
 		comisionCobrada.setPasajero_viaje(pasajero);
 		this.entitymanager.getTransaction().commit();
 		return true;
 	}
-	
+
 	public Integer comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje){
 
 		// TODO Auto-generated method stub

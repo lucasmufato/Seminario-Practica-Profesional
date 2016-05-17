@@ -50,7 +50,7 @@
 											{{#usuario_logueado.es_perfil_propio}}
 											<tr>
 												<td><strong>Contraseña:</strong></td>
-												<td><input name="pass-cliente" type="text" class="form-control" value="{{usuario.pass}}" disabled></td>
+												<td><input name="pass-cliente" type="text" class="form-control validar" value="{{usuario.pass}}" disabled></td>
 											</tr>
 											{{/usuario_logueado.es_perfil_propio}}
 											<tr>
@@ -75,20 +75,20 @@
 											</tr>
 											<tr>
 												<td><strong>Domicilio:</strong></td>
-												<td><input name="domicilio-cliente" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+												<td><input name="domicilio-cliente" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>E-mail:</strong></td>
-												<td><input name="mail-cliente" type="text" class="form-control" value="{{usuario.mail}}" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+												<td><input name="mail-cliente" type="text" class="form-control validar" value="{{usuario.mail}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Teléfono:</strong></td>
-												<td><input name="telefono-cliente" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled  data-placement="top" data-trigger="manual" data-content=""></td>
+												<td><input name="telefono-cliente" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Sexo:</strong></td>
 												<td id="sexo">
-													<input list="sex" class="form-control" name="sexo" value="{{persona.sexo_string}}" disabled>
+													<input list="sex" class="form-control validar" name="sexo" value="{{persona.sexo_string}}" disabled>
 													<datalist id="sex">
 														<option value="Masculino"></option>
 														<option value="Femenino"></option>

@@ -195,6 +195,7 @@ CREATE TABLE LOCALIDAD_VIAJE (
 	id_viaje INTEGER NOT NULL,
 	id_localidad INTEGER NOT NULL,
 	cantidad_pasajeros INTEGER NOT NULL,
+    kms_a_localidad_siguiente long NOT NULL,
 
 	PRIMARY KEY (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje),
@@ -218,4 +219,15 @@ CREATE TABLE PASAJERO_VIAJE (
 	FOREIGN KEY (id_comision_cobrada) REFERENCES COMISION_COBRADA (id_comision_cobrada),
 	FOREIGN KEY (id_viaje, id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)
+);
+
+CREATE TABLE NOTIFICACION(
+ID_NOTIFICACION INTEGER NOT NULL AUTO_INCREMENT,
+FECHA DATETIME NOT NULL,
+TEXTO VARCHAR(200) NOT NULL,
+ESTADO CHAR(1) NOT NULL,
+ID_CLIENTE INTEGER NOT NULL,
+
+primary key(ID_NOTIFICACION),
+FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE(ID_USUARIO)
 );
