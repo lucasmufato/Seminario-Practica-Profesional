@@ -51,6 +51,10 @@ public class ServletViaje extends HttpServlet {
 			} else if (action != null && action.equals("ver_mis_viajes")) {
 				respuesta = this.ver_mis_viajes (request);
 			}
+		} else if (entity != null && entity.equals ("vehiculo")) {
+			if (action != null && action.equals ("new")) {
+				respuesta = this.nuevo_vehiculo (request);
+			}
 		} else {
 			respuesta = new JSONObject();
 			respuesta.put ("result", false);
@@ -206,7 +210,6 @@ public class ServletViaje extends HttpServlet {
 		try {
 			daoViajes.nuevoViaje(params);
 		} catch (ExceptionViajesCompartidos e) {
-			//ENVIA MENSAJE DE ERROR CON e.getMessage();
 			salida.put("result", false);
 			salida.put("msg", e.getMessage());
 			return salida;
@@ -363,6 +366,36 @@ public class ServletViaje extends HttpServlet {
 			return salida;
 		}
 
+		return salida;
+	}
+
+	public JSONObject nuevo_vehiculo (HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		JSONObject params = new JSONObject();
+		int id_usuario = AccessManager.getIdUsuario(request);
+		JSONObject json_vehiculo = new JSONObject ();
+
+		json_vehiculo.put("anio", Integer.parseInt(request.getParameter("anio")));
+		json_vehiculo.put("marca", request.getParameter("marca"));
+		json_vehiculo.put("modelo", request.getParameter("modelo"));
+		json_vehiculo.put("patente", request.getParameter("patente"));
+		json_vehiculo.put("aire", request.getParameter("aire").toString().charAt(0));
+		json_vehiculo.put("color", request.getParameter("color"));
+		json_vehiculo.put("asientos", Integer.parseInt(request.getParameter("asientos")));
+		json_vehiculo.put("seguro", request.getParameter("seguro").toString().charAt(0));
+		//json_vehiculo.put("foto", request.getParameter(""));
+
+		params.put("conductor", id_usuario);
+		params.put("vehiculo", json_vehiculo);
+
+		try{
+			daoViajes.NuevoVehiculo(params);
+			salida.put("result", true);
+			salida.put("msg", "Se ha creado el vehiculo correctamente");
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+		}
 		return salida;
 	}
 }

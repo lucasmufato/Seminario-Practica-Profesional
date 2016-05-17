@@ -13,29 +13,30 @@
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	
-	<script type="text/javascript" src="navegacion.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
-	<script type="text/javascript" src="calendarios.js"></script>
+	<script type="text/javascript" src="alta_vehiculo.js"></script>
+	<script type="text/javascript" src="navegacion.js"></script>
 </head>
 
 <body>
 
+	<script src="js/jscolor.min.js"></script>
     <main>
     	<div class="container-fluid">
-    		<form class="form-horizontal">
+    		<form id="form-vehiculo" class="form-horizontal" onsubmit="return submitFormVehiculo()">
 	    		<header class="bg-primary"><h3 class="pull-center">Alta de vehículo</h3></header>
 				<div class="form-group">
 					<div class="col-md-6">
 						<label for="marca" class="control-label col-md-4">Marca:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="marca" placeholder="Marca"></input>
+							<input type="text" class="form-control" id="marca" name="marca" placeholder="Marca"></input>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="patente" class="control-label col-md-5">Patente:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="patente" placeholder="Patente"></input>
+							<input type="text" class="form-control" id="patente" name="patente" placeholder="Patente"></input>
 						</div>
 					</div>
 				</div>
@@ -44,13 +45,13 @@
 					<div class="col-md-6">
 						<label for="modelo" class="control-label col-md-4">Modelo:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="modelo" placeholder="Modelo">
+							<input type="text" class="form-control" id="modelo" name="modelo" placeholder="Modelo">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="color" class="control-label col-md-5">Color:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="color" placeholder="Color">
+							<input class="form-control jscolor" id="color" name="color" style="font-size: 0px" placeholder="Color" value="ff0000">
 						</div>
 					</div>
 				</div>
@@ -59,21 +60,21 @@
 					<div class="col-md-6">
 						<label for="anio" class="control-label col-md-4">Año:</label>
 						<div class="input-group date form_date col-md-6" id="divanio">
-							<input type="text" class="form-control" id="anio" placeholder="Año" required>
-							<span class="input-group-addon " onclick="$('#anio').datetimepicker('show')");><span class="glyphicon glyphicon-calendar"></span></span>
+							<input type="text" class="form-control" id="anio" name="anio" placeholder="Año" required>
+							<span class="input-group-addon " onclick="$('#anio').datetimepicker('show')"><span class="glyphicon glyphicon-calendar"></span></span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="asientos" class="control-label col-md-5">Cantidad de asientos:</label>
 						<div class="col-md-6">
-							<select class="form-control" name="" id="asientos">
-								<option value="">1</option>
-								<option value="">2</option>
-								<option value="">3</option>
-								<option value="">4</option>
-								<option value="">5</option>
-								<option value="">6</option>
-								<option value="">7</option>
+							<select class="form-control" name="asientos" id="asientos">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
 							</select>					
 						</div>
 					</div>
@@ -83,18 +84,18 @@
 					<div class="col-md-6">
 						<label for="aire_acondicionado" class="control-label col-md-4">Aire acondicionado:</label>
 						<div class="col-md-6">
-							<select class="form-control" name="" id="aire_acondicionado">
-								<option value="">Sí</option>
-								<option value="">No</option>
+							<select class="form-control" name="aire" id="aire">
+								<option value="S">Sí</option>
+								<option value="N">No</option>
 							</select>					
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="seguro" class="control-label col-md-5">Seguro:</label>
 						<div class="col-md-6">
-							<select class="form-control" name="" id="seguro">
-								<option value="">Sí</option>
-								<option value="">No</option>
+							<select class="form-control" name="seguro" id="seguro">
+								<option value="S">Sí</option>
+								<option value="N">No</option>
 							</select>					
 						</div>
 					</div>
@@ -111,7 +112,7 @@
 
 				<div class="form-group">
 					<div class="col-xs-offset-7 col-sm-offset-9 col-md-offset-8 col-lg-offset-9">
-						<button class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
+						<button type="button" class="btn btn-primary" onclick="submitFormVehiculo()"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
 					</div>
 				</div>
 			</form>
