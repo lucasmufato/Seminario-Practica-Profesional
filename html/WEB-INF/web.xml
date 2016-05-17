@@ -52,4 +52,13 @@
         <servlet-name>perfil</servlet-name>
         <url-pattern>/perfil</url-pattern>
     </servlet-mapping>
+	
+	<servlet>
+        <servlet-name>reportes</servlet-name>
+        <servlet-class>gestionReportes.ControladorReportes</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>reportes</servlet-name>
+        <url-pattern>/reportes</url-pattern>
+    </servlet-mapping>
 </web-app>
