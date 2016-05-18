@@ -1,5 +1,5 @@
 package gestionComisiones.modelo;
 
 public enum EstadoComisionCobrada {
-	pendiente,pagado,vencido
+	pendiente,pagado,vencido,informativa,desestimada
 }

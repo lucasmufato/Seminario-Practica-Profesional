@@ -42,6 +42,22 @@ public class ComisionCobrada implements JSONable {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected PasajeroViaje pasajero_viaje;
 	
+	public Integer getId_comision_cobrada() {
+		return id_comision_cobrada;
+	}
+
+	public void setId_comision_cobrada(Integer id_comision_cobrada) {
+		this.id_comision_cobrada = id_comision_cobrada;
+	}
+
+	public EstadoComisionCobrada getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoComisionCobrada estado) {
+		this.estado = estado;
+	}
+
 	public ComisionCobrada(){
 		
 	}

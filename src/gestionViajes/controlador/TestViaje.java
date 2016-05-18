@@ -15,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.*;
 import junit.framework.TestCase;
@@ -315,6 +316,47 @@ public class TestViaje extends TestCase {
 		}
 		int i=0;
 		i++;
+	}
+	
+	@Test
+	public void testRechazarPostulante1Correcto() {
+		//test q envie un json correcto y tendria q andar bien
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		try {
+			assertTrue( this.daoviajes.rechazarPasajero(3, viaje.getId_viaje()) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+		PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		assertEquals(pv.getEstado(),EstadoPasajeroViaje.rechazado);
+		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.desestimada);
 	}
 	
 	@Test

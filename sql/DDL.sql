@@ -218,7 +218,7 @@ CREATE TABLE PASAJERO_VIAJE (
 	id_cliente INTEGER NOT NULL,
 	kilometros FLOAT,
 	estado CHAR(1) NOT NULL,
-	id_calificacion INTEGER NOT NULL,
+	id_calificacion INTEGER ,
 	id_comision_cobrada INTEGER NOT NULL,
 	id_localidad_subida INTEGER NOT NULL,
 	id_localidad_bajada INTEGER NOT NULL,
