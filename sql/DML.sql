@@ -37,3 +37,9 @@ INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("T", "Montaña/Cerro"),
 	("U", "Bajo el agua"),
 	("V", "Bosque/Arbustos");
+	
+INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
+	("1", "Terminado"),
+	("2", "No iniciado"),
+	("3", "Iniciado"),
+	("4", "Cancelado");

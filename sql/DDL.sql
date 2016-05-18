@@ -172,6 +172,13 @@ CREATE TABLE MANEJA (
 	FOREIGN KEY (id_vehiculo) REFERENCES VEHICULO (id_vehiculo)
 );
 
+CREATE TABLE ESTADO_VIAJE(
+	id_estado_viaje CHAR(1) NOT NULL,
+	nombre_estado VARCHAR(30) NOT NULL,
+	
+	PRIMARY KEY (id_estado_viaje)
+);
+
 CREATE TABLE VIAJE (
 	id_viaje INTEGER NOT NULL AUTO_INCREMENT,
 	nombre_amigable VARCHAR(30),
@@ -185,11 +192,14 @@ CREATE TABLE VIAJE (
     id_cliente INTEGER NOT NULL,
     fecha_inicio_maneja DATE NOT NULL,
     viaje_complementario INTEGER,
+	precio FLOAT,
 	
 	PRIMARY KEY (id_viaje),
 	FOREIGN KEY (id_cliente, id_vehiculo, fecha_inicio_maneja) REFERENCES MANEJA (id_cliente, id_vehiculo, fecha_inicio),
-    FOREIGN KEY (viaje_complementario) REFERENCES VIAJE (id_viaje)
+    FOREIGN KEY (viaje_complementario) REFERENCES VIAJE (id_viaje),
+	FOREIGN KEY (estado) REFERENCES ESTADO_VIAJE(id_estado_viaje)
 );
+
 
 CREATE TABLE LOCALIDAD_VIAJE (
 	id_viaje INTEGER NOT NULL,
