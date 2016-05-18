@@ -334,11 +334,6 @@ public class Viaje implements JSONable {
 			hora debe estar dentro de fecha
 			cantidad de pasajeros
 		*/
-		System.out.println("");
-		System.out.println("");
-		System.out.println(json_viaje);
-		System.out.println("");
-		System.out.println("");
 		return json_viaje;
 	}
 
