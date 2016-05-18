@@ -25,6 +25,16 @@ import otros.DataAccesObject;
 import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.DistanceMatrixRow;
+import com.google.maps.model.DistanceMatrixElement;
+import com.google.maps.model.DistanceMatrixElementStatus;
+import com.google.maps.model.LatLng;
+import com.google.maps.model.TravelMode;
+
 public class DAOViajes extends DataAccesObject {
 
     public DAOViajes(){
@@ -227,8 +237,43 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	protected Double distanciaEntreLocalidades(Localidad localidad1, Localidad localidad2){
-		//TODO todo el metodo para calcular distancia entre las 2 localidades
-		return 2.2;
+		GeoApiContext context = new GeoApiContext ();
+
+		// La apikey no deberia estar hardcodeada
+		context.setApiKey("AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg");
+
+		/* TODO: permitir configurar proxy */
+		//context.setProxy(proxy)
+
+		LatLng origen = new LatLng(localidad1.getLatitud(), localidad1.getLongitud());
+		LatLng destino = new LatLng(localidad2.getLatitud(), localidad2.getLongitud());
+
+		DistanceMatrixApiRequest request = DistanceMatrixApi.newRequest (context);
+		request.origins(origen);
+		request.destinations(destino);
+		request.mode(TravelMode.DRIVING);
+
+		long mts = -1;
+		
+		try {
+			long distance;
+			DistanceMatrix result = request.await();
+			for (DistanceMatrixElement element: result.rows[0].elements) {
+					distance = element.distance.inMeters;
+				if ((element.status == DistanceMatrixElementStatus.OK) && (mts == -1 || distance < mts)) {
+					mts = distance;
+				}
+			}
+		} catch (Exception e) {
+			//throw new ExceptionViajesCompartidos ("No se pudo calcular la distancia entre las localidades");
+		}
+
+		if (mts == -1) {
+			//throw new ExceptionViajesCompartidos ("No se pudo calcular la distancia entre las localidades");
+		}
+
+		double kms = (double) mts / 1000d;
+		return kms;
 	}
 	
 	//by mufa

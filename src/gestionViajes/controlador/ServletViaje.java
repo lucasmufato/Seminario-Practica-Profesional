@@ -1,6 +1,7 @@
 package gestionViajes.controlador;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class ServletViaje extends HttpServlet {
 		int asientos_ida=-1, asientos_vuelta=-1;
 		float costo=-1f;
 		String nombre_amigable=null, patente_vehiculo=null;
-		Date fecha_ida=null, fecha_vuelta=null;
+		Timestamp fecha_ida=null, fecha_vuelta=null;
 		boolean ida_vuelta = false;
 		ArrayList<String> err = new ArrayList<String>();
 
@@ -145,7 +146,7 @@ public class ServletViaje extends HttpServlet {
 		} catch (Exception e) {
 			err.add("Precio no es valido");
 		} try {
-			fecha_ida = new Date (format.parse(request.getParameter("fecha_ida")).getTime());
+			fecha_ida = new Timestamp (format.parse(request.getParameter("fecha_ida")).getTime());
 		} catch (Exception e) {
 			err.add("Fecha de viaje de ida no es valida");
 		} try {
@@ -164,7 +165,7 @@ public class ServletViaje extends HttpServlet {
 
 		if(ida_vuelta) {
 			try {
-				fecha_vuelta = new Date (format.parse(request.getParameter("fecha_vuelta")).getTime());
+				fecha_vuelta = new Timestamp (format.parse(request.getParameter("fecha_vuelta")).getTime());
 			} catch (Exception e) {
 				err.add("Fecha de vuelta no es valida");
 			} try {
@@ -316,12 +317,16 @@ public class ServletViaje extends HttpServlet {
 	}
 	
 	public JSONObject aceptar_rechazar_postulantes(Integer decision, Integer id_cliente_postulante, Integer id_viaje){
-		if(decision==1){
-			daoViajes.aceptarPasajero(id_cliente_postulante,id_viaje);
-		}else{
-			if(decision==2){
-				daoViajes.rechazarPasajero(id_cliente_postulante,id_viaje);
+		try {
+			if(decision==1){
+				daoViajes.aceptarPasajero(id_cliente_postulante,id_viaje);
+			}else{
+				if(decision==2){
+					daoViajes.rechazarPasajero(id_cliente_postulante,id_viaje);
+				}
 			}
+		} catch (ExceptionViajesCompartidos e) {
+			// agregado para que compile
 		}
 		return null;
 	}
