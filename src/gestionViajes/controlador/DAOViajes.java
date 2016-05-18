@@ -412,7 +412,17 @@ public class DAOViajes extends DataAccesObject {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	//by mufa
+	public List<Localidad> getOrigenYDestinoDeViaje(Integer id_viaje){
+		Viaje v=(Viaje)this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(v==null){
+			return null;
+		}else{
+			return  v.recuperarOrigenYDestino();
+		}
+	}
+	
 	//by mufa
 	//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
 	@Deprecated		//le puse q es deprecated para q no lo vaya a usar sin querer y hacer boleta la BD jjajajajaja

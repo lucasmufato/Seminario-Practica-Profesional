@@ -150,8 +150,11 @@ public class Viaje implements JSONable {
 	}
 	
 	public List<Localidad> recuperarOrigenYDestino(){
-		// TODO
-		return null;
+		List<Localidad> origenDestino = new ArrayList<Localidad>();
+		origenDestino.add( this.localidades.get(0).getLocalidad() );
+		int ultima_localidad=( this.localidades.size() -1);
+		origenDestino.add( this.localidades.get(ultima_localidad).getLocalidad() );
+		return origenDestino;
 	}
 	
 	public Viaje(){
