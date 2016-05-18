@@ -317,12 +317,16 @@ public class ServletViaje extends HttpServlet {
 	}
 	
 	public JSONObject aceptar_rechazar_postulantes(Integer decision, Integer id_cliente_postulante, Integer id_viaje){
-		if(decision==1){
-			daoViajes.aceptarPasajero(id_cliente_postulante,id_viaje);
-		}else{
-			if(decision==2){
-				daoViajes.rechazarPasajero(id_cliente_postulante,id_viaje);
+		try {
+			if(decision==1){
+				daoViajes.aceptarPasajero(id_cliente_postulante,id_viaje);
+			}else{
+				if(decision==2){
+					daoViajes.rechazarPasajero(id_cliente_postulante,id_viaje);
+				}
 			}
+		} catch (ExceptionViajesCompartidos e) {
+			// agregado para que compile
 		}
 		return null;
 	}
