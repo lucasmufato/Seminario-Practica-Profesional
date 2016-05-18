@@ -94,7 +94,7 @@ public class ControladorReportes extends HttpServlet {
 		JSONObject respuesta = new JSONObject();
 		
 		ServletContext context = this.getServletConfig().getServletContext();
-		String path = context.getRealPath("/reportes/reports/reporte_viajes.jrxml");
+		String path = context.getRealPath("/reportes/reports/vc_reporte_viajes.jrxml");
 
 		//compilo reporte
 		if (!this.compilarReporte(path)){
@@ -103,7 +103,7 @@ public class ControladorReportes extends HttpServlet {
 			return respuesta;
 		}
 		//creo archivo de reporte
-		String reportFileName = context.getRealPath("/reportes/reports/reporte_viajes.jasper");
+		String reportFileName = context.getRealPath("/reportes/reports/vc_reporte_viajes.jasper");
 		if (!this.existeReporteCompilado(reportFileName)){
 			respuesta.put("msg", "El reporte no se encuentra compilado");
 			respuesta.put("result", false);
@@ -111,7 +111,7 @@ public class ControladorReportes extends HttpServlet {
 		}
 		//relleno con datos
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("my_query", "select * from viaje v where v.id_viaje = 1");
+		//parameters.put("my_query", "select * from viaje v where v.id_viaje = 1");
 
 		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
 		if (jasperPrint == null){
