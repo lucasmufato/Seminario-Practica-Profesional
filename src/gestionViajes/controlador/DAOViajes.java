@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 
 import gestionComisiones.modelo.Comision;
 import gestionComisiones.modelo.ComisionCobrada;
+import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionPuntos.modelo.Calificacion;
 import gestionPuntos.modelo.EstadoClasificacion;
 import gestionUsuarios.modelo.*;
@@ -360,18 +361,11 @@ public class DAOViajes extends DataAccesObject {
 		ComisionCobrada comisionCobrada = Comision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
 		comisionCobrada.setMovimiento_saldo(null);
 		comisionCobrada.setPasajero_viaje(null);
-		
-		// TODO la parte de calificacion bien
-		Calificacion calificacion = new Calificacion();
-		calificacion.setMovimiento_puntos(null);
-		calificacion.setParticipo(EstadoClasificacion.pendiente_ambos);
-		calificacion.setPasajero_viaje(null);
+		comisionCobrada.setEstado(EstadoComisionCobrada.informativa);		//significa que se guarda solo para saber cuanto le dijimos q le ibamos a cobrar cuando se postulo
 		
 		//le asigno la calificacion y la comision al pasajero
-		pasajero.setCalificacion(calificacion);
 		pasajero.setComision(comisionCobrada);
 
-		this.entitymanager.persist(calificacion);
 		this.entitymanager.persist(comisionCobrada);
 		this.entitymanager.persist(pasajero);
 		this.entitymanager.getTransaction().commit();
@@ -387,7 +381,6 @@ public class DAOViajes extends DataAccesObject {
 				" se ha postulado para participar en tu viaje: "+viaje.getNombre_amigable());
 		this.entitymanager.persist(notificacion);
 		//ahora que ya tengo guardado el pasajero en la BD, la calificacion y la comision tiene una entidad a la cual apuntar
-		calificacion.setPasajero_viaje(pasajero);
 		comisionCobrada.setPasajero_viaje(pasajero);
 		this.entitymanager.getTransaction().commit();
 		return true;
@@ -453,9 +446,31 @@ public class DAOViajes extends DataAccesObject {
 		 */
 	}
 
-	public void rechazarPasajero(Integer id_cliente_postulante, Integer id_viaje) {
-		// TODO Auto-generated method stub
-		
+	//by mufa
+	public boolean rechazarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
+		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
+		}
+		if(viaje.getEstado()==EstadoViaje.cancelado || viaje.getEstado()==EstadoViaje.finalizado){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
+		}
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente_postulante);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+		PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		if (pasajero==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPA DE ESE VIAJE");
+		}
+		if(pasajero.getEstado()!=EstadoPasajeroViaje.postulado){	//no podria rechazar a un cliente que ya acepte
+			throw new ExceptionViajesCompartidos("ERROR: SOLO PODES RECHAZAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
+		}
+		this.entitymanager.getTransaction().begin();
+		pasajero.setEstado(EstadoPasajeroViaje.rechazado);
+		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
+		this.entitymanager.getTransaction().commit();
+		return true;
 	}
 	
 	//by mufa

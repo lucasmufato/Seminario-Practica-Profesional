@@ -48,7 +48,7 @@ public class Viaje implements JSONable {
 	@Column(nullable=false)
 	protected Integer asientos_disponibles;
 	@Column(nullable=false)
-	protected EstadoViaje estado; 		//falta hacer el enum
+	protected EstadoViaje estado;
 	@Column(nullable=false)
 	protected Timestamp fecha_inicio;
 	@Column(nullable=false)
@@ -334,7 +334,11 @@ public class Viaje implements JSONable {
 			hora debe estar dentro de fecha
 			cantidad de pasajeros
 		*/
-		
+		System.out.println("");
+		System.out.println("");
+		System.out.println(json_viaje);
+		System.out.println("");
+		System.out.println("");
 		return json_viaje;
 	}
 

@@ -150,7 +150,7 @@ var simular = function(json){
 	data.viaje = {
 		id: data.viaje.id ,
 		nombre_amigable: "Un alto viaje",
-		estado: "3",
+		estado: "no_iniciado",
 		tipo: "ida",
 		id_viaje_complemento: "4",
 		origen: "324",
@@ -213,15 +213,8 @@ var configurarUi = function(){
 	var esSeguidor = data.usuario_logueado.es_seguidor;
 	var haCalificado = data.usuario_logueado.ha_calificado;
 
-	var estado = data.viaje.estado;
+	var estado = estadoString(data.viaje.estado);
 	
-	/*
-	ESTADOS:
-		case '1': return "Terminado";
-		case '2': return "No iniciado";
-		case '3': return "Iniciado";
-		case '4': return "Cancelado";
-	*/
 	if (esPasajero || esConductor){
 		$("#botonera-cliente").hide();
 		if (esConductor){
@@ -229,7 +222,7 @@ var configurarUi = function(){
 			$("#botonera-pasajero").hide();
 			
 			//Boton finalizar solo si esta en iniciado
-			if (estado == "3"){
+			if (estado == "Iniciado"){
 				$("#btnViajeFinalizado").show();
 				$("#btnCalificar").hide();
 			}else{
@@ -263,24 +256,25 @@ var configurarUi = function(){
 			$("#btnSegir").show();		
 		}
 	}
-	if (estado=="4"){//cancelado
+	if (estado=="Cancelado"){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
 		$("#botonera-cliente").hide();
 		$("#btnCalificar").hide();
-	} else if(estado == "3"){//iniciado
+	} else if(estado == "Iniciado"){
 		
-	} else if(estado == "2"){ //no_iniciado
+	} else if(estado == "No iniciado"){ 
 		$("#btnCalificar").hide();
-	} else if(estado == "1"){ //terminado
+	} else if(estado == "Finalizado"){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
+		$("#botonera-cliente").hide();
 	}
 }
 
 var cargarVehiculo = function(){
-	$("#panel-foto-vehiculo a").attr('href',data.vehiculo.foto);
-	$("#panel-foto-vehiculo img").attr('src',data.vehiculo.foto);
+	$("#panel-foto-vehiculo a").attr('href',data.vehiculo.foto || "/img/perfil/sin_imagen.jpg");
+	$("#panel-foto-vehiculo img").attr('src',data.vehiculo.foto || "/img/perfil/sin_imagen.jpg");
 	$("#marca").text(data.vehiculo.marca);
 	$("#modelo").text(data.vehiculo.modelo);
 	$("#anio").text(data.vehiculo.anio);
@@ -309,18 +303,18 @@ var cargarViaje = function(){
 }
 
 var cargarConductor = function(){
-	$("#panel-foto-conductor a").attr('href',data.conductor.foto);
-	$("#panel-foto-conductor img").attr('src',data.conductor.foto);
-	$("#panel-foto-registro a").attr('href',data.conductor.foto_registro);
-	$("#panel-foto-registro img").attr('src',data.conductor.foto_registro);
+	$("#panel-foto-conductor a").attr('href',data.conductor.foto || "/img/perfil/default.png");
+	$("#panel-foto-conductor img").attr('src',data.conductor.foto || "/img/perfil/default.png");
+	$("#panel-foto-registro a").attr('href',data.conductor.foto_registro || "/img/perfil/sin_registro.jpg");
+	$("#panel-foto-registro img").attr('src',data.conductor.foto_registro || "/img/perfil/sin_registro.jpg");
 	$("#reputacion").text(reputacionStars(data.conductor.reputacion));;
 	$("#nombreConductor").text(data.conductor.nombre_usuario);
-	$("#nombreConductor").attr('href',"perfil.html?usuario="+data.conductor.nombre_usuario);
+	$("#nombreConductor").attr('href',"/perfil.html?usuario="+data.conductor.nombre_usuario);
 }
 
 function setearViajeComplemento(idComp){
 	if (idComp){
-		var link = "detalle_viaje.html?id=" + idComp;
+		var link = "/detalle_viaje.html?id=" + idComp;
 		$("#tipo").append(" <a href='"+link+"'><small>(complemento)</small></a>")
 	}
 }
@@ -453,7 +447,7 @@ var cancelarParticipacion = function(){
 	modalMessage(modalName,msg);
 }
 var modificarViaje = function(){
-	window.open("modificar_viaje.html?id="+data.viaje.id,"_blank");
+	window.open("/modificar_viaje.html?id="+data.viaje.id,"_blank");
 }
 var cancelarViaje = function(){
 	var modalName='warning';
@@ -465,7 +459,7 @@ var cancelarViaje = function(){
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
-				window.open("home.html","_blank");
+				window.open("/home.html","_blank");
 			}else{
 				errorMessage(jsonData.msg);
 			}
@@ -501,12 +495,12 @@ var verPostulantes = function(){
 	*/
 	
 	//si lo redirijo a listado_postulantes.html
-	window.open("listado_postulantes.html?id="+data.viaje.id,"_blank");
+	window.open("/listado_postulantes.html?id="+data.viaje.id,"_blank");
 }
 
 var calificar = function(){
 	console.log("calificar");
-	window.open("calificar.html?id="+data.viaje.id,"_blank");
+	window.open("/calificar.html?id="+data.viaje.id,"_blank");
 }
 
 var viajeFinalizado = function(){
@@ -554,10 +548,10 @@ var localidadNombre = function(id){
 
 var estadoString = function (caracter) {
 	switch (caracter) {
-		case '1': return "Terminado";
-		case '2': return "No iniciado";
-		case '3': return "Iniciado";
-		case '4': return "Cancelado";
+		case 'finalizado': return "Finalizado";
+		case 'no_iniciado': return "No iniciado";
+		case 'iniciado': return "Iniciado";
+		case 'cancelado': return "Cancelado";
 		case '': return "No especificado";
 		case null: return "No especificado";
 		default: return "Desconocido";

@@ -221,6 +221,7 @@ var generarHtmlViaje = function(indiceViaje){
 	if (indiceViaje % records_per_page == 0) $("#mis-viajes").html("");
 	var viaje = viajes.filter(filterer)[indiceViaje];
 	if (viaje){
+		viaje.foto_revisada = viaje.foto || "/img/perfil/default.png";
 		var template = $("#viaje-template").html();
 		viaje.reputacion_stars = reputacionStars(viaje.reputacion);
 		$("#mis-viajes").append(Mustache.render(template, viaje));
