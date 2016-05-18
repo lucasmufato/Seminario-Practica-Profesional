@@ -139,7 +139,11 @@ public abstract class DataAccesObject {
 	
 	//otro que busca por clave primaria, pero en este caso ya sabes la clave primaria
 	public Object buscarPorPrimaryKey(Object clase, Object primaryKey){
-		return entitymanager.find((clase).getClass(), primaryKey);
+		if(clase==null || primaryKey==null){
+			return null;
+		}else{
+			return entitymanager.find((clase).getClass(), primaryKey);
+		}
 	}
 
 	// Auto completado. Devuelve un JSONArray con los resultados

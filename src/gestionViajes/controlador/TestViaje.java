@@ -28,16 +28,6 @@ public class TestViaje extends TestCase {
 	//VAN A TENER Q AGREGAR LA LIBRERIA JUint 4, que contiene:
 	//junit.jar
 	//org.hamcrest.core_1.3.0.v201303031735
-	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception { 
-		//este metodo se ejecuta antes que arranque el test	
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		//este se ejecuta cuando termina todo el test
-	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -55,12 +45,6 @@ public class TestViaje extends TestCase {
 		this.daoviajes.vaciarTabla("Vehiculo");
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		//este metodo se ejecuta despues de cada parte del test
-		//O SE PUEDE PONER ACA EL CODIGO PARA VACIAR LA BD
-	}
-	
 	@Test
 	public void testNuevoViajeCorrectoSINVUELTA() {
 		//test q envie un json correcto y tendria q andar bien
@@ -223,12 +207,13 @@ public class TestViaje extends TestCase {
 		
 		assertNull(this.daoviajes.getVehiculoViaje(1));
 		assertNull(this.daoviajes.getConductorViaje(1));
+		assertNull(this.daoviajes.getVehiculoViaje(null));
+		assertNull(this.daoviajes.getConductorViaje(null));
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testbuscarManejar() {	//test q buscar en la tabla Maneja
-		
 		//json con datos de vehiculo
 		JSONObject json= crearVehiculo();
 		try {
@@ -330,6 +315,281 @@ public class TestViaje extends TestCase {
 		}
 		int i=0;
 		i++;
+	}
+	
+	@Test
+	public void testComisionPorRecorridoCorrecto() {
+		//test q compara el metodo con el monto calculado en el viaje, tendrian que ser iguales
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		PasajeroViaje pv=viaje.getPasajeros().get(0);
+		float monto_cobrado=pv.getComision().getMonto();
+		List <LocalidadViaje> lv=viaje.getLocalidades();
+		Localidad inicio=lv.get(0).getLocalidad();
+		Localidad destino= lv.get( (lv.size()-1) ).getLocalidad();
+		float monto_a_cobrar=0;		
+		try {
+			monto_a_cobrar = this.daoviajes.comision_por_recorrido(inicio, destino, viaje.getId_viaje());
+		} catch (ExceptionViajesCompartidos e) {
+			fail();
+			e.printStackTrace();
+		}
+		assertEquals(monto_cobrado,monto_a_cobrar);
+	}
+	
+	@Test
+	public void testComisionPorRecorridoINCorrecto1() {
+		//test q envia un id de viaje inexistente
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		List <LocalidadViaje> lv=viaje.getLocalidades();
+		Localidad inicio=lv.get(0).getLocalidad();
+		Localidad destino= lv.get( (lv.size()-1) ).getLocalidad();
+
+		boolean bandera=false;
+		try {
+			this.daoviajes.comision_por_recorrido(inicio, destino, 1);
+			fail();
+		} catch (ExceptionViajesCompartidos e) {
+			bandera=true;
+		}
+		assertTrue(bandera);
+	}
+	
+	@Test
+	public void testComisionPorRecorridoINCorrecto2() {
+		//test q envia las localidades al reves (= que en desorden)
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		PasajeroViaje pv=viaje.getPasajeros().get(0);
+		float monto_cobrado=pv.getComision().getMonto();
+		List <LocalidadViaje> lv=viaje.getLocalidades();
+		Localidad inicio=lv.get(0).getLocalidad();
+		Localidad destino= lv.get( (lv.size()-1) ).getLocalidad();
+		float monto_a_cobrar=0;	
+		boolean bandera=false;
+		try {
+			monto_a_cobrar = this.daoviajes.comision_por_recorrido(destino, inicio, viaje.getId_viaje());
+			fail();
+		} catch (ExceptionViajesCompartidos e) {
+			bandera=true;
+		}
+		assertTrue(bandera);
+	}
+	
+	@Test
+	public void testNuevoPasajeroViajeCorrecto2() {
+		//test q hace que 2 pasajeros se postulen al mismo viaje
+		// tambien verifica que el metodo listarPasajerosPorViaje funque bien
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		JSONObject json4= this.crearPostulante();
+		json4.remove("cliente");
+		json4.put("cliente",4);
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		List<PasajeroViaje>l=this.daoviajes.listarPasajerosPorViaje(viaje.getId_viaje());
+		assertEquals(l.size(),2);
+	}
+	
+	@Test
+	public void testNuevoPasajeroViajeINCorrecto1() {
+		//test que envia 2 veces al mismo postulante para un viaje
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		boolean bandera=false;
+		try {
+			this.daoviajes.Cliente_se_postula_en_viaje(json3);
+			fail();
+		} catch (ExceptionViajesCompartidos e) {
+			bandera=true;
+		}
+		assertTrue(bandera);
+	}
+	
+	@Test
+	public void testNuevoPasajeroViajeINCorrecto2() {
+		//test que envia postula al conductor del viaje como pasajero
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		json3.remove("cliente");
+		json3.put("cliente", 2);
+		boolean bandera=false;
+		try {
+			this.daoviajes.Cliente_se_postula_en_viaje(json3);
+			fail();
+		} catch (ExceptionViajesCompartidos e) {
+			bandera=true;
+		}
+		assertTrue(bandera);
+	}
+	
+	@Test
+	public void testNuevoPasajeroViajeINCorrecto3() {
+		//test que se postula a un viaje q no existe
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		json3.remove("viaje");
+		boolean bandera=false;
+		try {
+			this.daoviajes.Cliente_se_postula_en_viaje(json3);
+			fail();
+		} catch (ExceptionViajesCompartidos e) {
+			bandera=true;
+			assertTrue(e.toString(),bandera);
+		}
+		//assertTrue("",bandera);
 	}
 	
 	@SuppressWarnings("unchecked")

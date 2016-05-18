@@ -30,6 +30,7 @@ public class DAOViajes extends DataAccesObject {
     	super();
     }
     
+    //by mufa
     public boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{	//tiene tests
     	
     	/* estructura del JSON datos:
@@ -84,7 +85,7 @@ public class DAOViajes extends DataAccesObject {
     	return true;
     }
     
-    /*
+    /* //comentado por mufa
 	public Cliente getConductorViaje(Integer id_viaje) {
                 //agregado de fede
                 Cliente conductor = new Cliente();
@@ -114,17 +115,9 @@ public class DAOViajes extends DataAccesObject {
                 //fin agregado fede
 		
 	}
-
+	
+	//by mufa
 	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {		//tiene tests
-		/*
-		 * crear viaje, crear localidad_viaje para orige,destino,puntos intermedio
-		 * asignar vehiculo, si tiene vuelta crear viaje de vuelta con los puntos invertidos y la fecha especificada
-		 * linkear viaje de ida con viaje de vuelta
-		 * asignar estado no_iniciado
-		 * asignar conductor, nombre amigable, fecha,tipo_viaje, costo,asientos,
-		 * asignar maneja
-		 * 
-		 */
 		/*
 		EL JSON QUE RECIBE EL METODO TENDRIA LA SIGUIENTE FORMA:
 		 { "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
@@ -237,25 +230,13 @@ public class DAOViajes extends DataAccesObject {
 		return 2.2;
 	}
 	
-	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){
-		//podria ser resuelto por un buscar por pk compuesta en el DAO general
-		//agregado fede
-		/*
-                Maneja conductor_vehiculo = new Maneja();    
-                Query qry = entitymanager.createNamedQuery("Maneja.SearchById");
-    		qry.setParameter("id_cliente",id_cliente);
-                qry.setParameter("id_vehiculo",id_vehiculo);
-    		conductor_vehiculo =(Maneja)qry.getSingleResult();
-                
-                
-		return conductor_vehiculo;
-		*/
-		//NO TE ENOJES FEDE, ESTE ESTA PROBADO, SI QUIERES PROBA EL TUYO Y REEMPLAZA A ESTE
+	//by mufa
+	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){ //tiene test
 		Maneja maneja=(Maneja) this.buscarPorIDCompuesta("Maneja",id_cliente,id_vehiculo);
 		return maneja;
-                //fin fede
 	}
 	
+	//by mufa
 	public Cliente getConductorViaje(Integer id_viaje){		//tiene test
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
@@ -265,6 +246,7 @@ public class DAOViajes extends DataAccesObject {
 		}	
 	}
 	
+	//by mufa
 	public Vehiculo getVehiculoViaje(Integer id_viaje){		//tiene test
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
@@ -274,7 +256,8 @@ public class DAOViajes extends DataAccesObject {
 		}
 	}
 	
-	public boolean Cliente_se_postula_en_viaje(JSONObject json) throws ExceptionViajesCompartidos{//no testeado todavia
+	//by mufa
+	public boolean Cliente_se_postula_en_viaje(JSONObject json) throws ExceptionViajesCompartidos{// tiene test
 		/*
 		 * JSON{
 		 * "CLIENTE":ID_CLIENTE,
@@ -283,14 +266,7 @@ public class DAOViajes extends DataAccesObject {
 		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
 		 * } 
 		 */
-		/*
-		 * recuperar cliente
-		 * recuperar viaje
-		 * viaje.addpasajero(cliente, localidad subida, localidad bajada)
-		 * dao.notificar_usuario()
-		 * crear_comision_por_pasajero estado pendiente
-		 * 
-		 */
+		
 		Integer id_cliente= (Integer) json.get("cliente");
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
@@ -299,7 +275,10 @@ public class DAOViajes extends DataAccesObject {
 		Integer id_viaje = (Integer) json.get("viaje");
 		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
-			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRAD");
+			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRADO");
+		}
+		if( viaje.recuperar_pasajeroViaje_por_cliente(cliente) != null ){
+			throw new ExceptionViajesCompartidos("ERROR: YA ESTAS POSTULADO A ESTE VIAJE");
 		}
 		Integer id_subida= (Integer) json.get("localidad_subida");
 		Localidad localidad_subida= (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_subida);
@@ -326,9 +305,9 @@ public class DAOViajes extends DataAccesObject {
 		pasajero.setCliente(cliente);
 		pasajero.setEstado(EstadoPasajeroViaje.postulado);
 		
-		Double km = viaje.calcularKM(localidad_subida,localidad_bajada); 
-		pasajero.setKilometros(km);			
-		pasajero.setComision(null);			
+		Double km = viaje.calcularKM(localidad_subida,localidad_bajada);
+		pasajero.setKilometros(km);
+		pasajero.setComision(null);
 		
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
 		
@@ -369,16 +348,18 @@ public class DAOViajes extends DataAccesObject {
 		return true;
 	}
 
-	public Integer comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje){
-
-		// TODO Auto-generated method stub
-		/*
-		 * levantar viaje
-		 * viaje.devolver_recorrido(inicio, destino)
-		 * calcular distancia
-		 * buscar comision y precio
-		 */
-		return null;
+	//by mufa
+	public float comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje) throws ExceptionViajesCompartidos{	//tiene test
+		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRADO");
+		}
+		if (!viaje.contiene_localidades_en_orden(inicio, destino) ){
+			throw new ExceptionViajesCompartidos("ERROR: LAS LOCALIDADES NO EXISTEN O NO ESTAN EN ORDEN");
+		}
+		Double km = viaje.calcularKM(inicio,destino);
+		ComisionCobrada comisionCobrada = Comision.NuevaComisionCobrada(km);
+		return comisionCobrada.getMonto();
 	}
 	
 	public Viaje getViajeById(Integer id_viaje) {
@@ -386,20 +367,18 @@ public class DAOViajes extends DataAccesObject {
 		viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		return viaje;
 	}
+	
 	public List<Viaje> buscarViajes(JSONObject busqueda){
 		// TODO Auto-generated method stub
 		//crear query (campos obligatorios: origen, destino,fecha_desde)
-		
 		
 		
 		return null;
 	}
 	
 	public List<PasajeroViaje> listarPasajerosPorViaje(Integer id_viaje) {
-		//recupero viaje
-		//viaje.get_lista_pasajeros()
-		// TODO Auto-generated method stub
-		return null;
+		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		return viaje.getPasajeros();
 	}
 
 	public List<Viaje> listarViajesPorConductor(Integer id_conductor) {
@@ -409,9 +388,14 @@ public class DAOViajes extends DataAccesObject {
 		return (List<Viaje>)qry.getResultList();
 	}
 
-	public void nombreAmigablePorViaje(Integer id_viaje) {
-		// TODO Auto-generated method stub
-		
+	//by mufa
+	public String nombreAmigablePorViaje(Integer id_viaje) {
+		Viaje v=(Viaje)this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(v==null){
+			return null;
+		}else{
+			return  v.getNombre_amigable();
+		}
 	}
 
 	public void aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) {
@@ -428,17 +412,8 @@ public class DAOViajes extends DataAccesObject {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public List<Notificacion> notificacionesPorCliente(Integer id_cliente){
-		//TODO
-		return null;
-	}
-	
-	public boolean tieneNotificaciones(Integer id_cliente){
-		//TODO
-		return false;
-	}
 
+	//by mufa
 	//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
 	@Deprecated		//le puse q es deprecated para q no lo vaya a usar sin querer y hacer boleta la BD jjajajajaja
 	public void borrarRelacionesEntreViajes() {

@@ -91,8 +91,6 @@ public class Viaje implements JSONable {
 		cliente.setLocalidad_bajada(this.contiene_localidad(bajada));
 		cliente.setLocalidad_subida(this.contiene_localidad(subida));
 		cliente.setViaje(this);
-		
-		// TODO
 		return true;
 	}
 	
@@ -143,7 +141,11 @@ public class Viaje implements JSONable {
 	}
 	
 	public PasajeroViaje recuperar_pasajeroViaje_por_cliente(Cliente cliente){
-		// TODO
+		for(PasajeroViaje pv: this.pasajeros){
+			if(pv.getCliente().getId_usuario()==cliente.getId_usuario()){
+				return pv;
+			}
+		}
 		return null;
 	}
 	
@@ -419,5 +421,4 @@ public class Viaje implements JSONable {
 		}
 		return false;
 	}
-
 }
