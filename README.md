@@ -31,7 +31,7 @@ Dentro del directorio del sitio es necesario que existan los siguientes archivos
 *    org.eclipse.persistence.jpa.modelgen.source_2.5.2.v20140319-9ad6abd.jar
 *    org.eclipse.persistence.jpars_2.5.2.v20140319-9ad6abd.jar
 *    org.eclipse.persistence.jpars.source_2.5.2.v20140319-9ad6abd.jar
-
+*    eclipselink.jar
 
 
 ## NOTAS SOBRE EL CODIGO:
