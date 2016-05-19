@@ -82,12 +82,12 @@ VALUES (NULL, 'Mi primer viaje', '1', '0', '2016-05-15 00:00:00', '2016-05-10 00
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio) 
 VALUES (NULL, 'viaje re loco', '2', '3', '2016-04-18 00:00:00', '2016-04-10 00:00:00',NULL, '2016-04-13 00:00:00', '4', '6', '2016-05-01', NULL, '125');
 -- localidades de viajes
-INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente) 
-VALUES ('1', '3430988', '0', '10'), ('1', '3433781', '0', '10'), ('1', '3429980', '0', '0');
-INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente) 
-VALUES ('2', '3430988', '0', '10'), ('2', '3433781', '0', '0');
-INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente) 
-VALUES ('3', '3430987', '0', '10'), ('3', '3433780', '0', '10'), ('3', '3429979', '0', '0');
-INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente) 
-VALUES ('4', '3430977', '0', '5'), ('4', '3430978', '0', '5'), ('4', '3430979', '0', '5');
+INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal) 
+VALUES ('1', '3430988', '0', '10','1'), ('1', '3433781', '0', '10','2'), ('1', '3429980', '0', '0','3');
+INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal) 
+VALUES ('2', '3430988', '0', '10','1'), ('2', '3433781', '0', '0','2');
+INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal) 
+VALUES ('3', '3430987', '0', '10','1'), ('3', '3433780', '0', '10','2'), ('3', '3429979', '0', '0','3');
+INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal) 
+VALUES ('4', '3430977', '0', '5','1'), ('4', '3430978', '0', '5','2'), ('4', '3430979', '0', '5','3');
 

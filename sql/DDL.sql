@@ -206,7 +206,9 @@ CREATE TABLE LOCALIDAD_VIAJE (
 	id_localidad INTEGER NOT NULL,
 	cantidad_pasajeros INTEGER NOT NULL,
     kms_a_localidad_siguiente long NOT NULL,
+    ordinal INTEGER NOT NULL,
 
+	unique(id_viaje,id_localidad),
 	PRIMARY KEY (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje),
 	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad)

@@ -28,6 +28,8 @@ public class LocalidadViaje {
 	protected Localidad localidad;
 	@Column(nullable=false,name="CANTIDAD_PASAJEROS")
 	protected Integer cantidad_pasajeros;
+	@Column(nullable=false,name="ORDINAL")
+	protected Integer ordinal;
 	@Column(nullable=false,name="KMS_A_LOCALIDAD_SIGUIENTE")
 	protected Double kms_a_localidad_siguiente;
 	
@@ -93,6 +95,14 @@ public class LocalidadViaje {
 
 	public void setPasajeros_subieron(List<PasajeroViaje> pasajeros_subieron) {
 		this.pasajeros_subieron = pasajeros_subieron;
+	}
+
+	public Integer getOrdinal() {
+		return ordinal;
+	}
+
+	public void setOrdinal(Integer ordinal) {
+		this.ordinal = ordinal;
 	}
 	
 }

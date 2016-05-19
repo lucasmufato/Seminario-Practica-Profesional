@@ -159,15 +159,39 @@ public class DAOViajes extends DataAccesObject {
 		Viaje viaje= new Viaje();
 		viaje.setConductor_vehiculo(maneja);
 		//seteo los otros datos
-		viaje.setFecha_inicio((Timestamp) datos.get("fecha_inicio"));
+		Timestamp fecha_inicio= (Timestamp) datos.get("fecha_inicio");
+		if(fecha_inicio==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE FECHA DE INICIO");
+		}
+		viaje.setFecha_inicio(fecha_inicio);
 		viaje.setFecha_alta(new Timestamp((new java.util.Date()).getTime()));
 		viaje.setFecha_cancelacion(null);
 		viaje.setFecha_finalizacion(null);
-		viaje.setEstado(EstadoViaje.no_iniciado);		//falta hacer los enum	
+		viaje.setEstado(EstadoViaje.no_iniciado);
 		
-		viaje.setAsientos_disponibles((Integer) datos.get("cantidad_asientos"));
-		viaje.setNombre_amigable((String) datos.get("nombre_amigable"));
-		//viaje.setCosto_viaje((String)datos.get("costo_viaje"));		//falta en viaje
+		Integer cantidad_asientos = (Integer) datos.get("cantidad_asientos");
+		if(cantidad_asientos==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES");
+		}
+		if (cantidad_asientos>maneja.getVehiculo().getCantidad_asientos()){
+			throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO");
+		}
+		viaje.setAsientos_disponibles(cantidad_asientos);
+		String nombre_amigable = (String) datos.get("nombre_amigable");
+		if(nombre_amigable==null){
+			nombre_amigable="Viaje sin nombre "+fecha_inicio.toString();
+		}
+		viaje.setNombre_amigable(nombre_amigable);
+		Float precio=null;
+		try{
+			precio =new Float((Double) datos.get("precio") );
+		}catch(ClassCastException e){
+			precio = Float.intBitsToFloat((Integer) datos.get("precio") );
+		}
+		if(precio==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE PRECIO O NO SE PUDO INTERPRETAR EL FORMATO");
+		}
+		viaje.setPrecio(precio);
 		
 		//creo el recorrido (lista de localidades) que tiene el viaje
 		// le JSON datos tiene un JSON que se llama localidades, q tiene origen, destino y todos los puntos intermedios
@@ -185,17 +209,28 @@ public class DAOViajes extends DataAccesObject {
 		}
 		JSONArray intermedios = (JSONArray) localidades.get("intermedios");
 		ArrayList<Localidad> recorrido= new ArrayList<Localidad>();
-		//armo la lista de localidades en ORDEN
-		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_origen) );
+		//armo la lista de localidades en ORDEN, el ordinal lo pone el viaje
+		Localidad origen= (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_origen);
+		if(origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL ORIGEN NO EXISTE EN EL SISTEMA");
+		}
+		recorrido.add(origen);
 		if(intermedios!=null){
 			for(Object o: intermedios){
-				recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), o) );			
+				origen =(Localidad) this.buscarPorPrimaryKey(new Localidad(), o);
+				if(origen==null){
+					throw new ExceptionViajesCompartidos("ERROR: UN PUNTO INTERMEDIO NO EXISTE EN EL SISTEMA (NOSE CUAL :-( )");
+				}
+				recorrido.add( origen );			
 			}
 		}
-		recorrido.add( (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino) );
+		origen=(Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino); //cambio el origen por el destino, mantengo la variable
+		if(origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL DESTINO NO EXISTE EN EL SISTEMA");
+		}
+		recorrido.add(origen);
 		viaje.crearRecorrido(recorrido);
 		
-		//TODO parte para asignarle a cada localidad la distancia con la siguiente
 		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
 		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
 			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
@@ -236,6 +271,7 @@ public class DAOViajes extends DataAccesObject {
 		return true;
 	}
 	
+	//by pablo
 	protected Double distanciaEntreLocalidades(Localidad localidad1, Localidad localidad2){
 		GeoApiContext context = new GeoApiContext ();
 

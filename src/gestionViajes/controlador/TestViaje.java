@@ -686,6 +686,7 @@ public class TestViaje extends TestCase {
 		json2.put("cliente", 2);
 		json2.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
 		json2.put("cantidad_asientos", 2);
+		json2.put("precio", 50);
 		json2.put("nombre_amigable", "prueba viaje");
 		JSONObject localidades= new JSONObject();
 		localidades.put("origen",3427200 );
