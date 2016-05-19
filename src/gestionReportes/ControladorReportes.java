@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,17 +111,32 @@ public class ControladorReportes extends HttpServlet {
 			respuesta.put("result", false);
 			return respuesta;
 		}
-		//relleno con datos
+		// tomo parametros de la web y relleno reporte con datos
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("id_viaje_desde", "1");
-		parameters.put("id_viaje_hasta", "5");
-		Date date = new java.sql.Date(new java.util.Date().getTime());
-		parameters.put("fecha_desde", "2016-04-17");
-		parameters.put("fecha_hasta", date);
-		parameters.put("conductor", "j");
-		parameters.put("precio_desde", 5);
-		parameters.put("precio_hasta", 100);
+		
+		String conductor = request.getParameter("data[conductor]");
+		Integer id_desde = parsearInteger(request.getParameter("data[id_desde]"));
+		Integer id_hasta = parsearInteger(request.getParameter("data[id_hasta]"));
+		java.sql.Date fecha_desde = parsearFecha(request.getParameter("data[fecha_desde]"));
+		java.sql.Date fecha_hasta = parsearFecha(request.getParameter("data[fecha_hasta]"));
+		Double km_desde = parsearDouble(request.getParameter("data[km_desde]"));
+		Double km_hasta = parsearDouble(request.getParameter("data[km_hasta]"));
+		Float precio_desde = parsearFloat(request.getParameter("data[precio_desde]"));
+		Float precio_hasta = parsearFloat(request.getParameter("data[precio_hasta]"));
+		Integer pasajeros_desde = parsearInteger(request.getParameter("data[pasajeros_desde]"));
+		Integer pasajeros_hasta = parsearInteger(request.getParameter("data[pasajeros_hasta]"));
 
+		parameters.put("id_viaje_desde", id_desde);
+		parameters.put("id_viaje_hasta", id_hasta);
+		parameters.put("fecha_desde", fecha_desde);
+		parameters.put("fecha_hasta", fecha_hasta);
+		parameters.put("conductor", conductor);
+		parameters.put("precio_desde", precio_desde);
+		parameters.put("precio_hasta", precio_hasta);
+		parameters.put("km_desde", km_desde);
+		parameters.put("km_hasta", km_hasta);
+		parameters.put("pasajeros_desde", pasajeros_desde);
+		parameters.put("precio_hasta", pasajeros_hasta);
 		
 		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
 		if (jasperPrint == null){
@@ -143,6 +159,37 @@ public class ControladorReportes extends HttpServlet {
 		return respuesta;
 	}
 
+	private Integer parsearInteger(String valor) {
+		try{
+			return Integer.parseInt(valor);
+		}catch(NumberFormatException e){
+			return null;
+		}
+	}
+	private Float parsearFloat(String valor) {
+		try{
+			return Float.parseFloat(valor);
+		}catch(NumberFormatException e){
+			return null;
+		}
+	}
+	private Double parsearDouble(String valor) {
+		try{
+			return Double.parseDouble(valor);
+		}catch(NumberFormatException e){
+			return null;
+		}
+	}
+	private java.sql.Date parsearFecha(String valor) {
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date;
+		try {
+			date = formato.parse(valor);
+		} catch (ParseException e) {
+			return null;
+		}
+		return new java.sql.Date(date.getTime());  
+	}
 	private boolean existeReporteCompilado(String reportFileName) {
 		File reportFile = new File(reportFileName);
 		return reportFile.exists();
