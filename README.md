@@ -32,6 +32,16 @@ Dentro del directorio del sitio es necesario que existan los siguientes archivos
 *    org.eclipse.persistence.jpars_2.5.2.v20140319-9ad6abd.jar
 *    org.eclipse.persistence.jpars.source_2.5.2.v20140319-9ad6abd.jar
 *    eclipselink.jar
+//jasper reports requiere tambien:
+*	commons-beanutils-1.9.0.jar
+*	commons-collections-3.2.1.jar
+*	commons-digester-2.1.jar
+*	commons-logging-1.1.1.jar
+*	groovy-all-2.4.3.jar
+*	itext-2.1.7.js4.jar
+*	jasperreports-6.2.0.jar
+*	jfreechart-1.0.19.jar // este me parece que se me coló pero lo pongo igual
+*	poi-3.10.1.jar
 
 
 ## NOTAS SOBRE EL CODIGO:
