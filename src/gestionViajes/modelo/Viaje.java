@@ -43,21 +43,22 @@ public class Viaje implements JSONable {
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorViaje", sequenceName = "sequence")
 	@Column(name="ID_VIAJE")
 	protected Integer id_viaje;
-	@Column(nullable=false,length=30)
+	@Column(nullable=false,length=30,name="NOMBRE_AMIGABLE")
 	protected String nombre_amigable;
-	@Column(nullable=false)
+	@Column(nullable=false,name="ASIENTOS_DISPONIBLES")
 	protected Integer asientos_disponibles;
-	@Column(nullable=false)
+	@Column(nullable=false,name="ESTADO")
 	protected EstadoViaje estado;
-	@Column(nullable=false)
+	@Column(nullable=false,name="FECHA_INICIO")
 	protected Timestamp fecha_inicio;
-	@Column(nullable=false)
+	@Column(nullable=false,name="FECHA_ALTA")
 	protected Timestamp fecha_alta;
-	@Column(nullable=true)
+	@Column(nullable=true,name="FECHA_FINALIZACION")
 	protected Timestamp fecha_finalizacion;
-	@Column(nullable=true)
+	@Column(nullable=true,name="FECHA_CANCELACION")
 	protected Timestamp fecha_cancelacion;
-
+	@Column(nullable=true,name="PRECIO")
+	protected Float precio;
 	@JoinColumns ({
 		@JoinColumn(name="id_cliente", referencedColumnName="id_cliente"),
 		@JoinColumn(name="id_vehiculo", referencedColumnName="id_vehiculo"),
@@ -73,11 +74,14 @@ public class Viaje implements JSONable {
 	@OneToOne(cascade=CascadeType.PERSIST)
 	protected Viaje viaje_complementario;
 	
-	
+	//by mufa
 	public boolean crearRecorrido(List<Localidad> arreglo_de_localidades){
+		Integer ordinal=1;
 		for(Localidad l: arreglo_de_localidades){
 			LocalidadViaje lv = new LocalidadViaje(this,l);
+			lv.setOrdinal(ordinal);
 			this.localidades.add(lv);
+			ordinal++;
 		}
 		return true;
 	}
@@ -86,6 +90,7 @@ public class Viaje implements JSONable {
 		// TODO		nose de donde salio este metodo(lucas)
 	}
 	
+	//by mufa
 	public boolean aniadir_pasajeroViaje (PasajeroViaje cliente, Localidad subida, Localidad bajada) throws ExceptionViajesCompartidos{
 		this.pasajeros.add(cliente);
 		cliente.setLocalidad_bajada(this.contiene_localidad(bajada));
@@ -94,6 +99,7 @@ public class Viaje implements JSONable {
 		return true;
 	}
 	
+	//by mufa
 	public LocalidadViaje contiene_localidad(Localidad localidad){
 		//recorro la lista de localidadesViaje, comparando por id, si tiene la localidad, te devuelve LocalidadViaje
 		Integer cantidad_iteraciones= this.localidades.size();
@@ -107,6 +113,7 @@ public class Viaje implements JSONable {
 		return null;
 	}
 	
+	//by mufa
 	//metodo que devuelve la cantidad de KM o metros, que tiene una parte o todo un recorrido,
 	public Double calcularKM(Localidad localidad_subida, Localidad localidad_bajada) throws ExceptionViajesCompartidos {
 		if( !this.contiene_localidades_en_orden(localidad_subida, localidad_bajada) ){
@@ -140,6 +147,7 @@ public class Viaje implements JSONable {
 		return null;
 	}
 	
+	//by mufa
 	public PasajeroViaje recuperar_pasajeroViaje_por_cliente(Cliente cliente){
 		for(PasajeroViaje pv: this.pasajeros){
 			if(pv.getCliente().getId_usuario()==cliente.getId_usuario()){
@@ -149,6 +157,7 @@ public class Viaje implements JSONable {
 		return null;
 	}
 	
+	//by mufa
 	public List<Localidad> recuperarOrigenYDestino(){
 		List<Localidad> origenDestino = new ArrayList<Localidad>();
 		origenDestino.add( this.localidades.get(0).getLocalidad() );
@@ -229,6 +238,14 @@ public class Viaje implements JSONable {
 		this.estado = estado;
 	}
 
+	public float getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(float precio) {
+		this.precio = precio;
+	}
+
 	public void setFecha_finalizacion(Timestamp fecha_finalizacion) {
 		this.fecha_finalizacion = fecha_finalizacion;
 	}
@@ -299,8 +316,6 @@ public class Viaje implements JSONable {
 
 	@Override
 	public void SetJSONObject(JSONObject json) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -308,7 +323,7 @@ public class Viaje implements JSONable {
 		JSONObject json_viaje = new JSONObject();
 		json_viaje.put("id", this.getId_viaje());
 		json_viaje.put("nombre_amigable", this.getNombre_amigable());
-		json_viaje.put("estado", this.getEstado().toString());
+		json_viaje.put("estado", (this.getEstado().toString()!= null)? this.getEstado().toString(): null);
 		if (this.getViaje_complementario() == null) {
 			json_viaje.put("tipo", "ida");
 		} else {
@@ -329,20 +344,20 @@ public class Viaje implements JSONable {
 		json_viaje.put("fecha_alta", (this.getFecha_alta() != null)? this.getFecha_alta().toString(): null);
 		json_viaje.put("fecha_cancelacion", (this.getFecha_cancelacion() != null)? this.getFecha_cancelacion().toString(): null);
 		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion() != null)? this.getFecha_finalizacion().toString(): null);
+		json_viaje.put("precio",this.getPrecio());
+		json_viaje.put("cantidad_pasajeros",this.pasajeros.size());
 		/* NOTAS: 
-			agregar precio,
-			hora debe estar dentro de fecha
-			cantidad de pasajeros
+			//TODO hora debe estar dentro de fecha
 		*/
 		return json_viaje;
 	}
 
 	@Override
 	public Object getPrimaryKey() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	//by mufa
 	public void crearTuVuelta(JSONObject vuelta) throws ExceptionViajesCompartidos {
 		Viaje mi_vuelta = new Viaje();
 		//le pongo al viaje los datos que llegan desde el JSON
@@ -366,6 +381,7 @@ public class Viaje implements JSONable {
 		}
 		mi_vuelta.setFecha_alta(new Timestamp((new java.util.Date()).getTime()));
 		// le pongo al viaje los datos propios que se repiten
+		
 		mi_vuelta.setConductor_vehiculo(this.getConductor_vehiculo());
 		mi_vuelta.setEstado(EstadoViaje.no_iniciado);
 		mi_vuelta.setFecha_cancelacion(null);
@@ -395,7 +411,8 @@ public class Viaje implements JSONable {
 		//lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
 		
 	}
-
+	
+	//by mufa
 	public boolean contiene_localidades_en_orden(Localidad primer_localidad, Localidad segunda_localidad) {
 		//si el primero == segundo, va a decir q estan en orden
 		boolean encontre_primero=false;
