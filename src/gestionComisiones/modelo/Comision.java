@@ -23,16 +23,16 @@ import otros.JSONable;
 	
 })
 @Entity
-@Table(name="comision")
+@Table(name="COMISION")
 public class Comision implements JSONable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorComision")
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorComision", sequenceName = "sequence")
 	protected Integer id_comision;
-	@Column(nullable=false)
+	@Column(nullable=false,name="LIMITE_SUPERIOR")
 	protected float limite_superior;
-	@Column(nullable=false)
+	@Column(nullable=false,name="LIMITE_INFERIOR")
 	protected float limite_inferior;
 	
 	@JoinColumn(name="PRECIO_COMISION")
@@ -95,8 +95,6 @@ public class Comision implements JSONable {
 
 	@Override
 	public void SetJSONObject(JSONObject json) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -107,7 +105,6 @@ public class Comision implements JSONable {
 
 	@Override
 	public Object getPrimaryKey() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

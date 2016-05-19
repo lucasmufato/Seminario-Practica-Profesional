@@ -442,9 +442,15 @@ public class DAOViajes extends DataAccesObject {
 		return viaje;
 	}
 	
-	public List<Viaje> buscarViajes(JSONObject busqueda){
+	public List<Viaje> buscarViajes(JSONObject busqueda) throws ExceptionViajesCompartidos{
 		// TODO Auto-generated method stub
 		//crear query (campos obligatorios: origen, destino,fecha_desde)
+		// otros campos: fecha hasta, conductor, cantidad_asientos, estado_viaje
+		
+		Integer id_origen = (Integer) busqueda.get("");
+		if(id_origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL ORIGEN");
+		}
 		
 		
 		return null;
