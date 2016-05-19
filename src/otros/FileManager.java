@@ -12,9 +12,14 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
+
 public class FileManager {
 	
-	private static String directorioRaiz = "upload/";
+	private static String directorioRaiz = "/upload/";
+	private static String directorioReportes = "/reportes/upload/";
 	
 	public static String uploadImage(String pathReal, String img){
 		// si no existe directorio, lo creo
@@ -35,14 +40,43 @@ public class FileManager {
 			return "";
 		}
 	}
+	
+	public static String uploadPdf(String pathReal, JasperPrint jasperPrint){
+		// si no existe directorio, lo creo
+		createDirectory(pathReal,directorioReportes);
+		
+		// Seteo pdf con nombre generado, formato y el path relativo
+		String imgName = generateFileName();
+		String imgFormat = ".pdf";
+		String pathRelativo = directorioReportes+imgName+imgFormat;
+		if (generarPdf(jasperPrint,pathReal+pathRelativo)){
+			return pathRelativo;
+		}else{
+			return "";
+		}
+	}
+
+	private static boolean generarPdf(JasperPrint jasperPrint,
+		String pathCompleto) {
+		// Genero archivo donde se guardara el pdf
+		File f = new File(pathCompleto);
+		try {
+			JasperExportManager.exportReportToPdfFile(jasperPrint,pathCompleto);
+			return true;
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public static boolean modifyImage(String realPath, String archivo) {
 		File file = new File(realPath+archivo);
 		return file.delete();
 	}
 	
-	private static void createDirectory(String pathReal, String directorioRaiz) {
-		File directorio = new File(pathReal+directorioRaiz);
+	private static void createDirectory(String pathRealRaiz, String pathSave) {
+		File directorio = new File(pathRealRaiz+pathSave);
 		if (!directorio.exists()){
 		    try{
 		        directorio.mkdir();

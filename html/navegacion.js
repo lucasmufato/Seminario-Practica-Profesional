@@ -7,15 +7,15 @@ var toggleSidebar = function () {
 var addNavegacion = function () {
 	var nav = document.createElement('NAV');
 	$(nav).addClass('navbar navbar-fixed-top');
-	$(nav).load('navegacion.html #common-navbar');
+	$(nav).load('/navegacion.html #common-navbar');
 
 	var sidebar = document.createElement('SIDEBAR');
-	$(sidebar).load('navegacion.html #common-sidebar');
+	$(sidebar).load('/navegacion.html #common-sidebar');
 
 	var modal = document.createElement('DIV');
-	$(modal).load('navegacion.html #common-modal');
+	$(modal).load('/navegacion.html #common-modal');
 
-	//$.getScript( "permisos.js");
+	//$.getScript( "/permisos.js");
 	$('body').prepend (sidebar);
 	$('body').prepend (nav);
 	$('body').append (modal);
