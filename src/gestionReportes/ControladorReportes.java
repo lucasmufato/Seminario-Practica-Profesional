@@ -1,13 +1,14 @@
 package gestionReportes;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,8 +112,16 @@ public class ControladorReportes extends HttpServlet {
 		}
 		//relleno con datos
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		//parameters.put("my_query", "select * from viaje v where v.id_viaje = 1");
+		parameters.put("id_viaje_desde", "1");
+		parameters.put("id_viaje_hasta", "5");
+		Date date = new java.sql.Date(new java.util.Date().getTime());
+		parameters.put("fecha_desde", "2016-04-17");
+		parameters.put("fecha_hasta", date);
+		parameters.put("conductor", "j");
+		parameters.put("precio_desde", 5);
+		parameters.put("precio_hasta", 100);
 
+		
 		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
 		if (jasperPrint == null){
 			respuesta.put("msg", "No se pudo rellenar el reporte con datos");
