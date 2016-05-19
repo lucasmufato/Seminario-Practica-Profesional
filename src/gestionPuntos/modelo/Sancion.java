@@ -2,9 +2,16 @@ package gestionPuntos.modelo;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import gestionUsuarios.modelo.Cliente;
@@ -13,18 +20,33 @@ import gestionUsuarios.modelo.Cliente;
 	
 })
 @Entity
-@Table(name="sancion")
+@Table(name="SANCION")
 public class Sancion {
 	
 	@Id
+	@Column(nullable=false,name="ID_SANCION")
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorSancion")
+	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorSancion", sequenceName = "sequence")
 	protected Integer id_sancion;
-	
+	@Column(nullable=false,name="FECHA_INICIO")
 	protected Date fecha_inicio;
+	@Column(nullable=false,name="FECHA_FIN")
 	protected Date fecha_fin;
 	
+
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name="ID_CLIENTE")
 	protected Cliente cliente;
+
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name="ID_MOVIMIENTO_PUNTOS")
 	protected MovimientoPuntos movimiento_puntos;
+
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name="ID_TIPO_SANCION")
 	protected TipoSancion tipo_sancion;
+	
+	@Column(nullable=false,name="ESTADO")
 	protected EstadoSancion estado;
 	
 	public Sancion(){

@@ -2,23 +2,35 @@ package gestionPuntos.modelo;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @NamedQueries({
 	
 })
 @Entity
-@Table(name="tipo_sancion")
+@Table(name="TIPO_SANCION")
 public class TipoSancion {
 
 	@Id
+	@Column(nullable=false,name="ID_TIPO_SANCION")
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorTipoSancion")
+	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorTipoSancion", sequenceName = "sequence")
 	protected Integer id_tipo_sancion;
+	@Column(nullable=false,length=255,name="DESCRIPCION")
 	protected String descripcion;
+	@Column(nullable=false,name="DIAS_SANCION")
 	protected Integer dias_sancion;
 	
+	@OneToMany(mappedBy="tipo_sancion", cascade=CascadeType.PERSIST)
 	protected List<Sancion> sanciones;
 	
 	public TipoSancion(){

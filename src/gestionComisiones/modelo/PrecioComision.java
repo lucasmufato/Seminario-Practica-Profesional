@@ -25,6 +25,7 @@ import otros.JSONable;
 public class PrecioComision implements JSONable {
 
 	@Id
+	@Column(nullable=false,name="ID_COMISION")
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorPrecioComision")
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorPrecioComision", sequenceName = "sequence")
 	protected Integer id_comision;
