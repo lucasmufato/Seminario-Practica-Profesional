@@ -4,20 +4,22 @@ var clientes = [];
 var loadData = function() {
 
 	var sendData = {
-		action: "ver_mis_vehiculos"
+		action: "ver_mis_vehiculos",
+		entity: "vehiculo"
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();
 			vehiculos = jsonData.vehiculos;
-			if (postulantes) {
+			clientes = jsonData.clientes;
+			if (vehiculos && vehiculos.length) {
 				cargarVehiculos();
 			}
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;// si no es conductor de este viaje, acceso denegado
 		}
 	}
-	simular();
+	//simular();
 	
 	sendAjax(sendData,onsuccess);
 }
@@ -54,9 +56,9 @@ var simular = function(){
 		seguro: "si",
 		aire: "si",
 		cantidad_asientos: "4",
-		cliente_vinculado: ["48"],
-		foto_vehiculo: "http://www.coches.com/fotos_historicas/ford/Focus/med_ford_focus-2014_r3.jpg.pagespeed.ce.JW0wSPihZv.jpg",
-		vehiculo_verificado: "s"
+		conductores: ["48"],
+		foto: "http://www.coches.com/fotos_historicas/ford/Focus/med_ford_focus-2014_r3.jpg.pagespeed.ce.JW0wSPihZv.jpg",
+		verificado: "S"
 	},{
 		id: "11",
 		marca: "ford",
@@ -67,9 +69,9 @@ var simular = function(){
 		seguro: "si",
 		aire: "si",
 		cantidad_asientos: "4",
-		cliente_vinculado: ["48","15"],
-		foto_vehiculo: "https://www.16valvulas.com.ar/wp-content/uploads/2007/10/ford-focus-2008.jpg",
-		vehiculo_verificado: "n"
+		conductores: ["48","15"],
+		foto: "https://www.16valvulas.com.ar/wp-content/uploads/2007/10/ford-focus-2008.jpg",
+		verificado: "N"
 	},{
 		id: "21",
 		marca: "ford",
@@ -80,9 +82,9 @@ var simular = function(){
 		seguro: "si",
 		aire: "si",
 		cantidad_asientos: "4",
-		cliente_vinculado: ["48","34"],
-		foto_vehiculo: "https://www.16valvulas.com.ar/wp-content/uploads/2007/10/ford-focus-2008.jpg",
-		vehiculo_verificado: "n"
+		conductores: ["48","34"],
+		foto: "https://www.16valvulas.com.ar/wp-content/uploads/2007/10/ford-focus-2008.jpg",
+		verificado: "N"
 	},{
 		id: "31",
 		marca: "ford",
@@ -93,9 +95,9 @@ var simular = function(){
 		seguro: "si",
 		aire: "si",
 		cantidad_asientos: "4",
-		cliente_vinculado: ["48","15","34"],
-		foto_vehiculo: "https://www.16valvulas.com.ar/wp-content/uploads/2007/10/ford-focus-2008.jpg",
-		vehiculo_verificado: "s"
+		conductores: ["48","15","34"],
+		foto: "https://www.16valvulas.com.ar/wp-content/uploads/2007/10/ford-focus-2008.jpg",
+		verificado: "S"
 	}];
 	if (vehiculos.length) {
 		cargarVehiculos();
@@ -113,7 +115,7 @@ var clientePorId = function(id){
 }
 
 var cargarAsociados = function(elem) {
-	elem.cliente_vinculado.forEach(function(cli){
+	elem.conductores.forEach(function(cli){
 		console.log(clientePorId(cli));
 		html += $("#clientes_asociados").append('<li>'+clientePorId(cli)+'</li>');
 	});
@@ -124,8 +126,11 @@ var cargarVehiculos = function(){
 	var htmlVehiculosVerificados = "";
 	var htmlVehiculosNoVerificados = "";
 	vehiculos.forEach(function(elem){
-		elem.color = panelColor(elem.vehiculo_verificado);
-		if (elem.es_verificado = elem.vehiculo_verificado == "s"){
+		if(!elem.foto) {
+			elem.foto="/img/vehiculo/vehiculo.png";
+		}
+		elem.color = panelColor(elem.verificado);
+		if (elem.es_verificado = elem.verificado == "S"){
 			htmlVehiculosVerificados += Mustache.render(template, elem);
 		}else{
 			htmlVehiculosNoVerificados += Mustache.render(template, elem);
@@ -149,9 +154,8 @@ var cargarVehiculos = function(){
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
-	/*
 	$.ajax({
-		url: '/viaje', 
+		url: '/viajes', 
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -164,7 +168,6 @@ var sendAjax = function(sendData,callback){
 			window.alert (err3);
 		}
 	});
-	*/
 }
 
 var estadoString = function (caracter) {
@@ -189,8 +192,8 @@ var colorPanel = function(caracter){
 
 var panelColor = function (caracter) {
 	switch(caracter) {
-		case 's': return "info";
-		case 'n': return "danger";
+		case 'S': return "info";
+		case 'N': return "danger";
 	}
 }
 
