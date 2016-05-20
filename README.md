@@ -42,6 +42,12 @@ Dentro del directorio del sitio es necesario que existan los siguientes archivos
 *	jasperreports-6.2.0.jar
 *	jfreechart-1.0.19.jar // este me parece que se me coló pero lo pongo igual
 *	poi-3.10.1.jar
+//google maps
+*	google-maps-services-0.1.12.jar
+*	gson-2.6.2.jar
+*	joda-time-2.9.3.jar
+*	okhttp-2.7.5.jar
+*	okio-1.8.0.jar
 
 
 ## NOTAS SOBRE EL CODIGO:
