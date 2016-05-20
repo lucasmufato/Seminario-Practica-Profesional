@@ -99,7 +99,6 @@ var simular = function(){
 	}];
 	if (vehiculos.length) {
 		cargarVehiculos();
-		//cargarAsociados();
 	}
 }
 

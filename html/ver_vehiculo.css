@@ -4,14 +4,21 @@ header h3 {
     padding-bottom: 0.5em;
     margin-top: 1px;
 }
+.panel{
+    background-color: #ecf0f1;
+}
 .tabla input[disabled] {
-	background-color: transparent;
 	border: none;
-	cursor: auto;
-	box-shadow: none;
-	padding: 0;
-	height: auto;
-	color: #000;
+    cursor: auto;
+}
+#cantidad_asientos input[disabled], #seguro input[disabled], #aire_acondicionado input[disabled]{
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+    color: #000;
 }
 .tabla td {
     color: #000;
