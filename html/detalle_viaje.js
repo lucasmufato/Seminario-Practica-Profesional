@@ -156,7 +156,6 @@ var simular = function(json){
 		origen: "324",
 		destino: "880",
 		fecha_inicio: "12/09/2016",
-		hora: "20:30",
 		precio: "30",
 		participantes: "1",
 		recorrido: ["324", "112","880"]
@@ -294,7 +293,6 @@ var cargarViaje = function(){
 	$("#origen").text(localidadNombre (data.viaje.origen));
 	$("#destino").text(localidadNombre (data.viaje.destino));
 	$("#fecha").text(data.viaje.fecha_inicio);
-	$("#hora").text(data.viaje.hora);
 	$("#precio").text("$"+data.viaje.precio);
 	data.viaje.recorrido.forEach(function(elem){
 		$("#recorrido").append('<li>'+localidadNombre(elem)+'</li>');

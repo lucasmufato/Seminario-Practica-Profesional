@@ -24,6 +24,7 @@ var generarReporte = function(){
 	data.pasajeros_desde = $("#reportForm input[name=pasajerosdesde]").val();
 	data.pasajeros_hasta = $("#reportForm input[name=pasajeroshasta]").val();
 	data.conductor = $("#reportForm input[name=conductor]").val();
+	data.estado = $("#reportForm select[name=estado]").val();
 
 	var sendData = {
 		action: "reporte_viajes",

@@ -115,6 +115,7 @@ public class ControladorReportes extends HttpServlet {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		
 		String conductor = request.getParameter("data[conductor]");
+		String estado = request.getParameter("data[estado]");
 		Integer id_desde = parsearInteger(request.getParameter("data[id_desde]"));
 		Integer id_hasta = parsearInteger(request.getParameter("data[id_hasta]"));
 		java.sql.Date fecha_desde = parsearFecha(request.getParameter("data[fecha_desde]"));
@@ -131,6 +132,7 @@ public class ControladorReportes extends HttpServlet {
 		parameters.put("fecha_desde", fecha_desde);
 		parameters.put("fecha_hasta", fecha_hasta);
 		parameters.put("conductor", conductor);
+		parameters.put("estado", estado);
 		parameters.put("precio_desde", precio_desde);
 		parameters.put("precio_hasta", precio_hasta);
 		parameters.put("km_desde", km_desde);
