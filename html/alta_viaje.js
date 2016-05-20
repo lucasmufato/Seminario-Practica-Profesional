@@ -153,6 +153,33 @@ enviarForm = function ()  {
 	return false;
 }
 
+addVehiculosSelectOption = function (vehiculo) {
+	var opt = document.createElement ("OPTION");
+	opt.value = vehiculo.patente;
+	opt.textContent= vehiculo.marca + " " + vehiculo.modelo + " ["+ vehiculo.patente +"]";
+	$('select[name=vehiculo]').append(opt);
+}
+
+cargarVehiculosSelect = function() {
+	var onsuccess = function (jsonData) {
+		var vehiculos = jsonData.vehiculos;
+		if(vehiculos.length) {
+			vehiculos.forEach(function (vehiculo) {
+				addVehiculosSelectOption(vehiculo);
+			});
+		} else {
+			vc.ventana_mensaje("Usted no tiene ningun vehiculo asociado.<br> <a href='/alta_vehiculo.html' class='btn btn-primary'>Nuevo vehiculo</a>");
+		}
+	}
+
+	var sendData = {
+		action: "ver_mis_vehiculos",
+		entity: "vehiculo"
+	}
+
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
+}
+
 window.onload = function () {
 
 	$('#fecha').datetimepicker({
@@ -241,6 +268,7 @@ window.onload = function () {
 		redibujar();
 	});
 
+	cargarVehiculosSelect();
 }
 
 
