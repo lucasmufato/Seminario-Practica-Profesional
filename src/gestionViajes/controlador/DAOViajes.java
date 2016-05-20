@@ -133,12 +133,13 @@ public class DAOViajes extends DataAccesObject {
 		EL JSON QUE RECIBE EL METODO TENDRIA LA SIGUIENTE FORMA:
 		 { "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
 		 "VEHICULO": ID_VEHICULO,
-		 "VIAJE": {FECHA_SALIDA, HS_SALIDA, CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE, COSTO_VIAJE},
-		 "VUELTA": {FECHA_SALIDA,HS_SALIDA,CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE},
-		 "CLIENTE":ID_CLIENTE
+		 "VIAJE": {FECHA_SALIDA, NOMBRE_AMIGABLE, COSTO_VIAJE},
+		 "VUELTA": {FECHA_SALIDA},
+		 "CLIENTE":ID_CLIENTE,
+		 "cantidad_asientos"=asientos,
 		 }
 		*/
-		
+		JSONObject d_viaje= (JSONObject) datos.get("viaje");
 		Integer id_cliente= (Integer) datos.get("cliente");
 		Cliente cliente= (Cliente)this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if (cliente==null){
@@ -153,13 +154,19 @@ public class DAOViajes extends DataAccesObject {
 		if( cliente.puedeManejar(vehiculo)==false ){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
 		}
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
 		this.entitymanager.getTransaction().begin();
 		//pongo quien es el conductor del viaje y en q vehiculo
 		Maneja maneja= this.buscarManeja(cliente, vehiculo);
 		Viaje viaje= new Viaje();
 		viaje.setConductor_vehiculo(maneja);
 		//seteo los otros datos
-		Timestamp fecha_inicio= (Timestamp) datos.get("fecha_inicio");
+		Timestamp fecha_inicio= (Timestamp) d_viaje.get("fecha_inicio");
+		if(fecha_inicio.before(new Timestamp((new java.util.Date()).getTime()))){
+			throw new ExceptionViajesCompartidos("ERROR:LA FECHA DE INICIO NO PUEDE SER ANTERIOR A LA ACTUAL");
+		}
 		if(fecha_inicio==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE FECHA DE INICIO");
 		}
@@ -177,21 +184,41 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO");
 		}
 		viaje.setAsientos_disponibles(cantidad_asientos);
-		String nombre_amigable = (String) datos.get("nombre_amigable");
+		String nombre_amigable = (String) d_viaje.get("nombre_amigable");
 		if(nombre_amigable==null){
 			nombre_amigable="Viaje sin nombre "+fecha_inicio.toString();
 		}
 		viaje.setNombre_amigable(nombre_amigable);
-		Float precio=null;
-		try{
-			precio =new Float((Double) datos.get("precio") );
-		}catch(ClassCastException e){
-			precio = Float.intBitsToFloat((Integer) datos.get("precio") );
-		}
+		
+		Float precio=(Float) d_viaje.get("precio");
 		if(precio==null){
-			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE PRECIO O NO SE PUDO INTERPRETAR EL FORMATO");
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE PRECIO");
+		}
+		if(precio<0){
+			throw new ExceptionViajesCompartidos("ERROR: EL PRECIO NO PUEDE SER NEGATIVO");
 		}
 		viaje.setPrecio(precio);
+		
+		
+		// chequeo los datos de la vuelta
+		JSONObject vuelta=(JSONObject) datos.get("vuelta");
+		if(vuelta!=null){
+			Timestamp fecha_vuelta= (Timestamp) vuelta.get("fecha_inicio");
+			if(fecha_vuelta.before(fecha_inicio)){
+				throw new ExceptionViajesCompartidos("ERROR:LA FECHA DE INICIO DEL VIAJE DE VUELTA NO PUEDE SER ANTERIOR A LA FECHA DEL VIAJE DE IDA");
+			}
+			if(fecha_vuelta==null){
+				throw new ExceptionViajesCompartidos("ERROR: EL VIAJE DE VUELTA NO TIENE FECHA DE INICIO");
+			}
+		}
+		Integer cantidad_asientos_vuelta = (Integer) datos.get("cantidad_asientos");
+		if(cantidad_asientos_vuelta==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES PARA LA VUELTA");
+		}
+		if (cantidad_asientos_vuelta>maneja.getVehiculo().getCantidad_asientos()){
+			throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO PARA LA VUELTA");
+		}
+		
 		
 		//creo el recorrido (lista de localidades) que tiene el viaje
 		// le JSON datos tiene un JSON que se llama localidades, q tiene origen, destino y todos los puntos intermedios
@@ -240,8 +267,9 @@ public class DAOViajes extends DataAccesObject {
 		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
 		
 		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
-		JSONObject vuelta=(JSONObject) datos.get("vuelta");
+		vuelta=(JSONObject) datos.get("vuelta");
 		if(vuelta!=null){ 
+			
 			try{	//SI EL VIAJE TIENE VUELTA, GUARDO EL PRIMER VIAJE EN LA BD
 				this.entitymanager.persist(viaje);
 	    		entitymanager.getTransaction( ).commit( );	

@@ -1,5 +1,7 @@
 package gestionViajes.modelo;
 
+import gestionUsuarios.modelo.Cliente;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import otros.JSONable;
 
@@ -137,6 +140,14 @@ public class Vehiculo implements JSONable {
 		this.conductores = conductores;
 	}
 
+	public List<Cliente> getConductoresAsListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for (Maneja maneja: this.getConductores()) {
+			lista.add(maneja.getCliente());
+		}
+		return lista;
+	}
+
 	public Integer getId_vehiculo() {
 		return id_vehiculo;
 	}
@@ -195,15 +206,20 @@ public class Vehiculo implements JSONable {
 	@Override
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
+		JSONArray id_conductores = new JSONArray();
 		json.put("id", this.getId());
 		json.put("marca", this.getMarca());
 		json.put("modelo", this.getModelo());
 		json.put("anio", this.getAnio());
 		json.put("patente", this.getPatente());
-		json.put("aire", this.getAire_acondicionado().toString());
-		json.put("seguro", this.getSeguro().toString());
-		json.put("verificado", this.getVerificado().toString());
+		json.put("aire", (this.getAire_acondicionado() != null)? this.getAire_acondicionado().toString(): null);
+		json.put("seguro", (this.getSeguro() != null)? this.getSeguro().toString(): null);
+		json.put("verificado", (this.getVerificado() != null)? this.getVerificado().toString(): null);
 		json.put("foto", this.getFoto());
+		for (Cliente conductor: this.getConductoresAsListCliente()) {
+			id_conductores.add(conductor.getId_usuario());
+		}
+		json.put("conductores", id_conductores);
 		return json;
 	}
 

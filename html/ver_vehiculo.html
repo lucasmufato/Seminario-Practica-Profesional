@@ -8,74 +8,81 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="ver_vehiculo.css">
-
+	
+	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
 	<script type="text/javascript" src="ver_vehiculo.js"></script>
-	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
+	
 
-	<script id="perfil-template" type="text/template">
-			
-	</script>
-</head>
-
-<body>
-
-    <main>
-		<div class="container-fluid">
-			<header>
-				<h3 class="text-center  bg-primary ">Datos del vehículo</h3>
-			</header>
-			<div id="panel-vehiculo">
-				<div class="row">
+	<script id="vehiculo-template" type="text/template">
+		<div class="row">
       			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
-							<h3 class="panel-title">Patente de vehículo - IGH 888</h3>
+							<h3 class="panel-title" style="text-transform: uppercase">Patente de vehículo - {{patente}}</h3>
 						</div> 
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-3 col-lg-3" align="center">
-									<img id="foto_vehiculo" alt="Foto Vehiculo" src="http://www.coches.com/fotos_historicas/ford/Focus/med_ford_focus-2014_r3.jpg.pagespeed.ce.JW0wSPihZv.jpg" class="img-responsive" style="max-height: 200px">
+									<img id="foto_vehiculo" alt="Foto Vehiculo" src="{{foto}}" class="img-responsive" style="max-height: 200px">
 									<div>
 										<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_vehiculo" accept="image/*"></span>
 									</div>
 								</div>
 								<div class=" col-md-9 col-lg-9 ">
 									<table class="table table-user-information" id="table-vehiculo">
-										<tbody class="tabla">
+										<tbody class="tabla" id="tablaVehiculo">
 											<tr>
 												<td><strong>Patente:</strong></td>
-												<td id="patente">IGH 888</td>
+												<td id="patente" style="text-transform: uppercase">{{patente}}</td>
 											</tr>
 											<tr>
 												<td><strong>Marca:</strong></td>
-												<td id="marca">Ford</td>
+												<td id="marca">{{marca}}</td>
 											</tr>
 											<tr>
 												<td><strong>Modelo:</strong></td>
-												<td id="modelo">Focus</td>
+												<td id="modelo">{{modelo}}</td>
 											</tr>
 											<tr>
 												<td><strong>Color:</strong></td>
-												<td id="color">Azul</td>
+												<td id="color"><input name="color" type="text" class="form-control jscolor" style="font-size: 0px" placeholder="" value="{{color}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Año:</strong></td>
-												<td id="anio">2010</td>
+												<td id="anio">{{anio}}</td>
 											</tr>
 											<tr>
 												<td><strong>Cantidad de asientos:</strong></td>
-												<td id="cantidad de asientos">4</td>
+												<td id="cantidad_asientos"><input list="asientos" name="cantidad_asientos" class="form-control" placeholder="" value="{{cantidad_asientos}}" disabled>
+													<datalist id="asientos">
+														<option value="1"></option>
+														<option value="2"></option>
+														<option value="3"></option>
+														<option value="4"></option>
+														<option value="5"></option>
+													</datalist>
+												</td>
 											</tr>
 											<tr>
 												<td><strong>Seguro:</strong></td>
-												<td><input name="seguro" type="text" class="form-control" placeholder="" value="Si" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+												<td id="seguro"><input list="seguro_op" name="seguro" class="form-control" placeholder="" value="{{seguro}}" disabled>
+													<datalist id="seguro_op">
+														<option value="Sí"></option>
+														<option value="No"></option>
+													</datalist>
+												</td>
 											</tr>
 											<tr>
 												<td><strong>Aire acondicionado:</strong></td>
-												<td><input name="aire_acondicionado" type="text" class="form-control" value="Si" disabled   data-placement="top" data-trigger="manual" data-content=""></td>
+												<td id="aire_acondicionado"><input list="aire" class="form-control" value="{{aire}}" name="aire_acondicionado" disabled>
+													<datalist id="aire">
+														<option value="Sí"></option>
+														<option value="No"></option>
+													</datalist>			
+												</td>
 											</tr>
 										</tbody>
 									</table>
@@ -98,16 +105,47 @@
 							</div>
 	            		</div>
 						<div class="panel-footer clearfix">
-							<button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Eliminar vehículo</button>
-							<span class="pull-right" id="botonera-modificar-cliente-{{usuario.nombre_usuario}}">
+							<button class="btn btn-danger" onclick="eliminarVehiculo();"><span class="glyphicon glyphicon-remove"></span> Eliminar vehículo</button>
+							<span class="pull-right" id="botonera-modificar-vehiculo">
 								<button class="btn btn-primary" onclick="activarModificar();"><span class="glyphicon glyphicon-edit"></span> Modificar</button>							
 							</span>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
+	</script>
+</head>
+
+<body>
+	<script src="js/jscolor.min.js"></script>
+    <main>
+    	<div class="container-fluid">
+			<header>
+				<h3 class="text-center  bg-primary ">Datos del vehículo</h3>
+			</header>
+			<div id="panel-vehiculo">
+			
 			</div>
 		</div>
+
+		<div id="modal-warning" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-warning">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" onclick="closeModal('warning')">&times;</button>
+						<h3 class="dialog-title"> Atención</h3>
+					</div><!-- modal-header -->
+					<div class="modal-body">
+						<div id="warning-message">
+							Usuario debe saber esto <!-- Esto sera modificado desde javascript -->
+						</div>					</div><!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" onclick="closeModal('warning');"> Cerrar</button>
+					</div><!-- .modal-footer -->
+				</div><!-- .modal-content -->
+			</div><!-- .modal-dialog -->
+		</div><!-- .modal -->
 		
 		<div id="modal-error" class="modal fade">
 			<div class="modal-dialog">

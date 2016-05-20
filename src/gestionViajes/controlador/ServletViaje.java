@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 import java.io.PrintWriter;
 import java.io.IOException;
 
@@ -55,6 +56,8 @@ public class ServletViaje extends HttpServlet {
 		} else if (entity != null && entity.equals ("vehiculo")) {
 			if (action != null && action.equals ("new")) {
 				respuesta = this.nuevo_vehiculo (request);
+			} else if (action != null && action.equals ("ver_mis_vehiculos")) {
+				respuesta = this.listar_vehiculos (request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -102,16 +105,59 @@ public class ServletViaje extends HttpServlet {
 	}
 	
 	public List<Vehiculo> conseguir_vehiculos_cliente(Integer id_cliente){
-		//TODO el metodo funca, aunque sea en los tests
+		List<Vehiculo> lista;
 		try {
-			this.daoViajes.getVehiculosPorCliente(id_cliente);
+			lista = this.daoViajes.getVehiculosPorCliente(id_cliente);
 		} catch (ExceptionViajesCompartidos e) {
+			// Si falla devuelve una lista vacia
+			lista = new ArrayList<Vehiculo>();
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return lista;
+	}
+
+	public JSONObject listar_vehiculos(HttpServletRequest request) {
+		JSONObject salida = new JSONObject ();
+		JSONArray json_vehiculos = new JSONArray();
+		JSONArray json_conductores = new JSONArray();
+		HashSet<Cliente> conductores = new HashSet<Cliente>();
+
+		try {
+			int id_usuario = AccessManager.getIdUsuario(request);
+			List <Vehiculo> lista = this.conseguir_vehiculos_cliente(id_usuario);
+			JSONObject json_vehiculo;
+			for (Vehiculo vehiculo: lista) {
+				json_vehiculo = vehiculo.toJSON();
+				for (Cliente conductor: vehiculo.getConductoresAsListCliente()) {
+					conductores.add(conductor);
+				} 
+				json_vehiculos.add (json_vehiculo);
+			}
+			salida.put("vehiculos", json_vehiculos);
+			
+			JSONObject json_conductor;
+			for (Cliente conductor: conductores) {
+				json_conductor = new JSONObject();
+				/* No se usa Cliente.toJSON para que no se envie la contrasenia */
+				json_conductor.put("id", conductor.getId_usuario());
+				json_conductor.put("nombre_usuario", conductor.getNombre_usuario());
+				json_conductor.put("foto", conductor.getFoto());
+				json_conductores.add(json_conductor);
+			}
+			salida.put("clientes", json_conductores);
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Error interno del servidor: ");
+			e.printStackTrace();
+			return salida;
+		}
+
+		salida.put("result", true);
+		return salida;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject nuevo_viaje(HttpServletRequest request){
 		int id_origen=-1, id_destino=-1, id_conductor=-1;
 		JSONArray id_intermedios=null;
@@ -204,6 +250,7 @@ public class ServletViaje extends HttpServlet {
 		viaje.put("fecha_inicio", fecha_ida);
 		//viaje.put("cantidad_asientos", asientos_ida);
 		viaje.put("nombre_amigable", nombre_amigable);
+		viaje.put("precio", costo);	//by mufa
 		params.put("viaje", viaje);
 
 		if(ida_vuelta) {
@@ -235,6 +282,7 @@ public class ServletViaje extends HttpServlet {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject ver_viaje_detallado(HttpServletRequest request) {
 		int id_viaje;
 		JSONObject salida = new JSONObject();

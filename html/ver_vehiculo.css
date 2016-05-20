@@ -4,14 +4,21 @@ header h3 {
     padding-bottom: 0.5em;
     margin-top: 1px;
 }
+.panel{
+    background-color: #ecf0f1;
+}
 .tabla input[disabled] {
-	background-color: transparent;
 	border: none;
-	cursor: auto;
-	box-shadow: none;
-	padding: 0;
-	height: auto;
-	color: #000;
+    cursor: auto;
+}
+#cantidad_asientos input[disabled], #seguro input[disabled], #aire_acondicionado input[disabled]{
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+    color: #000;
 }
 .tabla td {
     color: #000;
@@ -37,4 +44,33 @@ header h3 {
 }
 #foto_vehiculo {
 	margin-bottom: 0.5em;
+}
+/* POP TOOLTIP*/
+  .popover-error {
+      border: 2px dotted red;
+  }
+  /* Popover Header */
+.popover-title-error {
+ /*no hay title*/
+}
+/* Popover Body */
+.popover-content-error {
+    background-color: #D9534F;
+    color: white;
+}
+/* Popover Arrow */
+.arrow-error {
+  border-top-color: red !important ;
+}
+
+.popover-success {
+      border: 2px dotted green;
+  }
+.popover-content-success {
+    background-color: #5cb85c;
+    color: white;
+    padding:3px 6px 3px 6px;
+}
+.arrow-success {
+  border-left-color: #5cb85c !important ;
 }
