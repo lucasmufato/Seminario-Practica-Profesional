@@ -43,73 +43,53 @@
 			<form class="form-horizontal" id="formBusqueda" onsubmit="buscarViaje(); return false;">
 				<header class="bg-primary"><h3 class="pull-center">Buscador de Viajes</h3></header>
 				<div class="form-group">
-					<label for="origen" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Origen:</label>
-					<div class="col-xs-3 col-sm-3 col-lg-2">
+					<label for="origen" class="control-label col-md-3">Origen:</label>
+					<div class="col-md-3">
 					<!--SE QUE ESTO ESTo MAL PERO ANDaBA PROBANDO -->
-						<input list="ciudades" class="form-control" name="origen">
-						<datalist id="ciudades">
-							<option value="Luján"></option>
-							<option value="Moreno"></option>
-							<option value="Gral Rodriguez"></option>
-							<option value="Once"></option>
-							<option value="Palermo"></option>
-							<option value="Avellaneda"></option>
-						</datalist>
+						<input class="form-control" name="origen" placeholder="Origen">
 					</div>
-					<label for="destino" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Destino:</label>
-					<div class="col-xs-3 col-sm-3 col-lg-2">
-						<input type="text" class="form-control" name="destino">
+					<label for="destino" class="control-label col-md-2">Destino:</label>
+					<div class="col-md-3">
+						<input type="text" class="form-control" name="destino" placeholder="Destino">
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="fechadesde" class="control-label col-xs-2 col-xs-offset-1 col-md-2">Fecha desde:</label>
-					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+					<label for="fechadesde" class="control-label col-md-3">Fecha desde:</label>
+					<div class="col-md-3">
 						<div class="input-group date form_date">
-							<input type="text" class="form-control" name="fechadesde" id="fechadesde">
+							<input type="text" class="form-control" name="fechadesde" id="fechadesde"  placeholder="Fecha desde">
 							<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
 						</div>
 					</div>
-					<label for="fechahasta" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Fecha hasta:</label>
-					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+					<label for="fechahasta" class="control-label col-md-2">Fecha hasta:</label>
+					<div class="col-md-3">
 						<div class="input-group date form_date">
-							<input type="text" class="form-control" name="fechahasta" id="fechahasta">
+							<input type="text" class="form-control" name="fechahasta" id="fechahasta" placeholder="Fecha hasta">
 							<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>					
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="conductor" class="control-label col-xs-2 col-sm-2 col-xs-offset-1">Conductor:</label>
-					<div class="col-xs-3 col-sm-3 col-lg-2">
-						<input type="text" class="form-control" name="conductor">
+					<label for="conductor" class="control-label col-md-3">Conductor:</label>
+					<div class="col-md-3">
+						<input type="text" class="form-control" name="conductor"  placeholder="Conductor">
 					</div>
-					<label for="asientos" class="control-label col-xs-2 col-sm-2 col-lg-offset-1">Cantidad de asientos:</label>
-					<div class="col-xs-3 col-sm-3 col-lg-2">
-						<select class="form-control" name="asientos">
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
+					<label for="estadoviaje" class="control-label col-md-2">Estado de viaje:</label>
+					<div class="col-md-3">
+						<select class="form-control" name="estadoviaje" placeholder="Estado">
+							<option value="">Todos</option>
+							<option value="0">No iniciado</option>
+							<option value="1">Iniciado</option>
+							<!--<option value="2">Terminado</option> -->
+							<!--<option value="3">Cancelado</option> -->
 						</select>					
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="estadoviaje" class="control-label  col-xs-2 col-xs-offset-1">Estado de viaje:</label>
-					<div class="col-xs-3 col-md-3 col-lg-2">
-						<select class="form-control" name="estadoviaje">
-							<option value=""></option>
-							<!--<option value="1">Terminado</option> -->
-							<option value="1">No iniciado</option><!-- le puse 'p' de pendiente-->
-							<option value="2">Iniciado</option>
-							<!--<option value="4">Cancelado</option> -->
-						</select>					
-					</div>
-					<div class="col-xs-3 col-md-3 col-lg-2 col-xs-offset-2 col-lg-offset-3">
+					<div class="col-md-3 col-md-offset-8">
 						<button type = "submit" class="btn btn-primary btn-block" ><span class="glyphicon glyphicon-search"></span> Buscar</button>
 					</div>
 				</div>

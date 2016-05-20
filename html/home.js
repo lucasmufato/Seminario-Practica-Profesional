@@ -36,7 +36,7 @@ var showViajes = function(){
 }
 /////paginacion////
 var current_page = 1;
-var records_per_page = 3;
+var records_per_page = 10;
 
 function autogeneratePages(){
 	//Ir a pagina anterior
@@ -126,7 +126,6 @@ var buscarViaje = function(){
 	sendData.fecha_hasta = $('#formBusqueda input[name=fechahasta]').val();
 	sendData.conductor = $('#formBusqueda input[name=conductor]').val().toLowerCase();
 	sendData.asientos = $('#formBusqueda select[name=asientos]').val();
-	sendData.estadoViaje = $('#formBusqueda select[name=estadoviaje]').val();
 		
 	sendForm(sendData, showViajes);
 
@@ -142,8 +141,7 @@ var sendForm = function (sendData, onsuccess) {
 			"origen" : "Luján",
 			"destino" : "Pilar",
 			"fecha_inicio" : "2016-05-17",
-			//"hora" : "20:30", //podria ir incluido en fecha
-			//"estado" : "2",
+			"estado" : "0",
 			"conductor" : "Carlos Ruiz",
 			"reputacion" : "3",
 			"precio": "200",
@@ -153,8 +151,7 @@ var sendForm = function (sendData, onsuccess) {
 			"origen" : "Jauregui",
 			"destino" : "La quiaca",
 			"fecha_inicio" : "2016-03-12",
-			//"hora" : "12:30", //podria ir incluido en fecha
-			//"estado" : "1",
+			"estado" : "1",
 			"conductor" : "Lisandro Pedrera",
 			"reputacion" : "1",
 			"precio": "200",
@@ -164,8 +161,7 @@ var sendForm = function (sendData, onsuccess) {
 			"origen" : "Navarro",
 			"destino" : "Navarro",
 			"fecha_inicio" : "2016-05-17",
-			//"hora" : "15:23", 
-			//"estado" : "4",
+			"estado" : "1",
 			"conductor" : "Maria Cardenas",
 			"reputacion" : 3,
 			"precio": "456",
@@ -175,8 +171,7 @@ var sendForm = function (sendData, onsuccess) {
 			"origen" : "San Luis",
 			"destino" : "Rosario",
 			"fecha_inicio" : "2012-12-27",
-			//"hora" : "20:30", //podria ir incluido en fecha
-			//"estado" : "3",
+			"estado" : "0",
 			"conductor" : "Renata Lopez",
 			"reputacion" : "5",
 			"precio": "290",
@@ -189,7 +184,7 @@ var sendForm = function (sendData, onsuccess) {
 	/*
 	console.log("Data a enviar: ",sendData);
 	$.ajax({
-		url: '/viaje',
+		url: '/viajes',
 		method: 'POST',
 		data: sendData,
 		dataType: 'json',
@@ -221,10 +216,10 @@ aux.enableButtons = function () {
 
 aux.estadoString = function (caracter) {
 	switch (caracter) {
-		case '1': return "Terminado";
-		case '2': return "No iniciado";
-		case '3': return "Iniciado";
-		case '4': return "Cancelado";
+		case '2': return "Terminado";
+		case '0': return "No iniciado";
+		case '1': return "Iniciado";
+		case '3': return "Cancelado";
 		case '': return "No especificado";
 		case null: return "No especificado";
 		default: return "Desconocido";

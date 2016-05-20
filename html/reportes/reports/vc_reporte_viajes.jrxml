@@ -18,6 +18,9 @@
 	<parameter name="conductor" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="estado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="precio_desde" class="java.lang.Float">
 		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
@@ -37,26 +40,29 @@
 		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT * FROM
+		<![CDATA[SELECT
+Id,Inicio,Conductor, e.nombre_estado AS estado,km,pasajeros,precio
+FROM
     (SELECT
         v.id_viaje AS Id,
         v.fecha_inicio AS Inicio,
-        e.nombre_estado AS Estado,
+        v.estado AS estado,
         u.nombre_usuario AS Conductor,
         SUM(lv.kms_a_localidad_siguiente) as km,
         COUNT(pv.id_pasajero_viaje) as pasajeros,
         v.precio as Precio
     FROM
-        (VIAJE v INNER JOIN ESTADO_VIAJE e ON v.estado = e.id_estado_viaje)
-        INNER JOIN USUARIO u  ON u.id_usuario = v.id_cliente
+        VIAJE v INNER JOIN USUARIO u  ON u.id_usuario = v.id_cliente
         INNER JOIN LOCALIDAD_VIAJE lv ON lv.id_viaje=v.id_viaje
         LEFT JOIN PASAJERO_VIAJE pv ON pv.id_viaje=v.id_viaje
     GROUP BY v.id_viaje) AS reporte
-WHERE (Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null)
+INNER JOIN ESTADO_VIAJE e ON reporte.estado = e.id_estado_viaje
+WHERE Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null
             and (Id <= $P!{id_viaje_hasta} or $P!{id_viaje_hasta} is null)
             and (Inicio >= "$P!{fecha_desde}"  or "$P!{fecha_desde}" = "null")
             and (Inicio <= "$P!{fecha_hasta}" or "$P!{fecha_hasta}" = "null")
-            and (Conductor LIKE "%$P!{conductor}%")
+            and (LOWER(Conductor) LIKE LOWER("%$P!{conductor}%"))
+            and (reporte.estado LIKE "$P!{estado}%")
             and (km >= $P!{km_desde} or $P!{km_desde} is null)
             and (km <= $P!{km_hasta} or $P!{km_hasta} is null)
             and (pasajeros >= $P!{pasajeros_desde} or $P!{pasajeros_desde} is null)
