@@ -2,6 +2,8 @@ mapData = {
 	marcadores: []
 }
 
+vehiculos = [];
+
 magic={
 	origen: null,
 	intermedios: [],
@@ -125,29 +127,15 @@ enviarForm = function ()  {
 			sendData.asientos_vuelta= $('#form-alta-viaje select[name=asientos-vuelta]').val();
 		}
 
-		$.ajax({
-			url: '/viajes',
-			method: 'POST',
-			dataType: 'json',
-			data: sendData,
-			success: function (jsonData) {
-				DEBUGresponse = jsonData;
-				if(jsonData.result){
-					window.alert ("Viaje creado, redireccionar");
-					// Viaje creado
-					// Redireccionar a detalle viaje
-				} else {
-					window.alert (jsonData.msg);
-					// Viaje no creado
-					// Mostrar error
-				}
-			},
-			error: function (er1, err2, err3) {
-				document.body.innerHTML = er1.responseText;
-				window.alert (err3);
-			}
-		});
+		var onsuccess = function (jsonData) {
+			// Viaje creado
+			// Deberia redireccionar a detalle viaje
+			// Pero como parche va a redireccionar a mis viajes
+			vc.ventana_mensaje ("Viaje creado correctamente<br>Redireccionando a mis viajes");
+			setTimeout(function(){window.location="/mis_viajes.html"}, 1000);
+		};
 
+		vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 	} 
 
 	return false;
@@ -162,11 +150,12 @@ addVehiculosSelectOption = function (vehiculo) {
 
 cargarVehiculosSelect = function() {
 	var onsuccess = function (jsonData) {
-		var vehiculos = jsonData.vehiculos;
+		vehiculos = jsonData.vehiculos;
 		if(vehiculos.length) {
 			vehiculos.forEach(function (vehiculo) {
 				addVehiculosSelectOption(vehiculo);
 			});
+			actualizarCantidadAsientos();
 		} else {
 			vc.ventana_mensaje("Usted no tiene ningun vehiculo asociado.<br> <a href='/alta_vehiculo.html' class='btn btn-primary'>Nuevo vehiculo</a>");
 		}
@@ -178,6 +167,40 @@ cargarVehiculosSelect = function() {
 	}
 
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
+}
+
+actualizarCantidadAsientos = function() {
+	var vehiculo = getSelectedVehiculo();
+	$('select[name=asientos-ida]').html('');
+	$('select[name=asientos-vuelta]').html('');
+
+	if(vehiculo) {
+		for (i = 1; i <= vehiculo.cantidad_asientos; i++) {
+			var opt1 = document.createElement("OPTION");
+			var opt2 = document.createElement("OPTION");
+			opt1.value=i;
+			opt2.value=i;
+			opt1.textContent=i;
+			opt2.textContent=i;
+			$('select[name=asientos-ida]').append(opt1);
+			$('select[name=asientos-vuelta]').append(opt2);
+		}
+	}
+}
+
+getSelectedVehiculo = function() {
+	var encontrado = null;
+	var veh_pat = $('select[name=vehiculo]').val();
+	if(veh_pat) {
+		vehiculos.forEach(function (v) {
+			if (v.patente == veh_pat) {
+				encontrado = v;
+			}
+		})
+	} 
+	
+	return encontrado;
+	
 }
 
 window.onload = function () {
@@ -267,6 +290,8 @@ window.onload = function () {
 		magic.intermedios = records;
 		redibujar();
 	});
+
+	$('select[name=vehiculo]').on('change', actualizarCantidadAsientos);
 
 	cargarVehiculosSelect();
 }
