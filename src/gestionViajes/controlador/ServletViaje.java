@@ -157,6 +157,7 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject nuevo_viaje(HttpServletRequest request){
 		int id_origen=-1, id_destino=-1, id_conductor=-1;
 		JSONArray id_intermedios=null;
@@ -249,6 +250,7 @@ public class ServletViaje extends HttpServlet {
 		viaje.put("fecha_inicio", fecha_ida);
 		//viaje.put("cantidad_asientos", asientos_ida);
 		viaje.put("nombre_amigable", nombre_amigable);
+		viaje.put("precio", costo);	//by mufa
 		params.put("viaje", viaje);
 
 		if(ida_vuelta) {
@@ -280,6 +282,7 @@ public class ServletViaje extends HttpServlet {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject ver_viaje_detallado(HttpServletRequest request) {
 		int id_viaje;
 		JSONObject salida = new JSONObject();

@@ -82,7 +82,9 @@ public class TestViaje extends TestCase {
 
 		JSONObject json2 = this.crearViaje();
 		JSONObject vuelta = new JSONObject();
-		vuelta.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
+		Timestamp fecha= new Timestamp((new java.util.Date()).getTime());
+		fecha.setMonth(12);
+		vuelta.put("fecha_inicio", fecha);
 		vuelta.put("cantidad_asientos", 2);
 		vuelta.put("nombre_amigable", "la vuelta de prueba viaje");
 		json2.put("vuelta", vuelta);
@@ -744,13 +746,17 @@ public class TestViaje extends TestCase {
 			 "CLIENTE":ID_CLIENTE
 			 }
 		*/
+		JSONObject viaje = new JSONObject();
 		JSONObject json2 = new JSONObject();
 		json2.put("vehiculo", "abd123");
 		json2.put("cliente", 2);
-		json2.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
+		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
+		fecha.setMonth(11);
+		viaje.put("fecha_inicio", fecha);
 		json2.put("cantidad_asientos", 2);
-		json2.put("precio", 50);
-		json2.put("nombre_amigable", "prueba viaje");
+		viaje.put("precio", new Float(50.0));
+		viaje.put("nombre_amigable", "prueba viaje");
+		json2.put("viaje", viaje);
 		JSONObject localidades= new JSONObject();
 		localidades.put("origen",3427200 );
 		localidades.put("destino",3427205 );
