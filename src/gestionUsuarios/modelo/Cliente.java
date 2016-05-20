@@ -165,6 +165,7 @@ public class Cliente extends Usuario implements JSONable {
 		return true;
 	}
 
+	//by mufa
 	public boolean puedeManejar(Vehiculo vehiculo) {
 		for(Maneja m: this.vehiculos){
 			//si es el vehiculo q busco
@@ -189,6 +190,18 @@ public class Cliente extends Usuario implements JSONable {
 	
 	public void enviarNotificacion(Notificacion notificacion){
 		this.notificaciones.add(notificacion);
+	}
+
+	//by mufa
+	//metodo que devuelve los vehiculos que puede manjejar el cliente
+	public List<Vehiculo> getVehiculosQueManeja() {
+		ArrayList<Vehiculo> v=new ArrayList<Vehiculo>();
+		for(Maneja m: this.vehiculos){
+			if(m.getFecha_fin()==null){
+				v.add(m.getVehiculo());
+			}
+		}
+		return v;
 	}
 	
 }

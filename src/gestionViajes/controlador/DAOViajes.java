@@ -418,7 +418,12 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.persist(notificacion);
 		//ahora que ya tengo guardado el pasajero en la BD, la calificacion y la comision tiene una entidad a la cual apuntar
 		comisionCobrada.setPasajero_viaje(pasajero);
-		this.entitymanager.getTransaction().commit();
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
 		return true;
 	}
 
@@ -443,17 +448,99 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	public List<Viaje> buscarViajes(JSONObject busqueda) throws ExceptionViajesCompartidos{
-		// TODO Auto-generated method stub
 		//crear query (campos obligatorios: origen, destino,fecha_desde)
-		// otros campos: fecha hasta, conductor, cantidad_asientos, estado_viaje
+		// otros campos: fecha hasta, conductor, estado_viaje
 		
-		Integer id_origen = (Integer) busqueda.get("");
+		Integer id_origen = (Integer) busqueda.get("origen");
 		if(id_origen==null){
 			throw new ExceptionViajesCompartidos("ERROR: FALTA EL ORIGEN");
 		}
+		Localidad origen = (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_origen);
+		if(origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: El ORIGEN NO SE ENCUENTRA EN EL SISTEMA");
+		}
+		Integer id_destino = (Integer) busqueda.get("destino");
+		if(id_origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DESTINO");
+		}
+		Localidad destino = (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino);
+		if(destino==null){
+			throw new ExceptionViajesCompartidos("ERROR: El DESTINO NO SE ENCUENTRA EN EL SISTEMA");
+		}
+		Timestamp fecha_desde = (Timestamp) busqueda.get("fecha_desde");
+		if(fecha_desde==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA LA FECHA DESDE");
+		}else{
+			if(fecha_desde.before( new Timestamp((new java.util.Date()).getTime()) ) ){
+				//throw new ExceptionViajesCompartidos("ERROR: FECHA DESDE NO PUEDE SER ANTERIOR A LA FECHA ACTUAL");
+			}
+		}
 		
+		Timestamp fecha_hasta =(Timestamp) busqueda.get("fecha_hasta");
+		boolean b_fecha_hasta=false;
+		if(fecha_hasta!=null){
+			if(fecha_hasta.before( new Timestamp((new java.util.Date()).getTime()) ) ){
+				throw new ExceptionViajesCompartidos("ERROR: FECHA HASTA NO PUEDE SER ANTERIOR A LA FECHA ACTUAL");
+			}
+			b_fecha_hasta=true;
+		}
 		
-		return null;
+		String conductor = (String) busqueda.get("conductor");
+		boolean b_conductor=false;
+		if(conductor!=null){
+			b_conductor=true;
+		}
+		
+		String estado = (String) busqueda.get("estado");
+		if(estado==null){
+			estado="ambas";
+		}
+		if( !(estado.equals("ambas") ||estado.equals("iniciado") || estado.equals("no_iniciado")) ){
+			//si el estado no es iniciado, ambas o no iniciado tiro error
+			throw new ExceptionViajesCompartidos("ERROR: ESTADO DEL VIAJE INCORRECTO (ESTADOS POSIBLES: INICIADO, NO INICIADO, AMBOS)");
+		}
+		// esta es la query base
+		String query="SELECT v FROM Viaje v JOIN v.localidades lv JOIN lv.localidad L"
+				+ " WHERE v.fecha_inicio < :fecha_desde AND :origen = L AND :destino = L ";
+		//ahora le agrego a la query los otros campos de busqueda a medida q los hay
+		if(b_fecha_hasta){
+			query.concat("AND v.fecha_inicio < :fecha_hasta ");
+		}
+		if(b_conductor){
+			//query.concat("AND v LIKE :nombre_usuario_conductor ");
+		}
+		String query_estado = "";
+		if(estado.equals("ambas")){
+			query_estado= "AND v.estado=:estado1 OR v.estado=:estado2 ";
+		}else{
+			query_estado ="AND v.estado= :estado1";
+		}
+		
+		//armo la query y pongo los parametros minimos
+		Query q=this.entitymanager.createQuery(query+query_estado);
+		q.setParameter("fecha_desde", fecha_desde);
+		q.setParameter("origen", origen);
+		q.setParameter("destino", destino);
+		
+		//ahora agrego el resto de los parametros
+		if(b_fecha_hasta){
+			q.setParameter("fecha_hasta",fecha_hasta);
+		}
+		if(b_conductor){
+			//query.setParameter("nombre_usuario_conductor",conductor);
+		}
+		if(estado.equals("ambas")){
+			q.setParameter("estado1", EstadoViaje.iniciado);
+			q.setParameter("estado1", EstadoViaje.no_iniciado);
+		}else{
+			if(estado.equals("iniciado")){
+				q.setParameter("estado1", EstadoViaje.iniciado);
+			}else{
+				q.setParameter("estado1", EstadoViaje.no_iniciado);
+			}
+		}
+		List<Viaje> viajes= q.getResultList();
+		return viajes;
 	}
 	
 	public List<PasajeroViaje> listarPasajerosPorViaje(Integer id_viaje) {
@@ -511,8 +598,52 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.getTransaction().begin();
 		pasajero.setEstado(EstadoPasajeroViaje.rechazado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
-		this.entitymanager.getTransaction().commit();
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
 		return true;
+	}
+	
+	public boolean clienteNoManejaVehiculo(Integer id_cliente, Integer id_vehiculo) throws ExceptionViajesCompartidos{
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
+		}
+		Vehiculo vehiculo = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), id_vehiculo);
+		if(vehiculo==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO NO EXISTE");
+		}
+		Maneja maneja = this.buscarManeja(cliente, vehiculo);
+		if(maneja==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO ESTA RELACIONADO CON LE VEHICULO");
+		}
+		if(maneja.getFecha_fin()!=null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PODIA MANEJAR EL VEHICULO");
+		}
+		this.entitymanager.getTransaction().begin();
+		maneja.setFecha_fin( new Timestamp((new java.util.Date()).getTime()) );
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		return true;
+	}
+	
+	public List<Vehiculo> getVehiculosPorCliente(Integer id_cliente) throws ExceptionViajesCompartidos{
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE EN EL SISTEMA");
+		}
+		Query q= this.entitymanager.createQuery("SELECT v FROM Vehiculo v JOIN v.conductores maneja"
+				+ " JOIN maneja.cliente cliente WHERE maneja.fecha_fin = null AND cliente=:cliente ");
+		q.setParameter("cliente", cliente);
+		return q.getResultList();
+	//	return cliente.getVehiculosQueManeja();
 	}
 	
 	//by mufa

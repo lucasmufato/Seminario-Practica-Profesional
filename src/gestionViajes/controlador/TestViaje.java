@@ -84,7 +84,7 @@ public class TestViaje extends TestCase {
 		JSONObject vuelta = new JSONObject();
 		vuelta.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
 		vuelta.put("cantidad_asientos", 2);
-		vuelta.put("nombre_amigable", "prueba viaje");
+		vuelta.put("nombre_amigable", "la vuelta de prueba viaje");
 		json2.put("vuelta", vuelta);
 		
 		try {
@@ -92,8 +92,48 @@ public class TestViaje extends TestCase {
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}
-		int i=0;
-		i++;
+	}
+	
+	@Test
+	public void testBuscarViajeCorrecto1() {
+		//test q busca un viaje recien creado que vaya desde el primero punto del viaje hasta el ultimo
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		JSONObject vuelta = new JSONObject();
+		vuelta.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
+		vuelta.put("cantidad_asientos", 2);
+		json2.put("vuelta", vuelta);
+		
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject buscar = new JSONObject();
+		buscar.put("origen", 3427200);
+		buscar.put("destino", 3427205);
+		buscar.put("fecha_desde", new Timestamp((new java.util.Date()).getTime()) );
+		buscar.put("estado", "no_iniciado");
+		try {
+			List<Viaje> l=this.daoviajes.buscarViajes(buscar);
+			if(l.size()!=2){
+				fail();
+			}
+			for(Viaje v: l){
+				System.out.println("Viaje: "+v.getNombre_amigable());
+			}
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
 	}
 	
 	@Test
@@ -228,6 +268,29 @@ public class TestViaje extends TestCase {
 			Maneja maneja=(Maneja)this.daoviajes.buscarPorIDCompuesta("Maneja", c, auto);
 			assertNotNull(maneja);
 			System.out.println(maneja);
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testgetVehiculosPorCliente() {
+		//test q les crea 2 vehiculos a un usuario, le saca uno y comprueba que solo puede manejar el otro
+		//TODO
+		//json con datos de vehiculo
+		JSONObject json= crearVehiculo();
+		JSONObject json2= crearVehiculo();
+		JSONObject vj=(JSONObject) json2.get("vehiculo");
+		vj.remove("patente");
+		vj.put("patente", "eer999");
+		try {
+			//pruebo que el metodo devuelva true
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+			assertTrue(this.daoviajes.NuevoVehiculo(json2) );
+			Vehiculo v=(Vehiculo)this.daoviajes.buscarPorClaveCandidata("Vehiculo", "eer999");
+			this.daoviajes.clienteNoManejaVehiculo(2, v.getId());
+			List<Vehiculo> l=this.daoviajes.getVehiculosPorCliente(2);
+			assertEquals(l.size(),1);
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}

@@ -102,6 +102,13 @@ public class ServletViaje extends HttpServlet {
 	}
 	
 	public List<Vehiculo> conseguir_vehiculos_cliente(Integer id_cliente){
+		//TODO el metodo funca, aunque sea en los tests
+		try {
+			this.daoViajes.getVehiculosPorCliente(id_cliente);
+		} catch (ExceptionViajesCompartidos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
@@ -223,7 +230,7 @@ public class ServletViaje extends HttpServlet {
 	public JSONObject buscar_viaje(JSONObject datos){
 		/*
 		EL JSON QUE RECIBE LE METODO TENDRIA LA FORMA:
-		{ "ORIGEN":ID_LOCALIDAD, "DESTINO":ID_LOCALIDAD, DESDE, HASTA, CONDUCTOR,ASIENTOS_LIBRES,ESTADO}	
+		{ "ORIGEN":ID_LOCALIDAD, "DESTINO":ID_LOCALIDAD, DESDE, HASTA, CONDUCTOR,ESTADO}	
 		 */
 		return null;
 	}
@@ -403,4 +410,14 @@ public class ServletViaje extends HttpServlet {
 		}
 		return salida;
 	}
+	
+	public JSONObject cliente_no_maneja_mas (HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		//TODO
+		//metodo para que un cliente no puede manejar mas un auto, esta chequeado en "testGetVehiculosPorCliente"
+		//ponganle el nombre q quieran, soy malo para los nombres de los metodos jajajaja
+		//this.daoViajes.clienteNoManejaVehiculo(id_cliente, id_vehiculo);
+		return salida;
+	}
+	
 }
