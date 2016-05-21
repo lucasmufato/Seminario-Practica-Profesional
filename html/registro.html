@@ -2,12 +2,15 @@
 <head>
 	<title>Registro</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="css/bootstrap.min.css" />
-	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-	<link rel="stylesheet" href="registro.css" />
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="registro.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="/registro.css" />
+	<script type="text/javascript" src="/jquery.js"></script>
+	<script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="/js/locales/bootstrap-datetimepicker.es.js"></script>
+	<script type="text/javascript" src="/registro.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -23,11 +26,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">Viajes Compartidos</a>
+          <a class="navbar-brand" href="/index.html">Viajes Compartidos</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="login.html">Ingresar</a></li>
+            <li><a href="/login.html">Ingresar</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -113,7 +116,12 @@
 
 			  <div class="form-group col-md-6">
 				<label for="fecha_nacimiento" class="col-md-4">Fecha de nacimiento (*)</label>
-				<div class="col-md-8"><input type="date" name="fecha_nacimiento" class="form-control" required></div>
+				<div class="col-md-8">
+					<div class="input-group date form_date">
+						<input type="text" class="form-control" name="fecha_nacimiento" id="fecha">
+						<span class="input-group-addon " onclick="$('#fecha').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
+					</div>
+				</div>
 			  </div><!-- .form-group -->
 
 			  <div class="form-group col-md-6">

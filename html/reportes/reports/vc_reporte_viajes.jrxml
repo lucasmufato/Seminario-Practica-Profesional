@@ -48,9 +48,9 @@ FROM
         v.fecha_inicio AS Inicio,
         v.estado AS estado,
         u.nombre_usuario AS Conductor,
-        SUM(lv.kms_a_localidad_siguiente) as km,
+        ROUND(SUM(lv.kms_a_localidad_siguiente),1) as km,
         COUNT(pv.id_pasajero_viaje) as pasajeros,
-        v.precio as Precio
+        ROUND(v.precio,2) as Precio
     FROM
         VIAJE v INNER JOIN USUARIO u  ON u.id_usuario = v.id_cliente
         INNER JOIN LOCALIDAD_VIAJE lv ON lv.id_viaje=v.id_viaje

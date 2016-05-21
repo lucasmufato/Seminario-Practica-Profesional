@@ -26,13 +26,23 @@ initUI = function() {
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
 	/*-----------*/
-	
+	$('[data-toggle="tooltip"]').tooltip(); 
 	$("#img_usuario, #img_registro").hide();
 	
 	loadData();
 };
 
 $(document).ready(function(){
+	$('#fecha').datetimepicker({
+        format: 'yyyy-mm-dd',
+    	language: "es",
+    	startView: 3,
+    	minView: 2,
+    	maxView: 2,  
+		autoclose: true,
+    	todayBtn: true,
+		clearBtn: true,
+	});
 	ui.setNewForm();
 	setearEventos();
 });
@@ -230,7 +240,7 @@ ingresarLogin = function(){
 	var parametro = "usuario";
 	var valor = $("#formUsuario input[name='nombre_usuario']").val();
 	
-	window.location = "login.html?"+parametro+"="+valor;
+	window.location = "/login.html?"+parametro+"="+valor;
 }
 
 ui.setNewForm = function (actualForm) {
