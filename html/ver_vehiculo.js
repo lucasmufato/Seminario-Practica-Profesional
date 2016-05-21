@@ -120,6 +120,7 @@ function setearEventos(){
 		}
 	});
 
+	$("#tablaVehiculo input[name=anio]").blur(validarCampoObligatorio);
 	$("#tablaVehiculo input[name=color]").blur(validarCampoObligatorio);
 	$("#tablaVehiculo input[name=seguro]").blur(validarSioNo);
 	$("#tablaVehiculo input[name=aire_acondicionado]").blur(validarSioNo);
@@ -168,12 +169,14 @@ var modificarVehiculo = function(){
 		id: vehiculo.id,
 		vehiculo:{}
 	}
+	sendData.vehiculo.anio = $("table input[name=anio]").val();
 	sendData.vehiculo.color = $("table input[name=color]").val();
 	sendData.vehiculo.cantidad_asientos = $("table input[name=cantidad_asientos]").val();
 	sendData.vehiculo.seguro = siNoCaracter($("table input[name=seguro]").val());
 	sendData.vehiculo.aire = siNoCaracter($("table input[name=aire_acondicionado]").val());
 
 		//SIMULA----------
+		vehiculo.anio = sendData.vehiculo.anio;
 		vehiculo.color = sendData.vehiculo.color;
 		vehiculo.cantidad_asientos = sendData.vehiculo.cantidad_asientos;
 		vehiculo.seguro = sendData.vehiculo.seguro;

@@ -11,7 +11,7 @@ header h3 {
 	border: none;
     cursor: auto;
 }
-#cantidad_asientos input[disabled], #seguro input[disabled], #aire_acondicionado input[disabled]{
+#cantidad_asientos input[disabled], #seguro input[disabled], #aire_acondicionado input[disabled], #anio input[disabled]{
     background-color: transparent;
     border: none;
     cursor: auto;
@@ -45,6 +45,7 @@ header h3 {
 #foto_vehiculo {
 	margin-bottom: 0.5em;
 }
+
 /* POP TOOLTIP*/
   .popover-error {
       border: 2px dotted red;
