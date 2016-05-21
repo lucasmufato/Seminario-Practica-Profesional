@@ -528,8 +528,12 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: ESTADO DEL VIAJE INCORRECTO (ESTADOS POSIBLES: INICIADO, NO INICIADO, AMBOS)");
 		}
 		// esta es la query base
-		String query="SELECT v FROM Viaje v JOIN v.localidades lv JOIN lv.localidad L"
-				+ " WHERE v.fecha_inicio < :fecha_desde AND :origen = L AND :destino = L ";
+
+		String query="SELECT v from Viaje v "
+			+"WHERE :fecha_desde < v.fecha_inicio "
+			+"AND EXISTS (SELECT l1 FROM LocalidadViaje l1 WHERE l1.viaje=v AND l1.localidad=:origen "
+			+"AND EXISTS (SELECT l2 FROM LocalidadViaje l2 WHERE l2.viaje=v AND l2.localidad=:destino "
+			+"AND l1.ordinal < l2.ordinal))";
 		//ahora le agrego a la query los otros campos de busqueda a medida q los hay
 		if(b_fecha_hasta){
 			query.concat("AND v.fecha_inicio < :fecha_hasta ");

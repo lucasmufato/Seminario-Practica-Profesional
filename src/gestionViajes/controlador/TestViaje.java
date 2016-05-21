@@ -129,7 +129,7 @@ public class TestViaje extends TestCase {
 		buscar.put("estado", "no_iniciado");
 		try {
 			List<Viaje> l=this.daoviajes.buscarViajes(buscar);
-			if(l.size()!=2){
+			if(l.size()!=1){
 				fail("hay 2 viajes creado y tenia q devolver solo uno! y devolvi: "+l.size());
 			}
 			for(Viaje v: l){
