@@ -152,7 +152,7 @@ var simular = function(json){
 		nombre_amigable: "Un alto viaje",
 		estado: "no_iniciado",
 		tipo: "ida",
-		id_viaje_complemento: "4",
+		id_viaje_complementario: "4",
 		origen: "324",
 		destino: "880",
 		fecha_inicio: "12/09/2016",
@@ -285,9 +285,8 @@ var cargarVehiculo = function(){
 }
 
 var cargarViaje = function(){
-	
-	$("#tipo").text(data.viaje.tipo);
-	setearViajeComplemento(data.viaje.id_viaje_complemento);
+	$("#tipo").text(tipoString(data.viaje.tipo));
+	setearViajeComplementario(data.viaje.id_viaje_complementario);
 
 	$("#estado").text(estadoString (data.viaje.estado));
 	$("#origen").text(localidadNombre (data.viaje.origen));
@@ -310,10 +309,10 @@ var cargarConductor = function(){
 	$("#nombreConductor").attr('href',"/perfil.html?usuario="+data.conductor.nombre_usuario);
 }
 
-function setearViajeComplemento(idComp){
+function setearViajeComplementario(idComp){
 	if (idComp){
 		var link = "/detalle_viaje.html?id=" + idComp;
-		$("#tipo").append(" <a href='"+link+"'><small>(complemento)</small></a>")
+		$("#tipo").append(" <a href='"+link+"'></br><small>Viaje complemento</small></a>")
 	}
 }
 
@@ -493,7 +492,7 @@ var verPostulantes = function(){
 	*/
 	
 	//si lo redirijo a listado_postulantes.html
-	window.open("/listado_postulantes.html?id="+data.viaje.id,"_blank");
+	window.open("/listado_postulantes.html?id="+data.viaje.id);
 }
 
 var calificar = function(){
@@ -543,7 +542,15 @@ var localidadNombre = function(id){
 	});
 	return nombre;
 }
-
+var tipoString = function(caracter){
+	switch (caracter) {
+		case 'ida': return "Ida";
+		case 'ida_vuelta': return "Ida y vuelta";
+		case '': return "No especificado";
+		case null: return "No especificado";
+		default: return "Desconocido";
+	}
+}
 var estadoString = function (caracter) {
 	switch (caracter) {
 		case 'finalizado': return "Finalizado";
