@@ -176,7 +176,7 @@ public class DAOViajes extends DataAccesObject {
 		viaje.setFecha_finalizacion(null);
 		viaje.setEstado(EstadoViaje.no_iniciado);
 		
-		Integer cantidad_asientos = (Integer) datos.get("cantidad_asientos");
+		Integer cantidad_asientos = (Integer) d_viaje.get("cantidad_asientos");
 		if(cantidad_asientos==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES");
 		}
@@ -201,22 +201,31 @@ public class DAOViajes extends DataAccesObject {
 		
 		
 		// chequeo los datos de la vuelta
+		Timestamp fecha_vuelta = null;
+		Integer cantidad_asientos_vuelta=0;
+		Float precio_vuelta=0f;
+		
 		JSONObject vuelta=(JSONObject) datos.get("vuelta");
 		if(vuelta!=null){
-			Timestamp fecha_vuelta= (Timestamp) vuelta.get("fecha_inicio");
+			fecha_vuelta= (Timestamp) vuelta.get("fecha_inicio");
 			if(fecha_vuelta.before(fecha_inicio)){
 				throw new ExceptionViajesCompartidos("ERROR:LA FECHA DE INICIO DEL VIAJE DE VUELTA NO PUEDE SER ANTERIOR A LA FECHA DEL VIAJE DE IDA");
 			}
 			if(fecha_vuelta==null){
 				throw new ExceptionViajesCompartidos("ERROR: EL VIAJE DE VUELTA NO TIENE FECHA DE INICIO");
 			}
-		}
-		Integer cantidad_asientos_vuelta = (Integer) datos.get("cantidad_asientos");
-		if(cantidad_asientos_vuelta==null){
-			throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES PARA LA VUELTA");
-		}
-		if (cantidad_asientos_vuelta>maneja.getVehiculo().getCantidad_asientos()){
-			throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO PARA LA VUELTA");
+			cantidad_asientos_vuelta = (Integer) vuelta.get("cantidad_asientos");
+			if(cantidad_asientos_vuelta==null){
+				throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES PARA LA VUELTA");
+			}
+
+			if (cantidad_asientos_vuelta>maneja.getVehiculo().getCantidad_asientos()){
+				throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO PARA LA VUELTA");
+			}
+			precio_vuelta=(Float) vuelta.get("precio");
+			if(precio_vuelta == null) {
+				throw new ExceptionViajesCompartidos("ERROR: NO INGRESO PRECIO PARA LA VUELTA");
+			}
 		}
 		
 		
@@ -279,7 +288,9 @@ public class DAOViajes extends DataAccesObject {
 	    	}
 			//HAGO OTRA TRANSACCION, Y AHI LE DIGO AL VIAJE Q CREE SU VUELTA, Y LO GUARDO EN LA BD (EL NUEVO VIAJE SE GUARDA POR PERSIST EN CASCADA)
 			entitymanager.getTransaction().begin();
-			viaje.crearTuVuelta(vuelta);
+			Viaje viaje_vuelta = viaje.crearTuVuelta(vuelta);
+			viaje_vuelta.setPrecio(precio_vuelta);
+			viaje_vuelta.setAsientos_disponibles(cantidad_asientos_vuelta);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
 	    	}catch(RollbackException e){

@@ -87,6 +87,7 @@ public class TestViaje extends TestCase {
 		vuelta.put("fecha_inicio", fecha);
 		vuelta.put("cantidad_asientos", 2);
 		vuelta.put("nombre_amigable", "la vuelta de prueba viaje");
+		vuelta.put("precio", 48f);
 		json2.put("vuelta", vuelta);
 		
 		try {
@@ -114,6 +115,7 @@ public class TestViaje extends TestCase {
 		fecha.setMonth(12);
 		vuelta.put("fecha_inicio",fecha);
 		vuelta.put("cantidad_asientos", 2);
+		vuelta.put("precio", 24f);
 		json2.put("vuelta", vuelta);
 		
 		try {
@@ -755,7 +757,7 @@ public class TestViaje extends TestCase {
 		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
 		fecha.setMonth(11);
 		viaje.put("fecha_inicio", fecha);
-		json2.put("cantidad_asientos", 2);
+		viaje.put("cantidad_asientos", 2);
 		viaje.put("precio", new Float(50.0));
 		viaje.put("nombre_amigable", "prueba viaje");
 		json2.put("viaje", viaje);

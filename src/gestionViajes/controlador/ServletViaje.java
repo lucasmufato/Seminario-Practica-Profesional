@@ -162,7 +162,7 @@ public class ServletViaje extends HttpServlet {
 		int id_origen=-1, id_destino=-1, id_conductor=-1;
 		JSONArray id_intermedios=null;
 		int asientos_ida=-1, asientos_vuelta=-1;
-		float costo=-1f;
+		float precio=-1f;
 		String nombre_amigable=null, patente_vehiculo=null;
 		Timestamp fecha_ida=null, fecha_vuelta=null;
 		boolean ida_vuelta = false;
@@ -195,7 +195,7 @@ public class ServletViaje extends HttpServlet {
 		} catch (Exception e) {
 			err.add("Nombre amigable");
 		} try {
-			costo = Float.parseFloat(request.getParameter ("precio"));
+			precio = Float.parseFloat(request.getParameter ("precio"));
 		} catch (Exception e) {
 			err.add("Precio no es valido");
 		} try {
@@ -236,8 +236,6 @@ public class ServletViaje extends HttpServlet {
 
 		params.put("cliente", AccessManager.getIdUsuario(request));
 		params.put("vehiculo", patente_vehiculo);
-		params.put("cantidad_asientos", asientos_ida); // Esto deberia estar en viaje y en vuelta
-		params.put("fecha_inicio", fecha_ida); // Esto deberia estar en viaje y en vuelta
 
 		JSONObject localidades = new JSONObject();
 		localidades.put("origen", id_origen);
@@ -248,16 +246,17 @@ public class ServletViaje extends HttpServlet {
 
 		JSONObject viaje = new JSONObject();
 		viaje.put("fecha_inicio", fecha_ida);
-		//viaje.put("cantidad_asientos", asientos_ida);
+		viaje.put("cantidad_asientos", asientos_ida);
 		viaje.put("nombre_amigable", nombre_amigable);
-		viaje.put("precio", costo);	//by mufa
+		viaje.put("precio", precio);	//by mufa
 		params.put("viaje", viaje);
 
 		if(ida_vuelta) {
 			JSONObject vuelta = new JSONObject ();
 			vuelta.put("fecha_inicio", fecha_vuelta);
-			//vuelta.put("cantidad_asientos", asientos_vuelta);
-			vuelta.put("nombre_amigable", nombre_amigable);
+			vuelta.put("cantidad_asientos", asientos_vuelta);
+			//vuelta.put("nombre_amigable", nombre_amigable+" (VUELTA)");
+			vuelta.put("precio", precio);	//by mufa
 			params.put("vuelta", vuelta);
 		}
 
@@ -411,7 +410,7 @@ public class ServletViaje extends HttpServlet {
 				jtmp.put("fecha_inicio", (viaje.getFecha_inicio().toString()));
 				jtmp.put("conductor", viaje.getConductor().getNombre_usuario());
 				jtmp.put("reputacion", viaje.getConductor().getReputacion());
-//				jtmp.put("precio", viaje.getPrecio());
+				jtmp.put("precio", viaje.getPrecio());
 				jtmp.put("foto", viaje.getConductor().getFoto());
 
 				json_viajes.add(jtmp);
@@ -422,7 +421,8 @@ public class ServletViaje extends HttpServlet {
 		/* SEGUIR */
 		} catch (Exception e) {
 			salida.put("result", false);
-			salida.put("msg", "Error interno del servidor");
+			salida.put("msg", "Error interno del servidor ");
+			e.printStackTrace();
 			return salida;
 		}
 
