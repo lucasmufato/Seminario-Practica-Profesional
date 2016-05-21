@@ -110,7 +110,9 @@ public class TestViaje extends TestCase {
 
 		JSONObject json2 = this.crearViaje();
 		JSONObject vuelta = new JSONObject();
-		vuelta.put("fecha_inicio",new Timestamp((new java.util.Date()).getTime()) );
+		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
+		fecha.setMonth(12);
+		vuelta.put("fecha_inicio",fecha);
 		vuelta.put("cantidad_asientos", 2);
 		json2.put("vuelta", vuelta);
 		
@@ -128,7 +130,7 @@ public class TestViaje extends TestCase {
 		try {
 			List<Viaje> l=this.daoviajes.buscarViajes(buscar);
 			if(l.size()!=2){
-				fail();
+				fail("hay 2 viajes creado y tenia q devolver solo uno! y devolvi: "+l.size());
 			}
 			for(Viaje v: l){
 				System.out.println("Viaje: "+v.getNombre_amigable());
