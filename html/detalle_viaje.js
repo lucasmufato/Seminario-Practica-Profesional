@@ -447,11 +447,14 @@ var cancelarParticipacion = function(){
 	var confirmarCancelacion = function(){
 		closeModal(modalName);
 		var sendJson = {
+			entity: "viaje",
 			action: "cancelar_participacion",
-			id_viaje: data.viaje.id,
+			id_viaje: data.viaje.id
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
+				// esta linea genera un bug de mierda donde el modal no se cierra.
+				//modalMessage(modalName,jsonData.msg,"Participación cancelada");
 				data.loadData();
 			}else{
 				errorMessage(jsonData.msg);
@@ -621,6 +624,7 @@ $(document).on('hide.bs.modal', function (e) {
   $(".dinamico").each(function(){
 	$(this).remove();
   });
+  
 });
 
 var errorMessage = function (textMsg) {

@@ -15,7 +15,8 @@ var addNavegacion = function () {
 	var modal = document.createElement('DIV');
 	$(modal).load('/navegacion.html #common-modal');
 
-	//$.getScript( "/permisos.js");
+	$.getScript( "/permisos.js");
+	
 	$('body').prepend (sidebar);
 	$('body').prepend (nav);
 	$('body').append (modal);

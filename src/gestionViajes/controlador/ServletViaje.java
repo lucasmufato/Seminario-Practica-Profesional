@@ -42,7 +42,6 @@ public class ServletViaje extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
-
 		/* TODO: comprobar permisos */	
 
 		if (entity != null && entity.equals ("viaje")) {
@@ -52,7 +51,12 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.ver_viaje_detallado (request);
 			} else if (action != null && action.equals("participar")){
 				respuesta = this.participar_viaje(request);
+			} else if(action != null && action.equals("cancelar_participacion")){
+				respuesta = this.cancelar_participacion(request);
+			} else if (action != null && action.equals("ver_postulantes")){
+				respuesta = this.ver_postulantes(request);
 			} else if (action != null && action.equals("ver_mis_viajes")) {
+
 				respuesta = this.ver_mis_viajes (request);
 			}
 		} else if (entity != null && entity.equals ("vehiculo")) {
@@ -424,23 +428,111 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	private JSONObject cancelar_participacion(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
 
-
-	public JSONObject cliente_se_postula_a_viaje(Integer id_viaje, Integer id_localidad_subida, Integer id_localidad_bajada){
-		//saco el id del cliente mediante la cookie
-		return null;
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Id del viaje no es válido");
+			return respuesta;
+		}
+		/*
+		 * 
+		 * DAO ACA
+		 */
+		
+		respuesta.put("result", false);
+		respuesta.put("msg", "No implementado");
+		
+		return respuesta;
 	}
-	
+
 	public JSONObject comision_por_recorrido(Integer id_localidad_subida, Integer id_localidad_bajada, Integer id_viaje){
 		return null;
 	}
 	
+
+	private JSONObject ver_postulantes(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		
+		//Chequeo que cliente es conductor
+		Viaje viaje = daoViajes.getViajeById(idViaje);
+		if (AccessManager.nombreUsuario(request).equals(viaje.getConductor().getNombre_usuario())){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
+			return respuesta;
+		}
+		
+		// Tomo postulantes
+		List<PasajeroViaje> listaPasajeros = daoViajes.listarPasajerosPorViaje(idViaje);
+		
+		//En el arreglo que devuelvo cargo json con la data que precisa la web
+		JSONArray postulantes = new JSONArray();
+		for (PasajeroViaje pv : listaPasajeros){
+			postulantes.add(cargarPostulante(pv));
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Postulantes cargados");
+		respuesta.put("postulantes", postulantes);
+		
+		return respuesta;
+	}
+	
+	private JSONObject cargarPostulante(PasajeroViaje pv) {
+		JSONObject postulante = new JSONObject();
+		Cliente c = pv.getCliente();
+		Persona p = c.getPersona();
+		
+		postulante.put("estado_postulacion", pv.getEstado().toString());
+		postulante.put("origen", pv.getLocalidad_subida().getLocalidad().getNombre());
+		postulante.put("destino", pv.getLocalidad_bajada().getLocalidad().getNombre());
+		postulante.put("nombre_usuario", c.getNombre_usuario());
+		postulante.put("foto", c.getFoto());
+		postulante.put("reputacion", c.getReputacion());
+		postulante.put("apellido", p.getApellidos());
+		postulante.put("nombres", p.getNombres());
+		postulante.put("telefono", p.getTelefono());
+		postulante.put("mail", c.getEmail());
+		
+		return postulante;
+	}
+
+	/* PARA QUE TOMAS EL NOMBRE AMIGABLE? 
 	public JSONObject ver_lista_pasajeros(Integer id_viaje){
 		daoViajes.listarPasajerosPorViaje(id_viaje);
 		daoViajes.nombreAmigablePorViaje(id_viaje);
 		return null;
 	}
-	
+	*/
 	public JSONObject aceptar_rechazar_postulantes(Integer decision, Integer id_cliente_postulante, Integer id_viaje){
 		try {
 			if(decision==1){
@@ -545,10 +637,10 @@ public class ServletViaje extends HttpServlet {
 		Cliente usuario_logueado = null;
 		try {
 			usuario_logueado = (Cliente) daoUsuarios.buscarPorClaveCandidata ("Cliente", AccessManager.nombreUsuario(request));
+			return daoUsuarios.isUsuarioActivo(usuario_logueado.getNombre_usuario());
 		} catch (Exception e) {
 			return false;
 		}		
-		return daoUsuarios.isUsuarioActivo(usuario_logueado.getNombre_usuario());
 	}
 
 }
