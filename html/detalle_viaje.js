@@ -47,7 +47,7 @@ data.loadData = function() {
 			//cargarComentarios();
 			cargarConductor();
 			cargarRutaEnMapa();
-			
+
 			
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
@@ -62,7 +62,6 @@ data.loadData = function() {
 initUI = function() {
 	data.loadData();	
 	loadMap();
-
 };
 window.onload=initUI;
 
@@ -293,6 +292,8 @@ var cargarViaje = function(){
 	$("#destino").text(localidadNombre (data.viaje.destino));
 	$("#fecha").text(data.viaje.fecha_inicio);
 	$("#precio").text("$"+data.viaje.precio);
+	
+	$("#recorrido").html("");
 	data.viaje.recorrido.forEach(function(elem){
 		$("#recorrido").append('<li>'+localidadNombre(elem)+'</li>');
 	});
@@ -351,16 +352,17 @@ var createOp = function(valor,texto){
 
 var participarViaje = function(){
 	var sendJson = {
+		entity: "viaje",
 		action: "participar",
 		id_viaje: data.viaje.id,
 		origen:  $("select[name=origenPasajero]").val(),
 		destino:  $("select[name=destinoPasajero]").val()
 	}
 	var onsuccess = function(jsonData){
-		closeModal('Participar');
+		closeModal('participar');
 		if (jsonData.result){
-			modalMessage('success',jsonData.msg);//podria incluir datos de conductor como mail o telefono
 			data.loadData();
+			postulacionCorrecta(jsonData.msg,jsonData.conductor);
 		}else{
 			errorMessage(jsonData.msg);
 		}
@@ -369,10 +371,34 @@ var participarViaje = function(){
 		sendAjax(sendJson,onsuccess);
 	};
 }
+var postulacionCorrecta = function(mensaje,conductor){
+	var modalName = 'postulacion-correcta';
+	
+	// Lleno datos del conductor en el modal
+	var nombre = conductor.persona.apellidos+", "+conductor.persona.nombres;
+	$("#nombre-conductor").html(nombre);
+	var perfil = 'perfil.html?usuario='+conductor.cliente.nombre_usuario;
+	var usuario = "<a href='"+perfil+"'>"
+		+ conductor.cliente.nombre_usuario
+		+ "</div>";
+	$("#usuario-conductor").html(usuario);
+	var linkMail = "mailto:"+conductor.cliente.email;
+	var mail = "<a href='"+linkMail+"'>"
+		+ conductor.cliente.email
+		+ "</div>";
+	$("#mail-conductor").html(mail);
+	var tel = conductor.persona.telefono;
+	$("#telefono-conductor").html(tel);
 
+	//muestro modal
+	modalMessage(modalName,mensaje,"Postulación a viaje");
+}
+var verMisViajes = function(){
+	window.location = "/mis_viajes.html";
+}
 var esTramoValido = function(){
-	var origen = $("select[name=origenPasajero]").val();
-	var destino = $("select[name=destinoPasajero]").val();
+	var origen = parseInt($("select[name=origenPasajero]").val());
+	var destino = parseInt($("select[name=destinoPasajero]").val());
 	var indexOrigen = data.viaje.recorrido.indexOf(origen);
 	var indexDestino = data.viaje.recorrido.indexOf(destino);
 	if (indexOrigen >= indexDestino){
@@ -444,7 +470,7 @@ var cancelarParticipacion = function(){
 	modalMessage(modalName,msg);
 }
 var modificarViaje = function(){
-	window.open("/modificar_viaje.html?id="+data.viaje.id,"_blank");
+	window.location = "/modificar_viaje.html?id="+data.viaje.id;
 }
 var cancelarViaje = function(){
 	var modalName='warning';
@@ -456,7 +482,7 @@ var cancelarViaje = function(){
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
-				window.open("/home.html","_blank");
+				window.location = "/home.html"; //mejorar esto
 			}else{
 				errorMessage(jsonData.msg);
 			}
@@ -492,12 +518,11 @@ var verPostulantes = function(){
 	*/
 	
 	//si lo redirijo a listado_postulantes.html
-	window.open("/listado_postulantes.html?id="+data.viaje.id);
+	window.location = "/listado_postulantes.html?id="+data.viaje.id;
 }
 
 var calificar = function(){
-	console.log("calificar");
-	window.open("/calificar.html?id="+data.viaje.id,"_blank");
+	window.location = "/calificar_usuarios.html?id="+data.viaje.id;
 }
 
 var viajeFinalizado = function(){

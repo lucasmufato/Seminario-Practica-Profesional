@@ -50,6 +50,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.nuevo_viaje (request);
 			} else if (action != null && action.equals("detalle")) {
 				respuesta = this.ver_viaje_detallado (request);
+			} else if (action != null && action.equals("participar")){
+				respuesta = this.participar_viaje(request);
 			} else if (action != null && action.equals("ver_mis_viajes")) {
 				respuesta = this.ver_mis_viajes (request);
 			}
@@ -70,7 +72,7 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
-	
+
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
@@ -333,7 +335,7 @@ public class ServletViaje extends HttpServlet {
 		
 		JSONObject json_logged = new JSONObject();
 		json_logged.put("es_conductor", (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario()));
-		json_logged.put("es_pasajero", viaje.getPasajerosComoListCliente().contains(usuario_logueado)); //NO SE SI ESTO FUNCIONA
+		json_logged.put("es_pasajero", viaje.getPasajerosComoListCliente().contains(usuario_logueado));
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
 		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
 		salida.put("usuario_logueado", json_logged);
@@ -356,6 +358,75 @@ public class ServletViaje extends HttpServlet {
 		 
 		 */
 	
+	private JSONObject participar_viaje(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		JSONObject postulacion = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		postulacion.put("cliente",AccessManager.getIdUsuario(request));
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Id del viaje no es válido");
+			return respuesta;
+		}
+		postulacion.put("viaje",idViaje);
+
+		//Chequeo que origen y destino sean validos
+		int origen,destino;
+		try {
+			origen = Integer.parseInt(request.getParameter("origen"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Localidad de subida no es válida");
+			return respuesta;
+		}
+		try {
+			destino = Integer.parseInt(request.getParameter("destino"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Localidad de bajada no es válida");
+			return respuesta;
+		}
+		postulacion.put("localidad_subida", origen);
+		postulacion.put("localidad_bajada", destino);
+
+		//invoco al gran Lucas
+		try {
+			daoViajes.Cliente_se_postula_en_viaje(postulacion);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		// Si todo salio bien le doy al cliente la data del conductor para que se contacte
+		Viaje v = daoViajes.getViajeById(idViaje);
+		Cliente c = v.getConductor();
+		Persona p = c.getPersona();
+		JSONObject conductor = new JSONObject();
+		conductor.put("persona", p.toJSON());
+		conductor.put("cliente", c.toJSON());
+		
+		// Respondo que todo salio bien y le doy el conductor
+		respuesta.put("result", true);
+		respuesta.put("msg", "Usted se ha postulado correctamente");
+		respuesta.put("conductor", conductor);
+
+		return respuesta;
+	}
+	
+
+
 	public JSONObject cliente_se_postula_a_viaje(Integer id_viaje, Integer id_localidad_subida, Integer id_localidad_bajada){
 		//saco el id del cliente mediante la cookie
 		return null;
@@ -468,4 +539,16 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+		
+	// Funcion que chequea que el usuario registrado es un cliente (solo los clientes tienen acceso a ciertas funcionalidades de viaje)
+	private boolean usuarioEsClienteValido(HttpServletRequest request) {
+		Cliente usuario_logueado = null;
+		try {
+			usuario_logueado = (Cliente) daoUsuarios.buscarPorClaveCandidata ("Cliente", AccessManager.nombreUsuario(request));
+		} catch (Exception e) {
+			return false;
+		}		
+		return daoUsuarios.isUsuarioActivo(usuario_logueado.getNombre_usuario());
+	}
+
 }

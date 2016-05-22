@@ -387,6 +387,11 @@ public class DAOViajes extends DataAccesObject {
 		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRADO");
 		}
+		/*
+		 * Nota de juan
+		 * Bajo esta restriccion el cliente no se puede postular en dos tramos diferentes
+		 * Si, es un boludito si hace eso pero lo anoto para que se sepa nomas.
+		 */
 		if( viaje.recuperar_pasajeroViaje_por_cliente(cliente) != null ){
 			throw new ExceptionViajesCompartidos("ERROR: YA ESTAS POSTULADO A ESTE VIAJE");
 		}

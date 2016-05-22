@@ -265,7 +265,45 @@
 				</div>
 			</div>
 		</div>
-		
+		<div id="modal-postulacion-correcta" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-success">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" onclick="closeModal('postulacion-correcta')">&times;</button>
+						<h3 class="dialog-title"> Éxito!</h3>
+					</div><!-- modal-header -->
+					<div class="modal-body">
+						<div id="postulacion-correcta-message" class="text-center">
+							Todo salió bien. <!-- Esto sera modificado desde javascript -->
+						</div>		
+						<table class="table table-user-information tabla-conductor">
+							<tbody>
+								<tr>
+									<td>Conductor:</td>
+									<td id="nombre-conductor"></td>
+								</tr>
+								<tr>
+									<td>Usuario:</td>
+									<td id="usuario-conductor"></td>
+								</tr>
+								<tr>
+									<td>Email</td>
+									<td id="mail-conductor"></td>
+								</tr>
+								<tr>
+									<td>Teléfono:</td>
+									<td id="telefono-conductor"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div><!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" onclick="closeModal('postulacion-correcta');"> Cerrar</button>
+						<button type="button" class="btn btn-primary" onclick="verMisViajes()"><span class="glyphicon glyphicon-globe"></span> Mis Viajes</button>
+					</div><!-- .modal-footer -->
+				</div><!-- .modal-content -->
+			</div><!-- .modal-dialog -->
+		</div><!-- .modal -->
 		<div id="modal-success" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content panel-success">

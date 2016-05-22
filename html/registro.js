@@ -33,6 +33,7 @@ initUI = function() {
 };
 
 $(document).ready(function(){
+/*
 	$('#fecha').datetimepicker({
         format: 'yyyy-mm-dd',
     	language: "es",
@@ -43,6 +44,7 @@ $(document).ready(function(){
     	todayBtn: true,
 		clearBtn: true,
 	});
+	*/
 	ui.setNewForm();
 	setearEventos();
 });

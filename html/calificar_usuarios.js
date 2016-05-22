@@ -186,7 +186,7 @@ var calificarPendiente = function(nombre_usuario){
 }
 
 var verViaje = function(){
-	window.open("detalle_viaje.html?id="+idViaje,"_blank");
+	window.location = "/detalle_viaje.html?id="+idViaje;
 }
 
 var sendAjax = function(sendData,callback){

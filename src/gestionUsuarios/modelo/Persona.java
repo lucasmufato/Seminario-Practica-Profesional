@@ -216,7 +216,7 @@ public class Persona implements JSONable {
 		json.put("sexo", this.sexo.toString());
 		json.put("tipo_doc", this.tipo_doc);
 		json.put("nro_doc", this.nro_doc);
-		json.put("fecha_nacimiento", this.fecha_nacimiento);
+		json.put("fecha_nacimiento", this.fecha_nacimiento.toString());
 		json.put("estado",this.estado.toString());
 		return json;
 	}

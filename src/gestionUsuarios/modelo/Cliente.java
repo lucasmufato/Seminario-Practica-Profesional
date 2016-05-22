@@ -204,4 +204,18 @@ public class Cliente extends Usuario implements JSONable {
 		return v;
 	}
 	
+	
+	// Para saber si dos clientes son el mismo (llamado por List<Cliente> en metodo contains)
+    @Override
+    public boolean equals(Object object){
+        boolean igual = false;
+
+        if (object != null && object instanceof Cliente){
+            igual = this.getId_usuario() == ((Cliente) object).getId_usuario() 
+            		&& this.getNombre_usuario().equals(((Cliente) object).getNombre_usuario());
+        }
+
+        return igual;
+    }
+	
 }
