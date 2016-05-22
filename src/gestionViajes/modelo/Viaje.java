@@ -238,7 +238,7 @@ public class Viaje implements JSONable {
 		this.estado = estado;
 	}
 
-	public float getPrecio() {
+	public Float getPrecio() {
 		return precio;
 	}
 
@@ -358,7 +358,7 @@ public class Viaje implements JSONable {
 	}
 	
 	//by mufa
-	public void crearTuVuelta(JSONObject vuelta) throws ExceptionViajesCompartidos {
+	public Viaje crearTuVuelta(JSONObject vuelta) throws ExceptionViajesCompartidos {
 		Viaje mi_vuelta = new Viaje();
 		//le pongo al viaje los datos que llegan desde el JSON
 		Integer a=(Integer) vuelta.get("cantidad_asientos");
@@ -386,6 +386,7 @@ public class Viaje implements JSONable {
 		mi_vuelta.setEstado(EstadoViaje.no_iniciado);
 		mi_vuelta.setFecha_cancelacion(null);
 		mi_vuelta.setFecha_finalizacion(null);
+		mi_vuelta.setPrecio(this.precio);
 		//hago la relacion con sigo mismo
 		this.setViaje_complementario(mi_vuelta);
 		mi_vuelta.setViaje_complementario(this);
@@ -409,6 +410,8 @@ public class Viaje implements JSONable {
 		}
 		Integer ultimo=lista_localidad_viaje.size();
 		//lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+		
+		return mi_vuelta;
 		
 	}
 	
