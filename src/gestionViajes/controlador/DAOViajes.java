@@ -71,7 +71,10 @@ public class DAOViajes extends DataAccesObject {
     		throw new ExceptionViajesCompartidos("ERROR: EXISTE UN VEHICULO CON ESA PATENTE");
     	}
     	
-    	entitymanager.getTransaction( ).begin( );
+    	if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
     	vehiculo = new Vehiculo();
     	vehiculo.setAnio( (Integer)datos_vehiculo.get("anio") );
     	vehiculo.setFecha_verificacion(null);
@@ -130,6 +133,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	//by mufa
+	@SuppressWarnings("unused")
 	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {		//tiene tests
 		/*
 		EL JSON QUE RECIBE EL METODO TENDRIA LA SIGUIENTE FORMA:
@@ -447,6 +451,9 @@ public class DAOViajes extends DataAccesObject {
 		if (!viaje.contiene_localidades_en_orden(localidad_subida,localidad_bajada)){
 			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA ESTA DESPUES QUE LA DE BAJADA");
 		}
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
 		this.entitymanager.getTransaction().begin();
 		PasajeroViaje pasajero= new PasajeroViaje();
 		pasajero.setCalificacion(null);
@@ -465,7 +472,7 @@ public class DAOViajes extends DataAccesObject {
 		comisionCobrada.setPasajero_viaje(null);
 		comisionCobrada.setEstado(EstadoComisionCobrada.informativa);		//significa que se guarda solo para saber cuanto le dijimos q le ibamos a cobrar cuando se postulo
 		
-		//le asigno la calificacion y la comision al pasajero
+		//le asigno la comision al pasajero
 		pasajero.setComision(comisionCobrada);
 
 		this.entitymanager.persist(comisionCobrada);
@@ -638,70 +645,79 @@ public class DAOViajes extends DataAccesObject {
 
 	//by jasmin y luz
 	public boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
-				/*
-				 * recupero viaje
-				 * recupero pasajero viaje
-				 * pasajero viaje estado=aceptado/rechazado
-				 * notificar al pasajero
-				 */
-				Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
-				if (viaje == null) {
-					throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
-				}
-				if(viaje.getEstado() == EstadoViaje.cancelado || viaje.getEstado() == EstadoViaje.finalizado){
-					throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
-				}
-				Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente_postulante);
-				if(cliente == null){
-					throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
-				}
-				PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
-				if (pasajero == null){
-					throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPA DE ESE VIAJE");
-				}
-				if(pasajero.getEstado() != EstadoPasajeroViaje.postulado){
-					throw new ExceptionViajesCompartidos("ERROR: SOLO PODES ACEPTAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
-				}
-				Integer asientos = viaje.getAsientos_disponibles();
-				LocalidadViaje bajada = pasajero.getLocalidad_bajada();
-				LocalidadViaje subida = pasajero.getLocalidad_subida();
-				List<LocalidadViaje> lista = viaje.getLocalidades();
-				Integer i = 0;
-				while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
-					i++;
-				}
-				while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
-					if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { // SI NO HAY ASIENTOS DISPONIBLES
-						//NO SE LO PUEDE ACEPTAR 
-						throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
-					}
-					i++;
-				} 
-				if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { //SE VERIFICAN LOS ASIENTOS EN LA BAJADA
-					//NO SE LO PUEDE ACEPTAR
-					throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
-				}
-				//ACEPTAR
-				this.entitymanager.getTransaction().begin();
-				pasajero.setEstado(EstadoPasajeroViaje.aceptado);
-				i = 0;
-				while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
-					i++;
-				}
-				while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
-					Integer c=lista.get(i).getCantidad_pasajeros();
-					c++;
-					lista.get(i).setCantidad_pasajeros(c);
-					i++;
-				} 
-				pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
-				try{
-		    		entitymanager.getTransaction( ).commit( );	
-		    	}catch(RollbackException e){
-		    		String error= ManejadorErrores.parsearRollback(e);
-		    		throw new ExceptionViajesCompartidos("ERROR: "+error);
-		    	}
-				return true;	
+		/*
+		 * recupero viaje
+		 * recupero pasajero viaje
+		 * pasajero viaje estado=aceptado/rechazado
+		 * notificar al pasajero
+		 */
+		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if (viaje == null) {
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
+		}
+		if(viaje.getEstado() == EstadoViaje.cancelado || viaje.getEstado() == EstadoViaje.finalizado){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
+		}
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente_postulante);
+		if(cliente == null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+		PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		if (pasajero == null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPA DE ESE VIAJE");
+		}
+		if(pasajero.getEstado() != EstadoPasajeroViaje.postulado){
+			throw new ExceptionViajesCompartidos("ERROR: SOLO PODES ACEPTAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
+		}
+		Integer asientos = viaje.getAsientos_disponibles();
+		LocalidadViaje bajada = pasajero.getLocalidad_bajada();
+		LocalidadViaje subida = pasajero.getLocalidad_subida();
+		List<LocalidadViaje> lista = viaje.getLocalidades();
+		Integer i = 0;
+		while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
+			i++;
+		}
+		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
+			if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { // SI NO HAY ASIENTOS DISPONIBLES
+				//NO SE LO PUEDE ACEPTAR 
+				throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
+			}
+			i++;
+		} 
+		//COMENTO PORQUE CREO QUE COMO EN LA BAJADA NO SE SUMA PASAJERO NO HACE FALTA CHEQUEARLA
+		/*if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { //SE VERIFICAN LOS ASIENTOS EN LA BAJADA
+			//NO SE LO PUEDE ACEPTAR
+			throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
+		}*/ 
+		//ACEPTAR
+		this.entitymanager.getTransaction().begin();
+		pasajero.setEstado(EstadoPasajeroViaje.aceptado);
+		i = 0;
+		while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
+			i++;
+		}
+		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
+			Integer c=lista.get(i).getCantidad_pasajeros();
+			c++;
+			lista.get(i).setCantidad_pasajeros(c);
+			i++;
+		} 
+		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
+		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
+		Notificacion notificacion= new Notificacion();
+		notificacion.setCliente(cliente);
+		notificacion.setEstado(EstadoNotificacion.no_leido);
+		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+		notificacion.setTexto("El conductor: "+ viaje.getConductor() +
+				" lo ha aceptado al viaje: "+viaje.getNombre_amigable());
+		this.entitymanager.persist(notificacion);
+		try{
+		 	entitymanager.getTransaction( ).commit( );	
+		}catch(RollbackException e){
+		  	String error= ManejadorErrores.parsearRollback(e);
+		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		}
+		return true;
 	}
 
 	//by mufa
@@ -724,6 +740,9 @@ public class DAOViajes extends DataAccesObject {
 		if(pasajero.getEstado()!=EstadoPasajeroViaje.postulado){	//no podria rechazar a un cliente que ya acepte
 			throw new ExceptionViajesCompartidos("ERROR: SOLO PODES RECHAZAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
 		}
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
 		this.entitymanager.getTransaction().begin();
 		pasajero.setEstado(EstadoPasajeroViaje.rechazado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
@@ -736,6 +755,7 @@ public class DAOViajes extends DataAccesObject {
 		return true;
 	}
 	
+	// by mufa
 	public boolean clienteNoManejaVehiculo(Integer id_cliente, Integer id_vehiculo) throws ExceptionViajesCompartidos{
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
@@ -752,6 +772,9 @@ public class DAOViajes extends DataAccesObject {
 		if(maneja.getFecha_fin()!=null){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PODIA MANEJAR EL VEHICULO");
 		}
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
 		this.entitymanager.getTransaction().begin();
 		maneja.setFecha_fin( new Timestamp((new java.util.Date()).getTime()) );
 		try{
@@ -763,6 +786,8 @@ public class DAOViajes extends DataAccesObject {
 		return true;
 	}
 	
+	//by mufa
+	@SuppressWarnings("unchecked")
 	public List<Vehiculo> getVehiculosPorCliente(Integer id_cliente) throws ExceptionViajesCompartidos{
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
@@ -785,18 +810,66 @@ public class DAOViajes extends DataAccesObject {
 		}
 	}
 	
-	//by mufa
-	//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
-	@Deprecated		//le puse q es deprecated para q no lo vaya a usar sin querer y hacer boleta la BD jjajajajaja
-	public void borrarRelacionesEntreViajes() {
-		this.entitymanager.getTransaction().begin();
-		List<Viaje> viajes=this.selectAll("Viaje");
-		for(Viaje v: viajes){
-			v.setViaje_complementario(null);
+	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{	//sin test TODO
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
 		}
-		this.entitymanager.getTransaction().commit();
+		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL VIAJE");
+		}
+		PasajeroViaje pv= viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		if(pv==null){
+			//si el cliente no esta en el viaje, pregunto si es el conductor
+			if(viaje.getConductor().getId_usuario()!=cliente.getId_usuario()){
+				throw new ExceptionViajesCompartidos("ERROR: NO PARTICIPAS DEL VIAJE!");
+			}else{
+				//si soy el chofer hago voy a este metodo y termino
+				return this.finalizarViaje(viaje);
+			}
+		}else{
+			if(pv.getEstado()!=EstadoPasajeroViaje.aceptado){
+				throw new ExceptionViajesCompartidos("ERROR: NO ESTAS ACEPTADO EN EL VIAJE");
+			}
+		}
+		if(viaje.getEstado()!=EstadoViaje.iniciado || viaje.getEstado()!=EstadoViaje.finalizado ){
+			throw new ExceptionViajesCompartidos("ERROR: NO PUEDES FINALIZAR TU PARTICIPACION EN UN VIAJE QUE NO ESTA INICIADO O FINALIZADO");
+		}
+		
+		//GUARDO EL CAMBIO DE ESTADO
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		pv.setEstado(EstadoPasajeroViaje.finalizo_viaje);
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		
+		return true;
 	}
-        
+
+	private boolean finalizarViaje(Viaje viaje) throws ExceptionViajesCompartidos {
+		//entro a este metodo solo si quiero finalizar un viaje y soy el conductor
+		//este metodo es llamado por el otro finalizar viaje
+		
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		viaje.setEstado(EstadoViaje.finalizado);		
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		return true;
+	}       
         
         //by fede
         public boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {

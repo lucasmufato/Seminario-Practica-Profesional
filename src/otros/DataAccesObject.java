@@ -9,6 +9,8 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
+import gestionViajes.modelo.Viaje;
+
 public abstract class DataAccesObject {
 	
 	protected EntityManagerFactory emfactory;
@@ -18,6 +20,18 @@ public abstract class DataAccesObject {
 		this.emfactory= Persistence.createEntityManagerFactory( "Viajes Compartidos" ); 
     	this.entitymanager = emfactory.createEntityManager( );
 	}
+	
+	//by mufa
+		//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
+		@Deprecated		//le puse q es deprecated para q no lo vaya a usar sin querer y hacer boleta la BD jjajajajaja
+		public void borrarRelacionesEntreViajes() {
+			this.entitymanager.getTransaction().begin();
+			List<Viaje> viajes=this.selectAll("Viaje");
+			for(Viaje v: viajes){
+				v.setViaje_complementario(null);
+			}
+			this.entitymanager.getTransaction().commit();
+		}
 	
 	//
 	public Object buscarPorIDCompuesta(String nombre_clase,Object id_1,Object id_2){
