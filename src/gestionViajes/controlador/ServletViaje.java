@@ -485,7 +485,10 @@ public class ServletViaje extends HttpServlet {
 		
 		//Chequeo que cliente es conductor
 		Viaje viaje = daoViajes.getViajeById(idViaje);
-		if (AccessManager.nombreUsuario(request).equals(viaje.getConductor().getNombre_usuario())){
+		String cliente = AccessManager.nombreUsuario(request);
+		String conductor = viaje.getConductor().getNombre_usuario();
+		if (!cliente.equals(conductor)){
+			AccessManager.nombreUsuario(request);
 			respuesta.put("result", false);
 			respuesta.put("redirect", "/acceso_denegado.html");
 			return respuesta;

@@ -12,7 +12,7 @@ var loadData = function() {
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();
 			postulantes = jsonData.postulantes;
-			if (postulantes) cargarPostulantes();
+			if (postulantes.length) cargarPostulantes();
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;// si no es conductor de este viaje, acceso denegado
 		}
@@ -146,7 +146,7 @@ var rechazarPostulante = function(nombre_usuario){
 }
 
 var verViaje = function(){
-	window.open("detalle_viaje.html?id="+idViaje,"_blank");
+	window.location = "detalle_viaje.html?id="+idViaje;
 }
 
 var sendAjax = function(sendData,callback){
