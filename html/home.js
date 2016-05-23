@@ -17,6 +17,12 @@ initUI = function() {
     	autoclose: true,
     	todayBtn: true
 	});
+	var ahora = new Date();
+	var anio = ahora.getFullYear();
+	var mes = ahora.getMonth()+1;
+	if(mes<10) {mes = "0"+mes;}
+	var dia = ahora.getDate();
+	$('#fechadesde').val(""+anio+"-"+mes+"-"+dia);
 	$('#fechahasta').datetimepicker({
         format: 'yyyy-mm-dd',
     	language: "es",
