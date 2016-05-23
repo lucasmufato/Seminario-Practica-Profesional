@@ -511,6 +511,7 @@ public class DAOViajes extends DataAccesObject {
 		return viaje;
 	}
 	
+	//by pablo y lucas
 	public List<Viaje> buscarViajes(JSONObject busqueda) throws ExceptionViajesCompartidos{
 		//crear query (campos obligatorios: origen, destino,fecha_desde)
 		// otros campos: fecha hasta, conductor, estado_viaje
@@ -633,8 +634,8 @@ public class DAOViajes extends DataAccesObject {
 		}
 	}
 
+	//by jasmin y luz
 	public boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
-		// TODO Auto-generated method stub
 				/*
 				 * recupero viaje
 				 * recupero pasajero viaje
@@ -681,8 +682,16 @@ public class DAOViajes extends DataAccesObject {
 				//ACEPTAR
 				this.entitymanager.getTransaction().begin();
 				pasajero.setEstado(EstadoPasajeroViaje.aceptado);
-				asientos--;
-				viaje.setAsientos_disponibles(asientos);
+				i = 0;
+				while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
+					i++;
+				}
+				while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
+					Integer c=lista.get(i).getCantidad_pasajeros();
+					c++;
+					lista.get(i).setCantidad_pasajeros(c);
+					i++;
+				} 
 				pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
 				try{
 		    		entitymanager.getTransaction( ).commit( );	

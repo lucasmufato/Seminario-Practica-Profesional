@@ -426,6 +426,7 @@ public class TestViaje extends TestCase {
 				assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
 	}
 	
+	//by jasmin y luz
 	@Test
 	public void testAceptarPostulanteIncorrecto(){
 	//test q envie un json correcto y tendria q andar bien
@@ -459,21 +460,28 @@ public class TestViaje extends TestCase {
 		
 		List viajes=this.daoviajes.selectAll("Viaje");
 		Viaje viaje=(Viaje) viajes.get(0);
+		boolean bandera = false;
 		try {
 			assertTrue( this.daoviajes.aceptarPasajero(5, viaje.getId_viaje()));
 			assertTrue( this.daoviajes.aceptarPasajero(6, viaje.getId_viaje()));
 		} catch (ExceptionViajesCompartidos e) {
-			fail(e.getMessage());
+			if(e.toString().contains("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO")){
+				bandera=true;
+			}else{
+				fail("no tiro el error de asientos insuficientes");
+			}
 		}
+		assertTrue(bandera);
+		//compruebo estados
 		Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 5);
 		PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
 		assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
-		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.informativa);
+		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
 		
 		Cliente cliente1 = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 6);
-		PasajeroViaje pv1=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
-		assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
-		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.informativa);
+		PasajeroViaje pv1=viaje.recuperar_pasajeroViaje_por_cliente(cliente1);
+		assertEquals(pv1.getEstado(),EstadoPasajeroViaje.postulado);
+		assertEquals(pv1.getComision().getEstado(),EstadoComisionCobrada.informativa);
 		
 	}
 	
