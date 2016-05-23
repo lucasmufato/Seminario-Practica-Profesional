@@ -387,49 +387,163 @@ public class TestViaje extends TestCase {
 		i++;
 	}
 	
+	//by jasmin y luz
 	@Test
 	public void testAceptarPostulanteCorrecto() {
+		//CANTIDAD DE ASIENTOS DEL AUTO 1
+		//SE POSTULA Y ACEPTA A 1 PASAJERO CORRECTAMENTE
+		
 		//datos del vehiculo y cliente, para crear el vehiculo
-				JSONObject json= crearVehiculo();
-				try {
-					//creo los datos en la tabla maneja
-					assertTrue(this.daoviajes.NuevoVehiculo(json) );
-				}catch(ExceptionViajesCompartidos E){
-					fail(E.getMessage());
-				}
-
-				JSONObject json2 = this.crearViaje();
-				try {
-					assertTrue( this.daoviajes.nuevoViaje(json2) );
-				} catch (ExceptionViajesCompartidos e) {
-					fail(e.getMessage());
-				}
-				
-				JSONObject json3= this.crearPostulante();
-				
-				try {
-					assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
-				} catch (ExceptionViajesCompartidos e) {
-					fail(e.getMessage());
-				}
-				
-				List viajes=this.daoviajes.selectAll("Viaje");
-				Viaje viaje=(Viaje) viajes.get(0);
-				try {
-					assertTrue( this.daoviajes.aceptarPasajero(3, viaje.getId_viaje()) );
-				} catch (ExceptionViajesCompartidos e) {
-					fail(e.getMessage());
-				}
-				Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
-				PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
-				assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
-				assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+			JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		try {
+			assertTrue( this.daoviajes.aceptarPasajero(3, viaje.getId_viaje()) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+		PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
+		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+	}
+	
+	//by jasmin y luz
+	@Test
+	public void testAceptarPostulanteCorrecto1(){
+		// CANTIDAD DE ASIENTOS DEL AUTO ES 1
+		// LAS SUBIDAS Y BAJADAS DE LOS DOS PASAJEROS NO SE SUPORPONEN
+		//LOS DOS SON ACEPTADOS.
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+			JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante3();
+		JSONObject json4= this.crearPostulante4();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
+			
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		try {
+			assertTrue( this.daoviajes.aceptarPasajero(4, viaje.getId_viaje()));
+			assertTrue( this.daoviajes.aceptarPasajero(7, viaje.getId_viaje()));
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		//compruebo estados
+		Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 4);
+		PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
+		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+			
+		Cliente cliente1 = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 7);
+		PasajeroViaje pv1=viaje.recuperar_pasajeroViaje_por_cliente(cliente1);
+		assertEquals(pv1.getEstado(),EstadoPasajeroViaje.aceptado);
+		assertEquals(pv1.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+		
+	}
+	
+	//by jasmin y luz
+	@Test
+	public void testAceptarPostulanteCorrecto2(){
+		// CANTIDAD DE ASIENTOS DEL AUTO ES 1
+		// LAS SUBIDAS Y BAJADAS DE LOS DOS PASAJEROS SE SUPORPONEN PERO
+		//COINCIDE LA BAJADA DE UNO CON LA SUBIDA DE OTRO
+		//LOS DOS SON ACEPTADOS.
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+			JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante5();
+		JSONObject json4= this.crearPostulante6();
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
+			
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		try {
+			assertTrue( this.daoviajes.aceptarPasajero(8, viaje.getId_viaje()));
+			assertTrue( this.daoviajes.aceptarPasajero(9, viaje.getId_viaje()));
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		//compruebo estados
+		Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 8);
+		PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
+		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+			
+		Cliente cliente1 = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 9);
+		PasajeroViaje pv1=viaje.recuperar_pasajeroViaje_por_cliente(cliente1);
+		assertEquals(pv1.getEstado(),EstadoPasajeroViaje.aceptado);
+		assertEquals(pv1.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+		
 	}
 	
 	//by jasmin y luz
 	@Test
 	public void testAceptarPostulanteIncorrecto(){
-	//test q envie un json correcto y tendria q andar bien
+		// CANTIDAD DE ASIENTOS DEL AUTO ES 1
+		// LAS SUBIDAS Y BAJADAS DE LOS DOS PASAJEROS SE SUPORPONEN
+		//EL SEGUNDO NO ES ACEPTADO POR LA SUPERPOSICION.
 		
 		//datos del vehiculo y cliente, para crear el vehiculo
 		JSONObject json= crearVehiculo();
@@ -820,24 +934,6 @@ public class TestViaje extends TestCase {
 		json.put("localidad_bajada", 3427205);
 		return json;
 	}
-
-	@SuppressWarnings("unchecked")
-	private JSONObject crearVehiculo(){
-		JSONObject json= new JSONObject();
-		json.put("conductor", 2);
-		JSONObject vehiculo= new JSONObject();
-		vehiculo.put("patente", "abd123");
-		vehiculo.put("anio", 1992);
-		vehiculo.put("modelo", "viejo");
-		vehiculo.put("marca", "mondeo");
-		vehiculo.put("seguro", 'C');
-		vehiculo.put("color","arcoiris");
-		vehiculo.put("aire", 'S');
-		vehiculo.put("asientos",5);
-		json.put("vehiculo", vehiculo);
-		return json;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante1() {
 		/*
@@ -853,8 +949,8 @@ public class TestViaje extends TestCase {
 		List viajes=this.daoviajes.selectAll("Viaje");
 		Viaje viaje=(Viaje) viajes.get(0);
 		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427200);
-		json.put("localidad_bajada", 3427205);
+		json.put("localidad_subida", 3427201);
+		json.put("localidad_bajada", 3427203);
 		return json;
 	}
 	
@@ -873,8 +969,104 @@ public class TestViaje extends TestCase {
 		List viajes=this.daoviajes.selectAll("Viaje");
 		Viaje viaje=(Viaje) viajes.get(0);
 		json.put("viaje", viaje.getId_viaje());
+		json.put("localidad_subida", 3427202);
+		json.put("localidad_bajada", 3427204);
+		return json;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject crearPostulante3() {
+		/*
+		 * JSON{
+		 * "CLIENTE":ID_CLIENTE,
+		 * "VIAJE":ID_VIAJE,
+		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * } 
+		 */
+		JSONObject json =new JSONObject();
+		json.put("cliente", 4);
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		json.put("viaje", viaje.getId_viaje());
 		json.put("localidad_subida", 3427200);
+		json.put("localidad_bajada", 3427202);
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject crearPostulante4() {
+		/*
+		 * JSON{
+		 * "CLIENTE":ID_CLIENTE,
+		 * "VIAJE":ID_VIAJE,
+		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * } 
+		 */
+		JSONObject json =new JSONObject();
+		json.put("cliente", 7);
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		json.put("viaje", viaje.getId_viaje());
+		json.put("localidad_subida", 3427204);
 		json.put("localidad_bajada", 3427205);
+		return json;
+	}
+
+	
+	private JSONObject crearPostulante5() {
+		/*
+		 * JSON{
+		 * "CLIENTE":ID_CLIENTE,
+		 * "VIAJE":ID_VIAJE,
+		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * } 
+		 */
+		JSONObject json =new JSONObject();
+		json.put("cliente", 8);
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		json.put("viaje", viaje.getId_viaje());
+		json.put("localidad_subida", 3427204);
+		json.put("localidad_bajada", 3427205);
+		return json;
+	}
+	
+	private JSONObject crearPostulante6() {
+		/*
+		 * JSON{
+		 * "CLIENTE":ID_CLIENTE,
+		 * "VIAJE":ID_VIAJE,
+		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * } 
+		 */
+		JSONObject json =new JSONObject();
+		json.put("cliente", 9);
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		json.put("viaje", viaje.getId_viaje());
+		json.put("localidad_subida", 3427202);
+		json.put("localidad_bajada", 3427204);
+		return json;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject crearVehiculo(){
+		JSONObject json= new JSONObject();
+		json.put("conductor", 2);
+		JSONObject vehiculo= new JSONObject();
+		vehiculo.put("patente", "abd123");
+		vehiculo.put("anio", 1992);
+		vehiculo.put("modelo", "viejo");
+		vehiculo.put("marca", "mondeo");
+		vehiculo.put("seguro", 'C');
+		vehiculo.put("color","arcoiris");
+		vehiculo.put("aire", 'S');
+		vehiculo.put("asientos",5);
+		json.put("vehiculo", vehiculo);
 		return json;
 	}
 	

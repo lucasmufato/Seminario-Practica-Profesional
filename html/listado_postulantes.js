@@ -112,32 +112,33 @@ var setearEventos = function(){
 var aceptarPostulante = function(nombre_usuario){
 	console.log(nombre_usuario);
 	var sendData = {
-		action: "aceptar_postulante",
-		"id": idViaje,
-		"nombre_usuario": nombre_usuario
+		entity:"viaje",
+		action: "aceptar_rechazar_postulante",
+		"id_viaje": idViaje,
+		"nombre_postulante": nombre_usuario,
+		"decision": 1 //aceptar
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
-			$('.loadingScreen').fadeOut();
-			postulantes = jsonData.postulantes;
-			cargarPostulantes();
+			loadData();
 		} else {
 			modalMessage("error",jsonData.msg,"Aceptar postulante");
 		}
 	}	
 	sendAjax(sendData,onsuccess);
 }
+
 var rechazarPostulante = function(nombre_usuario){
 	var sendData = {
-		action: "rechazar_postulante",
-		"id": idViaje,
-		"nombre_usuario": nombre_usuario
+		entity:"viaje",
+		action: "aceptar_rechazar_postulante",
+		"id_viaje": idViaje,
+		"nombre_postulante": nombre_usuario,
+		"decision": 2 //rechazado
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
-			$('.loadingScreen').fadeOut();
-			postulantes = jsonData.postulantes;
-			cargarPostulantes();
+			loadData();
 		} else {
 			modalMessage("error",jsonData.msg,"Rechazar postulante");
 		}

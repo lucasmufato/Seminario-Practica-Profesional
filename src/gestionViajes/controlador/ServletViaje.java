@@ -57,8 +57,9 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.cancelar_participacion(request);
 			} else if (action != null && action.equals("ver_postulantes")){
 				respuesta = this.ver_postulantes(request);
+			} else if (action != null && action.equals("aceptar_rechazar_postulante")){
+				respuesta = this.aceptar_rechazar_postulante(request);
 			} else if (action != null && action.equals("ver_mis_viajes")) {
-
 				respuesta = this.ver_mis_viajes (request);
 			}
 		} else if (entity != null && entity.equals ("vehiculo")) {
@@ -543,19 +544,65 @@ public class ServletViaje extends HttpServlet {
 		return null;
 	}
 	*/
-	public JSONObject aceptar_rechazar_postulantes(Integer decision, Integer id_cliente_postulante, Integer id_viaje){
+	public JSONObject aceptar_rechazar_postulante(HttpServletRequest request){
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Id del viaje no es válido");
+			return respuesta;
+		}
+		
+		// Chequeo que cliente al cual se acepta o rechaza es cliente valido
+		String nombre_postulante = request.getParameter("nombre_postulante");
+		Cliente postulante = null;
+		try {
+			postulante = (Cliente) daoUsuarios.buscarPorClaveCandidata ("Cliente", nombre_postulante);
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Postulante no es un cliente válido");
+			return respuesta;
+		}	
+		
+		// Se acepta o no al postulante?
+		int decision;
+		try {
+			decision = Integer.parseInt(request.getParameter("decision"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "El postulante solo puede ser aceptado o rechazado");
+			return respuesta;
+		}
 		try {
 			if(decision==1){
-				daoViajes.aceptarPasajero(id_cliente_postulante,id_viaje);
+				daoViajes.aceptarPasajero(postulante.getId_usuario(),idViaje);
+			}else if(decision==2){
+					daoViajes.rechazarPasajero(postulante.getId_usuario(),idViaje);
 			}else{
-				if(decision==2){
-					daoViajes.rechazarPasajero(id_cliente_postulante,id_viaje);
-				}
+				respuesta.put("result", false);
+				respuesta.put("msg", "El postulante solo puede ser aceptado o rechazado");
+				return respuesta;
 			}
 		} catch (ExceptionViajesCompartidos e) {
-			// agregado para que compile
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
 		}
-		return null;
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Operación exitosa");
+		return respuesta;
 	}
 
 	public JSONObject ver_mis_viajes (HttpServletRequest request) {
