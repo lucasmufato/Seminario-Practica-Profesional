@@ -142,7 +142,7 @@ var showViajes = function(){
 }
 /////paginacion////
 var current_page = 1;
-var records_per_page = 3;
+var records_per_page = 10;
 
 function autogeneratePages(){
 	//Ir a pagina anterior

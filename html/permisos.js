@@ -4,7 +4,6 @@ data.usuariop={};
 data.rolesp=[];
 
 $(document).ready(function(){
-	console.log("hola");
 	esconderFuncionalidades();
 	getPermisosUsuario();
 });
@@ -15,7 +14,6 @@ function esconderFuncionalidades(){
 }
 
 function getPermisosUsuario() {
-	console.log("en get permisos usuario");
 	var sendData = {
 		action: 'get_permisos'
 	};
@@ -56,9 +54,9 @@ var cargarBotones = function(){
 	//$("#link-mis-vehiculos").attr("href","/mis_vehiculos.html?usuario="+data.usuariop.nombre_usuario);
 }
 function mostrarFunciones(){
-	console.log("Permisos que me traje: ",data.permisosp);
-		console.log("roles que me traje: ",data.rolesp);
-	console.log("usuario que me traje: ",data.usuariop);
+	//console.log("Permisos que me traje: ",data.permisosp);
+	//console.log("roles que me traje: ",data.rolesp);
+	//console.log("usuario que me traje: ",data.usuariop);
 	$("#dropdown-usuario").html(data.usuariop.nombre_usuario+" ");
 	if (data.rolesp){
 		for (var i=0; i<data.rolesp.length;i++){

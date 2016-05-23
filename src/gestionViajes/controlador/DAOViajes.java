@@ -315,7 +315,11 @@ public class DAOViajes extends DataAccesObject {
 		GeoApiContext context = new GeoApiContext ();
 
 		// La apikey no deberia estar hardcodeada
-		context.setApiKey("AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg");
+		//juan: creo que en java se guardan en un objeto property o algo por el estilo
+		//en node.js yo lo metia en un archivo txt y lo cargaba con un modulo standard pero en Java ni idea
+		String claveJuan = "AIzaSyC83dfqf-uzt4fyBckfpNa51sToN6t7kZA";
+		String clavePablo = "AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg";
+		context.setApiKey(clavePablo);
 
 		/* TODO: permitir configurar proxy */
 		//context.setProxy(proxy)

@@ -4,19 +4,20 @@ var postulantes = [];
 var loadData = function() {
 
 	var sendData = {
+		entity:"viaje",
 		action: "ver_postulantes",
-		"id": idViaje
+		"id_viaje": idViaje
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();
 			postulantes = jsonData.postulantes;
-			if (postulantes) cargarPostulantes();
+			if (postulantes.length) cargarPostulantes();
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;// si no es conductor de este viaje, acceso denegado
 		}
 	}
-	simular();
+	//simular();
 	
 	sendAjax(sendData,onsuccess);
 }
@@ -33,7 +34,7 @@ window.onload=initUI;
 
 var simular = function(){
 	postulantes = [{
-		estado: "1", //1: postulado, 2: aceptado, 3: rechazado
+		estado_postulacion: "1", //1: postulado, 2: aceptado, 3: rechazado
 		nombre_usuario: "Carolo4",
 		foto:"img/home/administracion_usuarios.png",
 		reputacion:"1",
@@ -44,7 +45,7 @@ var simular = function(){
 		telefono: "421154",
 		mail: "carolo4@gmail.com"
 	},{
-		estado: "2", //1: postulado, 2: aceptado, 3: rechazado
+		estado_postulacion: "2", //1: postulado, 2: aceptado, 3: rechazado
 		nombre_usuario: "KarinaK100",
 		foto:"upload/foto.jpg",
 		reputacion:"2",
@@ -55,7 +56,7 @@ var simular = function(){
 		telefono: "497673",
 		mail: "Karina234123@outlook.com"
 	},{
-		estado: "3",
+		estado_postulacion: "3",
 		nombre_usuario: "RodolfoU",
 		foto:"upload/foto.jpg",
 		reputacion:"3",
@@ -70,14 +71,17 @@ var simular = function(){
 }
 
 var cargarPostulantes = function(){
+	console.log("postulantes que me traje: ",postulantes);
+
 	var template = $("#postulante-template").html();
 	var htmlPendientes = "";
 	var htmlNoPendientes = "";
 	postulantes.forEach(function(elem){
-		elem.estado_string = estadoString(elem.estado);
-		elem.color_panel = colorPanel(elem.estado);
+		elem.estado_string = estadoString(elem.estado_postulacion);
+		elem.color_panel = colorPanel(elem.estado_postulacion);
 		elem.reputacion_stars = reputacionStars(elem.reputacion);
-		if (elem.es_pendiente = elem.estado == 1){
+		elem.foto_revisada = elem.foto || "/img/perfil/default.png";
+		if (elem.es_pendiente = elem.estado_postulacion == "postulado"){
 			htmlPendientes += Mustache.render(template, elem);
 		}else{
 			htmlNoPendientes += Mustache.render(template, elem);
@@ -96,6 +100,13 @@ var cargarPostulantes = function(){
 			"</div>";
 	}
 	$("#panel-postulantes").html(html);
+	
+	// Lo que solo anda una vez que se cargo toda la data.
+	setearEventos();
+}
+
+var setearEventos = function(){
+	$('[data-toggle="tooltip"]').tooltip(); 
 }
 
 var aceptarPostulante = function(nombre_usuario){
@@ -135,14 +146,14 @@ var rechazarPostulante = function(nombre_usuario){
 }
 
 var verViaje = function(){
-	window.open("detalle_viaje.html?id="+idViaje,"_blank");
+	window.location = "detalle_viaje.html?id="+idViaje;
 }
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
-	/*
+
 	$.ajax({
-		url: '/viaje', 
+		url: '/viajes', 
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -155,14 +166,16 @@ var sendAjax = function(sendData,callback){
 			window.alert (err3);
 		}
 	});
-	*/
 }
 
 var estadoString = function (caracter) {
 	switch (caracter) {
-		case '1': return "Postulado";
-		case '2': return "Aceptado";
-		case '3': return "Rechazado";
+		case 'postulado': return "Postulado";
+		case 'aceptado': return "Aceptado";
+		case 'rechazado': return "Rechazado";
+		case 'cancelado': return "Cancelado";
+		case 'ausente': return "Ausente";
+		case 'finalizo_viaje': return "Finalizó viaje";
 		case null: return "No especificado";
 		default: return "Desconocido";
 	}
@@ -170,9 +183,9 @@ var estadoString = function (caracter) {
 
 var colorPanel = function(caracter){
 	switch (caracter) {
-		case '1': return "info";
-		case '2': return "success";
-		case '3': return "danger";
+		case 'postulado': return "info";
+		case 'aceptado': return "success";
+		case 'rechazado': return "danger";
 		case null: return "default";
 		default: return "default";
 	}
