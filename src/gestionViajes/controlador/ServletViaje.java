@@ -164,7 +164,7 @@ public class ServletViaje extends HttpServlet {
 		int id_origen=-1, id_destino=-1, id_conductor=-1;
 		JSONArray id_intermedios=null;
 		int asientos_ida=-1, asientos_vuelta=-1;
-		float precio=-1f;
+		float precio_ida=-1f, precio_vuelta=-1f;
 		String nombre_amigable=null, patente_vehiculo=null;
 		Timestamp fecha_ida=null, fecha_vuelta=null;
 		boolean ida_vuelta = false;
@@ -188,6 +188,7 @@ public class ServletViaje extends HttpServlet {
 			if (locs != null) {
 				for (String loc: locs) {
 					id_intermedios.add(Integer.parseInt(loc));
+					System.out.println("PUNTO INTERMEDIO: ID"+loc);
 				}
 			}
 		} catch (NumberFormatException e) {
@@ -197,9 +198,9 @@ public class ServletViaje extends HttpServlet {
 		} catch (Exception e) {
 			err.add("Nombre amigable");
 		} try {
-			precio = Float.parseFloat(request.getParameter ("precio"));
+			precio_ida = Float.parseFloat(request.getParameter ("precio_ida"));
 		} catch (Exception e) {
-			err.add("Precio no es valido");
+			err.add("Precio de viaje de ida no es valido");
 		} try {
 			fecha_ida = new Timestamp (format.parse(request.getParameter("fecha_ida")).getTime());
 		} catch (Exception e) {
@@ -227,6 +228,10 @@ public class ServletViaje extends HttpServlet {
 				asientos_vuelta = Integer.parseInt(request.getParameter("asientos_vuelta"));
 			} catch (Exception e) {
 				err.add("Cantidad de asientos en viaje de vuelta no es valida");
+			} try {
+				precio_vuelta = Float.parseFloat(request.getParameter("precio_vuelta"));
+			} catch (Exception e) {
+				err.add("Precio de viaje de vuelta no es valido");
 			}
 		}
 			
@@ -250,7 +255,7 @@ public class ServletViaje extends HttpServlet {
 		viaje.put("fecha_inicio", fecha_ida);
 		viaje.put("cantidad_asientos", asientos_ida);
 		viaje.put("nombre_amigable", nombre_amigable);
-		viaje.put("precio", precio);	//by mufa
+		viaje.put("precio", precio_ida);
 		params.put("viaje", viaje);
 
 		if(ida_vuelta) {
@@ -258,7 +263,7 @@ public class ServletViaje extends HttpServlet {
 			vuelta.put("fecha_inicio", fecha_vuelta);
 			vuelta.put("cantidad_asientos", asientos_vuelta);
 			//vuelta.put("nombre_amigable", nombre_amigable+" (VUELTA)");
-			vuelta.put("precio", precio);	//by mufa
+			vuelta.put("precio", precio_vuelta);
 			params.put("vuelta", vuelta);
 		}
 

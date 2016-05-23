@@ -112,7 +112,8 @@ enviarForm = function ()  {
 			destino: magic.inputDestino.getValue()[0],
 			intermedios: magic.inputIntermedios.getValue(),
 			nombre_amigable: $('#form-alta-viaje input[name=nombre_amigable]').val(),
-			precio: $('#form-alta-viaje input[name=precio]').val(),
+			precio_ida: $('#form-alta-viaje input[name=precio-ida]').val(),
+			precio_vuelta: $('#form-alta-viaje input[name=precio-vuelta]').val(),
 			tipo_viaje: $('#form-alta-viaje select[name=tipo_viaje]').val(),
 			fecha_ida: $('#form-alta-viaje input[name=fecha-ida]').val(),
 			vehiculo_ida: $('#form-alta-viaje select[name=vehiculo]').val(),
@@ -169,6 +170,13 @@ cargarVehiculosSelect = function() {
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
+actualizarFormularioVuelta = function (){
+	if ($('select[name=tipo_viaje]').val() == 'ida_vuelta') {
+		$('#divVuelta').slideDown();
+	} else {
+		$('#divVuelta').slideUp();
+	}
+}
 actualizarCantidadAsientos = function() {
 	var vehiculo = getSelectedVehiculo();
 	$('select[name=asientos-ida]').html('');
@@ -222,7 +230,8 @@ window.onload = function () {
 		autoclose: 1,
 		todayHighlight: 1,
 		startView: 2,
-		minView: 0
+		minView: 0,
+		pickerPosition: 'top-left'
 	})
 
 	magic.inputOrigen = $('.localidad-origen-input').magicSuggest({
@@ -291,8 +300,11 @@ window.onload = function () {
 		redibujar();
 	});
 
-	$('select[name=vehiculo]').on('change', actualizarCantidadAsientos);
 
+	$('select[name=vehiculo]').on('change', actualizarCantidadAsientos);
+	$('select[name=tipo_viaje]').on('change', actualizarFormularioVuelta);
+
+	actualizarFormularioVuelta();
 	cargarVehiculosSelect();
 }
 

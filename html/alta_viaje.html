@@ -28,13 +28,13 @@
 				<div class="form-group">
 					<div class="col-md-6">
 						<label for="nombre_amigable" class="control-label col-md-4">Nombre:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<input type="text" class="form-control" id="nombre" name="nombre_amigable" placeholder="Nombre"></input>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="vehiculo" class="control-label col-md-4">Vehículo:</label>
-						<div class="col-md-6">	
+						<div class="col-md-8">	
 							<select class="form-control" name="vehiculo" id="vehiculo">
 							</select>			
 						</div>
@@ -43,27 +43,21 @@
 				<div class="form-group">
 					<div class="col-md-6">
 						<label for="origen" class="control-label col-md-4">Origen:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<input type="text" class="form-control localidad-origen-input" id="origen" name="origen" placeholder="Origen"></input>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="destino" class="control-label col-md-4">Destino:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<input type="text" class="form-control localidad-destino-input" id="destino" name="destino" placeholder="Destino"></input>
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-md-6">
-						<label for="precio" class="control-label col-md-4">Precio Estimado:</label>
-						<div class="col-md-6">
-							<input type="text" class="form-control" id="precio" name="precio" placeholder="Precio"></input>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<label for="puntos" class="control-label col-md-4">Puntos Intermedios:</label>
-						<div class="col-md-6">
+					<div class="col-md-12">
+						<label for="puntos" class="control-label col-md-2">Puntos Intermedios:</label>
+						<div class="col-md-10">
 						  	<input type="text" class="form-control localidad-intermedias-input" id="punto" name="puntos" placeholder=""></input>
 						</div>
 	  				</div>
@@ -82,17 +76,17 @@
 						<label for="tipo_viaje" class="control-label col-md-4">Tipo de Viaje:</label>
 						<div class="col-md-6">
 							<select class="form-control" name="tipo_viaje" id="tipo">
-								<option value="ida">Ida</option>
+								<option value="ida">Solo ida</option>
 								<option value="ida_vuelta">Ida y Vuelta</option>
 							</select>		
 						</div>
 					</div>
 					<div class="col-md-12">
-						<h3 class="text-center">Ida</h3>
+						<h3 class="text-center">Viaje de ida</h3>
 					</div>
 					<div class="col-md-6">
 						<label for="fecha" class="control-label col-md-4">Fecha:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<div class="input-group date form_date">
 								<input type="text" class="form-control" name="fecha-ida" id="fecha">
 								<span class="input-group-addon " onclick="$('#fecha').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
@@ -100,21 +94,28 @@
 						</div>
 					</div>
 					<div class="col-md-6">
+						<label for="precio-ida" class="control-label col-md-4">Precio estimado:</label>
+						<div class="input-group col-md-8">
+						<div class="input-group-addon">$</div>
+							<input type="number" min="0" step="0.01" class="form-control" name="precio-ida" id="precio-ida" value="5.00">
+						</div>
+					</div>
+					<div class="col-md-6">
 						<label for="asientos-ida" class="control-label col-md-4">Asientos libres:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<select class="form-control" name="asientos-ida" id="asientos">
 							</select>		
 						</div>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div id="divVuelta" class="form-group">
 					<div class="col-md-12">
-						<h3 class="text-center">Vuelta</h3>
+						<h3 class="text-center">Viaje de vuelta</h3>
 					</div>
 					<div class="col-md-6">
 						<label for="fecha" class="control-label col-md-4">Fecha:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<div class="input-group date form_date">
 								<input type="text" class="form-control" name="fecha-vuelta" id="fechahasta">
 								<span class="input-group-addon " onclick="$('#fechahasta').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
@@ -122,8 +123,15 @@
 						</div>
 					</div>
 					<div class="col-md-6">
+						<label for="precio-vuelta" class="control-label col-md-4">Precio estimado:</label>
+						<div class="input-group col-md-8">
+							<div class="input-group-addon">$</div>
+							<input type="number" min="0" step="0.01" class="form-control" name="precio-vuelta" id="precio-vuelta" value="5.00">
+						</div>
+					</div>
+					<div class="col-md-6">
 						<label for="asientos-vuelta" class="control-label col-md-4">Asientos libres:</label>
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<select class="form-control" name="asientos-vuelta" id="asientos">
 							</select>		
 						</div>
