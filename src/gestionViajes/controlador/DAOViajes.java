@@ -25,7 +25,7 @@ import otros.DataAccesObject;
 import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
 
-import com.google.maps.GeoApiContext;
+/*import com.google.maps.GeoApiContext;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.model.DistanceMatrix;
@@ -33,7 +33,7 @@ import com.google.maps.model.DistanceMatrixRow;
 import com.google.maps.model.DistanceMatrixElement;
 import com.google.maps.model.DistanceMatrixElementStatus;
 import com.google.maps.model.LatLng;
-import com.google.maps.model.TravelMode;
+import com.google.maps.model.TravelMode;*/
 
 public class DAOViajes extends DataAccesObject {
 
@@ -312,6 +312,7 @@ public class DAOViajes extends DataAccesObject {
 	
 	//by pablo
 	protected Double distanciaEntreLocalidades(Localidad localidad1, Localidad localidad2){
+	/* 
 		GeoApiContext context = new GeoApiContext ();
 
 		// La apikey no deberia estar hardcodeada
@@ -321,7 +322,7 @@ public class DAOViajes extends DataAccesObject {
 		String clavePablo = "AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg";
 		context.setApiKey(clavePablo);
 
-		/* TODO: permitir configurar proxy */
+		// TODO: permitir configurar proxy 
 		//context.setProxy(proxy)
 
 		LatLng origen = new LatLng(localidad1.getLatitud(), localidad1.getLongitud());
@@ -353,7 +354,22 @@ public class DAOViajes extends DataAccesObject {
 
 		double kms = (double) mts / 1000d;
 		return kms;
+		*/
+		return this.distanceCalculation(localidad1.getLatitud(), localidad1.getLongitud(), localidad2.getLatitud(), localidad2.getLongitud());
 	}
+	
+	protected double distanceCalculation(double point1_lat, double point1_long, double point2_lat, double point2_long) {
+	/*
+	Descripción: Cálculo de la distancia entre 2 puntos en función de su latitud/longitud
+	Autor: Rajesh Singh (2014)
+	Sito web: AssemblySys.com
+	*/
+	// Cálculo de la distancia en grados
+	double degrees = Math.toDegrees(Math.acos((Math.sin(Math.toRadians(point1_lat))*Math.sin(Math.toRadians(point2_lat))) + (Math.cos(Math.toRadians(point1_lat))*Math.cos(Math.toRadians(point2_lat))*Math.cos(Math.toRadians(point1_long-point2_long)))));
+ 
+	double distance = degrees * 111.13384; // 1 grado = 111.13384 km, basándose en el diametro promedio de la Tierra (12.735 km)
+	return distance;
+}
 	
 	//by mufa
 	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){ //tiene test
