@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionUsuarios.modelo.Cliente;
+import gestionViajes.controlador.DAOViajes;
 import gestionViajes.modelo.*;
 import junit.framework.TestCase;
 import otros.ExceptionViajesCompartidos;
@@ -800,6 +801,111 @@ public class TestViaje extends TestCase {
 		}
 		//assertTrue("",bandera);
 	}
+        
+        //by fede
+         public void testCancelarParticipacionTodoElViajeCorrecto() {
+		//test cancelar participacion
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+                Integer id_viaje = viaje.getId_viaje();
+		JSONObject json3= this.crearPostulante();
+                json3.remove("cliente");
+		json3.put("cliente",5);
+		JSONObject json4= this.crearPostulante();
+		json4.remove("cliente");
+		json4.put("cliente",4);
+		try { 
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
+                        assertTrue( this.daoviajes.aceptarPasajero(4, id_viaje ));
+                        assertTrue( this.daoviajes.aceptarPasajero(5, id_viaje));
+                        assertTrue ( this.daoviajes.cancelarParticipacionEnViaje(id_viaje, 4));
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		List viajes2=this.daoviajes.selectAll("Viaje");
+		Viaje viaje2=(Viaje) viajes2.get(0);
+		List<PasajeroViaje>l=this.daoviajes.listarPasajerosPorViaje(viaje2.getId_viaje());
+                 int cancelados = 0;
+                for (int j=0; j<l.size();j++){
+                   PasajeroViaje pasaj = l.get(j);
+                   if( pasaj.getEstado() == EstadoPasajeroViaje.cancelado ){
+                        cancelados++;
+                   }
+                }
+		assertEquals(cancelados,1);
+	}
+         
+         
+         //by fede
+         public void testCancelarParticipacionIntermedioCorrecto() {
+		//test cancelar participacion
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+                Integer id_viaje = viaje.getId_viaje();
+		JSONObject json3= this.crearPostulante();
+                json3.remove("cliente");
+		json3.put("cliente",5);
+		JSONObject json4= this.crearPostulante();
+		json4.remove("cliente");
+		json4.put("cliente",4);
+                json4.remove("localidad_subida");
+                json4.remove("localidad_bajada");
+                json4.put("localidad_subida",3427202);
+                json4.put("localidad_bajada",3427203);
+		try { 
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
+                        assertTrue( this.daoviajes.aceptarPasajero(4, id_viaje ));
+                        assertTrue( this.daoviajes.aceptarPasajero(5, id_viaje));
+                        assertTrue ( this.daoviajes.cancelarParticipacionEnViaje(id_viaje, 4));
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		List viajes2=this.daoviajes.selectAll("Viaje");
+		Viaje viaje2=(Viaje) viajes2.get(0);
+		List<PasajeroViaje>l=this.daoviajes.listarPasajerosPorViaje(viaje2.getId_viaje());
+                 int cancelados = 0;
+                for (int j=0; j<l.size();j++){
+                   PasajeroViaje pasaj = l.get(j);
+                   if( pasaj.getEstado() == EstadoPasajeroViaje.cancelado ){
+                        cancelados++;
+                   }
+                }
+		assertEquals(cancelados,1);
+	}
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante() {
@@ -895,7 +1001,7 @@ public class TestViaje extends TestCase {
 		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
 		fecha.setMonth(11);
 		viaje.put("fecha_inicio", fecha);
-		viaje.put("cantidad_asientos", 1);
+		viaje.put("cantidad_asientos", 2);
 		viaje.put("precio", new Float(50.0));
 		viaje.put("nombre_amigable", "prueba viaje");
 		json2.put("viaje", viaje);

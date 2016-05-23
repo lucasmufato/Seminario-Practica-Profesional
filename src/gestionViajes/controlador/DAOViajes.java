@@ -13,10 +13,12 @@ import org.json.simple.JSONObject;
 import gestionComisiones.modelo.Comision;
 import gestionComisiones.modelo.ComisionCobrada;
 import gestionComisiones.modelo.EstadoComisionCobrada;
+import gestionPuntos.controlador.DAOPuntos;
 import gestionPuntos.modelo.Calificacion;
 import gestionPuntos.modelo.EstadoClasificacion;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
+import java.util.Calendar;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
@@ -867,6 +869,63 @@ public class DAOViajes extends DataAccesObject {
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
 		return true;
-	}
-	
+	}       
+        
+        //by fede
+        public boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
+            //Verificaciones varias
+            Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
+		}
+		if(viaje.getEstado()==EstadoViaje.cancelado || viaje.getEstado()==EstadoViaje.finalizado){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
+		}
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+		PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		if (pasajero==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPA DE ESE VIAJE");
+		}
+		if(pasajero.getEstado()==EstadoPasajeroViaje.cancelado){	//no podria rechazar a un cliente que ya acepte
+			throw new ExceptionViajesCompartidos("ERROR: USTED YA CANCELO SU PARTICIPACION EN ESTE VIAJE");
+		}
+                if(pasajero.getEstado()==EstadoPasajeroViaje.rechazado){	//no podria rechazar a un cliente que ya acepte
+			throw new ExceptionViajesCompartidos("ERROR: USTED FUE RECHAZADO POR EL CHOFER");
+		}
+                //Fin verificaciones. Ahora busco el tramo.
+                this.entitymanager.getTransaction().begin();
+                LocalidadViaje subida = pasajero.getLocalidad_subida();
+                LocalidadViaje bajada = pasajero.getLocalidad_bajada();
+                List<LocalidadViaje> lista = viaje.getLocalidades();
+                Integer i = 0;
+                
+                while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
+                    i++;
+		}
+		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
+                    Integer c = lista.get(i).getCantidad_pasajeros();
+                    c--;
+                    lista.get(i).setCantidad_pasajeros(c);
+                    i++;
+		} 
+		
+		pasajero.setEstado(EstadoPasajeroViaje.cancelado);
+		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
+		try{
+                    entitymanager.getTransaction( ).commit( );
+                    DAOPuntos daopuntos = new DAOPuntos();
+                    boolean bandera= false;
+                    Calendar calendar = Calendar.getInstance();
+                    Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+                    bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
+                }catch(RollbackException e){
+                    String error= ManejadorErrores.parsearRollback(e);
+                    throw new ExceptionViajesCompartidos("ERROR: "+error);
+                }
+		return true;
+        
+        }
 }
