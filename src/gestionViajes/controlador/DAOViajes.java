@@ -636,70 +636,79 @@ public class DAOViajes extends DataAccesObject {
 
 	//by jasmin y luz
 	public boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
-				/*
-				 * recupero viaje
-				 * recupero pasajero viaje
-				 * pasajero viaje estado=aceptado/rechazado
-				 * notificar al pasajero
-				 */
-				Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
-				if (viaje == null) {
-					throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
-				}
-				if(viaje.getEstado() == EstadoViaje.cancelado || viaje.getEstado() == EstadoViaje.finalizado){
-					throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
-				}
-				Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente_postulante);
-				if(cliente == null){
-					throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
-				}
-				PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
-				if (pasajero == null){
-					throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPA DE ESE VIAJE");
-				}
-				if(pasajero.getEstado() != EstadoPasajeroViaje.postulado){
-					throw new ExceptionViajesCompartidos("ERROR: SOLO PODES ACEPTAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
-				}
-				Integer asientos = viaje.getAsientos_disponibles();
-				LocalidadViaje bajada = pasajero.getLocalidad_bajada();
-				LocalidadViaje subida = pasajero.getLocalidad_subida();
-				List<LocalidadViaje> lista = viaje.getLocalidades();
-				Integer i = 0;
-				while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
-					i++;
-				}
-				while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
-					if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { // SI NO HAY ASIENTOS DISPONIBLES
-						//NO SE LO PUEDE ACEPTAR 
-						throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
-					}
-					i++;
-				} 
-				if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { //SE VERIFICAN LOS ASIENTOS EN LA BAJADA
-					//NO SE LO PUEDE ACEPTAR
-					throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
-				}
-				//ACEPTAR
-				this.entitymanager.getTransaction().begin();
-				pasajero.setEstado(EstadoPasajeroViaje.aceptado);
-				i = 0;
-				while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
-					i++;
-				}
-				while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
-					Integer c=lista.get(i).getCantidad_pasajeros();
-					c++;
-					lista.get(i).setCantidad_pasajeros(c);
-					i++;
-				} 
-				pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
-				try{
-		    		entitymanager.getTransaction( ).commit( );	
-		    	}catch(RollbackException e){
-		    		String error= ManejadorErrores.parsearRollback(e);
-		    		throw new ExceptionViajesCompartidos("ERROR: "+error);
-		    	}
-				return true;	
+		/*
+		 * recupero viaje
+		 * recupero pasajero viaje
+		 * pasajero viaje estado=aceptado/rechazado
+		 * notificar al pasajero
+		 */
+		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if (viaje == null) {
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
+		}
+		if(viaje.getEstado() == EstadoViaje.cancelado || viaje.getEstado() == EstadoViaje.finalizado){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
+		}
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente_postulante);
+		if(cliente == null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+		PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		if (pasajero == null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPA DE ESE VIAJE");
+		}
+		if(pasajero.getEstado() != EstadoPasajeroViaje.postulado){
+			throw new ExceptionViajesCompartidos("ERROR: SOLO PODES ACEPTAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
+		}
+		Integer asientos = viaje.getAsientos_disponibles();
+		LocalidadViaje bajada = pasajero.getLocalidad_bajada();
+		LocalidadViaje subida = pasajero.getLocalidad_subida();
+		List<LocalidadViaje> lista = viaje.getLocalidades();
+		Integer i = 0;
+		while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
+			i++;
+		}
+		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
+			if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { // SI NO HAY ASIENTOS DISPONIBLES
+				//NO SE LO PUEDE ACEPTAR 
+				throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
+			}
+			i++;
+		} 
+		//COMENTO PORQUE CREO QUE COMO EN LA BAJADA NO SE SUMA PASAJERO NO HACE FALTA CHEQUEARLA
+		/*if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { //SE VERIFICAN LOS ASIENTOS EN LA BAJADA
+			//NO SE LO PUEDE ACEPTAR
+			throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
+		}*/ 
+		//ACEPTAR
+		this.entitymanager.getTransaction().begin();
+		pasajero.setEstado(EstadoPasajeroViaje.aceptado);
+		i = 0;
+		while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
+			i++;
+		}
+		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
+			Integer c=lista.get(i).getCantidad_pasajeros();
+			c++;
+			lista.get(i).setCantidad_pasajeros(c);
+			i++;
+		} 
+		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
+		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
+		Notificacion notificacion= new Notificacion();
+		notificacion.setCliente(cliente);
+		notificacion.setEstado(EstadoNotificacion.no_leido);
+		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+		notificacion.setTexto("El conductor: "+ viaje.getConductor() +
+				" lo ha aceptado al viaje: "+viaje.getNombre_amigable());
+		this.entitymanager.persist(notificacion);
+		try{
+		 	entitymanager.getTransaction( ).commit( );	
+		}catch(RollbackException e){
+		  	String error= ManejadorErrores.parsearRollback(e);
+		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		}
+		return true;	
 	}
 
 	//by mufa
