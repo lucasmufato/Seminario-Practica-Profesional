@@ -47,6 +47,8 @@ public class ServletViaje extends HttpServlet {
 		if (entity != null && entity.equals ("viaje")) {
 			if (action != null && action.equals ("new")) {
 				respuesta = this.nuevo_viaje (request);
+			} else if (action != null && action.equals("buscar")) {
+				respuesta = this.buscar_viaje (request);
 			} else if (action != null && action.equals("detalle")) {
 				respuesta = this.ver_viaje_detallado (request);
 			} else if (action != null && action.equals("participar")){
@@ -649,6 +651,85 @@ public class ServletViaje extends HttpServlet {
 		} catch (Exception e) {
 			return false;
 		}		
+	}
+
+	public JSONObject buscar_viaje (HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		List<Viaje> resultados;
+		JSONObject busqueda = new JSONObject();
+		Timestamp fecha_desde=null, fecha_hasta=null;
+		int origen, destino;
+		String estado=null, conductor=null;
+		SimpleDateFormat format = new SimpleDateFormat ("yyy-MM-dd");
+		try {
+			try {
+				origen = Integer.parseInt(request.getParameter("origen"));
+			} catch (Exception e) {
+				throw new ExceptionViajesCompartidos ("Origen no valido");
+			} try {
+				destino = Integer.parseInt(request.getParameter("destino"));
+			} catch (Exception e) {
+				throw new ExceptionViajesCompartidos ("Destino no valido");
+			} try {
+				fecha_desde = new Timestamp ( (format.parse(request.getParameter("fecha_desde"))).getTime() );
+			} catch (Exception e) {
+				throw new ExceptionViajesCompartidos ("Fecha no valida");
+			} try {
+				fecha_hasta = new Timestamp ( (format.parse(request.getParameter("fecha_hasta"))).getTime() );
+			} catch (Exception e) {
+				// No hacer nada, el campo fecha_hasta no es obligatorio
+			} try {
+				estado = request.getParameter("estado");
+			} catch (Exception e) {
+				estado = "ambas";
+			} try {
+				conductor = request.getParameter("conductor");
+			} catch (Exception e) {
+				// No hacer nada, el campo conductor no es obligatorio
+			}
+			busqueda.put("origen", origen);
+			busqueda.put("destino", destino);
+			busqueda.put("fecha_desde", fecha_desde);
+			if (fecha_hasta != null) {
+				busqueda.put("fecha_hasta", fecha_hasta);
+			}
+			if (estado != null) {
+				busqueda.put("estado", estado);
+			}
+			if (conductor != null) {
+				busqueda.put("conductor", conductor);
+			}
+			
+			resultados = daoViajes.buscarViajes(busqueda);
+			
+			JSONArray json_viajes = new JSONArray();
+			for (Viaje viaje: resultados) {
+				JSONObject json_viaje = new JSONObject();
+				json_viaje.put("id", viaje.getId_viaje());
+				json_viaje.put("origen", viaje.getOrigen().getNombre());
+				json_viaje.put("destino", viaje.getDestino().getNombre());
+				json_viaje.put("fecha_inicio", (viaje.getFecha_inicio() != null)? viaje.getFecha_inicio().toString(): null);
+				json_viaje.put("precio", viaje.getPrecio());
+				json_viaje.put("estado", viaje.getEstado().toString());
+				json_viaje.put("conductor", viaje.getConductor().getNombre_usuario());
+				json_viaje.put("reputacion", viaje.getConductor().getReputacion());
+				json_viaje.put("foto", viaje.getConductor().getFoto());
+				json_viajes.add (json_viaje);
+			}
+			salida.put("viajes", json_viajes);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			return salida;
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Error interno del servidor");
+			e.printStackTrace();
+			return salida;
+		}
+		
+		salida.put("result", true);
+		return salida;
 	}
 
 }

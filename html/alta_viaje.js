@@ -220,7 +220,8 @@ window.onload = function () {
 		autoclose: 1,
 		todayHighlight: 1,
 		startView: 2,
-		minView: 0
+		minView: 0,
+		pickerPosition: 'top-left'
 	})
 
 	$('#fechahasta').datetimepicker({

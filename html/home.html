@@ -8,15 +8,16 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="css/magicsuggest.css" />
 
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="home.js"></script>
-	<script type="text/javascript" src="navegacion.js"></script>
-	<script type="text/javascript" src="calendarios.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
+	<script type="text/javascript" src="js/magicsuggest-min.js"></script>
+	<script type="text/javascript" src="home.js"></script>
+	<script type="text/javascript" src="navegacion.js"></script>
 
 	
 	<script id="viaje-template" type="text/template">
@@ -79,9 +80,9 @@
 					<label for="estadoviaje" class="control-label col-md-2">Estado de viaje:</label>
 					<div class="col-md-3">
 						<select class="form-control" name="estadoviaje" placeholder="Estado">
-							<option value="">Todos</option>
-							<option value="0">No iniciado</option>
-							<option value="1">Iniciado</option>
+							<option value="ambas">Todos</option>
+							<option value="no_iniciado">No iniciado</option>
+							<option value="iniciado">Iniciado</option>
 							<!--<option value="2">Terminado</option> -->
 							<!--<option value="3">Cancelado</option> -->
 						</select>					

@@ -1,4 +1,5 @@
 var viajes = [];
+var magic = {};
 
 initUI = function() {
 	/* Bootstrap */
@@ -6,6 +7,62 @@ initUI = function() {
 	$('table').addClass('table table-hover');
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
+
+	$('#fechadesde').datetimepicker({
+        format: 'yyyy-mm-dd',
+    	language: "es",
+    	startView: 3,
+    	minView: 2,
+    	maxView: 2,
+    	autoclose: true,
+    	todayBtn: true
+	});
+	$('#fechahasta').datetimepicker({
+        format: 'yyyy-mm-dd',
+    	language: "es",
+    	startView: 3,
+    	minView: 2,
+    	maxView: 2,
+    	autoclose: true,
+    	todayBtn: true
+	});
+
+	magic.inputOrigen = $('input[name=origen]').magicSuggest({
+		method: 'GET',
+		data: '/autocompletado',
+		mode: 'remote',
+		allowFreeEntries: false,
+		selectFirst: true,
+		maxSelection: 1,
+		hideTrigger: true,
+		placeholder: 'Buscar Localidades',
+		noSuggestionText: 'No hay sugerencias',
+		minChars: 3,
+		maxSelectionRenderer: function(){},
+		minCharsRenderer: function() {},
+		dataUrlParams: {
+			entity: "localidad"
+		}
+	});
+
+	magic.inputDestino = $('input[name=destino]').magicSuggest({
+		method: 'GET',
+		data: '/autocompletado',
+		mode: 'remote',
+		allowFreeEntries: false,
+		selectFirst: true,
+		maxSelection: 1,
+		hideTrigger: true,
+		placeholder: 'Buscar Localidades',
+		noSuggestionText: 'No hay sugerencias',
+		minChars: 3,
+		maxSelectionRenderer: function(){},
+		minCharsRenderer: function() {},
+		dataUrlParams: {
+			entity: "localidad"
+		}
+	});
+	
 	/*-----------*/
 	$('.loadingScreen').fadeOut(); 
 };
@@ -120,18 +177,25 @@ function nextPage(){
 var buscarViaje = function(){
 	var sendData = {};
 	
-	sendData.origen = $('#formBusqueda input[name=origen]').val().toLowerCase();
-	sendData.destino = $('#formBusqueda input[name=destino]').val().toLowerCase();
+	sendData.action="buscar";
+	sendData.entity="viaje";
+	sendData.origen = magic.inputOrigen.getValue()[0];
+	sendData.destino = magic.inputDestino.getValue()[0];
 	sendData.fecha_desde = $('#formBusqueda input[name=fechadesde]').val();
 	sendData.fecha_hasta = $('#formBusqueda input[name=fechahasta]').val();
 	sendData.conductor = $('#formBusqueda input[name=conductor]').val().toLowerCase();
-	sendData.asientos = $('#formBusqueda select[name=asientos]').val();
+	sendData.estado = $('#formBusqueda select[name=estadoviaje]').val();
 		
-	sendForm(sendData, showViajes);
+	//simular(sendData, showViajes);
+	var onsuccess = function(jsonData) {
+		viajes = jsonData.viajes;
+		showViajes();
+	}
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 
 }
 
-var sendForm = function (sendData, onsuccess) {
+var simular = function (sendData, onsuccess) {
 	
 	//SIMULO DATA RECIBIDA:
 	var jsonData = {

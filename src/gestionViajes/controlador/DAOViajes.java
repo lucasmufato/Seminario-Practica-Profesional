@@ -599,7 +599,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		if(estado.equals("ambas")){
 			q.setParameter("estado1", EstadoViaje.iniciado);
-			q.setParameter("estado1", EstadoViaje.no_iniciado);
+			q.setParameter("estado2", EstadoViaje.no_iniciado);
 		}else{
 			if(estado.equals("iniciado")){
 				q.setParameter("estado1", EstadoViaje.iniciado);
