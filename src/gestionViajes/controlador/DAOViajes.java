@@ -958,5 +958,38 @@ public class DAOViajes extends DataAccesObject {
         	}
     		
     		return true;
-    	}	
+    	}
+    	
+    	//by juan
+		public boolean modificarVehiculo(JSONObject json) throws ExceptionViajesCompartidos {
+    		int idVehiculo;
+    		try{
+    			idVehiculo = Integer.parseInt(json.get("id").toString());
+    		}catch(Exception e){
+    			throw new ExceptionViajesCompartidos("El vehiculo no es válido");
+    		}
+        	Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+        	if (v==null){
+    			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
+        	}
+        	
+    		//GUARDO EL CAMBIO DE FOTO
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		this.entitymanager.getTransaction().begin();
+			v.setAire_acondicionado(json.get("aire").toString().charAt(0));
+			v.setAnio(Integer.parseInt(json.get("anio").toString()));
+			v.setCantidad_asientos(Integer.parseInt(json.get("asientos").toString()));
+			v.setColor(json.get("color").toString());
+			v.setSeguro(json.get("seguro").toString().charAt(0));
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+    		
+    		return true;
+		}	
 }

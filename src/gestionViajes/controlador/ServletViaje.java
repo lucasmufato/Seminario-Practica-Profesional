@@ -70,6 +70,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.listar_vehiculos (request);
 			} else if (action != null && action.equals ("ver_un_vehiculo")){
 				respuesta = this.verUnVehiculo(request);
+			} else if (action != null && action.equals ("modificar_vehiculo")){
+				respuesta = this.modificarVehiculo(request);
 			} else if (action != null && action.equals ("modificar_imagen_vehiculo")){
 				respuesta = this.modificarImagenVehiculo(request);
 			}
@@ -84,7 +86,6 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
-
 
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -236,6 +237,59 @@ public class ServletViaje extends HttpServlet {
 		respuesta.put("vehiculo", v.toJSON());
 		respuesta.put("conductores",conductores);
 
+		return respuesta;
+	}
+	
+	private JSONObject modificarVehiculo(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		int idVehiculo;
+		try{
+			idVehiculo = Integer.parseInt(request.getParameter("vehiculo[id]"));
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehículo no es válido");
+			return respuesta;
+		}
+		
+		Vehiculo v = null;
+		try{
+			v = (Vehiculo) daoViajes.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehículo no se encuentra en el sistema");
+			return respuesta;
+		}
+		
+		JSONObject json_vehiculo = new JSONObject ();
+		
+		json_vehiculo.put("id", idVehiculo);
+		json_vehiculo.put("anio", Integer.parseInt(request.getParameter("vehiculo[anio]")));
+		//json_vehiculo.put("marca", request.getParameter("vehiculo[marca]"));
+		//json_vehiculo.put("modelo", request.getParameter("vehiculo[modelo]"));
+		//json_vehiculo.put("patente", request.getParameter("vehiculo[patente]"));
+		json_vehiculo.put("aire", request.getParameter("vehiculo[aire]").toString().charAt(0));
+		json_vehiculo.put("color", request.getParameter("vehiculo[color]"));
+		json_vehiculo.put("asientos", Integer.parseInt(request.getParameter("vehiculo[cantidad_asientos]")));
+		json_vehiculo.put("seguro", request.getParameter("vehiculo[seguro]").toString().charAt(0));
+		//json_vehiculo.put("foto", request.getParameter("vehiculo[foto]"));
+
+		try {
+			daoViajes.modificarVehiculo(json_vehiculo);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", json_vehiculo.toJSONString());
 		return respuesta;
 	}
 	

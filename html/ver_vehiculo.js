@@ -111,12 +111,13 @@ function setearEventos(){
 			enviarFoto(imageSrc);
 		}
 	});
-
+	
+	$("#tablaVehiculo input[name=anio]").attr("max",new Date().getFullYear());
 	$("#tablaVehiculo input[name=anio]").blur(validarAnio);
 	$("#tablaVehiculo input[name=color]").blur(validarCampoObligatorio);
-	//$("#tablaVehiculo input[name=seguro]").blur(validarSioNo);
-	//$("#tablaVehiculo input[name=aire_acondicionado]").blur(validarSioNo);
-	//$("#tablaVehiculo input[name=cantidad_asientos]").blur(validarAsientos);
+	$("#tablaVehiculo select[name=seguro]").blur(validarSioNo);
+	$("#tablaVehiculo select[name=aire]").blur(validarSioNo);
+	$("#tablaVehiculo input[name=cantidad_asientos]").blur(validarAsientos);
 }
 
 var enviarFoto = function(src){
@@ -158,24 +159,15 @@ var cancelarModificar = function(){
 
 var modificarVehiculo = function(){
 	var sendData = {
+		entity:"vehiculo",
 		action: "modificar_vehiculo",
-		id: vehiculo.id,
-		vehiculo:{}
+		vehiculo: vehiculo
 	}
 	sendData.vehiculo.anio = $("table input[name=anio]").val();
 	sendData.vehiculo.color = $("table input[name=color]").val();
 	sendData.vehiculo.cantidad_asientos = $("table input[name=cantidad_asientos]").val();
 	sendData.vehiculo.seguro = $("table select[name=seguro]").val();
 	sendData.vehiculo.aire = $("table select[name=aire]").val();
-
-		//SIMULA----------
-		vehiculo.anio = sendData.vehiculo.anio;
-		vehiculo.color = sendData.vehiculo.color;
-		vehiculo.cantidad_asientos = sendData.vehiculo.cantidad_asientos;
-		vehiculo.seguro = sendData.vehiculo.seguro;
-		vehiculo.aire = sendData.vehiculo.aire;
-		cargarVehiculo();
-		//-------------
 
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
@@ -184,6 +176,7 @@ var modificarVehiculo = function(){
 			modalMessage("error", jsonData.msg, "Modificar Vehículo");
 		}
 	}
+	
 	sendAjax(sendData,onsuccess);
 }
 
@@ -232,12 +225,12 @@ var validarCampoObligatorio = function(){
 		customAlertSuccess(input);
 	}
 }
-/* Usando select ya no es necesario, seria mejor implementarlo igual pero por ahora lo comento
+
 var validarSioNo = function(){
 	var input = $(this);
 	var valor = input.val().toLowerCase();
 	if (valor.length > 0){
-		if (valor == "sí" || valor == "no" || valor == "si"){
+		if (valor == "s" || valor == "n"){
 			customAlertSuccess(input);
 		}else{
 			customAlert(input,"Valores válidos son: 'Sí' y 'No'");
@@ -249,24 +242,23 @@ var validarSioNo = function(){
 
 var validarAsientos = function(){
 	var input = $(this);
-	var valor = input.val().toLowerCase();
-	if (valor.length > 0){
-		if (valor == "1" || valor == "2" || valor == "3" || valor == "4" || valor == "5"){
+	var valor = parseInt(input.val());
+	if (valor > 0){
+		if (valor>0 && valor <=30){
 			customAlertSuccess(input);
 		}else{
-			customAlert(input,"Valores válidos son: '1', '2', '3', '4' y '5'");
+			customAlert(input,"Demasiados asientos asignados a este vehículo");
 		}
 	}else{
 		customAlert(input, "Completar campo obligatorio");
 	}
 }
-*/
+
 var validarAnio = function(){
 	var input = $(this);
 	var valor = input.val();
 	if (valor.length > 0){
 		var anio = new Date().getFullYear();
-		console.log(anio);
 		if (anio >= valor){
 			customAlertSuccess(input);
 		}else{
