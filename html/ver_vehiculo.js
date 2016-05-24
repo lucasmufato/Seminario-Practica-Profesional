@@ -1,9 +1,9 @@
-//var idVehiculo = getUrlVars()["id"];
-var clientes = [];
+var idVehiculo = getUrlVars()["id"];
+var conductores = [];
 var vehiculo = {};
 
 var simular = function(){
-	clientes = [{
+	conductores = [{
 		id: "48", 
 		nombre_usuario: "Lucho85"
 	},{
@@ -36,8 +36,9 @@ var simular = function(){
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
-	/*$.ajax({
-		url: '/vehiculo', 
+	
+	$.ajax({
+		url: '/viajes', 
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -49,40 +50,31 @@ var sendAjax = function(sendData,callback){
 			document.body.innerHTML = er1.responseText;
 			window.alert (err3);
 		}
-	});*/
+	});
 }
 
 var loadData = function() {
 	
 	var sendData = {
-		action: "ver_vehiculo"
+		entity: "vehiculo",
+		action: "ver_un_vehiculo",
+		"id_vehiculo": idVehiculo
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();	
 			vehiculo = jsonData.vehiculo;
+			conductores = jsonData.conductores;
 			cargarVehiculo();
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
+		}else{
+			modalMessage('error',jsonData.msg)
 		}
 	}
 
-	simular();
+	//simular();
 	sendAjax(sendData,onsuccess);
-	/*$.ajax({
-		url: '/vehiculo', 
-		dataType: 'json',
-		method: 'GET',
-		data: sendData,
-		success: function (jsonData) {
-			DEBUGresponse = jsonData;
-			onsuccess(jsonData);
-		},
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
-		}
-	});*/
 }
 
 var initUI = function(){

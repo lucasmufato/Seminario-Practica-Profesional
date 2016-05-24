@@ -203,8 +203,7 @@ public class Cliente extends Usuario implements JSONable {
 		}
 		return v;
 	}
-	
-	
+
 	// Para saber si dos clientes son el mismo (llamado por List<Cliente> en metodo contains)
     @Override
     public boolean equals(Object object){

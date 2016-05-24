@@ -153,6 +153,8 @@ public abstract class DataAccesObject {
 	
 	//otro que busca por clave primaria, pero en este caso ya sabes la clave primaria
 	public Object buscarPorPrimaryKey(Object clase, Object primaryKey){
+
+
 		if(clase==null || primaryKey==null){
 			return null;
 		}else{
