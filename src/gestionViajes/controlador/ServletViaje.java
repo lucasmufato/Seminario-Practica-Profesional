@@ -191,7 +191,7 @@ public class ServletViaje extends HttpServlet {
 		} catch (Exception e) {
 			err.add("Destino no es valido");
 		} try {
-			String[] locs = request.getParameterValues("intermedios");
+			String[] locs = request.getParameterValues("intermedios[]");
 			if (locs != null) {
 				for (String loc: locs) {
 					id_intermedios.add(Integer.parseInt(loc));
