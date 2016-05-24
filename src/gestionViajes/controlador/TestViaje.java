@@ -402,7 +402,7 @@ public class TestViaje extends TestCase {
 			}catch(ExceptionViajesCompartidos E){
 				fail(E.getMessage());
 			}
-				JSONObject json2 = this.crearViaje();
+				JSONObject json2 = this.crearViaje2();
 			try {
 				assertTrue( this.daoviajes.nuevoViaje(json2) );
 			} catch (ExceptionViajesCompartidos e) {
@@ -445,7 +445,7 @@ public class TestViaje extends TestCase {
 			}catch(ExceptionViajesCompartidos E){
 				fail(E.getMessage());
 			}
-				JSONObject json2 = this.crearViaje();
+				JSONObject json2 = this.crearViaje2();
 			try {
 				assertTrue( this.daoviajes.nuevoViaje(json2) );
 			} catch (ExceptionViajesCompartidos e) {
@@ -500,7 +500,7 @@ public class TestViaje extends TestCase {
 			}catch(ExceptionViajesCompartidos E){
 				fail(E.getMessage());
 			}
-				JSONObject json2 = this.crearViaje();
+				JSONObject json2 = this.crearViaje2();
 			try {
 				assertTrue( this.daoviajes.nuevoViaje(json2) );
 			} catch (ExceptionViajesCompartidos e) {
@@ -555,7 +555,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = this.crearViaje2();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -1195,6 +1195,40 @@ public class TestViaje extends TestCase {
 		fecha.setMonth(11);
 		viaje.put("fecha_inicio", fecha);
 		viaje.put("cantidad_asientos", 2);
+		viaje.put("precio", new Float(50.0));
+		viaje.put("nombre_amigable", "prueba viaje");
+		json2.put("viaje", viaje);
+		JSONObject localidades= new JSONObject();
+		localidades.put("origen",3427200 );
+		localidades.put("destino",3427205 );
+		JSONArray intermedio= new JSONArray();
+		intermedio.add(3427201);
+		intermedio.add(3427202);
+		intermedio.add(3427203);
+		intermedio.add(3427204);
+		localidades.put("intermedios", intermedio);
+		json2.put("localidades", localidades);
+		return json2;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject crearViaje2(){
+		/*
+		{ "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
+			 "VEHICULO": ID_VEHICULO,
+			 "VIAJE": {FECHA_inicio, HS_SALIDA, CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE, COSTO_VIAJE},
+			 "VUELTA": {FECHA_SALIDA,HS_SALIDA,CANTIDAD_ASIENTOS, NOMBRE_AMIGABLE},
+			 "CLIENTE":ID_CLIENTE
+			 }
+		*/
+		JSONObject viaje = new JSONObject();
+		JSONObject json2 = new JSONObject();
+		json2.put("vehiculo", "abd123");
+		json2.put("cliente", 2);
+		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
+		fecha.setMonth(11);
+		viaje.put("fecha_inicio", fecha);
+		viaje.put("cantidad_asientos", 1);
 		viaje.put("precio", new Float(50.0));
 		viaje.put("nombre_amigable", "prueba viaje");
 		json2.put("viaje", viaje);
