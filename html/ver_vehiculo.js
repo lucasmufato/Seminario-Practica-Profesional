@@ -20,13 +20,13 @@ var simular = function(){
 			id: "1",
 			marca: "ford",
 			modelo: "focus",
-			color: "#303F9F",
+			color: "303F9F",
 			anio: "2010",
 			patente: "ifg 999",
 			seguro: "S",
 			aire: "S",
 			cantidad_asientos: "4",
-			cliente_vinculado: ["48"],
+			//cliente_vinculado: ["48"],
 			foto: "http://www.coches.com/fotos_historicas/ford/Focus/med_ford_focus-2014_r3.jpg.pagespeed.ce.JW0wSPihZv.jpg",
 			vehiculo_verificado: "S"
 	}
@@ -89,54 +89,55 @@ var cargarVehiculo = function(){
 	$("#panel-vehiculo").empty();
 
 	if (vehiculo){
-		vehiculo.foto = vehiculo.foto || "img/vehiculo/vehiculo.png";
+		vehiculo.foto_revisada = vehiculo.foto || "img/vehiculo/vehiculo.png";
 	}
 	var elemento = vehiculo;
-	elemento.seguro = mostrarSiNo(vehiculo.seguro);
-	elemento.aire = mostrarSiNo(vehiculo.aire);
+	elemento.tieneSeguro = vehiculo.seguro == "S";
+	elemento.tieneAire = vehiculo.aire == "S";
+	elemento.color_hex = "#"+elemento.color;
 	var template = $("#vehiculo-template").html();
-	//var template = $("#panel-vehiculo").html();
 	$("#panel-vehiculo").append(Mustache.render(template,elemento));
-	new jscolor($('.jscolor')[0]);
 	setearEventos();
 }
 
 function setearEventos(){
+	new jscolor($('.jscolor')[0]);
 	$("input[type='file']").change(function(){
 		readURL(this);
 	});
 	$('#foto_vehiculo').load(function() {
 		var imageSrc = $(this).attr("src");
-		if (imageSrc != vehiculo.foto){
-			enviarFoto("vehiculo",imageSrc);
+		if (imageSrc != vehiculo.foto && imageSrc != vehiculo.foto_revisada){
+			enviarFoto(imageSrc);
 		}
 	});
 
-	$("#tablaVehiculo input[name=anio]").blur(validarCampoObligatorio);
+	$("#tablaVehiculo input[name=anio]").blur(validarAnio);
 	$("#tablaVehiculo input[name=color]").blur(validarCampoObligatorio);
-	$("#tablaVehiculo input[name=seguro]").blur(validarSioNo);
-	$("#tablaVehiculo input[name=aire_acondicionado]").blur(validarSioNo);
-	$("#tablaVehiculo input[name=cantidad_asientos]").blur(validarAsientos);
+	//$("#tablaVehiculo input[name=seguro]").blur(validarSioNo);
+	//$("#tablaVehiculo input[name=aire_acondicionado]").blur(validarSioNo);
+	//$("#tablaVehiculo input[name=cantidad_asientos]").blur(validarAsientos);
 }
 
-var enviarFoto = function(atributo, src){
+var enviarFoto = function(src){
 	var sendData = {
-		id : vehiculo.id,
-		action : "modificar_imagen"
-	}
-	if (atributo == "vehiculo"){
-		sendData.foto = src;
+		entity: "vehiculo",
+		"id_vehiculo" : vehiculo.id,
+		action : "modificar_imagen_vehiculo",
+		foto: src
 	}
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
 			loadData();
-		} 
+		} else{
+			modalMessage("error",jsonData.msg,"Error al subir imagen de vehiculo");
+		}
 	}
 	sendAjax(sendData,onsuccess);
 }
 //-----------------------------------------------MODIFICAR--------------------------------------------------
 var activarModificar = function(){
-	$("#table-vehiculo input").attr("disabled",false);
+	$("#table-vehiculo input, #table-vehiculo select").attr("disabled",false);
 	generarNuevosBotones();
 }
 
@@ -164,8 +165,8 @@ var modificarVehiculo = function(){
 	sendData.vehiculo.anio = $("table input[name=anio]").val();
 	sendData.vehiculo.color = $("table input[name=color]").val();
 	sendData.vehiculo.cantidad_asientos = $("table input[name=cantidad_asientos]").val();
-	sendData.vehiculo.seguro = siNoCaracter($("table input[name=seguro]").val());
-	sendData.vehiculo.aire = siNoCaracter($("table input[name=aire_acondicionado]").val());
+	sendData.vehiculo.seguro = $("table select[name=seguro]").val();
+	sendData.vehiculo.aire = $("table select[name=aire]").val();
 
 		//SIMULA----------
 		vehiculo.anio = sendData.vehiculo.anio;
@@ -231,7 +232,7 @@ var validarCampoObligatorio = function(){
 		customAlertSuccess(input);
 	}
 }
-
+/* Usando select ya no es necesario, seria mejor implementarlo igual pero por ahora lo comento
 var validarSioNo = function(){
 	var input = $(this);
 	var valor = input.val().toLowerCase();
@@ -254,6 +255,22 @@ var validarAsientos = function(){
 			customAlertSuccess(input);
 		}else{
 			customAlert(input,"Valores válidos son: '1', '2', '3', '4' y '5'");
+		}
+	}else{
+		customAlert(input, "Completar campo obligatorio");
+	}
+}
+*/
+var validarAnio = function(){
+	var input = $(this);
+	var valor = input.val();
+	if (valor.length > 0){
+		var anio = new Date().getFullYear();
+		console.log(anio);
+		if (anio >= valor){
+			customAlertSuccess(input);
+		}else{
+			customAlert(input,"El año no puede ser mayor que el actual");
 		}
 	}else{
 		customAlert(input, "Completar campo obligatorio");

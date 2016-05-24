@@ -13,7 +13,7 @@
 	font-size: 2em;
     color: orange;
 }
-.tabla input[disabled] {
+#table-perfil input[disabled], #table-perfil select[disabled] {
 	background-color: transparent;
 	border: none;
 	cursor: auto;
@@ -21,6 +21,12 @@
 	padding: 0;
 	height: auto;
 	color: #000;
+}
+#table-perfil select[disabled] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
 }
 .tabla td {
     color: #000;

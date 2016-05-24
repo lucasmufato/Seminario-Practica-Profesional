@@ -88,12 +88,11 @@
 											<tr>
 												<td><strong>Sexo:</strong></td>
 												<td id="sexo">
-													<input list="sex" class="form-control validar" name="sexo" value="{{persona.sexo_string}}" disabled>
-													<datalist id="sex">
-														<option value="Masculino"></option>
-														<option value="Femenino"></option>
-														<option value="Otro"></option>
-													</datalist>
+													<select class="form-control validar" name="sexo" disabled>
+														<option value="M" {{#persona.esM}}selected{{/persona.esM}}>Masculino</option>
+														<option value="F" {{#persona.esF}}selected{{/persona.esF}}>Femenino</option>
+														<option value="O" {{#persona.esO}}selected{{/persona.esO}}>Otro</option>
+													</select>
 												</td>
 											</tr>
 											{{#usuario_logueado.es_perfil_propio}}

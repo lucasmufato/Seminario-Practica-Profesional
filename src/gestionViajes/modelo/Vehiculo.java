@@ -229,6 +229,7 @@ public class Vehiculo implements JSONable {
 		json.put("seguro", (this.getSeguro() != null)? this.getSeguro().toString(): null);
 		json.put("verificado", (this.getVerificado() != null)? this.getVerificado().toString(): null);
 		json.put("foto", this.getFoto());
+		json.put("color", this.getColor());
 		for (Cliente conductor: this.getConductoresAsListCliente()) {
 			id_conductores.add(conductor.getId_usuario());
 		}

@@ -30,7 +30,7 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-3 col-lg-3" align="center">
-									<img id="foto_vehiculo" alt="Foto Vehiculo" src="{{foto}}" class="img-responsive" style="max-height: 200px">
+									<img id="foto_vehiculo" alt="Foto Vehiculo" src="{{foto_revisada}}" class="img-responsive" style="max-height: 200px">
 									<div>
 										<span class="btn btn-default btn-file ">Examinar <input type="file" name="foto_vehiculo" accept="image/*"></span>
 									</div>
@@ -52,40 +52,33 @@
 											</tr>
 											<tr>
 												<td><strong>Color:</strong></td>
-												<td id="color"><input name="color" type="text" class="form-control jscolor" style="font-size: 0px" placeholder="" value="{{color}}" disabled></td>
+												<td id="color"><input name="color" type="text" class="form-control jscolor" style="font-size: 0px" value="{{color_hex}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Año:</strong></td>
-												<td id="anio"><input type="text" class="form-control" name="anio" value="{{anio}}" disabled></td>
+												<td id="anio"><input type="number" min="1920" step="1" class="form-control" name="anio" value="{{anio}}" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Cantidad de asientos:</strong></td>
-												<td id="cantidad_asientos"><input list="asientos" name="cantidad_asientos" class="form-control" placeholder="" value="{{cantidad_asientos}}" disabled>
-													<datalist id="asientos">
-														<option value="1"></option>
-														<option value="2"></option>
-														<option value="3"></option>
-														<option value="4"></option>
-														<option value="5"></option>
-													</datalist>
+												<td id="cantidad_asientos"><input type="number" min="1" max="30" step="1"  name="cantidad_asientos" class="form-control" value="{{cantidad_asientos}}" disabled>
 												</td>
 											</tr>
 											<tr>
 												<td><strong>Seguro:</strong></td>
-												<td id="seguro"><input list="seguro_op" name="seguro" class="form-control" placeholder="" value="{{seguro}}" disabled>
-													<datalist id="seguro_op">
-														<option value="Sí"></option>
-														<option value="No"></option>
-													</datalist>
+												<td id="seguro">
+													<select name="seguro" class="form-control" disabled>
+														<option value="S" {{#tieneSeguro}}selected{{/tieneSeguro}}>Si</option>
+														<option value="N" {{^tieneSeguro}}selected{{/tieneSeguro}}>No</option>
+													</select>
 												</td>
 											</tr>
 											<tr>
 												<td><strong>Aire acondicionado:</strong></td>
-												<td id="aire_acondicionado"><input list="aire" class="form-control" value="{{aire}}" name="aire_acondicionado" disabled>
-													<datalist id="aire">
-														<option value="Sí"></option>
-														<option value="No"></option>
-													</datalist>			
+												<td id="aire_acondicionado">
+													<select name="aire" class="form-control" disabled>
+														<option value="S" {{#tieneAire}}selected{{/tieneAire}}>Si</option>
+														<option value="N" {{^tieneAire}}selected{{/tieneAire}}>No</option>
+													</select>		
 												</td>
 											</tr>
 										</tbody>

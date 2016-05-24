@@ -7,11 +7,11 @@ header h3 {
 .panel{
     background-color: #ecf0f1;
 }
-.tabla input[disabled] {
+#table-vehiculo input[disabled], #table-vehiculo select[disabled] {
 	border: none;
     cursor: auto;
 }
-#cantidad_asientos input[disabled], #seguro input[disabled], #aire_acondicionado input[disabled], #anio input[disabled]{
+#table-vehiculo select[disabled],#cantidad_asientos input[disabled], #seguro input[disabled], #aire_acondicionado input[disabled], #anio input[disabled]{
     background-color: transparent;
     border: none;
     cursor: auto;
@@ -20,6 +20,13 @@ header h3 {
     height: auto;
     color: #000;
 }
+#table-vehiculo select[disabled] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+
 .tabla td {
     color: #000;
 }
@@ -44,6 +51,9 @@ header h3 {
 }
 #foto_vehiculo {
 	margin-bottom: 0.5em;
+}
+input[name=color]{
+	width: 20%;
 }
 
 /* POP TOOLTIP*/

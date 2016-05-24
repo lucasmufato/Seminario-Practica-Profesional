@@ -416,7 +416,7 @@ public class Perfil extends HttpServlet {
 	}
 	private boolean eliminarArchivo(String archivo) {
 		boolean bandera = false;
-		if (!archivo.isEmpty() && archivo != null){
+		if (archivo != null && !archivo.isEmpty()){
 			FileManager.modifyImage(getServletContext().getRealPath("/"), archivo);
 		}
 		return bandera;

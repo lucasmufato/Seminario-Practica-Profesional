@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -41,6 +42,38 @@ public class FileManager {
 		}
 	}
 	
+	//Mismo que arriba pero obtengo el path real del request, ya voy a mejorar esta redundancia
+	public static String uploadImage(HttpServletRequest request, String img){
+		
+		String pathReal = getPathReal(request);
+		
+		// si no existe directorio, lo creo
+		createDirectory(pathReal,directorioRaiz);
+		
+		// Seteo imagen con nombre generado, formato de la imagen dada y el path relativo
+		String imgName = generateFileName();
+		String imgFormat = getImgFormat(img);
+		String pathRelativo = directorioRaiz+imgName+imgFormat;
+		//
+		
+		// Genero imagen en base a la uri dada y la subo 
+		String imgBase64 = extractMetadata(img); // quitar metada de uri para convertir a binario 
+		byte[] data = Base64.getDecoder().decode(imgBase64); // convierto la uri de String a bytes
+		if (upload(data,pathReal+pathRelativo)){ // la subo al path completo
+			return pathRelativo;
+		} else{
+			return "";
+		}
+	}
+	public static boolean deleteImage(HttpServletRequest request, String archivo) {
+		File file = new File(getPathReal(request)+archivo);
+		return file.delete();
+	}
+	
+	private static String getPathReal(HttpServletRequest request) {
+		return request.getRealPath("/");
+	}
+
 	public static String uploadPdf(String pathReal, JasperPrint jasperPrint){
 		// si no existe directorio, lo creo
 		createDirectory(pathReal,directorioReportes);

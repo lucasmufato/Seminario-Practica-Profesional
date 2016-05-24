@@ -18,7 +18,9 @@ import gestionPuntos.modelo.Calificacion;
 import gestionPuntos.modelo.EstadoClasificacion;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
+
 import java.util.Calendar;
+
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
@@ -928,4 +930,33 @@ public class DAOViajes extends DataAccesObject {
 		return true;
         
         }
+        
+        //by juan
+    	public boolean subirFotoVehiculo(JSONObject foto) throws ExceptionViajesCompartidos {
+    		int idVehiculo;
+    		try{
+    			idVehiculo = Integer.parseInt(foto.get("vehiculo").toString());
+    		}catch(Exception e){
+    			throw new ExceptionViajesCompartidos("El vehiculo no es válido");
+    		}
+        	Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+        	if (v==null){
+    			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
+        	}
+        	
+    		//GUARDO EL CAMBIO DE FOTO
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		this.entitymanager.getTransaction().begin();
+			v.setFoto(foto.get("imagen").toString());
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+    		
+    		return true;
+    	}	
 }

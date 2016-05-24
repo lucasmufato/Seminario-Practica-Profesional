@@ -23,6 +23,7 @@ import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 import otros.ExceptionViajesCompartidos;
 import otros.AccessManager;
+import otros.FileManager;
 
 
 public class ServletViaje extends HttpServlet {
@@ -69,6 +70,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.listar_vehiculos (request);
 			} else if (action != null && action.equals ("ver_un_vehiculo")){
 				respuesta = this.verUnVehiculo(request);
+			} else if (action != null && action.equals ("modificar_imagen_vehiculo")){
+				respuesta = this.modificarImagenVehiculo(request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -81,6 +84,7 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
+
 
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -174,6 +178,7 @@ public class ServletViaje extends HttpServlet {
 		// Chequeo que usuario es cliente
 		if (!this.usuarioEsClienteValido(request)){
 			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
 			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
 			return respuesta;
 		}
@@ -184,34 +189,34 @@ public class ServletViaje extends HttpServlet {
 			idVehiculo = Integer.parseInt(request.getParameter("id_vehiculo"));
 		} catch (Exception e) {
 			respuesta.put("result", false);
+			respuesta.put("redirect", "/mis_vehiculos.html");
 			respuesta.put("msg", "Id del vehiculo no es válido");
 			return respuesta;
 		}
 
 		// chequeo que vehiculo existe
-		Vehiculo v = null;
-		try{
-			 v = (Vehiculo) daoViajes.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
-		}catch (Exception e){
+		Vehiculo v = (Vehiculo) daoViajes.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+		if (v == null){
 			respuesta.put("result", false);
+			respuesta.put("redirect", "/mis_vehiculos.html");
 			respuesta.put("msg", "Vehiculo no se encuentra en el sistema");
 			return respuesta;
 		}
 		
 		// Chequeo que  vehiculo sea del cliente
-		Maneja m = null;
-		try{
-			m = daoViajes.buscarManeja(daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request)), v);
-		}catch (Exception e){
+		Maneja m = daoViajes.buscarManeja(daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request)), v);
+		if (m == null){
 			respuesta.put("result", false);
-			respuesta.put("msg", "Usted no tiene permitido manejar este auto");
+			respuesta.put("redirect", "/mis_vehiculos.html");
+			respuesta.put("msg", "Usted no tiene permitido manejar este vehículo");
 			return respuesta;
 		}
 		
 		// Chequeo que aun tenga asignado el vehiculo
 		if (m.getFecha_fin() != null){
 			respuesta.put("result", false);
-			respuesta.put("msg", "Usted ya no tiene permitido manejar este vehiculo");
+			respuesta.put("redirect", "/mis_vehiculos.html");
+			respuesta.put("msg", "Usted ya no tiene permitido manejar este vehículo");
 			return respuesta;
 		}
 		
@@ -231,6 +236,63 @@ public class ServletViaje extends HttpServlet {
 		respuesta.put("vehiculo", v.toJSON());
 		respuesta.put("conductores",conductores);
 
+		return respuesta;
+	}
+	
+	private JSONObject modificarImagenVehiculo(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que vehiculo tiene id valida
+		int idVehiculo;
+		try{
+			idVehiculo = Integer.parseInt(request.getParameter("id_vehiculo"));
+		}catch (Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehiculo no es válido");
+			return respuesta;
+		}
+		
+		// Chequeo que vehiculo existe
+		Vehiculo v = null;
+		try{
+			v = (Vehiculo) daoViajes.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehiculo no se encuentra en el sistema");
+			return respuesta;
+		}
+		
+		//guardo imagen anterior
+		String fotoAnterior = v.getFoto();
+		
+		//Subo imagen
+		String pathFotoSubida = FileManager.uploadImage(request,request.getParameter("foto"));
+		if (pathFotoSubida.isEmpty() || pathFotoSubida == null){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Error al subir imagen al servidor");
+			return respuesta;
+		}
+		
+		//cargo objeto a mandar al dao
+		JSONObject foto = new JSONObject();
+		foto.put("vehiculo", idVehiculo);
+		foto.put("imagen", pathFotoSubida);
+
+		try {
+			// si sube imagen correctamente elimino imagen anterior
+			if (daoViajes.subirFotoVehiculo(foto)){
+				if (fotoAnterior != null && !fotoAnterior.isEmpty()){
+					FileManager.deleteImage(request, fotoAnterior);
+				}
+			}
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Imagen fue subida al servidor pero hubo un error en el almacenamiento del path en la bd");
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Imagen fue guardada con éxito");
 		return respuesta;
 	}
 	

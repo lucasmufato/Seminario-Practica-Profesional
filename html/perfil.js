@@ -79,8 +79,10 @@ var cargarPerfil = function(){
 		data.cliente.reputacion_stars =  reputacionStars(data.cliente.reputacion);
 	}
 	data.persona.tipo_doc_string = tipoDocString(data.persona.tipo_doc);
-	data.persona.sexo_string = sexoString(data.persona.sexo);
-	
+	data.persona.esM = data.persona.sexo == "M";
+	data.persona.esF = data.persona.sexo == "F";
+	data.persona.esO = data.persona.sexo == "O";
+
 	// GENERO HTML DINAMICO
 	var template = $("#perfil-template").html();
 	$("#panel-perfil").append(Mustache.render(template,data));
@@ -107,7 +109,7 @@ function setearEventos(){
 	$("#tableCliente input").not(".validar").blur(validarCampoObligatorio);
 	$("#tableCliente input[name='mail-cliente']").blur(validarMail);
 	$("#tableCliente input[name='pass-cliente']").blur(validarPass);
-	$("#tableCliente input[name=sexo]").blur(validarSexo);
+	//$("#tableCliente select[name=sexo]").blur(validarSexo);
 }
 
 var enviarFoto = function(atributo, src){
@@ -129,7 +131,7 @@ var enviarFoto = function(atributo, src){
 }
 
 var activarModificar = function(){
-	$("#table-perfil input").attr("disabled",false);
+	$("#table-perfil input,#table-perfil select").attr("disabled",false);
 	generarNuevosBotones();
 }
 
@@ -192,7 +194,7 @@ var modificarPerfilCliente = function(){
 		sendData.persona.apellidos = $("table input[name=apellidos-cliente]").val();
 		sendData.persona.nombres = $("table input[name=nombres-cliente]").val();
 		sendData.persona.fecha_nacimiento = $("#tableCliente input[name=fecha_nacimiento]").val();
-		sendData.persona.sexo = sexoCaracter($("#tableCliente input[name=sexo]").val());
+		sendData.persona.sexo = $("#tableCliente select[name=sexo]").val();
 
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
@@ -263,7 +265,7 @@ var validarPass = function(){
 		customAlert(inputPass, "Completar campo obligatorio");
 	}
 }
-
+/*
 var validarSexo = function(){
 	var inputSexo = $(this);
 	var valor = inputSexo.val().toLowerCase();
@@ -277,7 +279,7 @@ var validarSexo = function(){
 		customAlert(inputSexo, "Completar campo obligatorio");
 	}
 }
-
+*/
 var customAlert = function(elemento,msg){
 	var mensaje = msg;
 	var popoverTemplate = ['<div class="popover-error popover">',
