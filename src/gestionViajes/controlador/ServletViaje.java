@@ -67,6 +67,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.nuevo_vehiculo (request);
 			} else if (action != null && action.equals ("ver_mis_vehiculos")) {
 				respuesta = this.listar_vehiculos (request);
+			} else if (action != null && action.equals ("ver_un_vehiculo")){
+				respuesta = this.verUnVehiculo(request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -164,6 +166,72 @@ public class ServletViaje extends HttpServlet {
 
 		salida.put("result", true);
 		return salida;
+	}
+	
+	private JSONObject verUnVehiculo(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del vehiculo es valido
+		int idVehiculo;
+		try {
+			idVehiculo = Integer.parseInt(request.getParameter("id_vehiculo"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Id del vehiculo no es válido");
+			return respuesta;
+		}
+
+		// chequeo que vehiculo existe
+		Vehiculo v = null;
+		try{
+			 v = (Vehiculo) daoViajes.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+		}catch (Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehiculo no se encuentra en el sistema");
+			return respuesta;
+		}
+		
+		// Chequeo que  vehiculo sea del cliente
+		Maneja m = null;
+		try{
+			m = daoViajes.buscarManeja(daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request)), v);
+		}catch (Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Usted no tiene permitido manejar este auto");
+			return respuesta;
+		}
+		
+		// Chequeo que aun tenga asignado el vehiculo
+		if (m.getFecha_fin() != null){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Usted ya no tiene permitido manejar este vehiculo");
+			return respuesta;
+		}
+		
+		//Devuelvo conductores pero solo aquellos que no tienen estado fin (es decir, que aun pueden manejar este vehiculo)
+		List<Cliente> listaConductores = v.getConductoresActivos();
+		JSONArray conductores = new JSONArray();
+		for (Cliente c: listaConductores){
+			if (c.isActivo()){
+				JSONObject conductor = new JSONObject();
+				conductor.put("id", c.getId_usuario());
+				conductor.put("nombre_usuario", c.getNombre_usuario());
+				conductores.add(conductor);
+			}
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("vehiculo", v.toJSON());
+		respuesta.put("conductores",conductores);
+
+		return respuesta;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -287,14 +355,6 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
-	public JSONObject buscar_viaje(JSONObject datos){
-		/*
-		EL JSON QUE RECIBE LE METODO TENDRIA LA FORMA:
-		{ "ORIGEN":ID_LOCALIDAD, "DESTINO":ID_LOCALIDAD, DESDE, HASTA, CONDUCTOR,ESTADO}	
-		 */
-		return null;
-	}
-	
 	@SuppressWarnings("unchecked")
 	public JSONObject ver_viaje_detallado(HttpServletRequest request) {
 		int id_viaje;
@@ -354,7 +414,8 @@ public class ServletViaje extends HttpServlet {
 		
 		return salida;
 	}
-		/*
+		
+	/*
 		 EL JSON DE LA RESPUESTA DEBERIA TENER:
 		 
 		 Nota de Juan: contrastar este json con el de 'detalle_viaje.js' funcion: 'simular()'
@@ -469,7 +530,6 @@ public class ServletViaje extends HttpServlet {
 	public JSONObject comision_por_recorrido(Integer id_localidad_subida, Integer id_localidad_bajada, Integer id_viaje){
 		return null;
 	}
-	
 
 	private JSONObject ver_postulantes(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
@@ -537,13 +597,6 @@ public class ServletViaje extends HttpServlet {
 		return postulante;
 	}
 
-	/* PARA QUE TOMAS EL NOMBRE AMIGABLE? 
-	public JSONObject ver_lista_pasajeros(Integer id_viaje){
-		daoViajes.listarPasajerosPorViaje(id_viaje);
-		daoViajes.nombreAmigablePorViaje(id_viaje);
-		return null;
-	}
-	*/
 	public JSONObject aceptar_rechazar_postulante(HttpServletRequest request){
 		JSONObject respuesta = new JSONObject();
 		

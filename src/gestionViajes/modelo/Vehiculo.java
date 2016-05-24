@@ -148,6 +148,18 @@ public class Vehiculo implements JSONable {
 		return lista;
 	}
 
+	// by juan
+	// Lista de clientes que manejan el auto y se encuentran activos
+	public List<Cliente> getConductoresActivos() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for (Maneja maneja: this.getConductores()) {
+			if (maneja.fecha_fin == null){
+				lista.add(maneja.getCliente());
+			}
+		}
+		return lista;
+	}
+	
 	public Integer getId_vehiculo() {
 		return id_vehiculo;
 	}

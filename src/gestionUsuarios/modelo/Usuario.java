@@ -150,6 +150,12 @@ public class Usuario implements JSONable {
 		this.estado = estado;
 	}
 	
+	//by juan
+	public boolean isActivo(){
+		return this.estado.toString().equals("A");
+	}
+	
+	
 	@Override
 	public String toString(){
 		return "Usuario: [ID:"+this.id_usuario+" , "+this.nombre_usuario+" , "+this.password+" , "+this.descripcion+" , "+this.email+" , "+
