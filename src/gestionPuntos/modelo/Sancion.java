@@ -15,12 +15,17 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import gestionUsuarios.modelo.Cliente;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.NamedQuery;
 
-@NamedQueries({
-	
-})
+
 @Entity
 @Table(name="SANCION")
+@NamedQuery(name="Sancion.PorIDCliente",query="SELECT s FROM Sancion s WHERE s.cliente = :id_cliente")    
+
+
 public class Sancion {
 	
 	@Id
