@@ -62,7 +62,8 @@ public class DAOPuntos extends DataAccesObject {
             this.entitymanager.persist(mov);
             try{    
                     
-                    entitymanager.getTransaction( ).commit( );	
+                    entitymanager.getTransaction( ).commit( );
+                    boolean bandera = this.actualizarPuntosCliente(descuento_int, cliente.getId_usuario());
             }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -146,4 +147,27 @@ public class DAOPuntos extends DataAccesObject {
         }
         return diferencia;
     }
+    
+    public boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
+        
+        DAOAdministracionUsuarios daoadmusr = new DAOAdministracionUsuarios(); 
+        if(this.entitymanager.getTransaction().isActive()){
+                this.entitymanager.getTransaction().rollback();
+        }
+        this.entitymanager.getTransaction( ).begin( );
+        Cliente cliente = (Cliente) daoadmusr.buscarPorPrimaryKey(new Cliente(), id_cliente);     
+        Integer puntos_cuenta = cliente.getPuntos();
+        puntos_cuenta  = puntos_cuenta + (int)monto;
+        cliente.setPuntos(puntos_cuenta);
+        try{                
+                this.entitymanager.getTransaction( ).commit( );
+        }catch(Exception e){
+		String error= ManejadorErrores.parsearRollback((RollbackException) e);
+        	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		
+        }        
+        return true;
+    }
+    
+    
 }
