@@ -2,7 +2,9 @@ package gestionUsuarios.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import gestionViajes.modelo.*;
+
 import javax.persistence.*;
 
 import org.json.simple.JSONArray;
@@ -10,11 +12,14 @@ import org.json.simple.JSONObject;
 
 import otros.JSONable;
 
-@Entity
-@Table(name="cliente")
+	@Entity
+	@Table(name="cliente")
+	@NamedQueries({
+		@NamedQuery(name="Cliente.buscarPorClaveCandidata",query="SELECT c FROM Cliente c WHERE c.nombre_usuario = :clave_candidata"),
+		@NamedQuery(name="Cliente.autocompletar",query="SELECT c FROM Cliente c WHERE CONCAT(c.nombre_usuario , \" \", c.email) LIKE :busqueda")
+	})
 
-@NamedQuery(name="Cliente.buscarPorClaveCandidata",query="SELECT c FROM Cliente c WHERE c.nombre_usuario = :clave_candidata")
-@DiscriminatorValue("C")		//valor que va en la tabla de usuario, por el cual JPA distingue que tipo de clase hijo es
+	@DiscriminatorValue("C")		//valor que va en la tabla de usuario, por el cual JPA distingue que tipo de clase hijo es
 public class Cliente extends Usuario implements JSONable {
 	@Column(nullable=true)
 	protected Integer reputacion;

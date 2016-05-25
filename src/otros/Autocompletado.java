@@ -59,6 +59,17 @@ public class Autocompletado extends HttpServlet {
 				item.put("lng", localidad.getLongitud());
 				encontrados.add(item);
 			}
+		} else if (entity.equals("cliente")){
+			List<Cliente> resultados;
+			resultados = (List<Cliente>) dao.autocompletar("Cliente", busqueda);
+			for (Cliente cliente: resultados) {
+				if (cliente.isActivo()){
+					JSONObject item = new JSONObject();
+					item.put("id", cliente.getId_usuario());
+					item.put("name", cliente.getNombre_usuario() + " - " + cliente.getEmail());
+					encontrados.add(item);
+				}
+			}
 		}
 
 		writer.print(encontrados);

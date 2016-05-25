@@ -1,9 +1,10 @@
 var idVehiculo = getUrlVars()["id"];
-var conductores = [];
-var vehiculo = {};
+var dataVehiculo = {}
+dataVehiculo.conductores = [];
+dataVehiculo.vehiculo = {};
 
 var simular = function(){
-	conductores = [{
+	dataVehiculo.conductores = [{
 		id: "48", 
 		nombre_usuario: "Lucho85"
 	},{
@@ -16,7 +17,7 @@ var simular = function(){
 		id: "2",
 		nombre_usuario: "Lolo91"
 	}];
-	vehiculo = {
+	dataVehiculo.vehiculo = {
 			id: "1",
 			marca: "ford",
 			modelo: "focus",
@@ -30,7 +31,7 @@ var simular = function(){
 			foto: "http://www.coches.com/fotos_historicas/ford/Focus/med_ford_focus-2014_r3.jpg.pagespeed.ce.JW0wSPihZv.jpg",
 			vehiculo_verificado: "S"
 	}
-	cargarVehiculo();
+	cargarDataVehiculo();
 };
 
 
@@ -63,9 +64,9 @@ var loadData = function() {
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();	
-			vehiculo = jsonData.vehiculo;
-			conductores = jsonData.conductores;
-			cargarVehiculo();
+			dataVehiculo.vehiculo = jsonData.vehiculo;
+			dataVehiculo.conductores = jsonData.conductores;
+			cargarDataVehiculo();
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
 		}else{
@@ -84,19 +85,18 @@ var initUI = function(){
 
 window.onload=initUI;
 
-var cargarVehiculo = function(){
+var cargarDataVehiculo = function(){
 	//Limpio UI
 	$("#panel-vehiculo").empty();
 
-	if (vehiculo){
-		vehiculo.foto_revisada = vehiculo.foto || "img/vehiculo/vehiculo.png";
+	if (dataVehiculo.vehiculo){
+		dataVehiculo.vehiculo.foto_revisada = dataVehiculo.vehiculo.foto || "img/vehiculo/vehiculo.png";
 	}
-	var elemento = vehiculo;
-	elemento.tieneSeguro = vehiculo.seguro == "S";
-	elemento.tieneAire = vehiculo.aire == "S";
-	elemento.color_hex = "#"+elemento.color;
+	dataVehiculo.vehiculo.tieneSeguro = dataVehiculo.vehiculo.seguro == "S";
+	dataVehiculo.vehiculo.tieneAire = dataVehiculo.vehiculo.aire == "S";
+	dataVehiculo.vehiculo.color_hex = "#"+dataVehiculo.vehiculo.color;
 	var template = $("#vehiculo-template").html();
-	$("#panel-vehiculo").append(Mustache.render(template,elemento));
+	$("#panel-vehiculo").append(Mustache.render(template,dataVehiculo));
 	setearEventos();
 }
 
@@ -107,7 +107,7 @@ function setearEventos(){
 	});
 	$('#foto_vehiculo').load(function() {
 		var imageSrc = $(this).attr("src");
-		if (imageSrc != vehiculo.foto && imageSrc != vehiculo.foto_revisada){
+		if (imageSrc != dataVehiculo.vehiculo.foto && imageSrc != dataVehiculo.vehiculo.foto_revisada){
 			enviarFoto(imageSrc);
 		}
 	});
@@ -123,7 +123,7 @@ function setearEventos(){
 var enviarFoto = function(src){
 	var sendData = {
 		entity: "vehiculo",
-		"id_vehiculo" : vehiculo.id,
+		"id_vehiculo" : dataVehiculo.vehiculo.id,
 		action : "modificar_imagen_vehiculo",
 		foto: src
 	}
@@ -136,6 +136,34 @@ var enviarFoto = function(src){
 	}
 	sendAjax(sendData,onsuccess);
 }
+//-----------------------------Asignar Conductor------------------------------------------------------------//
+
+var activarAsignarConductor = function(){
+
+	inputConductores = $('form input[name=conductores]').magicSuggest({
+		method: 'GET',
+		data: '/autocompletado',
+		mode: 'remote',
+		allowFreeEntries: false,
+		selectFirst: true,
+		hideTrigger: true,
+		placeholder: 'Buscar Conductores',
+		noSuggestionText: 'No hay sugerencias',
+		minChars: 3,
+		maxSelectionRenderer: function(){},
+		minCharsRenderer: function() {},
+		dataUrlParams: {
+			entity: "cliente"
+		}
+	});
+
+	$('#modal-asignar-conductor').modal('show');
+}
+var asignarConductores = function(){
+	var conductores = inputConductores.getValue();
+	console.log(conductores);
+}
+
 //-----------------------------------------------MODIFICAR--------------------------------------------------
 var activarModificar = function(){
 	$("#table-vehiculo input, #table-vehiculo select").attr("disabled",false);
@@ -154,14 +182,14 @@ var generarNuevosBotones = function(){
 }
 
 var cancelarModificar = function(){
-	cargarVehiculo();
+	cargarDataVehiculo();
 }
 
 var modificarVehiculo = function(){
 	var sendData = {
 		entity:"vehiculo",
 		action: "modificar_vehiculo",
-		vehiculo: vehiculo
+		vehiculo: dataVehiculo.vehiculo
 	}
 	sendData.vehiculo.anio = $("table input[name=anio]").val();
 	sendData.vehiculo.color = $("table input[name=color]").val();
@@ -187,7 +215,7 @@ var eliminarVehiculo = function(){
 		var sendJson = {
 			entity: "vehiculo",
 			action: "eliminar_vehiculo",
-			id: vehiculo.id
+			id: dataVehiculo.vehiculo.id
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
