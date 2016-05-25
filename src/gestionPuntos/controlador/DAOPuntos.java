@@ -1,5 +1,6 @@
 package gestionPuntos.controlador;
 
+import gestionPuntos.modelo.EstadoSancion;
 import gestionPuntos.modelo.MovimientoPuntos;
 import gestionPuntos.modelo.Sancion;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
@@ -45,13 +46,12 @@ public class DAOPuntos extends DataAccesObject {
         //System.out.println("Entro a DAOPUNTOS Con:\n IdCli:"+id_cliente+"\n IdViaje:"+id_viaje+"\n Time:"+fechaYHoraCancelacion+"");
         double descuento = this.calculcarDescuentoPuntos(id_viaje, id_cliente);
         if(descuento!=0){ //sanciono si cancelo tarde 
-            DAOAdministracionUsuarios daoadmusr = new DAOAdministracionUsuarios(); 
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
-            this.entitymanager.getTransaction( ).begin( );
+              this.entitymanager.getTransaction( ).begin( );
             MovimientoPuntos mov = new MovimientoPuntos();
-            Cliente cliente = (Cliente) daoadmusr.buscarPorPrimaryKey(new Cliente(), id_cliente);         
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);         
             mov.setCliente(cliente);
             java.util.Date utilDate = new java.util.Date();
             java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
@@ -59,10 +59,25 @@ public class DAOPuntos extends DataAccesObject {
             descuento = descuento - 2*(descuento);
             Integer descuento_int = (int)descuento;
             mov.setMonto(descuento_int);
-            this.entitymanager.persist(mov);
+            Sancion sancion = new Sancion();
+            sancion.setCliente(cliente);
+            sancion.setMovimiento_puntos(mov);
+            utilDate = new java.util.Date();
+            fecha = new java.sql.Date(utilDate.getTime());
+            sancion.setFecha_inicio(fecha);
+            sancion.setFecha_fin(fecha);            
+            sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.      
+            
+            
+            
+            
             try{    
-                    
-                    entitymanager.getTransaction( ).commit( );	
+                    this.entitymanager.persist(mov);
+                    this.entitymanager.getTransaction( ).commit( );
+                    this.entitymanager.getTransaction().begin();
+                    this.entitymanager.persist(sancion);
+                    this.entitymanager.getTransaction( ).commit( );
+                    boolean bandera = this.actualizarPuntosCliente(descuento_int, cliente.getId_usuario());
             }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -146,4 +161,26 @@ public class DAOPuntos extends DataAccesObject {
         }
         return diferencia;
     }
+    
+    public boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
+        
+        if(this.entitymanager.getTransaction().isActive()){
+                this.entitymanager.getTransaction().rollback();
+        }
+        this.entitymanager.getTransaction( ).begin( );
+        Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);     
+        Integer puntos_cuenta = cliente.getPuntos();
+        puntos_cuenta  = puntos_cuenta + (int)monto;
+        cliente.setPuntos(puntos_cuenta);
+        try{                
+                this.entitymanager.getTransaction( ).commit( );
+        }catch(Exception e){
+		String error= ManejadorErrores.parsearRollback((RollbackException) e);
+        	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		
+        }        
+        return true;
+    }
+    
+    
 }

@@ -29,7 +29,7 @@ public class MovimientoPuntos {
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorMovimientoPuntos")
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorMovimientoPuntos", sequenceName = "sequence")
 	protected Integer id_movimiento_puntos;
-	@ManyToOne()//cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="ID_CLIENTE")
 	protected Cliente cliente;
 	@Column(nullable=false,name="FECHA")

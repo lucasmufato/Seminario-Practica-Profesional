@@ -106,6 +106,12 @@ public class Sancion {
 		this.tipo_sancion = tipo_sancion;
 	}
 	
+	public void setEstado(EstadoSancion estado){
+            this.estado = estado;
+        }
 	
+        public EstadoSancion getEstado(){
+            return estado;
+        }
 	
 }
