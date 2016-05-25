@@ -108,13 +108,4 @@ public class Comision implements JSONable {
 	public Object getPrimaryKey() {
 		return null;
 	}
-
-	public static ComisionCobrada NuevaComisionCobrada(Double km) {
-		ComisionCobrada cc= new ComisionCobrada();
-		cc.setMonto(30);
-		cc.setComision(null);
-		// TODO Auto-generated method stub
-		return 	cc;
-	}
-
 }

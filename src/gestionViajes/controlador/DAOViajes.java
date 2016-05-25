@@ -10,6 +10,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import gestionComisiones.controlador.DAOComisiones;
 import gestionComisiones.modelo.Comision;
 import gestionComisiones.modelo.ComisionCobrada;
 import gestionComisiones.modelo.EstadoComisionCobrada;
@@ -469,7 +470,11 @@ public class DAOViajes extends DataAccesObject {
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
 		
 		//	TODO la parte de crear la comision
-		ComisionCobrada comisionCobrada = Comision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
+		DAOComisiones daocomision= new DAOComisiones();
+		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
+		daocomision.cerrarConexiones();
+		daocomision=null;
+		
 		comisionCobrada.setMovimiento_saldo(null);
 		comisionCobrada.setPasajero_viaje(null);
 		comisionCobrada.setEstado(EstadoComisionCobrada.informativa);		//significa que se guarda solo para saber cuanto le dijimos q le ibamos a cobrar cuando se postulo
@@ -512,7 +517,10 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: LAS LOCALIDADES NO EXISTEN O NO ESTAN EN ORDEN");
 		}
 		Double km = viaje.calcularKM(inicio,destino);
-		ComisionCobrada comisionCobrada = Comision.NuevaComisionCobrada(km);
+		DAOComisiones daocomision= new DAOComisiones();
+		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	
+		daocomision.cerrarConexiones();
+		daocomision=null;
 		return comisionCobrada.getMonto();
 	}
 	

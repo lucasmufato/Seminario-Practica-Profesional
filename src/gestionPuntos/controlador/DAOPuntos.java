@@ -45,13 +45,12 @@ public class DAOPuntos extends DataAccesObject {
         //System.out.println("Entro a DAOPUNTOS Con:\n IdCli:"+id_cliente+"\n IdViaje:"+id_viaje+"\n Time:"+fechaYHoraCancelacion+"");
         double descuento = this.calculcarDescuentoPuntos(id_viaje, id_cliente);
         if(descuento!=0){ //sanciono si cancelo tarde 
-            DAOAdministracionUsuarios daoadmusr = new DAOAdministracionUsuarios(); 
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
             this.entitymanager.getTransaction( ).begin( );
             MovimientoPuntos mov = new MovimientoPuntos();
-            Cliente cliente = (Cliente) daoadmusr.buscarPorPrimaryKey(new Cliente(), id_cliente);         
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);         
             mov.setCliente(cliente);
             java.util.Date utilDate = new java.util.Date();
             java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
@@ -150,12 +149,11 @@ public class DAOPuntos extends DataAccesObject {
     
     public boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
         
-        DAOAdministracionUsuarios daoadmusr = new DAOAdministracionUsuarios(); 
         if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
         }
         this.entitymanager.getTransaction( ).begin( );
-        Cliente cliente = (Cliente) daoadmusr.buscarPorPrimaryKey(new Cliente(), id_cliente);     
+        Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);     
         Integer puntos_cuenta = cliente.getPuntos();
         puntos_cuenta  = puntos_cuenta + (int)monto;
         cliente.setPuntos(puntos_cuenta);
