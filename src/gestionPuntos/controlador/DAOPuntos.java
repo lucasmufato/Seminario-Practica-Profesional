@@ -1,5 +1,6 @@
 package gestionPuntos.controlador;
 
+import gestionPuntos.modelo.EstadoSancion;
 import gestionPuntos.modelo.MovimientoPuntos;
 import gestionPuntos.modelo.Sancion;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
@@ -48,7 +49,7 @@ public class DAOPuntos extends DataAccesObject {
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
-            this.entitymanager.getTransaction( ).begin( );
+              this.entitymanager.getTransaction( ).begin( );
             MovimientoPuntos mov = new MovimientoPuntos();
             Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);         
             mov.setCliente(cliente);
@@ -58,10 +59,24 @@ public class DAOPuntos extends DataAccesObject {
             descuento = descuento - 2*(descuento);
             Integer descuento_int = (int)descuento;
             mov.setMonto(descuento_int);
-            this.entitymanager.persist(mov);
+            Sancion sancion = new Sancion();
+            sancion.setCliente(cliente);
+            sancion.setMovimiento_puntos(mov);
+            utilDate = new java.util.Date();
+            fecha = new java.sql.Date(utilDate.getTime());
+            sancion.setFecha_inicio(fecha);
+            sancion.setFecha_fin(fecha);            
+            sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.      
+            
+            
+            
+            
             try{    
-                    
-                    entitymanager.getTransaction( ).commit( );
+                    this.entitymanager.persist(mov);
+                    this.entitymanager.getTransaction( ).commit( );
+                    this.entitymanager.getTransaction().begin();
+                    this.entitymanager.persist(sancion);
+                    this.entitymanager.getTransaction( ).commit( );
                     boolean bandera = this.actualizarPuntosCliente(descuento_int, cliente.getId_usuario());
             }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);

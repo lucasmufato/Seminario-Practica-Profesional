@@ -42,7 +42,8 @@ public class TestViaje extends TestCase {
 		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno
 		
 		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
-		this.daoviajes.vaciarTabla("MovimientoPuntos");
+		this.daoviajes.vaciarTabla("Sancion");
+                this.daoviajes.vaciarTabla("MovimientoPuntos");
                 this.daoviajes.vaciarTabla("PasajeroViaje");
 		this.daoviajes.vaciarTabla("ComisionCobrada");
 		this.daoviajes.vaciarTabla("Calificacion");
