@@ -161,7 +161,24 @@ var activarAsignarConductor = function(){
 }
 var asignarConductores = function(){
 	var conductores = inputConductores.getValue();
-	console.log(conductores);
+	
+	if (conductores.length > 0){
+		var sendJson = {
+			entity: "vehiculo",
+			action: "asignar_vehiculo_clientes",
+			id:dataVehiculo.vehiculo.id,
+			conductores: conductores
+		}
+		var onsuccess = function(jsonData){
+			if (jsonData.result == false && jsonData.redirect != undefined) {
+				window.location = jsonData.redirect;
+			}
+			closeModal("asignar-conductor");
+			loadData();
+			modalMessage("success",jsonData.msg,"Asignar conductores a vehículo");
+		}
+		vc.peticionAjax("/viajes",sendJson,"POST",onsuccess);
+	}
 }
 
 //-----------------------------------------------MODIFICAR--------------------------------------------------

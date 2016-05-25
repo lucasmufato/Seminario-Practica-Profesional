@@ -76,6 +76,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.eliminarVehiculo(request);
 			} else if (action != null && action.equals ("modificar_imagen_vehiculo")){
 				respuesta = this.modificarImagenVehiculo(request);
+			} else if (action != null && action.equals ("asignar_vehiculo_clientes")){
+				respuesta = this.asignarVehiculoCliente(request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -215,23 +217,15 @@ public class ServletViaje extends HttpServlet {
 		}
 		
 		// Chequeo que  vehiculo sea del cliente
-		Maneja m = daoViajes.buscarManeja(daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request)), v);
-		if (m == null){
+		Cliente logueado = daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request));
+		if (!logueado.puedeManejar(v)){
 			respuesta.put("result", false);
 			respuesta.put("redirect", "/mis_vehiculos.html");
 			respuesta.put("msg", "Usted no tiene permitido manejar este vehículo");
 			return respuesta;
 		}
 		
-		// Chequeo que aun tenga asignado el vehiculo
-		if (m.getFecha_fin() != null){
-			respuesta.put("result", false);
-			respuesta.put("redirect", "/mis_vehiculos.html");
-			respuesta.put("msg", "Usted ya no tiene permitido manejar este vehículo");
-			return respuesta;
-		}
-		
-		//Devuelvo conductores pero solo aquellos que no tienen estado fin (es decir, que aun pueden manejar este vehiculo)
+		//Devuelvo conductores pero solo aquellos que estan activos
 		List<Cliente> listaConductores = v.getConductoresActivos();
 		JSONArray conductores = new JSONArray();
 		for (Cliente c: listaConductores){
@@ -366,6 +360,58 @@ public class ServletViaje extends HttpServlet {
 		respuesta.put("result", true);
 		respuesta.put("redirect", "/mis_vehiculos.html");
 		respuesta.put("msg", "Vehículo desactivado correctamente");
+		return respuesta;
+	}
+	
+	private JSONObject asignarVehiculoCliente(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		int idVehiculo;
+		try{
+			idVehiculo = Integer.parseInt(request.getParameter("id"));
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehículo no es válido");
+			return respuesta;
+		}
+		
+		ArrayList<Cliente> listaConductores = new ArrayList<>();
+		try {
+			String[] conductores = request.getParameterValues("conductores[]");
+			if (conductores != null) {
+				for (String c: conductores) {
+					Cliente cliente = (Cliente) daoViajes.buscarPorPrimaryKey(new Cliente(), Integer.parseInt(c));
+					if (c==null){
+						respuesta.put("result", false);
+						respuesta.put("msg", "Conductor no existe en el sistema");
+						return respuesta;
+					}
+					listaConductores.add(cliente);
+				}
+			}
+		} catch (NumberFormatException e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Ha ingresado un conductor no válido");
+			return respuesta;
+		} 
+		
+		try {
+			daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Conductores fueron asignados con éxito");
 		return respuesta;
 	}
 	
@@ -606,22 +652,7 @@ public class ServletViaje extends HttpServlet {
 		
 		return salida;
 	}
-		
-	/*
-		 EL JSON DE LA RESPUESTA DEBERIA TENER:
-		 
-		 Nota de Juan: contrastar este json con el de 'detalle_viaje.js' funcion: 'simular()'
-		 {
-		 	"CONDUCTOR":{NOMBREUSUARIO, FOTOPERFIL, FOTO_REGISTRO, REPUTACION},
-		 	"VEHICULO":{FOTO,MARCA,MODELO, PATENTE,AÑO,AIRE_ACOND,SEGURO,VERIFICADO},
-		 	"VIAJE":{FECHA,HORA,NOMBRE_AMIGABLE,IDA/VUELTA,ID_VIAJECOMPLEMENTO(es el id_ida o id_vuelta), COSTO,ESTADO,ASIENTOS_LIBRES
-		 			"RECORRIDO":[ ORIGEN,INTERMDIO,....,DESTINO]
-			//esto es para mostrarle funcionalidades(botones)
-		 	"usuario_logueado":{es_conductor,es_pasajero,es_seguidor}
-		 }
-		 
-		 */
-	
+
 	private JSONObject participar_viaje(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		JSONObject postulacion = new JSONObject();

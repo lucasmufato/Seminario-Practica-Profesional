@@ -950,6 +950,7 @@ public class DAOViajes extends DataAccesObject {
     		}
     		this.entitymanager.getTransaction().begin();
 			v.setFoto(foto.get("imagen").toString());
+			this.entitymanager.persist(v);
     		try{
         		entitymanager.getTransaction( ).commit( );	
         	}catch(RollbackException e){
@@ -982,6 +983,7 @@ public class DAOViajes extends DataAccesObject {
 			v.setCantidad_asientos(Integer.parseInt(json.get("asientos").toString()));
 			v.setColor(json.get("color").toString());
 			v.setSeguro(json.get("seguro").toString().charAt(0));
+			this.entitymanager.persist(v);
     		try{
         		entitymanager.getTransaction( ).commit( );	
         	}catch(RollbackException e){
@@ -1002,6 +1004,7 @@ public class DAOViajes extends DataAccesObject {
     		
     		this.entitymanager.getTransaction().begin();
 			v.setEstado("I".charAt(0));
+			this.entitymanager.persist(v);
     		try{
         		entitymanager.getTransaction( ).commit( );	
         	}catch(RollbackException e){
@@ -1023,8 +1026,8 @@ public class DAOViajes extends DataAccesObject {
 			List<Maneja> lista = this.getManejaPorVehiculo(v);
 			for (Maneja m : lista){
 				m.setFecha_fin(new Timestamp((new java.util.Date()).getTime()));
+				this.entitymanager.persist(m);
 			}
-			
     		try{
         		entitymanager.getTransaction( ).commit( );	
         	}catch(RollbackException e){
@@ -1069,5 +1072,44 @@ public class DAOViajes extends DataAccesObject {
 				}
 			}
 			return false;
+		}
+		
+		//by juan
+		// recibe una lista de id de conductores y el id de un vehiculo.
+		//Se le asignan esos conductores al vehiculo
+		public boolean asignarConductoresVehiculo(int idVehiculo,
+				ArrayList<Cliente> listaConductores) throws ExceptionViajesCompartidos {
+			
+			// verifico que vehiculo existe en sistema
+			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+        	if (v==null){
+    			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
+        	}
+			
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		this.entitymanager.getTransaction().begin();
+        	
+        	// Tomo los conductores activos de ese vehiculo
+        	List<Cliente> conductoresActivos = v.getConductoresActivos();
+        	
+        	// Si conductor no maneja este vehiculo, lo asigno. 
+        	for (Cliente conductorNuevo : listaConductores){
+        		if (!conductoresActivos.contains(conductorNuevo)){
+        			if (conductorNuevo.asignarVehiculo(v)){
+            			this.entitymanager.persist(conductorNuevo);
+        			}
+        		}
+        	}
+        	
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+			
+			return true;
 		}	
 }
