@@ -1,5 +1,8 @@
 package gestionViajes.controlador;
 
+import gestionViajes.controlador.*;
+import gestionViajes.controlador.*;
+import gestionViajes.controlador.*;
 import static org.junit.Assert.*;
 
 import java.sql.Date;
@@ -16,7 +19,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import gestionComisiones.modelo.EstadoComisionCobrada;
+import gestionPuntos.controlador.DAOPuntos;
 import gestionUsuarios.modelo.Cliente;
+import gestionViajes.controlador.DAOViajes;
 import gestionViajes.controlador.DAOViajes;
 import gestionViajes.modelo.*;
 import junit.framework.TestCase;
@@ -25,7 +30,7 @@ import otros.ExceptionViajesCompartidos;
 public class TestViaje extends TestCase {
 
 	protected DAOViajes daoviajes = new DAOViajes();
-	
+        	
 	//ESTOY SIGUIENDO EL TUTORIAL DE http://www.tutorialspoint.com/junit/index.htm
 	//VAN A TENER Q AGREGAR LA LIBRERIA JUint 4, que contiene:
 	//junit.jar
@@ -37,7 +42,8 @@ public class TestViaje extends TestCase {
 		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno
 		
 		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
-		this.daoviajes.vaciarTabla("PasajeroViaje");
+		this.daoviajes.vaciarTabla("MovimientoPuntos");
+                this.daoviajes.vaciarTabla("PasajeroViaje");
 		this.daoviajes.vaciarTabla("ComisionCobrada");
 		this.daoviajes.vaciarTabla("Calificacion");
 		this.daoviajes.vaciarTabla("LocalidadViaje");
@@ -45,6 +51,7 @@ public class TestViaje extends TestCase {
 		this.daoviajes.vaciarTabla("Viaje");
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
+                
 	}
 
 	@Test
@@ -1192,7 +1199,7 @@ public class TestViaje extends TestCase {
 		json2.put("vehiculo", "abd123");
 		json2.put("cliente", 2);
 		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
-		fecha.setMonth(11);
+		fecha.setMinutes(59);
 		viaje.put("fecha_inicio", fecha);
 		viaje.put("cantidad_asientos", 2);
 		viaje.put("precio", new Float(50.0));
