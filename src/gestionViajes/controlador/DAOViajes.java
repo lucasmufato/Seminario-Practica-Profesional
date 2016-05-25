@@ -973,7 +973,6 @@ public class DAOViajes extends DataAccesObject {
     			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
         	}
         	
-    		//GUARDO EL CAMBIO DE FOTO
     		if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
     		}
@@ -991,5 +990,84 @@ public class DAOViajes extends DataAccesObject {
         	}
     		
     		return true;
+		}
+
+		//by juan
+		//Funcion que pone el estado del vehiculo en inactivo
+		public boolean desactivarVehiculo(Vehiculo v) throws ExceptionViajesCompartidos {
+			
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		
+    		this.entitymanager.getTransaction().begin();
+			v.setEstado("I".charAt(0));
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+    		
+    		return true;
+		}
+
+		// by juan
+		//Funcion que desactiva todas las relaciones de maneja existentes segun el vehiculo dado
+		public boolean desactivarManeja(Vehiculo v) throws ExceptionViajesCompartidos {
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		this.entitymanager.getTransaction().begin();
+
+			List<Maneja> lista = this.getManejaPorVehiculo(v);
+			for (Maneja m : lista){
+				m.setFecha_fin(new Timestamp((new java.util.Date()).getTime()));
+			}
+			
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+			
+			return true;
+		}	
+		
+		
+		//by juan
+		//Funcion que en base a un vehiculo devuelve todas las relaciones de maneja
+		public List<Maneja> getManejaPorVehiculo(Vehiculo v) {
+			String query="SELECT m from Maneja m "
+					+"WHERE m.vehiculo = :id_vehiculo";
+			Query q=this.entitymanager.createQuery(query);
+			q.setParameter("id_vehiculo", v);
+			return q.getResultList();
+		}
+
+		//by juan
+		// funcion que en base a un maneja verifica si tiene viajes
+		public boolean manejaTieneViajesActivos(Maneja m) {
+			String query="SELECT v from Viaje v "
+					+"WHERE (v.conductor_vehiculo = :conductor_vehiculo) and"
+					+" (v.estado = :iniciado or v.estado = :no_iniciado)";
+			Query q=this.entitymanager.createQuery(query);
+			q.setParameter("conductor_vehiculo", m);
+			q.setParameter("iniciado", EstadoViaje.iniciado);
+			q.setParameter("no_iniciado", EstadoViaje.no_iniciado);
+			return !q.getResultList().isEmpty();
+		}	
+		
+		// by juan
+		// Funcion que en base a un vehiculo verifica si tiene viajes
+		public boolean vehiculoTieneViajes(Vehiculo v) {
+			List<Maneja> listaManeja = this.getManejaPorVehiculo(v);
+			for (Maneja m : listaManeja){
+				if (this.manejaTieneViajesActivos(m)){
+					return true;
+				}
+			}
+			return false;
 		}	
 }

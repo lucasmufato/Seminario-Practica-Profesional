@@ -208,6 +208,10 @@ public class Vehiculo implements JSONable {
 		this.foto = foto;
 	}
 
+	public boolean isActivo(){
+		return this.estado.equals("A".charAt(0));
+	}
+	
 	@Override
 	public void SetJSONObject(JSONObject json) {
 		// TODO Auto-generated method stub

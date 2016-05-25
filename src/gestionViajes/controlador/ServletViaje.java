@@ -72,6 +72,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.verUnVehiculo(request);
 			} else if (action != null && action.equals ("modificar_vehiculo")){
 				respuesta = this.modificarVehiculo(request);
+			} else if (action != null && action.equals ("eliminar_vehiculo")){
+				respuesta = this.eliminarVehiculo(request);
 			} else if (action != null && action.equals ("modificar_imagen_vehiculo")){
 				respuesta = this.modificarImagenVehiculo(request);
 			}
@@ -204,6 +206,14 @@ public class ServletViaje extends HttpServlet {
 			return respuesta;
 		}
 		
+		// Chequeo que vehiculo este activo
+		if (!v.isActivo()){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/mis_vehiculos.html");
+			respuesta.put("msg", "El vehículo no se encuentra activo");
+			return respuesta;
+		}
+		
 		// Chequeo que  vehiculo sea del cliente
 		Maneja m = daoViajes.buscarManeja(daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request)), v);
 		if (m == null){
@@ -290,6 +300,72 @@ public class ServletViaje extends HttpServlet {
 		
 		respuesta.put("result", true);
 		respuesta.put("msg", json_vehiculo.toJSONString());
+		return respuesta;
+	}
+	
+	private JSONObject eliminarVehiculo(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		int idVehiculo;
+		try{
+			idVehiculo = Integer.parseInt(request.getParameter("id"));
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehículo no es válido");
+			return respuesta;
+		}
+		
+		Vehiculo v = null;
+		try{
+			v = (Vehiculo) daoViajes.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehículo no se encuentra en el sistema");
+			return respuesta;
+		}
+		
+		if (!v.isActivo()){
+			respuesta.put("result", false);
+			respuesta.put("msg", "El vehículo no se encuentra activo");
+			return respuesta;
+		}
+		//Verifico que vehiculo no tenga viajes pendientes
+		if (daoViajes.vehiculoTieneViajes(v)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehiculo tiene viajes pendientes. Si aún asi desea continuar con la operación cancele los viajes asociados y vuelva a intentarlo.");
+			return respuesta;
+		}
+		//
+		// Desactivo vehiculo pero tambien todas las relaciones de Maneja.
+		//
+		try {
+			if (!daoViajes.desactivarVehiculo(v)){
+				respuesta.put("result", false);
+				respuesta.put("msg", "Error al desactivar vehículo");
+				return respuesta;
+				
+			}
+			if (!daoViajes.desactivarManeja(v)){
+				respuesta.put("result", false);
+				respuesta.put("msg", "Se desactivó vehiculo pero hubo un error en la desactivacion del vehiculo a todos los conductores del mismo");
+				return respuesta;
+			}
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("redirect", "/mis_vehiculos.html");
+		respuesta.put("msg", "Vehículo desactivado correctamente");
 		return respuesta;
 	}
 	

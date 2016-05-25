@@ -185,6 +185,7 @@ var eliminarVehiculo = function(){
 	var confirmar = function(){
 		closeModal(modalName);
 		var sendJson = {
+			entity: "vehiculo",
 			action: "eliminar_vehiculo",
 			id: vehiculo.id
 		}
@@ -192,7 +193,11 @@ var eliminarVehiculo = function(){
 			if (jsonData.result){
 				window.location = jsonData.redirect;
 			}else{
-				modalMessage("error",jsonData.msg,"Eliminar Vehículo");
+				if (jsonData.redirect != undefined){
+					window.location = jsonData.redirect;
+				}else if(jsonData.msg != undefined){
+					modalMessage("error",jsonData.msg,"Eliminar Vehículo");
+				}
 			}
 		}
 		sendAjax(sendJson,onsuccess);
