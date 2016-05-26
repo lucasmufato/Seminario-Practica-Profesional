@@ -1287,7 +1287,7 @@ public class DAOViajes extends DataAccesObject {
                         for(int i=0; i<lista.size();i++){
                             this.entitymanager.getTransaction().begin();
                             boolean bandera= false;
-                            currentTimestamp.setYear(9999);//seteo año para que no los sancione
+                            currentTimestamp.setYear(1000);//seteo año para que no los sancione
                             PasajeroViaje pasajero = lista.get(i);
                             pasajero.setEstado(EstadoPasajeroViaje.cancelado);
                             entitymanager.getTransaction( ).commit( );
