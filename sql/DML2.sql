@@ -105,3 +105,10 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (9, 2, C
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (7,0,0,NULL,NULL);
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (8,0,0,NULL,NULL);
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (9,0,0,NULL,NULL);
+
+
+
+-----fede
+INSERT INTO TIPO_SANCION (id_tiposancion,descripcion,dias_sancion) VALUES (1,"Descuento de Puntos por Cancelación de viaje con Pasajeros",0);
+INSERT INTO TIPO_SANCION (id_tiposancion,descripcion,dias_sancion) VALUES (2,"Descuento de Puntos por Cancelación tardía de participación en viaje",0);
+--completarlas
