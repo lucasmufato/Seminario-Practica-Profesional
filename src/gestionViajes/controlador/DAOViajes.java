@@ -1223,7 +1223,7 @@ public class DAOViajes extends DataAccesObject {
         		throw new ExceptionViajesCompartidos("El Conductor no se encuentra en el sistema");
 			}
 			if (!c.puedeManejar(v)){
-        		throw new ExceptionViajesCompartidos("El Conductor no tiene asignado este vehículo");
+        		throw new ExceptionViajesCompartidos("El Conductor no tiene asignado este vehï¿½culo");
 			}
 						
     		if(this.entitymanager.getTransaction().isActive()){
@@ -1282,7 +1282,13 @@ public class DAOViajes extends DataAccesObject {
                         entitymanager.getTransaction( ).commit( );
                         //Ya cancele el viaje, ahora cancelo a los Pasajeros sin sancionarlos
                         List<PasajeroViaje> lista = viaje.getPasajeros(); 
-                        
+                        int aceptados = 0 ;
+                        for(int j=0;j<lista.size();j++){//me fijo si alguno tenia estado aceptado
+                            PasajeroViaje pasajero = lista.get(j);
+                            if(pasajero.getEstado().equals(EstadoPasajeroViaje.aceptado)){
+                                aceptados++;                   
+                            }
+                        }
                         id_viaje = viaje.getId_viaje();
                         for(int i=0; i<lista.size();i++){
                             this.entitymanager.getTransaction().begin();
@@ -1301,13 +1307,7 @@ public class DAOViajes extends DataAccesObject {
                         boolean bandera = false;
                         calendar = Calendar.getInstance();
                         currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-                        int aceptados = 0 ;
-                        for(int j=0;j<lista.size();j++){//me fijo si alguno tenia estado aceptado
-                            PasajeroViaje pasajero = lista.get(j);
-                            if(pasajero.getEstado().equals(EstadoPasajeroViaje.aceptado)){
-                                aceptados++;                   
-                            }
-                        }                       
+                                          
                         
                         if(aceptados>0){//lo sanciono si tenia pasajeros
                             bandera = daopuntos.sancionarChofer(id_viaje,id_chofer);
