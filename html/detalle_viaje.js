@@ -41,12 +41,16 @@ data.loadData = function() {
 			data.localidades = jsonData.localidades;
 			data.comentarios = jsonData.comentarios;
 			data.usuario_logueado = jsonData.usuario_logueado;
+
 			configurarUi();
 			cargarViaje();
 			cargarVehiculo();
 			//cargarComentarios();
 			cargarConductor();
 			cargarRutaEnMapa();
+			if(jsonData.recargar_en) {
+				setTimeout(data.loadData, jsonData.recargar_en);
+			}
 
 			
 		} else if (jsonData.redirect != undefined) {

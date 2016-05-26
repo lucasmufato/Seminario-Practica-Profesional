@@ -1,7 +1,7 @@
-data={};
-data.permisosp=[];
-data.usuariop={};
-data.rolesp=[];
+permisosData={};
+permisosData.permisosp=[];
+permisosData.usuariop={};
+permisosData.rolesp=[];
 
 $(document).ready(function(){
 	esconderFuncionalidades();
@@ -19,9 +19,9 @@ function getPermisosUsuario() {
 	};
 	var callback = function (jsonData){
 		if (jsonData.result){
-			data.permisosp = jsonData.permisos;
-			data.usuariop = jsonData.usuario;
-			data.rolesp = jsonData.roles;
+			permisosData.permisosp = jsonData.permisos;
+			permisosData.usuariop = jsonData.usuario;
+			permisosData.rolesp = jsonData.roles;
 			cargarBotones();
 			mostrarFunciones();
 		}else if (jsonData.redirect != undefined){
@@ -49,35 +49,35 @@ function send(sendData,callback){
 }
 var cargarBotones = function(){
 	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
-	//$("#link-mi-perfil").attr("href","/perfil.html?usuario="+data.usuariop.nombre_usuario);
-	//$("#link-mis-viajes").attr("href","/mis_viajes.html?usuario="+data.usuariop.nombre_usuario);
-	//$("#link-mis-vehiculos").attr("href","/mis_vehiculos.html?usuario="+data.usuariop.nombre_usuario);
+	//$("#link-mi-perfil").attr("href","/perfil.html?usuario="+permisosData.usuariop.nombre_usuario);
+	//$("#link-mis-viajes").attr("href","/mis_viajes.html?usuario="+permisosData.usuariop.nombre_usuario);
+	//$("#link-mis-vehiculos").attr("href","/mis_vehiculos.html?usuario="+permisosData.usuariop.nombre_usuario);.hide();
 }
 function mostrarFunciones(){
-	//console.log("Permisos que me traje: ",data.permisosp);
-	//console.log("roles que me traje: ",data.rolesp);
-	//console.log("usuario que me traje: ",data.usuariop);
-	$("#dropdown-usuario").html(data.usuariop.nombre_usuario+" ");
-	if (data.rolesp){
-		for (var i=0; i<data.rolesp.length;i++){
-			var rol = data.rolesp[i].nombre_rol.toLowerCase();
+	//console.log("Permisos que me traje: ",permisosData.permisosp);
+	//console.log("roles que me traje: ",permisosData.rolesp);
+	//console.log("usuario que me traje: ",permisosData.usuariop);
+	$("#dropdown-usuario").html(permisosData.usuariop.nombre_usuario+" ");
+	if (permisosData.rolesp){
+		for (var i=0; i<permisosData.rolesp.length;i++){
+			var rol = permisosData.rolesp[i].nombre_rol.toLowerCase();
 			if (rol == "cliente"){
 				  $("#panel-cliente").show();
+				  $("#link-mi-perfil-admin").hide();
 				  makeListDropdown(rol);
 			}
 			if (rol == "super_usuario"){
 				  $("#panel-admin").show();
-				  $("#link-mi-perfil").show();
 				  makeListDropdown(rol);
 			}
 		}
 	}
 	/*
-	if (data.permisosp){
+	if (permisosData.permisosp){
 		var permiso=0;
-		for (permiso in data.permisosp){
-			var nombrePermiso=data.permisosp[permiso]["nombre_permiso"];
-			var estadoPermiso=data.permisosp[permiso]["estado"];
+		for (permiso in permisosData.permisosp){
+			var nombrePermiso=permisosData.permisosp[permiso]["nombre_permiso"];
+			var estadoPermiso=permisosData.permisosp[permiso]["estado"];
 			if (nombrePermiso && estadoPermiso=="A"){
 				if (nombrePermiso == "administrar_usuarios"){
 					$("#panel-admin").show();

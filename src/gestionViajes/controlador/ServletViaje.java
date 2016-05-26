@@ -689,6 +689,11 @@ public class ServletViaje extends HttpServlet {
 		salida.put("usuario_logueado", json_logged);
 		salida.put("result", true);
 		
+		// Calcular cuanto falta para que inicie el viaje
+		if (viaje.getEstado() == EstadoViaje.no_iniciado) {
+			long restante = (viaje.getFecha_inicio().getTime()) - (new java.util.Date().getTime());
+			salida.put("recargar_en", restante+3000);
+		}
 		return salida;
 	}
 
