@@ -1042,7 +1042,8 @@ public class ServletViaje extends HttpServlet {
 			} catch (Exception e) {
 				throw new ExceptionViajesCompartidos ("Fecha no valida");
 			} try {
-				fecha_hasta = new Timestamp ( (format.parse(request.getParameter("fecha_hasta"))).getTime() );
+				//Le sumamos un dia a la fecha para que se incluyan los resultados del ultimo dia
+				fecha_hasta = new Timestamp ( (format.parse(request.getParameter("fecha_hasta"))).getTime()+(24l*60l*60l*1000l) );
 			} catch (Exception e) {
 				// No hacer nada, el campo fecha_hasta no es obligatorio
 			} try {

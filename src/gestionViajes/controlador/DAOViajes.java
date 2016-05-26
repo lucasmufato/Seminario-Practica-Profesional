@@ -603,23 +603,22 @@ public class DAOViajes extends DataAccesObject {
 			+"WHERE :fecha_desde < v.fecha_inicio "
 			+"AND EXISTS (SELECT l1 FROM LocalidadViaje l1 WHERE l1.viaje=v AND l1.localidad=:origen "
 			+"AND EXISTS (SELECT l2 FROM LocalidadViaje l2 WHERE l2.viaje=v AND l2.localidad=:destino "
-			+"AND l1.ordinal < l2.ordinal))";
+			+"AND l1.ordinal < l2.ordinal)) ";
 		//ahora le agrego a la query los otros campos de busqueda a medida q los hay
 		if(b_fecha_hasta){
-			query.concat("AND v.fecha_inicio < :fecha_hasta ");
+			query=query.concat("AND v.fecha_inicio < :fecha_hasta ");
 		}
 		if(b_conductor){
-			//query.concat("AND v LIKE :nombre_usuario_conductor ");
+			//query=query.concat("AND v LIKE :nombre_usuario_conductor ");
 		}
-		String query_estado = "";
 		if(estado.equals("ambas")){
-			query_estado= "AND (v.estado=:estado1 OR v.estado=:estado2) ";
+			query=query.concat("AND (v.estado=:estado1 OR v.estado=:estado2) ");
 		}else{
-			query_estado ="AND v.estado= :estado1";
+			query=query.concat("AND v.estado= :estado1");
 		}
 		
 		//armo la query y pongo los parametros minimos
-		Query q=this.entitymanager.createQuery(query+query_estado);
+		Query q=this.entitymanager.createQuery(query);
 		q.setParameter("fecha_desde", fecha_desde);
 		q.setParameter("origen", origen);
 		q.setParameter("destino", destino);

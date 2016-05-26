@@ -214,24 +214,26 @@ getSelectedVehiculo = function() {
 window.onload = function () {
 
 	$('#fecha').datetimepicker({
-		format: 'yyyy-mm-dd hh:ii:ss',
+		format: 'yyyy-mm-dd hh:ii:00',
 		language: 'es',
 		todayBtn: 1,
 		autoclose: 1,
 		todayHighlight: 1,
 		startView: 2,
 		minView: 0,
+		startDate: new Date(),
 		pickerPosition: 'top-left'
 	})
 
 	$('#fechahasta').datetimepicker({
-		format: 'yyyy-mm-dd hh:ii:ss',
+		format: 'yyyy-mm-dd hh:ii:00',
 		language: 'es',
 		todayBtn: 1,
 		autoclose: 1,
 		todayHighlight: 1,
 		startView: 2,
 		minView: 0,
+		startDate: new Date(),
 		pickerPosition: 'top-left'
 	})
 
