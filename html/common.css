@@ -30,6 +30,10 @@
 			color: white;
 		}
 
+		sidebar hr{
+			visibility: hidden;
+		}
+
 		main {
 			margin-top: 50px;
 			border: 8px solid white;

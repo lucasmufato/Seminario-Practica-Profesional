@@ -32,6 +32,8 @@ import otros.JSONable;
 	@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id_viaje= :id"),//agregada por fede
 	@NamedQuery(name="Viaje.SearchByConductor",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT m FROM Maneja m WHERE v.conductor_vehiculo=m AND m.cliente= :conductor)"),
 	@NamedQuery(name="Viaje.todos",query="SELECT v FROM Viaje v"),
+	@NamedQuery(name="Viaje.noIniciadosAtrasados",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= CURRENT_TIMESTAMP"),
+	@NamedQuery(name="Viaje.inicianAntes",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= :tiempo")
 })
 
 @Entity
@@ -312,6 +314,19 @@ public class Viaje implements JSONable {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public boolean actualizarEstado() {
+		Timestamp now = new Timestamp((new java.util.Date()).getTime());
+		if (
+			(this.estado == EstadoViaje.no_iniciado) 
+			&& (this.fecha_inicio != null)
+			&& (this.fecha_inicio.compareTo(now) <= 0)
+		) {
+			this.setEstado(EstadoViaje.iniciado);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
