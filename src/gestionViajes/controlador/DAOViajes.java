@@ -611,7 +611,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		String query_estado = "";
 		if(estado.equals("ambas")){
-			query_estado= "AND v.estado=:estado1 OR v.estado=:estado2 ";
+			query_estado= "AND (v.estado=:estado1 OR v.estado=:estado2) ";
 		}else{
 			query_estado ="AND v.estado= :estado1";
 		}
