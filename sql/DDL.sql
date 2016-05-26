@@ -106,7 +106,7 @@ CREATE TABLE LOCALIDAD (
 	elevacion INTEGER,
 	dem INTEGER,
 	zona_horaria VARCHAR(40),
-	fecha_modificacion DATETIME,
+	fecha_modificacion DATE,
 
 
 	PRIMARY KEY (id_localidad)

@@ -178,7 +178,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		this.entitymanager.getTransaction().begin();
 		//pongo quien es el conductor del viaje y en q vehiculo
-		Maneja maneja= this.buscarManeja(cliente, vehiculo);
+		Maneja maneja= this.getManejaActivoPorVehiculoConductor(vehiculo, cliente);
 		Viaje viaje= new Viaje();
 		viaje.setConductor_vehiculo(maneja);
 		//seteo los otros datos
@@ -392,13 +392,6 @@ public class DAOViajes extends DataAccesObject {
 	double distance = degrees * 111.13384; // 1 grado = 111.13384 km, basándose en el diametro promedio de la Tierra (12.735 km)
 	return distance;
 }
-	
-	//by mufa
-	// WARNING: PUEDE HABER DOS RESULTADOS PARA LAS CLAVES DADAS
-	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){ //tiene test
-		Maneja maneja=(Maneja) this.buscarPorIDCompuesta("Maneja",id_cliente,id_vehiculo);
-		return maneja;
-	}
 	
 	//by mufa
 	public Cliente getConductorViaje(Integer id_viaje){		//tiene test
@@ -842,7 +835,7 @@ public class DAOViajes extends DataAccesObject {
 		if(vehiculo==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO NO EXISTE");
 		}
-		Maneja maneja = this.buscarManeja(cliente, vehiculo);
+		Maneja maneja = this.getManejaActivoPorVehiculoConductor(vehiculo, cliente);
 		if(maneja==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO ESTA RELACIONADO CON LE VEHICULO");
 		}
@@ -1129,6 +1122,18 @@ public class DAOViajes extends DataAccesObject {
 			q.setParameter("conductor", c);
 			q.setParameter("vehiculo", v);
 			return q.getResultList();
+		}
+		
+		//by juan
+		//Funcion que en base a un vehiculo y un conductor devuelve la primer relacion maneja que este activa
+		public Maneja getManejaActivoPorVehiculoConductor(Vehiculo v, Cliente c) {
+			List<Maneja> lista = this.getManejaPorVehiculoConductor(v,c);
+			for (Maneja m:lista){
+				if (m.getFecha_fin() == null){
+					return m;
+				}
+			}
+			return null;
 		}
 		
 		//by juan
