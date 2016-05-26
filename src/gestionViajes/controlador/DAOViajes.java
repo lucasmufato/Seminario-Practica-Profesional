@@ -776,7 +776,7 @@ public class DAOViajes extends DataAccesObject {
 		notificacion.setCliente(cliente);
 		notificacion.setEstado(EstadoNotificacion.no_leido);
 		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
-		notificacion.setTexto("El conductor: "+ viaje.getConductor() +
+		notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
 				" lo ha aceptado al viaje: "+viaje.getNombre_amigable());
 		this.entitymanager.persist(notificacion);
 		try{
@@ -814,6 +814,14 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.getTransaction().begin();
 		pasajero.setEstado(EstadoPasajeroViaje.rechazado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
+		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE RECHAZADO
+		Notificacion notificacion= new Notificacion();
+		notificacion.setCliente(cliente);
+		notificacion.setEstado(EstadoNotificacion.no_leido);
+		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+		notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
+				" ha rechazado su participacion en el viaje: "+viaje.getNombre_amigable());
+		this.entitymanager.persist(notificacion);
 		try{
     		entitymanager.getTransaction( ).commit( );	
     	}catch(RollbackException e){
@@ -982,6 +990,15 @@ public class DAOViajes extends DataAccesObject {
 		
 		pasajero.setEstado(EstadoPasajeroViaje.cancelado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
+
+		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL CONDUCTOR, SOBRE QUE EL PASAJERO CANCELO SU PARTICIPACION
+		Notificacion notificacion= new Notificacion();
+		notificacion.setCliente(viaje.getConductor());
+		notificacion.setEstado(EstadoNotificacion.no_leido);
+		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+		notificacion.setTexto("El pasajero: "+ pasajero.getCliente().getNombre_usuario() +
+				" ha cancelado su participacion su viaje <<"+viaje.getNombre_amigable()+">> con destino a "+viaje.getDestino().getNombre());
+		this.entitymanager.persist(notificacion);
 		try{
                     entitymanager.getTransaction( ).commit( );
                     DAOPuntos daopuntos = new DAOPuntos();
