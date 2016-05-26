@@ -149,15 +149,7 @@ public class Viaje implements JSONable {
 		return null;
 	}
 	
-	//by mufa
-	public PasajeroViaje recuperar_pasajeroViaje_por_cliente(Cliente cliente){
-		for(PasajeroViaje pv: this.pasajeros){
-			if(pv.getCliente().getId_usuario()==cliente.getId_usuario()){
-				return pv;
-			}
-		}
-		return null;
-	}
+
 	
 	//by mufa
 	public List<Localidad> recuperarOrigenYDestino(){
@@ -192,12 +184,42 @@ public class Viaje implements JSONable {
 		return pasajeros;
 	}
 
-	public List<Cliente> getPasajerosComoListCliente() {
+	public List<Cliente> getPasajerosTodosComoListCliente() {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		for(PasajeroViaje pas: pasajeros) {
 			lista.add(pas.getCliente());
 		}
 		return lista;
+	}
+	
+	public List<Cliente> getPasajerosPostuladosComoListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for(PasajeroViaje pas: pasajeros) {
+			if (pas.getEstado().equals(EstadoPasajeroViaje.postulado)){
+				lista.add(pas.getCliente());
+			}
+		}
+		return lista;
+	}
+
+	public List<Cliente> getPasajerosAceptadosComoListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for(PasajeroViaje pas: pasajeros) {
+			if (pas.getEstado().equals(EstadoPasajeroViaje.aceptado)){
+				lista.add(pas.getCliente());
+			}
+		}
+		return lista;
+	}
+	
+	//by mufa
+	public PasajeroViaje recuperar_pasajeroViaje_por_cliente(Cliente cliente){
+		for(PasajeroViaje pv: this.pasajeros){
+			if(pv.getCliente().getId_usuario()==cliente.getId_usuario()){
+				return pv;
+			}
+		}
+		return null;
 	}
 
 	public void setPasajeros(List<PasajeroViaje> pasajeros) {

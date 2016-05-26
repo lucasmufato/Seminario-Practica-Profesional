@@ -439,7 +439,7 @@ public class DAOViajes extends DataAccesObject {
 		 * Bajo esta restriccion el cliente no se puede postular en dos tramos diferentes
 		 * Si, es un boludito si hace eso pero lo anoto para que se sepa nomas.
 		 */
-		if( viaje.recuperar_pasajeroViaje_por_cliente(cliente) != null ){
+		if( viaje.getPasajerosPostuladosComoListCliente().contains(cliente)){
 			throw new ExceptionViajesCompartidos("ERROR: YA ESTAS POSTULADO A ESTE VIAJE");
 		}
 		Integer id_subida= (Integer) json.get("localidad_subida");
@@ -999,7 +999,11 @@ public class DAOViajes extends DataAccesObject {
                     boolean bandera= false;
                     Calendar calendar = Calendar.getInstance();
                     Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-                    bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
+                    /*
+                     * 
+                     * DANGER: NO ANDA ACA
+                     */
+                    //bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
                 }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);

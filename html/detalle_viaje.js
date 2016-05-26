@@ -198,6 +198,7 @@ var simular = function(json){
 	data.usuario_logueado = {
 		es_conductor: false,
 		es_pasajero: false,
+		es_postulado: false,
 		es_seguidor: false,
 		ha_calificado: false
 	};		
@@ -212,12 +213,13 @@ var configurarUi = function(){
 
 	var esConductor = data.usuario_logueado.es_conductor;
 	var esPasajero = data.usuario_logueado.es_pasajero;
+	var esPostulado = data.usuario_logueado.es_postulado;
 	var esSeguidor = data.usuario_logueado.es_seguidor;
 	var haCalificado = data.usuario_logueado.ha_calificado;
 
 	var estado = estadoString(data.viaje.estado);
 	
-	if (esPasajero || esConductor){
+	if (esPasajero || esPostulado || esConductor){
 		$("#botonera-cliente").hide();
 		if (esConductor){
 			$("#botonera-conductor").show();
@@ -244,6 +246,10 @@ var configurarUi = function(){
 		}else if (esPasajero){
 			$("#botonera-conductor").hide();
 			$("#botonera-pasajero").show();
+		} else if (esPostulado){
+			$("#botonera-conductor").hide();
+			$("#botonera-pasajero").show();
+			$("#btnCalificar").hide();
 		}
 	} else {
 		$("#btnCalificar").hide();

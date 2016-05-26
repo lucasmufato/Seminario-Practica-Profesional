@@ -293,7 +293,8 @@ public class ServletViaje extends HttpServlet {
 		
 		JSONObject json_logged = new JSONObject();
 		json_logged.put("es_conductor", (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario()));
-		json_logged.put("es_pasajero", viaje.getPasajerosComoListCliente().contains(usuario_logueado));
+		json_logged.put("es_postulado", viaje.getPasajerosPostuladosComoListCliente().contains(usuario_logueado));
+		json_logged.put("es_pasajero", viaje.getPasajerosAceptadosComoListCliente().contains(usuario_logueado));
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
 		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
 		salida.put("usuario_logueado", json_logged);
@@ -398,11 +399,12 @@ public class ServletViaje extends HttpServlet {
 			daoViajes.cancelarParticipacionEnViaje(idViaje, AccessManager.getIdUsuario(request));
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
-			respuesta.put("msg", "Error durante la cancelación de su participación en este viaje. Vuelva a intentarlo más tarde");
+			respuesta.put("msg", e.getMessage());
 			return respuesta;
 		}
-		respuesta.put("result", false);
-		respuesta.put("msg", "No implementado");
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Usted ha dejado de participar en este viaje");
 		
 		return respuesta;
 	}
@@ -581,7 +583,6 @@ public class ServletViaje extends HttpServlet {
 
 		return salida;
 	}
-
 
 	public JSONObject buscar_viaje (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
