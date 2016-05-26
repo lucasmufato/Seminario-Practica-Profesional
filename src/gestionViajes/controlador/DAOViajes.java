@@ -439,7 +439,7 @@ public class DAOViajes extends DataAccesObject {
 		 * Bajo esta restriccion el cliente no se puede postular en dos tramos diferentes
 		 * Si, es un boludito si hace eso pero lo anoto para que se sepa nomas.
 		 */
-		if( viaje.getPasajerosPostuladosComoListCliente().contains(cliente)){
+		if( viaje.recuperar_pasajeroViaje_por_cliente(cliente) != null ){
 			throw new ExceptionViajesCompartidos("ERROR: YA ESTAS POSTULADO A ESTE VIAJE");
 		}
 		Integer id_subida= (Integer) json.get("localidad_subida");
@@ -999,11 +999,7 @@ public class DAOViajes extends DataAccesObject {
                     boolean bandera= false;
                     Calendar calendar = Calendar.getInstance();
                     Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-                    /*
-                     * 
-                     * DANGER: NO ANDA ACA
-                     */
-                    //bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
+                    bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
                 }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -1297,13 +1293,21 @@ public class DAOViajes extends DataAccesObject {
                         for(int i=0; i<lista.size();i++){
                             this.entitymanager.getTransaction().begin();
                             boolean bandera= false;
-                            currentTimestamp.setYear(1000);//seteo año para que no los sancione
+                            currentTimestamp.setYear(9999);//seteo año para que no los sancione
                             PasajeroViaje pasajero = lista.get(i);
                             pasajero.setEstado(EstadoPasajeroViaje.cancelado);
                             entitymanager.getTransaction( ).commit( );
                             int id_cliente_pas = pasajero.getCliente().getId_usuario();
                             bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
-                            //TO DO notificarlo
+                            //SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE RECHAZADO
+                            Notificacion notificacion= new Notificacion();
+                            notificacion.setCliente(pasajero.getCliente());
+                            notificacion.setEstado(EstadoNotificacion.no_leido);
+                            notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+                            notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
+                                            " ha cancelado el viaje: "+viaje.getNombre_amigable());
+                            this.entitymanager.persist(notificacion);
+                            //fin notificar pasajero viaje
                         }
                         //Ahora sanciono al chofer si corresponde
                         int id_chofer = chofer.getId_usuario();
