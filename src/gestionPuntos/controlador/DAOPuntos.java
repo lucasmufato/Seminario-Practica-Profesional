@@ -3,8 +3,11 @@ package gestionPuntos.controlador;
 import gestionPuntos.modelo.EstadoSancion;
 import gestionPuntos.modelo.MovimientoPuntos;
 import gestionPuntos.modelo.Sancion;
+import gestionPuntos.modelo.TipoSancion;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.Cliente;
+import gestionUsuarios.modelo.EstadoNotificacion;
+import gestionUsuarios.modelo.Notificacion;
 import gestionUsuarios.modelo.Usuario;
 import gestionViajes.controlador.DAOViajes;
 import gestionViajes.modelo.EstadoViaje;
@@ -66,8 +69,20 @@ public class DAOPuntos extends DataAccesObject {
             fecha = new java.sql.Date(utilDate.getTime());
             sancion.setFecha_inicio(fecha);
             sancion.setFecha_fin(fecha);            
-            sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.      
-            
+            sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.
+            //TO DO poner el tipo sancion correspondiente
+            //ESTO ESTA HARCODEADO CAMBIARLO!!!!
+            TipoSancion tipo_sancion = new TipoSancion();
+            tipo_sancion.setDescripcion("Sancion de puntos HARCODEADA");
+            tipo_sancion.setDias_sancion(0);
+            this.entitymanager.persist(tipo_sancion);
+            //FIN
+            sancion.setTipo_sancion(tipo_sancion);
+            Notificacion notificacion= new Notificacion();
+            notificacion.setCliente(cliente); 
+            notificacion.setEstado(EstadoNotificacion.no_leido);
+            notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+            notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
             
             
             
@@ -214,6 +229,19 @@ public class DAOPuntos extends DataAccesObject {
         sancion.setFecha_inicio(fecha);
         sancion.setFecha_fin(fecha);            
         sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.
+        //TO DO poner el tipo sancion correspondiente
+            //ESTO ESTA HARCODEADO CAMBIARLO!!!!
+            TipoSancion tipo_sancion = new TipoSancion();
+            tipo_sancion.setDescripcion("Sancion de puntos HARCODEADA");
+            tipo_sancion.setDias_sancion(0);
+            this.entitymanager.persist(tipo_sancion);
+            //FIN
+            sancion.setTipo_sancion(tipo_sancion);
+            Notificacion notificacion= new Notificacion();
+            notificacion.setCliente(cliente); 
+            notificacion.setEstado(EstadoNotificacion.no_leido);
+            notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+            notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
         try{    
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction().commit();

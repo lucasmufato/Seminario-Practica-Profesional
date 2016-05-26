@@ -1310,11 +1310,11 @@ public class DAOViajes extends DataAccesObject {
                             currentTimestamp.setYear(1000);//seteo año para que no los sancione
                             PasajeroViaje pasajero = lista.get(i);
                             pasajero.setEstado(EstadoPasajeroViaje.cancelado);
-                            this.entitymanager.getTransaction( ).commit( );
+                            //this.entitymanager.getTransaction( ).commit( );
                             int id_cliente_pas = pasajero.getCliente().getId_usuario();
                             bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
                             //SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE RECHAZADO
-                            this.entitymanager.getTransaction().begin();
+                            //this.entitymanager.getTransaction().begin();
                             Notificacion notificacion= new Notificacion();
                             notificacion.setCliente(pasajero.getCliente()); 
                             notificacion.setEstado(EstadoNotificacion.no_leido);
