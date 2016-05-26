@@ -1,6 +1,7 @@
 package gestionUsuarios.modelo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,7 +34,7 @@ public class PermisoRol {
 	  private Permiso permiso;
 
 	@Column(nullable=false)
-	protected Date fecha_modificacion;
+	protected Timestamp fecha_modificacion;
 
 	  public PermisoRol(){
 		  //no hago nada
@@ -42,13 +43,13 @@ public class PermisoRol {
 	  public PermisoRol(Permiso p, Rol r){
 		  this.permiso=p;
 		  this.rol=r;
-		  this.fecha_modificacion=new Date((new java.util.Date()).getTime());
+		  this.fecha_modificacion=new Timestamp((new java.util.Date()).getTime());
 	  }
 	  
-		public Date getFecha_modificacion() {
+		public Timestamp getFecha_modificacion() {
 			return fecha_modificacion;
 		}
-		public void setFecha_modificacion(Date fecha_modificacion) {
+		public void setFecha_modificacion(Timestamp fecha_modificacion) {
 			this.fecha_modificacion = fecha_modificacion;
 		}
 		public Permiso getPermiso() {

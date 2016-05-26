@@ -169,7 +169,7 @@ public class Cliente extends Usuario implements JSONable {
 		this.vehiculos.add(maneja);		
 		return true;
 	}
-
+	
 	//by mufa
 	public boolean puedeManejar(Vehiculo vehiculo) {
 		for(Maneja m: this.vehiculos){

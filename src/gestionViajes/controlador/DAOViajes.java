@@ -381,6 +381,7 @@ public class DAOViajes extends DataAccesObject {
 }
 	
 	//by mufa
+	// WARNING: PUEDE HABER DOS RESULTADOS PARA LAS CLAVES DADAS
 	public Maneja buscarManeja(Cliente id_cliente, Vehiculo id_vehiculo){ //tiene test
 		Maneja maneja=(Maneja) this.buscarPorIDCompuesta("Maneja",id_cliente,id_vehiculo);
 		return maneja;
@@ -1044,8 +1045,16 @@ public class DAOViajes extends DataAccesObject {
         	}
 			
 			return true;
-		}	
-		
+		}
+
+		//by juan
+		//Funcion que en base a un vehiculo y un conductor devuelve todas sus relaciones de maneja
+		public List<Maneja> getManejaPorVehiculoConductor(Vehiculo v, Cliente c) {
+			Query q=this.entitymanager.createNamedQuery("Maneja.ListarConductorVehiculo");//nombre de query confuso
+			q.setParameter("conductor", c);
+			q.setParameter("vehiculo", v);
+			return q.getResultList();
+		}
 		
 		//by juan
 		//Funcion que en base a un vehiculo devuelve todas las relaciones de maneja
@@ -1104,9 +1113,10 @@ public class DAOViajes extends DataAccesObject {
         	
         	// Si conductor no maneja este vehiculo, lo asigno. 
         	for (Cliente conductorNuevo : listaConductores){
-        		if (!conductoresActivos.contains(conductorNuevo)){
+        		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
         			if (conductorNuevo.asignarVehiculo(v)){
             			this.entitymanager.persist(conductorNuevo);
+            			this.entitymanager.persist(v);
         			}
         		}
         	}
@@ -1118,6 +1128,48 @@ public class DAOViajes extends DataAccesObject {
         		throw new ExceptionViajesCompartidos("ERROR: "+error);
         	}
 			
+			return true;
+		}
+		
+		//by juan
+		// desactiva conductor a vehiculo (agarro el maneja y le mando una fecha al null de fechafin)
+		public boolean desasignarConductor(int idVehiculo, int idConductor) throws ExceptionViajesCompartidos {
+			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+			if (v==null){
+        		throw new ExceptionViajesCompartidos("El vehiculo no se encuentra en el sistema");
+			}
+			Cliente c = (Cliente) this.buscarPorPrimaryKey(new Cliente(), idConductor);
+			if (v==null){
+        		throw new ExceptionViajesCompartidos("El Conductor no se encuentra en el sistema");
+			}
+			if (!c.puedeManejar(v)){
+        		throw new ExceptionViajesCompartidos("El Conductor no tiene asignado este vehículo");
+			}
+						
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		this.entitymanager.getTransaction().begin();
+			
+			List<Maneja> listaManeja = this.getManejaPorVehiculoConductor(v, c);
+			for (Maneja m : listaManeja) {
+				if (m.getFecha_fin() == null){
+					// chequeo que vehiculo no tenga viaje pendiente
+					if (this.manejaTieneViajesActivos(m)){
+		        		throw new ExceptionViajesCompartidos("El Conductor tiene viajes pendientes con este vehiculo");
+					}
+					m.desactivar();
+					this.entitymanager.persist(m);
+				}
+			}
+			
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+    		
 			return true;
 		}	
 }

@@ -1,6 +1,7 @@
 package gestionUsuarios.modelo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,7 +35,7 @@ public class UsuarioRol {
 	protected Usuario usuario;
 	
 	@Column(nullable=false)
-	protected Date fecha_modificacion;
+	protected Timestamp fecha_modificacion;
 	
 	public UsuarioRol(){
 		
@@ -44,15 +45,15 @@ public class UsuarioRol {
 	public UsuarioRol(Usuario usuario, Rol rol) {
 		this.usuario=usuario;
 		this.rol=rol;
-		this.fecha_modificacion=new Date((new java.util.Date()).getTime());
+		this.fecha_modificacion=new Timestamp((new java.util.Date()).getTime());
 	}
 
 
-	public Date getFecha_modificacion() {
+	public Timestamp getFecha_modificacion() {
 		return fecha_modificacion;
 	}
 
-	public void setFecha_modificacion(Date fecha_modificacion) {
+	public void setFecha_modificacion(Timestamp fecha_modificacion) {
 		this.fecha_modificacion = fecha_modificacion;
 	}
 

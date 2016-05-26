@@ -20,7 +20,9 @@ import javax.persistence.OneToMany;
 
 @NamedQueries({	
 //@NamedQuery(name="Maneja.SearchById",query="SELECT m FROM Maneja m WHERE ( (m.id_conductor= :idc) AND (m.id_vehiculo= :idveh) )"),//agregada por fede	
-	@NamedQuery(name="Maneja.SearchByIdCompuesto", query="SELECT m FROM Maneja m WHERE ( (m.cliente= :id_1) AND (m.vehiculo= :id_2) )")
+	@NamedQuery(name="Maneja.SearchByIdCompuesto", query="SELECT m FROM Maneja m WHERE ( (m.cliente= :id_1) AND (m.vehiculo= :id_2) )"),
+	@NamedQuery(name="Maneja.ListarConductorVehiculo", query="SELECT m FROM Maneja m WHERE ( (m.cliente= :conductor) AND (m.vehiculo= :vehiculo) )")//lo mismo de arriba pero para no confundir le cambie el nombre
+
 })
 @Entity
 @Table(name="maneja")
@@ -85,5 +87,9 @@ public class Maneja {
 
 	public void setFecha_fin(Timestamp fecha_fin) {
 		this.fecha_fin = fecha_fin;
+	}
+
+	public void desactivar() {
+		this.fecha_fin = new Timestamp((new java.util.Date()).getTime());
 	}
 }
