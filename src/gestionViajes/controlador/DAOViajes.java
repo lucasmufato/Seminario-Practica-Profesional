@@ -1013,10 +1013,6 @@ public class DAOViajes extends DataAccesObject {
                     boolean bandera= false;
                     Calendar calendar = Calendar.getInstance();
                     Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-                    /*
-                     * 
-                     * DANGER: NO ANDA ACA
-                     */
                     bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
                 }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
@@ -1314,10 +1310,20 @@ public class DAOViajes extends DataAccesObject {
                             currentTimestamp.setYear(1000);//seteo año para que no los sancione
                             PasajeroViaje pasajero = lista.get(i);
                             pasajero.setEstado(EstadoPasajeroViaje.cancelado);
-                            entitymanager.getTransaction( ).commit( );
+                            this.entitymanager.getTransaction( ).commit( );
                             int id_cliente_pas = pasajero.getCliente().getId_usuario();
                             bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
-                            //TO DO notificarlo
+                            //SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE RECHAZADO
+                            this.entitymanager.getTransaction().begin();
+                            Notificacion notificacion= new Notificacion();
+                            notificacion.setCliente(pasajero.getCliente()); 
+                            notificacion.setEstado(EstadoNotificacion.no_leido);
+                            notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
+                            notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
+                                            " ha cancelado el viaje: "+viaje.getNombre_amigable());
+                            this.entitymanager.persist(notificacion);
+                            this.entitymanager.getTransaction( ).commit( );
+                            //fin notificar pasajero viaje
                         }
                         //Ahora sanciono al chofer si corresponde
                         int id_chofer = chofer.getId_usuario();
