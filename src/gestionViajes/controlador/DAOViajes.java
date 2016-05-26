@@ -21,6 +21,7 @@ import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -981,7 +982,7 @@ public class DAOViajes extends DataAccesObject {
     		try{
     			idVehiculo = Integer.parseInt(foto.get("vehiculo").toString());
     		}catch(Exception e){
-    			throw new ExceptionViajesCompartidos("El vehiculo no es válido");
+    			throw new ExceptionViajesCompartidos("El vehiculo no es vï¿½lido");
     		}
         	Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
         	if (v==null){
@@ -1011,7 +1012,7 @@ public class DAOViajes extends DataAccesObject {
     		try{
     			idVehiculo = Integer.parseInt(json.get("id").toString());
     		}catch(Exception e){
-    			throw new ExceptionViajesCompartidos("El vehiculo no es válido");
+    			throw new ExceptionViajesCompartidos("El vehiculo no es vï¿½lido");
     		}
         	Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
         	if (v==null){
@@ -1207,4 +1208,80 @@ public class DAOViajes extends DataAccesObject {
     		
 			return true;
 		}	
+                
+        //by fede
+        public boolean cancelarViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
+            //Verificaciones varias
+            if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+            }
+            Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
+		}
+		if(viaje.getEstado()==EstadoViaje.cancelado || viaje.getEstado()==EstadoViaje.finalizado){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE ESTA CANCELADO O YA FINALIZO");
+		}
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if(cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+                Cliente chofer = viaje.getConductor();
+                if(chofer.equals(cliente)){ //si es el chofer quien cancela
+                    this.entitymanager.getTransaction().begin();
+                    viaje.setEstado(EstadoViaje.cancelado);
+                    Calendar calendar = Calendar.getInstance();
+                    Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+                    viaje.setFecha_cancelacion(currentTimestamp);
+                    DAOPuntos daopuntos = new DAOPuntos();
+                    try{
+                        entitymanager.getTransaction( ).commit( );
+                        //Ya cancele el viaje, ahora cancelo a los Pasajeros sin sancionarlos
+                        List<PasajeroViaje> lista = viaje.getPasajeros(); 
+                        
+                        id_viaje = viaje.getId_viaje();
+                        for(int i=0; i<lista.size();i++){
+                            this.entitymanager.getTransaction().begin();
+                            boolean bandera= false;
+                            currentTimestamp.setYear(9999);//seteo aÃ±o para que no los sancione
+                            PasajeroViaje pasajero = lista.get(i);
+                            pasajero.setEstado(EstadoPasajeroViaje.cancelado);
+                            entitymanager.getTransaction( ).commit( );
+                            int id_cliente_pas = pasajero.getCliente().getId_usuario();
+                            bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
+                            //TO DO notificarlo
+                        }
+                        //Ahora sanciono al chofer si corresponde
+                        int id_chofer = chofer.getId_usuario();
+                                            
+                        boolean bandera = false;
+                        calendar = Calendar.getInstance();
+                        currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+                        int aceptados = 0 ;
+                        for(int j=0;j<lista.size();j++){//me fijo si alguno tenia estado aceptado
+                            PasajeroViaje pasajero = lista.get(j);
+                            if(pasajero.getEstado().equals(EstadoPasajeroViaje.aceptado)){
+                                aceptados++;                   
+                            }
+                        }                       
+                        
+                        if(aceptados>0){//lo sanciono si tenia pasajeros
+                            bandera = daopuntos.sancionarChofer(id_viaje,id_chofer);
+                        }
+                    }catch(RollbackException e){
+                        String error= ManejadorErrores.parsearRollback(e);
+                        throw new ExceptionViajesCompartidos("ERROR: "+error);
+                    }
+                
+                }else{//no era el chofer
+                    throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO ES EL CONDUCTOR");               
+                
+                }	
+		return true;
+        
+        }
+                
+                
+                
+                
 }
