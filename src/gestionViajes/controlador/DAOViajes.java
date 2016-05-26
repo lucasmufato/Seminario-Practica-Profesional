@@ -649,6 +649,29 @@ public class DAOViajes extends DataAccesObject {
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		this.entitymanager.getTransaction().begin();
 		actualizado = viaje.actualizarEstado();
+		
+		if (actualizado) {
+			// Notificar al conductor 
+			Notificacion notificacion = new Notificacion();
+			notificacion.setCliente(viaje.getConductor());
+			notificacion.setEstado(EstadoNotificacion.no_leido);
+			notificacion.setFecha(viaje.getFecha_inicio()); 
+			notificacion.setTexto ("Ha llegado el momento de iniciar tu viaje <<" + viaje.getNombre_amigable() + ">> con destino a " + viaje.getDestino().getNombre());
+			this.entitymanager.persist(notificacion);
+			List<PasajeroViaje> pasajeros = viaje.getPasajeros();
+			for(PasajeroViaje pasajero: pasajeros) {
+				if(pasajero.getEstado() == EstadoPasajeroViaje.aceptado) {
+					notificacion = new Notificacion();
+					notificacion.setCliente(pasajero.getCliente());
+					notificacion.setEstado(EstadoNotificacion.no_leido);
+					notificacion.setFecha(viaje.getFecha_inicio()); 
+					notificacion.setTexto ("Ha llegado la hora de inicio del viaje <<" + viaje.getNombre_amigable() + ">> con destino a " + viaje.getDestino().getNombre() + " en el cual esta inscripto como pasajero");
+					this.entitymanager.persist(notificacion);
+				}
+			}
+	
+		}
+		
 		this.entitymanager.getTransaction().commit();
 		return actualizado;
 	}
