@@ -73,10 +73,10 @@ initUI = function() {
 	$('.loadingScreen').fadeOut(); 
 };
 
-$(document).ready(function(){
+window.onload = function () {
 	initUI();
 	$("#panel-resultados").hide();
-});
+}
 
 var showViajes = function(){
 	$("#panel-resultados").show();

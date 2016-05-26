@@ -2,18 +2,24 @@ permisosData={};
 permisosData.permisosp=[];
 permisosData.usuariop={};
 permisosData.rolesp=[];
+/*
+$( document ).ready(function(){
+	console.log("cargando permisos desde document ready");
+	//permisosData.esconderFuncionalidadesPermisos();
+	//permisosData.getPermisosUsuario();
+ });
+*/
+permisosData.iniciarScriptPermisos = function(){
+	permisosData.esconderFuncionalidadesPermisos();
+	permisosData.getPermisosUsuario();
+}
 
-$(document).ready(function(){
-	esconderFuncionalidades();
-	getPermisosUsuario();
-});
-
-function esconderFuncionalidades(){
+permisosData.esconderFuncionalidadesPermisos = function(){
   $("#panel-admin").hide();
   $("#panel-cliente").hide();
 }
 
-function getPermisosUsuario() {
+permisosData.getPermisosUsuario = function() {
 	var sendData = {
 		action: 'get_permisos'
 	};
@@ -22,16 +28,16 @@ function getPermisosUsuario() {
 			permisosData.permisosp = jsonData.permisos;
 			permisosData.usuariop = jsonData.usuario;
 			permisosData.rolesp = jsonData.roles;
-			cargarBotones();
-			mostrarFunciones();
+			permisosData.cargarBotones();
+			permisosData.mostrarFunciones();
 		}else if (jsonData.redirect != undefined){
 			window.location = jsonData.redirect;
 		}
-
 	}
-	send(sendData,callback);
+	permisosData.send(sendData,callback);
 }
-function send(sendData,callback){
+
+permisosData.send = function(sendData,callback){
 	$.ajax({
 		url: '/users',
 		method: 'POST',
@@ -47,13 +53,14 @@ function send(sendData,callback){
 		}
 	});
 }
-var cargarBotones = function(){
+
+permisosData.cargarBotones = function(){
 	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
 	//$("#link-mi-perfil").attr("href","/perfil.html?usuario="+permisosData.usuariop.nombre_usuario);
 	//$("#link-mis-viajes").attr("href","/mis_viajes.html?usuario="+permisosData.usuariop.nombre_usuario);
 	//$("#link-mis-vehiculos").attr("href","/mis_vehiculos.html?usuario="+permisosData.usuariop.nombre_usuario);.hide();
 }
-function mostrarFunciones(){
+permisosData.mostrarFunciones = function(){
 	//console.log("Permisos que me traje: ",permisosData.permisosp);
 	//console.log("roles que me traje: ",permisosData.rolesp);
 	//console.log("usuario que me traje: ",permisosData.usuariop);
@@ -64,11 +71,11 @@ function mostrarFunciones(){
 			if (rol == "cliente"){
 				  $("#panel-cliente").show();
 				  $("#link-mi-perfil-admin").hide();
-				  makeListDropdown(rol);
+				  permisosData.makeListDropdown(rol);
 			}
 			if (rol == "super_usuario"){
 				  $("#panel-admin").show();
-				  makeListDropdown(rol);
+				  permisosData.makeListDropdown(rol);
 			}
 		}
 	}
@@ -88,7 +95,7 @@ function mostrarFunciones(){
 	*/
 }
 
-var makeListDropdown = function(rol){
+permisosData.makeListDropdown = function(rol){
 	var html = 	"<li><a href='/perfil.html'>Mi perfil</a></li>"
 	
 	if (rol == "cliente"){

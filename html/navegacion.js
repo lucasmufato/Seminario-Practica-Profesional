@@ -14,12 +14,23 @@ var addNavegacion = function () {
 
 	var modal = document.createElement('DIV');
 	$(modal).load('/navegacion.html #common-modal');
-
-	$.getScript( "/permisos.js");
 	
+	//cargo script de permisos
+	$.ajax({
+		url: "/permisos.js",
+		dataType: "script",
+		success: function () { permisosData.iniciarScriptPermisos();},
+		error: function (er1, err2, err3) {
+			document.body.innerHTML = er1.responseText;
+			window.alert (err3);
+		}
+	});
+
 	$('body').prepend (sidebar);
 	$('body').prepend (nav);
 	$('body').append (modal);
+	
+
 }
 
 var oldFunc = window.onload;
