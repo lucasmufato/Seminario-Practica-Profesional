@@ -161,4 +161,16 @@ public class PasajeroViaje implements JSONable {
 		return null;
 	}
 
+	// Para saber si dos pasajeros de un mismo viaje son el mismo (llamado por List<PasajeroViaje> en metodo contains)
+    @Override
+    public boolean equals(Object object){
+        boolean igual = false;
+
+        if (object != null && object instanceof PasajeroViaje){
+            igual = this.getCliente().getId_usuario() == ((PasajeroViaje) object).getCliente().getId_usuario() 
+            		&& this.getViaje().getId_viaje() == ((PasajeroViaje) object).getViaje().getId_viaje();
+        }
+
+        return igual;
+    }
 }

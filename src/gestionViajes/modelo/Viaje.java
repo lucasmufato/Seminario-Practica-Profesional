@@ -93,7 +93,11 @@ public class Viaje implements JSONable {
 	}
 	
 	//by mufa
+	//juan: ahora verifica que ese cliente ya sea pasajero, si es asi lo saca y pone el nuevo
 	public boolean aniadir_pasajeroViaje (PasajeroViaje cliente, Localidad subida, Localidad bajada) throws ExceptionViajesCompartidos{
+		if (this.pasajeros.contains(cliente)){
+			this.pasajeros.remove(this.pasajeros.indexOf(cliente));
+		}
 		this.pasajeros.add(cliente);
 		cliente.setLocalidad_bajada(this.contiene_localidad(bajada));
 		cliente.setLocalidad_subida(this.contiene_localidad(subida));
