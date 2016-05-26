@@ -78,6 +78,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.modificarImagenVehiculo(request);
 			} else if (action != null && action.equals ("asignar_vehiculo_clientes")){
 				respuesta = this.asignarVehiculoCliente(request);
+			} else if (action != null && action.equals ("desasignar_vehiculo_cliente")){
+				respuesta = this.desasignarVehiculoCliente(request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -90,6 +92,7 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
+
 
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -114,14 +117,6 @@ public class ServletViaje extends HttpServlet {
 
 		System.out.println (respuesta);
 		writer.println (respuesta);
-	}
-	
-	public List<Cliente> autocompletar_conductor(String clientes){
-		return null;
-	}
-	
-	public List<Localidad> autocompletar_localidad(String localidad){
-		return null;
 	}
 	
 	public List<Vehiculo> conseguir_vehiculos_cliente(Integer id_cliente){
@@ -412,6 +407,50 @@ public class ServletViaje extends HttpServlet {
 		
 		respuesta.put("result", true);
 		respuesta.put("msg", "Conductores fueron asignados con éxito");
+		return respuesta;
+	}
+	
+	private JSONObject desasignarVehiculoCliente(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		int idVehiculo;
+		try{
+			idVehiculo = Integer.parseInt(request.getParameter("id_vehiculo"));
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Vehículo no es válido");
+			return respuesta;
+		}
+		
+		int idConductor;
+		try{
+			idConductor = Integer.parseInt(request.getParameter("id_conductor"));
+		}catch(Exception e){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Conductor no es válido");
+			return respuesta;
+		}
+		
+		try {
+			daoViajes.desasignarConductor(idVehiculo,idConductor);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		if (idConductor == AccessManager.getIdUsuario(request)){
+			respuesta.put("redirect", "/mis_vehiculos.html");
+		}
+		respuesta.put("msg", "El conductor ha sido desasignado correctamente");
 		return respuesta;
 	}
 	

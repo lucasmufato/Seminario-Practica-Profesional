@@ -90,18 +90,37 @@
 							</div>
 							<div align="center">
 								<div class="col-md-12">
-									<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#conductores" aria-expanded="false" aria-controls="conductores"><span class="glyphicon glyphicon-eye-open"></span> Conductores</button>
-									<button class="btn btn-primary" onclick="activarAsignarConductor()"><span class="glyphicon glyphicon-plus"></span></button>
+									<div class="btn-group">
+										<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#conductores" aria-expanded="false" aria-controls="conductores"><span class="glyphicon glyphicon-eye-open"></span> Conductores</button>
+										<button class="btn btn-primary" onclick="activarAsignarConductor()"  data-toggle="tooltip" data-placement="right" title="Asignar conductor"><span class="glyphicon glyphicon-plus"></span></button>
+									</div>
 								</div>
-								<div class="collapse col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-0 col-md-offset-4 col-lg-offset-4" id="conductores">
-									<div class="panel panel-default">
+								<div class="collapse col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-0 col-md-offset-4 col-lg-offset-4" id="conductores">
+									<ul class="list-group" id="list-conductores">
+										{{#conductores}}
+										<li class="list-group-item list-group-item-success">
+											<span class="badge btn btn-danger" onclick="desasignarConductor({{id}});" data-toggle="tooltip" data-placement="right" title="Desasignar conductor"><span class="glyphicon glyphicon-minus" ></span></span>
+											<a href="/perfil.html?usuario={{nombre_usuario}}"  data-toggle="tooltip" data-placement="top" title="Ver perfil">{{nombre_usuario}}</a>
+										</li>
+										{{/conductores}}
+									</ul>
+								</div>	
+									<!--
+									<div class="">
 										<div class="list-group">
 											{{#conductores}}
-											<a href="/perfil.html?usuario={{nombre_usuario}}" class="list-group-item">{{nombre_usuario}}</a>
+											<div class="row">
+												<div class="col-md-8">
+													<a href="/perfil.html?usuario={{nombre_usuario}}" class="list-group-item">{{nombre_usuario}}</a>
+												</div>
+												<div class="col-md-4">
+													<a type="button" class="btn btn-danger btn-block" onclick="desasignarConductor({{id}});"><span class="glyphicon glyphicon-minus"></span></a>	
+												</div>
+											</div>
 											{{/conductores}}
 										</div>
 									</div>
-								</div>
+									-->
 							</div>
 	            		</div>
 						<div class="panel-footer clearfix">
@@ -147,6 +166,24 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" onclick="closeModal('asignar-conductor');"> Cerrar</button>
 						<button type="button" class="btn btn-success" onclick="asignarConductores();"><span class="glyphicon glyphicon-plus"></span> Asignar</button>
+					</div><!-- .modal-footer -->
+				</div><!-- .modal-content -->
+			</div><!-- .modal-dialog -->
+		</div><!-- .modal -->
+		
+		<div id="modal-success" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-success">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" onclick="closeModal('success')">&times;</button>
+						<h3 class="dialog-title"> Éxito!</h3>
+					</div><!-- modal-header -->
+					<div class="modal-body">
+						<div id="success-message">
+							Todo salió bien. <!-- Esto sera modificado desde javascript -->
+						</div>					</div><!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" onclick="closeModal('success');"> Cerrar</button>
 					</div><!-- .modal-footer -->
 				</div><!-- .modal-content -->
 			</div><!-- .modal-dialog -->

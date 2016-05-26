@@ -80,7 +80,6 @@ var loadData = function() {
 
 var initUI = function(){
 	loadData();
-	$('[data-toggle="tooltip"]').tooltip(); 
 }
 
 window.onload=initUI;
@@ -101,6 +100,8 @@ var cargarDataVehiculo = function(){
 }
 
 function setearEventos(){
+	$('[data-toggle="tooltip"]').tooltip(); 
+
 	new jscolor($('.jscolor')[0]);
 	$("input[type='file']").change(function(){
 		readURL(this);
@@ -136,10 +137,12 @@ var enviarFoto = function(src){
 	}
 	sendAjax(sendData,onsuccess);
 }
-//-----------------------------Asignar Conductor------------------------------------------------------------//
+//-----------------------------Asignar/Desasignar Conductor------------------------------------------------------------//
 
 var activarAsignarConductor = function(){
 
+	// tengo que borrar este input aca, no se como todavia
+	
 	inputConductores = $('form input[name=conductores]').magicSuggest({
 		method: 'GET',
 		data: '/autocompletado',
@@ -159,7 +162,51 @@ var activarAsignarConductor = function(){
 
 	$('#modal-asignar-conductor').modal('show');
 }
+var eliminarVehiculo = function(){
+
+	var msg = "¿Esta seguro que desea eliminar el vehículo? Esta acción no puede deshacerse";
+	var title= "Eliminar Vehículo";
+	var btn = document.createElement("BUTTON");       
+	btn.className="btn btn-danger dinamico";
+	btn.innerHTML = "<span class='glyphicon glyphicon-tint'></span>"+" Confirmar";
+	btn.name = "confirmar";
+	btn.onclick=confirmar;
+	modalButton(modalName,btn);
+	modalMessage(modalName,msg,title);
+}
+var desasignarConductor = function(id){
+	var modalName='warning';
+	var confirmar = function(){
+		closeModal(modalName);
+		var sendJson = {
+			entity: "vehiculo",
+			action: "desasignar_vehiculo_cliente",
+			"id_vehiculo":dataVehiculo.vehiculo.id,
+			"id_conductor": id
+		}
+		var onsuccess = function(jsonData){
+			if (jsonData.result == true && jsonData.redirect != undefined) {
+				window.location = jsonData.redirect;
+			}
+			loadData();
+			modalMessage("success",jsonData.msg,"Desasignar conductor");
+		}
+		vc.peticionAjax("/viajes",sendJson,"POST",onsuccess);
+	}
+	var msg = "¿Esta seguro que desea desasignar a este conductor del vehículo? Esta acción no puede deshacerse";
+	var title= "Desasignar conductor";
+	var btn = document.createElement("BUTTON");       
+	btn.className="btn btn-danger dinamico";
+	btn.innerHTML = "<span class='glyphicon glyphicon-warning-sign'></span>"+" Confirmar";
+	btn.name = "confirmar";
+	btn.onclick=confirmar;
+	modalButton(modalName,btn);
+	modalMessage(modalName,msg,title);
+}
+
 var asignarConductores = function(){
+	closeModal("asignar-conductor");
+
 	var conductores = inputConductores.getValue();
 	
 	if (conductores.length > 0){
@@ -173,7 +220,6 @@ var asignarConductores = function(){
 			if (jsonData.result == false && jsonData.redirect != undefined) {
 				window.location = jsonData.redirect;
 			}
-			closeModal("asignar-conductor");
 			loadData();
 			modalMessage("success",jsonData.msg,"Asignar conductores a vehículo");
 		}

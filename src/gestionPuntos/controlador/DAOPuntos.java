@@ -182,5 +182,52 @@ public class DAOPuntos extends DataAccesObject {
         return true;
     }
     
-    
+    public boolean sancionarChofer(int id_viaje, int id_chofer) throws ExceptionViajesCompartidos{
+        //formula
+        // puntos = (CantPas * 50 ) + (1/hsfaltan * beta)
+        this.entitymanager.getTransaction().begin();
+        Viaje viaje = new Viaje();
+        Integer id_viaje2 = id_viaje;
+        viaje = (Viaje) this.buscarPorPrimaryKey(viaje, id_viaje);
+        Timestamp fecha_inicio = viaje.getFecha_inicio();
+        Timestamp actual= new Timestamp((new java.util.Date()).getTime());
+        double dif_horas = this.diferenciaTimestamps(fecha_inicio, actual); //calculo diferencia de fechas
+        double segundo_termino = (1/dif_horas)*beta;
+        List<PasajeroViaje> lista = viaje.getPasajeros();
+        int cantidad_pasajeros = lista.size();
+        double primer_termino = cantidad_pasajeros * 50;
+        double resultado = primer_termino + segundo_termino;
+        MovimientoPuntos mov = new MovimientoPuntos();
+        Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_chofer);         
+        mov.setCliente(cliente);
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
+        mov.setFecha((Date) fecha);
+        resultado = resultado - 2*(resultado);
+        Integer resultado_int = (int)resultado;
+        mov.setMonto(resultado_int);
+        Sancion sancion = new Sancion();
+        sancion.setCliente(cliente);
+        sancion.setMovimiento_puntos(mov);
+        utilDate = new java.util.Date();
+        fecha = new java.sql.Date(utilDate.getTime());
+        sancion.setFecha_inicio(fecha);
+        sancion.setFecha_fin(fecha);            
+        sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.
+        try{    
+                    this.entitymanager.persist(mov);
+                    this.entitymanager.getTransaction().commit();
+                    this.entitymanager.getTransaction().begin();
+                    this.entitymanager.persist(sancion);
+                    this.entitymanager.getTransaction().commit();
+                    //this.entitymanager.getTransaction( ).commit( );
+                    boolean bandera = this.actualizarPuntosCliente(resultado_int, cliente.getId_usuario());
+            }catch(RollbackException e){
+                    String error= ManejadorErrores.parsearRollback(e);
+                    throw new ExceptionViajesCompartidos("ERROR: "+error);
+            }               
+        
+        
+        return true;
+    }
 }

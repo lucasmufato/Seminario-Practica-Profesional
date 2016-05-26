@@ -57,7 +57,7 @@ CREATE TABLE ROL (
 CREATE TABLE USUARIO_ROL (
 	id_usuario INTEGER NOT NULL,
 	id_rol INTEGER NOT NULL,
-	fecha_modificacion DATE NOT NULL,
+	fecha_modificacion DATETIME NOT NULL,
 	
 	PRIMARY KEY (id_usuario, id_rol),
 	FOREIGN KEY (id_usuario) REFERENCES USUARIO (id_usuario),
@@ -79,7 +79,7 @@ CREATE TABLE PERMISO (
 CREATE TABLE PERMISO_ROL (
 	id_permiso INTEGER NOT NULL,
 	id_rol INTEGER NOT NULL,
-	fecha_modificacion DATE NOT NULL,
+	fecha_modificacion DATETIME NOT NULL,
 
 	PRIMARY KEY(id_permiso,id_rol),
 	FOREIGN KEY (id_permiso) REFERENCES PERMISO(id_permiso),
@@ -106,7 +106,7 @@ CREATE TABLE LOCALIDAD (
 	elevacion INTEGER,
 	dem INTEGER,
 	zona_horaria VARCHAR(40),
-	fecha_modificacion DATE,
+	fecha_modificacion DATETIME,
 
 
 	PRIMARY KEY (id_localidad)
@@ -149,7 +149,7 @@ CREATE TABLE VEHICULO (
 	patente VARCHAR(15) NOT NULL,
 	verificado CHAR(1) NOT NULL,
 	estado CHAR(1) NOT NULL,
-	fecha_verificacion DATE,
+	fecha_verificacion DATETIME,
 	color VARCHAR(20),
     cantidad_asientos INTEGER NOT NULL,
     aire_acondicionado CHAR(1),
@@ -163,8 +163,8 @@ CREATE TABLE VEHICULO (
 CREATE TABLE MANEJA (
 	id_cliente INTEGER NOT NULL,
 	id_vehiculo INTEGER NOT NULL,
-	fecha_inicio DATE NOT NULL,
-	fecha_fin DATE,
+	fecha_inicio DATETIME NOT NULL,
+	fecha_fin DATETIME,
 	
 
 	PRIMARY KEY (id_cliente,id_vehiculo,fecha_inicio),
@@ -190,7 +190,7 @@ CREATE TABLE VIAJE (
 	fecha_cancelacion DATETIME,
 	id_vehiculo INTEGER NOT NULL,
     id_cliente INTEGER NOT NULL,
-    fecha_inicio_maneja DATE NOT NULL,
+    fecha_inicio_maneja DATETIME NOT NULL,
     viaje_complementario INTEGER,
 	precio FLOAT,
 	
