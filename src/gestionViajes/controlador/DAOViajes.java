@@ -465,7 +465,21 @@ public class DAOViajes extends DataAccesObject {
 			this.entitymanager.getTransaction().rollback();
 		}
 		this.entitymanager.getTransaction().begin();
-		PasajeroViaje pasajero= new PasajeroViaje();
+		
+		/*
+		 * De Fede y Juan: te comentamos esta linea Lucas:
+		 */
+		//PasajeroViaje pasajero= new PasajeroViaje();
+		/*
+		 * Porque no deberia crear una tupla en cualquier caso, 
+		 * solo debe crear esa tupla si no tiene ya una tupla en la relacion.
+		 * Mucho bardo genero esto jaja
+		 */
+		PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		if (pasajero == null){
+			pasajero = new PasajeroViaje();
+		}
+		
 		pasajero.setCalificacion(null);
 		pasajero.setCliente(cliente);
 		pasajero.setEstado(EstadoPasajeroViaje.postulado);
@@ -1003,7 +1017,7 @@ public class DAOViajes extends DataAccesObject {
                      * 
                      * DANGER: NO ANDA ACA
                      */
-                    //bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
+                    bandera = daopuntos.evaluarSancion(id_cliente, id_viaje, currentTimestamp);
                 }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);
