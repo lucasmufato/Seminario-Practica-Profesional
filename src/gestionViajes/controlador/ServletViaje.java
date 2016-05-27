@@ -730,7 +730,7 @@ public class ServletViaje extends HttpServlet {
 		json_vehiculo.put("color", request.getParameter("color"));
 		json_vehiculo.put("asientos", Integer.parseInt(request.getParameter("asientos")));
 		json_vehiculo.put("seguro", request.getParameter("seguro").toString().charAt(0));
-		//json_vehiculo.put("foto", request.getParameter(""));
+		//json_vehiculo.put("foto", request.getParameter("foto"));
 
 		params.put("conductor", id_usuario);
 		params.put("vehiculo", json_vehiculo);

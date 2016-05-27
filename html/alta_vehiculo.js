@@ -10,6 +10,9 @@ window.onload = function () {
     	autoclose: true
 	});
 
+	$("input[type='file']").change(function(){
+		readURL(this);
+	});
 }
 
 submitFormVehiculo = function () {
@@ -24,10 +27,53 @@ submitFormVehiculo = function () {
 		anio: $('#form-vehiculo input[name=anio]').val(),
 		asientos: $('#form-vehiculo select[name=asientos]').val(),
 		aire: $('#form-vehiculo select[name=aire]').val(),
-		seguro: $('#form-vehiculo select[name=seguro]').val()
+		seguro: $('#form-vehiculo select[name=seguro]').val(),
+		foto: $('#foto_vehiculo').attr("src")
 	}
 
 	vc.peticionAjax('/viajes', sendData);
 
 	return false;
 }
+//---------------------------- IMAGEN---------------------------------------//
+
+var imagenValida = function(file){
+	var maxTam = 1500000; // tamano maximo 1.5MB
+	if (file.size >= maxTam){
+		modalMessage("error", "Archivo es demasiado grande", "Modificar Imagen");
+		return false;
+	}
+    if (file.type.indexOf("image") == -1){
+		modalMessage("error", "Debe seleccionar una imagen", "Modificar Imagen");
+		return false;
+	}	
+	return true;
+}
+
+function readURL(input) {
+	var id = $(input).attr("name");
+    if (input.files && input.files[0] && imagenValida(input.files[0])) {
+		var reader = new FileReader();
+
+		reader.onload = function (e) {
+			$("#"+id).attr('src', e.target.result).show();
+		}
+
+		reader.readAsDataURL(input.files[0]);
+    }
+}
+//---------------------------------Fin Foto ------------------------------//
+//---------------------------------Modal ------------------------------//
+
+var modalMessage = function (modalName,textMsg,titleMsg) {
+	$('#'+modalName+'-message').text(textMsg);
+	if (titleMsg){
+		$('#modal-'+modalName +" .dialog-title").text(titleMsg);
+	}
+	$('#modal-'+modalName).modal('show');
+}
+var closeModal = function (name) {
+	$('#modal-' + name).modal('hide');
+}
+
+//---------------------------------FIN Modal ------------------------------//
