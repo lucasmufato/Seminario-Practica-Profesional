@@ -48,14 +48,25 @@ FROM
         v.fecha_inicio AS Inicio,
         v.estado AS estado,
         u.nombre_usuario AS Conductor,
-        ROUND(SUM(lv.kms_a_localidad_siguiente),1) as km,
-        COUNT(pv.id_pasajero_viaje) as pasajeros,
-        ROUND(v.precio,2) as Precio
+        km_por_viaje.km AS km,
+        pasajeros_por_viaje.pasajeros as pasajeros,
+        ROUND(v.Precio,2) as Precio
     FROM
-        VIAJE v INNER JOIN USUARIO u  ON u.id_usuario = v.id_cliente
-        INNER JOIN LOCALIDAD_VIAJE lv ON lv.id_viaje=v.id_viaje
-        LEFT JOIN PASAJERO_VIAJE pv ON pv.id_viaje=v.id_viaje
-    GROUP BY v.id_viaje) AS reporte
+		VIAJE v INNER JOIN
+			(SELECT
+				v.id_viaje, ROUND(SUM(lv.kms_a_localidad_siguiente),1) as km
+			FROM
+				VIAJE v INNER JOIN LOCALIDAD_VIAJE lv
+			ON lv.id_viaje=v.id_viaje group by v.id_viaje) AS km_por_viaje
+		ON v.id_viaje = km_por_viaje.id_viaje
+		INNER JOIN USUARIO u  ON u.id_usuario = v.id_cliente
+        INNER JOIN
+			(SELECT
+				v.id_viaje, COUNT(pv.id_pasajero_viaje) AS pasajeros
+			FROM
+				VIAJE v LEFT JOIN PASAJERO_VIAJE pv
+			ON pv.id_viaje=v.id_viaje GROUP BY v.id_viaje) AS pasajeros_por_viaje
+		ON v.id_viaje = pasajeros_por_viaje.id_viaje) AS reporte
 INNER JOIN ESTADO_VIAJE e ON reporte.estado = e.id_estado_viaje
 WHERE Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null
             and (Id <= $P!{id_viaje_hasta} or $P!{id_viaje_hasta} is null)
@@ -68,7 +79,8 @@ WHERE Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null
             and (pasajeros >= $P!{pasajeros_desde} or $P!{pasajeros_desde} is null)
             and (pasajeros <= $P!{pasajeros_hasta} or $P!{pasajeros_hasta} is null)
             and (Precio >= $P!{precio_desde} or $P!{precio_desde} is null)
-            and (Precio <= $P!{precio_hasta} or $P!{precio_hasta} is null);]]>
+            and (Precio <= $P!{precio_hasta} or $P!{precio_hasta} is null)
+ ORDER BY Id;]]>
 	</queryString>
 	<field name="Id" class="java.lang.Integer"/>
 	<field name="Conductor" class="java.lang.String"/>

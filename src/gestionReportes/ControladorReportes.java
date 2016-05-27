@@ -71,12 +71,14 @@ public class ControladorReportes extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("En doPost de Reportes!");
-		JSONObject out = null;
+		PrintWriter writer = response.getWriter();
+		JSONObject out = null;	
 
 		String accion = request.getParameter("action");
 
-		
-		if (accion.equals("reporte_viajes")){
+		if (accion != null && accion.equals("cargar_data")){
+			out = cargarData(request,response);
+		} else if (accion != null && accion.equals("reporte_viajes")){
 			out = reporteViajes(request,response);
 		}
 		
@@ -87,13 +89,31 @@ public class ControladorReportes extends HttpServlet {
 		
 		out.put("action", accion);
 		System.out.println("Lo que mando al js: "+out);
-		PrintWriter writer = response.getWriter();
 		writer.println (out);
+	}
+
+	private JSONObject cargarData(HttpServletRequest request,
+			HttpServletResponse response) {
+		JSONObject respuesta = new JSONObject();
+		if (!AccessManager.hasRol(request, "super_usuario")){
+			respuesta.put("result", true); // le tengo que poner true para que no vaya al cartel de error de vc.peticionajax();
+			respuesta.put("redirect", "/acceso_denegado.html");
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		return respuesta;
 	}
 
 	private JSONObject reporteViajes(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
+		
+		if (!AccessManager.hasRol(request, "super_usuario")){
+			respuesta.put("result", true); // le tengo que poner true para que no vaya al cartel de error de vc.peticionajax();
+			respuesta.put("redirect", "/acceso_denegado.html");
+			return respuesta;
+		}
 		
 		ServletContext context = this.getServletConfig().getServletContext();
 		String path = context.getRealPath("/reportes/reports/vc_reporte_viajes.jrxml");
@@ -155,7 +175,7 @@ public class ControladorReportes extends HttpServlet {
 			return respuesta;
 		}
 		respuesta.put("msg", "El reporte ha sido generado correctamente");
-		respuesta.put("relocate", pathToPdf);
+		respuesta.put("redirect", pathToPdf);
 		respuesta.put("result", true);
 		
 		return respuesta;

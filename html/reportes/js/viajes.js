@@ -1,4 +1,22 @@
+reporte = {};
+
+reporte.loadData = function(){
+	var sendData = {
+		action: "cargar_data"
+	};	
+	var onsuccess = function(jsonData){
+	
+		console.log(jsonData.relocate);
+		if (jsonData.redirect != undefined){
+			console.log("hola");
+			window.location = jsonData.redirect;
+		}
+	}
+	vc.peticionAjax("/reportes",sendData,"POST",onsuccess);
+}
+
 window.onload= function(){
+	reporte.loadData();
 	$('[data-toggle="tooltip"]').tooltip(); 
 	$('#fechadesde, #fechahasta').datetimepicker({
         format: 'yyyy-mm-dd',
@@ -11,6 +29,8 @@ window.onload= function(){
 		clearBtn: true,
 	});
 }
+
+
 var generarReporte = function(){
 	var data = {};
 	data.id_desde = $("#reportForm input[name=iddesde]").val();
@@ -31,8 +51,8 @@ var generarReporte = function(){
 		data: data
 	};	
 	var onsuccess = function(jsonData){
-		if (jsonData.relocate){
-			window.open(jsonData.relocate,"_blank");
+		if (jsonData.redirect){
+			window.open(jsonData.redirect,"_blank");
 		}
 	}
 	vc.peticionAjax("/reportes",sendData,"POST",onsuccess);
