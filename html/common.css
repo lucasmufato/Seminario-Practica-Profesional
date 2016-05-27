@@ -92,7 +92,9 @@
 			body.sidebar-on main {
 				margin-left: 240px;
 			}
-				
+			.mobile-only {
+				display: block;
+			}
 
 		}
 
@@ -104,6 +106,9 @@
 				width: calc (100% - 240px);
 				margin-left: 240px;
 				
+			}
+			.mobile-only {
+				display: none;
 			}
 		}
 
