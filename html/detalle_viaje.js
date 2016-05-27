@@ -153,6 +153,7 @@ var simular = function(json){
 	data.viaje = {
 		id: data.viaje.id ,
 		nombre_amigable: "Un alto viaje",
+		asientos_disponibles: "3",
 		estado: "no_iniciado",
 		tipo: "ida",
 		id_viaje_complementario: "4",
@@ -320,6 +321,9 @@ var cargarViaje = function(){
 	$("#destino").text(localidadNombre (data.viaje.destino));
 	$("#fecha").text(data.viaje.fecha_inicio);
 	$("#precio").text("$"+data.viaje.precio);
+	$("#nombre_amigable").text(data.viaje.nombre_amigable);
+	$("#asientos").text(data.viaje.asientos_disponibles);
+
 	
 	$("#recorrido").html("");
 	data.viaje.recorrido.forEach(function(elem){

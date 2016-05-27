@@ -398,6 +398,7 @@ public class Viaje implements JSONable {
 		json_viaje.put("fecha_cancelacion", (this.getFecha_cancelacion() != null)? this.getFecha_cancelacion().toString(): null);
 		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion() != null)? this.getFecha_finalizacion().toString(): null);
 		json_viaje.put("precio",this.getPrecio());
+		json_viaje.put("asientos_disponibles", this.getAsientos_disponibles());
 		json_viaje.put("cantidad_pasajeros_aceptados",this.getPasajerosAceptadosComoListCliente().size());
 		/* NOTAS: 
 			//TODO hora debe estar dentro de fecha
