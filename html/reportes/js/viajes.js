@@ -5,12 +5,11 @@ reporte.loadData = function(){
 		action: "cargar_data"
 	};	
 	var onsuccess = function(jsonData){
-	
-		console.log(jsonData.relocate);
 		if (jsonData.redirect != undefined){
 			console.log("hola");
 			window.location = jsonData.redirect;
 		}
+		$('.loadingScreen').fadeOut();
 	}
 	vc.peticionAjax("/reportes",sendData,"POST",onsuccess);
 }
