@@ -495,15 +495,28 @@ var cancelarParticipacion = function(){
 		}
 		sendAjax(sendJson,onsuccess);
 	}
-	var msg = "Al presionar en 'Confirmar Cancelación' usted será sancionado"
-		+" y podría perder su cuenta temporalmente."
-	var btn = document.createElement("BUTTON");       
-	btn.className="btn btn-danger dinamico";
-	btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
-	btn.name = "confirmarCancelacion";
-	btn.onclick=confirmarCancelacion;
-	modalButton(modalName,btn);
-	modalMessage(modalName,msg);
+	/*	es_conductor: false,
+		es_aceptado: false,
+		es_postulado: false,
+		es_seguidor: false,
+		es_finalizo: false,
+		ha_calificado: false*/
+		console.log(data.usuario_logueado);
+	if (data.usuario_logueado.es_postulado){
+		confirmarCancelacion();
+	}else if (data.usuario_logueado.es_aceptado){
+		var msg = "Usted ha sido aceptado por el conductor"
+		+ " para participar de este viaje."
+		+" Por lo tanto, al confirmar esta acción usted podría ser sancionado"
+		+" y perder su cuenta temporalmente."
+		var btn = document.createElement("BUTTON");       
+		btn.className="btn btn-danger dinamico";
+		btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
+		btn.name = "confirmarCancelacion";
+		btn.onclick=confirmarCancelacion;
+		modalButton(modalName,btn);
+		modalMessage(modalName,msg);
+	}
 }
 var modificarViaje = function(){
 	window.location = "/modificar_viaje.html?id="+data.viaje.id;

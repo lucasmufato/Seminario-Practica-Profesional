@@ -100,6 +100,23 @@ var cargarDataVehiculo = function(){
 }
 
 function setearEventos(){
+	inputConductores = $('form input[name=conductores]').magicSuggest({
+		method: 'GET',
+		data: '/autocompletado',
+		mode: 'remote',
+		allowFreeEntries: false,
+		selectFirst: true,
+		hideTrigger: true,
+		placeholder: 'Buscar Conductores',
+		noSuggestionText: 'No hay sugerencias',
+		minChars: 3,
+		maxSelectionRenderer: function(){},
+		minCharsRenderer: function() {},
+		dataUrlParams: {
+			entity: "cliente"
+		}
+	});
+
 	$('[data-toggle="tooltip"]').tooltip(); 
 
 	new jscolor($('.jscolor')[0]);
@@ -138,28 +155,9 @@ var enviarFoto = function(src){
 	sendAjax(sendData,onsuccess);
 }
 //-----------------------------Asignar/Desasignar Conductor------------------------------------------------------------//
-
 var activarAsignarConductor = function(){
 
-	// tengo que borrar este input aca, no se como todavia
-	
-	inputConductores = $('form input[name=conductores]').magicSuggest({
-		method: 'GET',
-		data: '/autocompletado',
-		mode: 'remote',
-		allowFreeEntries: false,
-		selectFirst: true,
-		hideTrigger: true,
-		placeholder: 'Buscar Conductores',
-		noSuggestionText: 'No hay sugerencias',
-		minChars: 3,
-		maxSelectionRenderer: function(){},
-		minCharsRenderer: function() {},
-		dataUrlParams: {
-			entity: "cliente"
-		}
-	});
-
+	// tengo que borrar el input magico aca, no se como todavia
 	$('#modal-asignar-conductor').modal('show');
 }
 var eliminarVehiculo = function(){
@@ -206,7 +204,7 @@ var desasignarConductor = function(id){
 
 var asignarConductores = function(){
 	closeModal("asignar-conductor");
-
+	
 	var conductores = inputConductores.getValue();
 	
 	if (conductores.length > 0){
