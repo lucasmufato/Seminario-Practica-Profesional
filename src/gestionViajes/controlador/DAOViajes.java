@@ -899,8 +899,8 @@ public class DAOViajes extends DataAccesObject {
 		if(cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
 		}
-		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_cliente);
-		if(cliente==null){
+		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL VIAJE");
 		}
 		PasajeroViaje pv= viaje.recuperar_pasajeroViaje_por_cliente(cliente);
@@ -917,7 +917,8 @@ public class DAOViajes extends DataAccesObject {
 				throw new ExceptionViajesCompartidos("ERROR: NO ESTAS ACEPTADO EN EL VIAJE");
 			}
 		}
-		if(viaje.getEstado()!=EstadoViaje.iniciado || viaje.getEstado()!=EstadoViaje.finalizado ){
+
+		if(viaje.getEstado()!=EstadoViaje.iniciado && viaje.getEstado()!=EstadoViaje.finalizado ){
 			throw new ExceptionViajesCompartidos("ERROR: NO PUEDES FINALIZAR TU PARTICIPACION EN UN VIAJE QUE NO ESTA INICIADO O FINALIZADO");
 		}
 		
@@ -945,7 +946,8 @@ public class DAOViajes extends DataAccesObject {
 			this.entitymanager.getTransaction().rollback();
 		}
 		this.entitymanager.getTransaction().begin();
-		viaje.setEstado(EstadoViaje.finalizado);		
+		viaje.setEstado(EstadoViaje.finalizado);
+		viaje.setFecha_finalizacion(new Timestamp((new java.util.Date()).getTime()) );
 		try{
     		entitymanager.getTransaction( ).commit( );	
     	}catch(RollbackException e){

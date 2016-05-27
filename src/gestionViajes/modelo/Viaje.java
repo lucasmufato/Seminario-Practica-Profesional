@@ -93,7 +93,7 @@ public class Viaje implements JSONable {
 	}
 	
 	//by mufa
-	//juan: ahora verifica que ese cliente ya sea pasajero, si es asi lo saca y pone el nuevo
+	//juan 26/05/2016: ahora verifica que ese cliente ya sea pasajero, si es asi lo saca y pone el nuevo
 	public boolean aniadir_pasajeroViaje (PasajeroViaje cliente, Localidad subida, Localidad bajada) throws ExceptionViajesCompartidos{
 		if (this.pasajeros.contains(cliente)){
 			this.pasajeros.remove(this.pasajeros.indexOf(cliente));
@@ -210,6 +210,16 @@ public class Viaje implements JSONable {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		for(PasajeroViaje pas: pasajeros) {
 			if (pas.getEstado().equals(EstadoPasajeroViaje.aceptado)){
+				lista.add(pas.getCliente());
+			}
+		}
+		return lista;
+	}
+	
+	public List<Cliente> getPasajerosFinalizadosComoListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for(PasajeroViaje pas: pasajeros) {
+			if (pas.getEstado().equals(EstadoPasajeroViaje.finalizo_viaje)){
 				lista.add(pas.getCliente());
 			}
 		}
@@ -386,7 +396,7 @@ public class Viaje implements JSONable {
 		json_viaje.put("fecha_cancelacion", (this.getFecha_cancelacion() != null)? this.getFecha_cancelacion().toString(): null);
 		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion() != null)? this.getFecha_finalizacion().toString(): null);
 		json_viaje.put("precio",this.getPrecio());
-		json_viaje.put("cantidad_pasajeros",this.pasajeros.size());
+		json_viaje.put("cantidad_pasajeros_aceptados",this.getPasajerosAceptadosComoListCliente().size());
 		/* NOTAS: 
 			//TODO hora debe estar dentro de fecha
 		*/

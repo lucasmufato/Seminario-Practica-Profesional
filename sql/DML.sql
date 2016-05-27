@@ -40,8 +40,8 @@ INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	
 INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
 	("2", "Finalizado"),
-	("0", "No iniciado"),
-	("1", "Iniciado"),
+	("1", "No iniciado"),
+	("0", "Iniciado"),
 	("3", "Cancelado");
 	
 -- Para crear viajes:

@@ -60,6 +60,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.ver_postulantes(request);
 			} else if (action != null && action.equals("aceptar_rechazar_postulante")){
 				respuesta = this.aceptar_rechazar_postulante(request);
+			} else if (action != null && action.equals("finalizar_viaje")) {
+				respuesta = this.finalizarViaje(request);
 			} else if (action != null && action.equals("ver_mis_viajes")) {
 				respuesta = this.ver_mis_viajes (request);
 			}
@@ -292,9 +294,14 @@ public class ServletViaje extends HttpServlet {
 		salida.put("conductor", json_conductor);
 		
 		JSONObject json_logged = new JSONObject();
-		json_logged.put("es_conductor", (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario()));
-		json_logged.put("es_postulado", viaje.getPasajerosPostuladosComoListCliente().contains(usuario_logueado));
-		json_logged.put("es_pasajero", viaje.getPasajerosAceptadosComoListCliente().contains(usuario_logueado));
+		boolean esConductor = (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario());
+		boolean esAceptado = viaje.getPasajerosAceptadosComoListCliente().contains(usuario_logueado);
+		boolean esPostulado = viaje.getPasajerosPostuladosComoListCliente().contains(usuario_logueado);
+		boolean esFinalizo = viaje.getPasajerosFinalizadosComoListCliente().contains(usuario_logueado);
+		json_logged.put("es_conductor", esConductor);
+		json_logged.put("es_postulado", esPostulado);
+		json_logged.put("es_aceptado", esAceptado);
+		json_logged.put("es_finalizo", esFinalizo);
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
 		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
 		salida.put("usuario_logueado", json_logged);
@@ -540,6 +547,50 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 
+	private JSONObject finalizarViaje(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Viaje no válido");
+			return respuesta;
+		}
+		
+		//Viaje viaje = daoViajes.getViajeById(idViaje);
+		//String cliente = AccessManager.nombreUsuario(request);
+		/*
+		String conductor = viaje.getConductor().getNombre_usuario();
+		if (!cliente.equals(conductor)){
+			AccessManager.nombreUsuario(request);
+			respuesta.put("result", false);
+			respuesta.put("msg", "Usted no tiene permitido realizar esta acción");
+			return respuesta;
+		}
+		*/
+		try {
+			daoViajes.finalizarViaje(AccessManager.getIdUsuario(request), idViaje);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Viaje finalizado con éxito");
+		return respuesta;
+	}
+	
 	public JSONObject ver_mis_viajes (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
 		try {

@@ -160,7 +160,7 @@ var simular = function(json){
 		destino: "880",
 		fecha_inicio: "12/09/2016",
 		precio: "30",
-		participantes: "1",
+		cantidad_pasajeros_aceptados: "1",
 		recorrido: ["324", "112","880"]
 	};
 	data.conductor = {
@@ -197,9 +197,10 @@ var simular = function(json){
 	}];
 	data.usuario_logueado = {
 		es_conductor: false,
-		es_pasajero: false,
+		es_aceptado: false,
 		es_postulado: false,
 		es_seguidor: false,
+		es_finalizo: false,
 		ha_calificado: false
 	};		
 	configurarUi();
@@ -212,14 +213,14 @@ var simular = function(json){
 var configurarUi = function(){
 
 	var esConductor = data.usuario_logueado.es_conductor;
-	var esPasajero = data.usuario_logueado.es_pasajero;
+	var esAceptado = data.usuario_logueado.es_aceptado;
 	var esPostulado = data.usuario_logueado.es_postulado;
+	var esFinalizo = data.usuario_logueado.es_finalizo;
 	var esSeguidor = data.usuario_logueado.es_seguidor;
 	var haCalificado = data.usuario_logueado.ha_calificado;
-
-	var estado = estadoString(data.viaje.estado);
 	
-	if (esPasajero || esPostulado || esConductor){
+	var estado = estadoString(data.viaje.estado);
+	if (esAceptado || esPostulado || esConductor || esFinalizo){
 		$("#botonera-cliente").hide();
 		if (esConductor){
 			$("#botonera-conductor").show();
@@ -233,26 +234,40 @@ var configurarUi = function(){
 				$("#btnViajeFinalizado").hide();
 
 				//solo califica si hay pasajeros
-				if (data.viaje.participantes > 0){
-					if (haCalificado){
-						$("#btnCalificar").hide();
-					}else{
+				if (data.viaje.cantidad_pasajeros_aceptados > 0){
+					// lo comento porque calificar ahora tiene calificacion dada y recibida
+					//if (haCalificado){
+						//$("#btnCalificar").hide();
+					//}else{
 						$("#btnCalificar").show();
-					}
+					//}
 				}else{
 					$("#btnCalificar").hide();
 				}
 			}
-		}else if (esPasajero){
+		}else if (esAceptado){
 			$("#botonera-conductor").hide();
 			$("#botonera-pasajero").show();
+			$("#btnCalificar").hide();
+			if (estado == "Iniciado" || estado == "Finalizado"){
+				$("#btnViajeFinalizado").show();
+			}else{
+				$("#btnViajeFinalizado").hide();
+			}
+		}else if (esFinalizo){
+			$("#botonera-conductor").hide();
+			$("#botonera-pasajero").hide();
+			$("#btnCalificar").show();
+			$("#btnViajeFinalizado").hide();	
 		} else if (esPostulado){
 			$("#botonera-conductor").hide();
 			$("#botonera-pasajero").show();
 			$("#btnCalificar").hide();
+			$("#btnViajeFinalizado").hide();
 		}
 	} else {
 		$("#btnCalificar").hide();
+		$("#btnViajeFinalizado").hide();
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
 		$("#botonera-cliente").show();
@@ -264,15 +279,18 @@ var configurarUi = function(){
 			$("#btnSegir").show();		
 		}
 	}
+	
 	if (estado=="Cancelado"){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
 		$("#botonera-cliente").hide();
 		$("#btnCalificar").hide();
+		$("#btnViajeFinalizado").hide();
 	} else if(estado == "Iniciado"){
-		
+
 	} else if(estado == "No iniciado"){ 
 		$("#btnCalificar").hide();
+		$("#btnViajeFinalizado").hide();
 	} else if(estado == "Finalizado"){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
@@ -463,8 +481,9 @@ var cancelarParticipacion = function(){
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
-				// esta linea genera un bug de mierda donde el modal no se cierra.
-				//modalMessage(modalName,jsonData.msg,"Participación cancelada");
+				// Lo saco porque se hace muy denso andar cerrando ventanitas a cada rato
+				// (esta es la tercera seguida que se abre!)
+				//modalMessage("warning",jsonData.msg,"Participación cancelada");
 				data.loadData();
 			}else{
 				errorMessage(jsonData.msg);
@@ -476,7 +495,7 @@ var cancelarParticipacion = function(){
 		+" y podría perder su cuenta temporalmente."
 	var btn = document.createElement("BUTTON");       
 	btn.className="btn btn-danger dinamico";
-	btn.innerHTML = 'Confirmar cancelación';
+	btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
 	btn.name = "confirmarCancelacion";
 	btn.onclick=confirmarCancelacion;
 	modalButton(modalName,btn);
@@ -506,7 +525,7 @@ var cancelarViaje = function(){
 		+" en caso de que existieran pasajeros inscriptos al viaje."
 	var btn = document.createElement("BUTTON");       
 	btn.className="btn btn-danger dinamico";
-	btn.innerHTML = 'Confirmar cancelación';
+	btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
 	btn.name = "confirmarCancelacion";
 	btn.onclick=confirmarCancelacion;
 	modalButton(modalName,btn);
@@ -514,23 +533,6 @@ var cancelarViaje = function(){
 }
 
 var verPostulantes = function(){
-	// si hiciera un modal
-	/*
-	var sendJson = {
-		action: "ver_postulantes",
-		id_viaje: data.viaje.id
-	}
-	var onsuccess = function(jsonData){
-		if (jsonData.result){
-			//a completar
-		}else{
-			errorMessage(jsonData.msg);
-		}
-	}
-	sendAjax(sendJson,onsuccess);
-	*/
-	
-	//si lo redirijo a listado_postulantes.html
 	window.location = "/listado_postulantes.html?id="+data.viaje.id;
 }
 
@@ -539,20 +541,39 @@ var calificar = function(){
 }
 
 var viajeFinalizado = function(){
-	console.log("viaje finalizado");
-	var sendJson = {
-		action: "finalizar_viaje",
-		id_viaje: data.viaje.id
-	}
-	var onsuccess = function(jsonData){
-		if (jsonData.result){
-			data.loadData();
-			calificar();
-		}else{
-			errorMessage(jsonData.msg);
+	var modalName='warning';
+	var confirmarFinalizacion = function(){
+		closeModal(modalName);
+		var sendJson = {
+			entity:"viaje",
+			action: "finalizar_viaje",
+			id_viaje: data.viaje.id
 		}
+		var onsuccess = function(jsonData){
+			if (jsonData.result){
+				data.loadData();
+				var msg = jsonData.msg;
+				var btn = document.createElement("BUTTON");       
+				btn.className="btn btn-success dinamico";
+				btn.innerHTML = '<span class="glyphicon glyphicon-ok"></span> Calificar';
+				btn.name = "calificar";
+				btn.onclick=calificar;
+				modalButton("success",btn);
+				modalMessage("success",msg);
+			}else{
+				errorMessage(jsonData.msg);
+			}
+		}
+		sendAjax(sendJson,onsuccess);
 	}
-	sendAjax(sendJson,onsuccess);
+	var msg = "Al presionar en 'Confirmar finalización' usted da por completada su participación en el viaje y podrá realizar la correspondiente calificación. Esta acción no se puede deshacer."
+	var btn = document.createElement("BUTTON");       
+	btn.className="btn btn-success dinamico";
+	btn.innerHTML = 'Confirmar finalización';
+	btn.name = "confirmarFinalizacion";
+	btn.onclick=confirmarFinalizacion;
+	modalButton(modalName,btn);
+	modalMessage(modalName,msg);
 }
 
 var customAlert = function(panel,elemento,msg){
