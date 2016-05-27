@@ -30,6 +30,8 @@ public class Localidad implements JSONable {
 	protected String nombre_ascii;
 	@Column(nullable=true)
 	protected Character clasificacion;
+	@Column(nullable=true)
+	protected Integer admin1;
 	
 	public Localidad(){
 		
@@ -105,4 +107,35 @@ public class Localidad implements JSONable {
 		return null;
 	}
 
+	public String getNombreProvincia() {
+		//Esto es un parche, en realidad deberia buscarse desde la base de datos.
+		// select admin1, nombre from localidad where clase_punto='ADM1';
+		switch (this.admin1) {
+			case 1 : return "Buenos Aires";
+			case 2 : return "Catamarca";
+			case 3 : return "Chaco";
+			case 4 : return "Chubut";
+			case 5 : return "Cordoba";
+			case 6 : return "Corrientes";
+			case 7 : return "Ciudad Autonoma de Buenos Aires";
+			case 8 : return "Entre Rios";
+			case 9 : return "Formosa";
+			case 10 : return "Jujuy";
+			case 11 : return "La Pampa";
+			case 12 : return "La Rioja";
+			case 13 : return "Mendoza";
+			case 14 : return "Misiones";
+			case 15 : return "Neuquen";
+			case 16 : return "Rio Negro";
+			case 17 : return "Salta";
+			case 18 : return "San Juan";
+			case 19 : return "San Luis";
+			case 20 : return "Santa Cruz";
+			case 21 : return "Santa Fe";
+			case 22 : return "Santiago del Estero";
+			case 23 : return "Tierra del Fuego";
+			case 24 : return "Tucuman";
+			default: return "";
+		}
+	}
 }
