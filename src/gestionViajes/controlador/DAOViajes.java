@@ -688,11 +688,25 @@ public class DAOViajes extends DataAccesObject {
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		return viaje.getPasajeros();
 	}
-
+	
+	public List<Viaje> listarViajesPorCliente(Integer id_cliente) {
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_cliente);
+		Query qry = entitymanager.createNamedQuery("Viaje.SearchByCliente");
+    	qry.setParameter("cliente", cliente);
+		return (List<Viaje>)qry.getResultList();
+	}
+	
 	public List<Viaje> listarViajesPorConductor(Integer id_conductor) {
 		Cliente conductor = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_conductor);
 		Query qry = entitymanager.createNamedQuery("Viaje.SearchByConductor");
     	qry.setParameter("conductor", conductor);
+		return (List<Viaje>)qry.getResultList();
+	}
+
+	public List<Viaje> listarViajesPorPasajero(Integer id_pasajero) {
+		Cliente pasajero = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_pasajero);
+		Query qry = entitymanager.createNamedQuery("Viaje.SearchByPasajero");
+    	qry.setParameter("pasajero", pasajero);
 		return (List<Viaje>)qry.getResultList();
 	}
 

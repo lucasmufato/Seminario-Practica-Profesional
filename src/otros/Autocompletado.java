@@ -54,7 +54,7 @@ public class Autocompletado extends HttpServlet {
 			for (Localidad localidad: resultados) {
 				JSONObject item = new JSONObject();
 				item.put("id", localidad.getId());
-				item.put("name", localidad.getNombre());
+				item.put("name", localidad.getNombre()+", "+localidad.getNombreProvincia());
 				item.put("lat", localidad.getLatitud());
 				item.put("lng", localidad.getLongitud());
 				encontrados.add(item);

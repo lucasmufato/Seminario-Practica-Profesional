@@ -30,7 +30,9 @@ import otros.JSONable;
 
 @NamedQueries({
 	@NamedQuery(name="Viaje.SearchById",query="SELECT v FROM Viaje v WHERE v.id_viaje= :id"),//agregada por fede
-	@NamedQuery(name="Viaje.SearchByConductor",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT m FROM Maneja m WHERE v.conductor_vehiculo=m AND m.cliente= :conductor)"),
+	@NamedQuery(name="Viaje.SearchByConductor",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT m FROM Maneja m WHERE v.conductor_vehiculo=m AND m.cliente= :conductor) ORDER BY v.fecha_inicio DESC"),
+	@NamedQuery(name="Viaje.SearchByPasajero",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT p FROM PasajeroViaje p WHERE p.viaje=v AND p.cliente= :pasajero) ORDER BY v.fecha_inicio DESC"),
+	@NamedQuery(name="Viaje.SearchByCliente",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT m FROM Maneja m WHERE v.conductor_vehiculo=m AND m.cliente= :cliente) OR EXISTS (SELECT p FROM PasajeroViaje p WHERE p.viaje=v AND p.cliente= :cliente) ORDER BY v.fecha_inicio DESC"),
 	@NamedQuery(name="Viaje.todos",query="SELECT v FROM Viaje v"),
 	@NamedQuery(name="Viaje.noIniciadosAtrasados",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= CURRENT_TIMESTAMP"),
 	@NamedQuery(name="Viaje.inicianAntes",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= :tiempo")

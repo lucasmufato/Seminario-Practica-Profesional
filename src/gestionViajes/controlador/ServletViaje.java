@@ -603,11 +603,8 @@ public class ServletViaje extends HttpServlet {
 				return salida;
 			}
 
-			List<Viaje> viajes = daoViajes.listarViajesPorConductor(id_usuario);
+			List<Viaje> viajes = daoViajes.listarViajesPorCliente(id_usuario);
 		
-			//AGREGAR LOS VIAJES COMO PASAJERO!
-			//viajes.addAll( daoViajes.listarViajesPorPasajero(id_usuario));
-
 			for (Viaje viaje: viajes) {
 				JSONObject jtmp = new JSONObject();
 				jtmp.put("id", viaje.getId_viaje());
