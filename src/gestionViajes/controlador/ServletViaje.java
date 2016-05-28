@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +45,9 @@ public class ServletViaje extends HttpServlet {
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
 		/* TODO: comprobar permisos */	
+
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Type", "application/json; charset=UTF-8");
 
 		if (entity != null && entity.equals ("viaje")) {
 			if (action != null && action.equals ("new")) {
@@ -296,11 +300,13 @@ public class ServletViaje extends HttpServlet {
 		JSONObject json_logged = new JSONObject();
 		boolean esConductor = (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario());
 		boolean esAceptado = viaje.getPasajerosAceptadosComoListCliente().contains(usuario_logueado);
+		boolean esRechazado = viaje.getPasajerosRechazadosComoListCliente().contains(usuario_logueado);
 		boolean esPostulado = viaje.getPasajerosPostuladosComoListCliente().contains(usuario_logueado);
 		boolean esFinalizo = viaje.getPasajerosFinalizadosComoListCliente().contains(usuario_logueado);
 		json_logged.put("es_conductor", esConductor);
 		json_logged.put("es_postulado", esPostulado);
 		json_logged.put("es_aceptado", esAceptado);
+		json_logged.put("es_rechazado", esRechazado);
 		json_logged.put("es_finalizo", esFinalizo);
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
 		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
@@ -1025,7 +1031,9 @@ public class ServletViaje extends HttpServlet {
 		} 
 		
 		try {
-			daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
+			//llamo al metodo nuevo 
+			daoViajes.asignarConductoresVehiculo2(idVehiculo,request.getParameterValues("conductores[]"));
+			//daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
 			respuesta.put("msg", e.getMessage());

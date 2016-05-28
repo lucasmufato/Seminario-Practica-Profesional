@@ -31,7 +31,12 @@ submitFormVehiculo = function () {
 		foto: $('#foto_vehiculo').attr("src")
 	}
 
-	vc.peticionAjax('/viajes', sendData);
+	var redirec = new function() {
+		vc.ventana_mensaje ("Vehiculo creado correctamente<br>Redireccionando a mis vehiculos");
+		window.setTimeout(function(){window.location="/mis_vehiculos.html"}, 1000);
+	}
+
+	vc.peticionAjax('/viajes', sendData, 'POST', redirec);
 
 	return false;
 }

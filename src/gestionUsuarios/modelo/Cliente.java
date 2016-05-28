@@ -167,6 +167,7 @@ public class Cliente extends Usuario implements JSONable {
 
 	public boolean asignarVehiculo(Vehiculo vehiculo) {
 		Maneja maneja= new Maneja(this,vehiculo);
+		vehiculo.getConductores().add(maneja);
 		this.vehiculos.add(maneja);		
 		return true;
 	}

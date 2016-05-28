@@ -328,6 +328,35 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	@Test
+	public void testasignarConductoresVehiculo2() {		
+		//json con datos de vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//el cliente con id=2
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );	
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		String[] conductores= {"3","4"};
+		Vehiculo v=(Vehiculo)this.daoviajes.buscarPorClaveCandidata("Vehiculo", "abd123");
+		try {
+			assertTrue (this.daoviajes.asignarConductoresVehiculo2(v.getId(), conductores) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		Cliente c=(Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+		if(! c.getVehiculosQueManeja().contains(v) ){
+			fail("no maneja el vehiculo que le acabo de asignar");
+		}
+		c=(Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 4);
+		if(! c.getVehiculosQueManeja().contains(v) ){
+			fail("no maneja el vehiculo que le acabo de asignar");
+		}
+		assertEquals(v.getConductoresActivos().size(),3);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
 	public void testNuevoAutoINCorrecto1() {	
 		//test q envia 2 veces un mismo auto (pantente repetida)
 		//el sistema debe responder con una exceptcion propia		
@@ -1143,14 +1172,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante1() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 5);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1163,14 +1184,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante2() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 6);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1183,14 +1196,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante3() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 4);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1203,14 +1208,6 @@ public class TestViaje extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante4() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 7);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1221,16 +1218,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 
-	
 	private JSONObject crearPostulante5() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 8);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1242,14 +1230,6 @@ public class TestViaje extends TestCase {
 	}
 	
 	private JSONObject crearPostulante6() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 9);
 		List viajes=this.daoviajes.selectAll("Viaje");

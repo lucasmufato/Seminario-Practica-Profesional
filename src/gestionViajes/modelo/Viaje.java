@@ -218,6 +218,17 @@ public class Viaje implements JSONable {
 		return lista;
 	}
 	
+	public List<Cliente> getPasajerosRechazadosComoListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		for(PasajeroViaje pas: pasajeros) {
+			if (pas.getEstado().equals(EstadoPasajeroViaje.rechazado)){
+				lista.add(pas.getCliente());
+			}
+		}
+		return lista;
+	}
+	
+	
 	public List<Cliente> getPasajerosFinalizadosComoListCliente() {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		for(PasajeroViaje pas: pasajeros) {
