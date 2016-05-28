@@ -350,8 +350,9 @@ var cargarViaje = function(){
 
 	
 	$("#recorrido").html("");
-	data.viaje.recorrido.forEach(function(elem){
-		$("#recorrido").append('<li>'+localidadNombre(elem)+'</li>');
+	data.viaje.recorrido.forEach(function(elem, index){
+		if (index>0)$("#recorrido").append(' <span class="glyphicon glyphicon-arrow-right"></span> ');
+		$("#recorrido").append('<span class="label label-primary">'+localidadNombre(elem)+'</span>');
 	});
 
 }
