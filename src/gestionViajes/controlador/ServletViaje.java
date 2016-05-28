@@ -1030,7 +1030,9 @@ public class ServletViaje extends HttpServlet {
 		} 
 		
 		try {
-			daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
+			//llamo al metodo nuevo 
+			daoViajes.asignarConductoresVehiculo2(idVehiculo,request.getParameterValues("conductores[]"));
+			//daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
 			respuesta.put("msg", e.getMessage());
