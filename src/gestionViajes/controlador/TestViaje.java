@@ -1143,14 +1143,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante1() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 5);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1163,14 +1155,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante2() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 6);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1183,14 +1167,6 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante3() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 4);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1203,14 +1179,6 @@ public class TestViaje extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	private JSONObject crearPostulante4() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 7);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1221,16 +1189,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 
-	
 	private JSONObject crearPostulante5() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 8);
 		List viajes=this.daoviajes.selectAll("Viaje");
@@ -1242,14 +1201,6 @@ public class TestViaje extends TestCase {
 	}
 	
 	private JSONObject crearPostulante6() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
 		JSONObject json =new JSONObject();
 		json.put("cliente", 9);
 		List viajes=this.daoviajes.selectAll("Viaje");
