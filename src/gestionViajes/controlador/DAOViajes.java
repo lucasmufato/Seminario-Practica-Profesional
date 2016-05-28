@@ -89,14 +89,44 @@ public class DAOViajes extends DataAccesObject {
 		}
 		this.entitymanager.getTransaction().begin();
     	vehiculo = new Vehiculo();
-    	vehiculo.setAnio( (Integer)datos_vehiculo.get("anio") );
+    	Integer anio= (Integer)datos_vehiculo.get("anio");
+    	if(anio==null){
+    		throw new ExceptionViajesCompartidos("ERROR: DEBE INGRESAR EL AÑO DEL VEHICULO");
+    	}else{
+    		System.out.println(Calendar.getInstance().get(Calendar.YEAR));
+    		if(anio>(Calendar.getInstance().get(Calendar.YEAR))){
+    			throw new ExceptionViajesCompartidos("ERROR: El AÑO DEL VEHICULO NO PUEDE SER MAYOR AL AÑO ACTUAL");
+    		}
+    	}
+    	vehiculo.setAnio(anio);
     	vehiculo.setFecha_verificacion(null);
-    	vehiculo.setMarca( (String)datos_vehiculo.get("marca") );
-    	vehiculo.setModelo( (String)datos_vehiculo.get("modelo") );
-    	vehiculo.setPatente( (String)datos_vehiculo.get("patente") );
+    	//para todos los string uso la misma variable para ahorrar :P
+    	String dato= (String)datos_vehiculo.get("marca");
+    	if(dato==null){
+    		throw new ExceptionViajesCompartidos("ERROR: DEBE COMPLETAR EL CAMPO 'MARCA'");
+    	}
+    	vehiculo.setMarca( dato );
+    	dato = (String)datos_vehiculo.get("modelo") ;
+    	if(dato==null){
+    		throw new ExceptionViajesCompartidos("ERROR: DEBE COMPLETAR EL CAMPO 'MARCA'");
+    	}
+    	vehiculo.setModelo( dato );
+    	dato = (String)datos_vehiculo.get("patente") ;
+    	if(dato==null){
+    		throw new ExceptionViajesCompartidos("ERROR: DEBE COMPLETAR EL CAMPO 'MARCA'");
+    	}
+    	vehiculo.setPatente(dato);
     	vehiculo.setAire_acondicionado( (Character) datos_vehiculo.get("aire"));
     	vehiculo.setColor((String) datos_vehiculo.get("color"));
-    	vehiculo.setCantidad_asientos( (Integer) datos_vehiculo.get("asientos"));
+    	Integer asientos=(Integer) datos_vehiculo.get("asientos");
+    	if(asientos==null){
+    		throw new ExceptionViajesCompartidos("ERROR: DEBE COMPLETAR EL CAMPO 'cantidad de asientos'");
+    	}else{
+    		if(asientos<=0){
+    			throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO DEBE TENER UN ASIENTOS DISPONIBLE COMO MINIMO");
+    		}
+    	}
+    	vehiculo.setCantidad_asientos(asientos);
     	vehiculo.setSeguro( (Character) datos_vehiculo.get("seguro"));
     	//vehiculo.setFoto(foto);		//TODO falta guardar la foto del auto
     	
@@ -173,6 +203,8 @@ public class DAOViajes extends DataAccesObject {
 		if( cliente.puedeManejar(vehiculo)==false ){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
 		}
+		
+		//TODO verificar que el cliente tenga salgo para hacer crear el viaje
 		if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
 		}
@@ -908,6 +940,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 	}
 	
+	//by mufa
 	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{	//sin test TODO
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
