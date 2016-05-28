@@ -17,6 +17,7 @@ import otros.JSONable;
 	@NamedQueries({
 		@NamedQuery(name="Cliente.buscarPorClaveCandidata",query="SELECT c FROM Cliente c WHERE c.nombre_usuario = :clave_candidata"),
 		@NamedQuery(name="Cliente.autocompletar",query="SELECT c FROM Cliente c WHERE CONCAT(c.nombre_usuario , \" \", c.email) LIKE :busqueda")
+
 	})
 
 	@DiscriminatorValue("C")		//valor que va en la tabla de usuario, por el cual JPA distingue que tipo de clase hijo es
@@ -166,6 +167,7 @@ public class Cliente extends Usuario implements JSONable {
 
 	public boolean asignarVehiculo(Vehiculo vehiculo) {
 		Maneja maneja= new Maneja(this,vehiculo);
+		vehiculo.getConductores().add(maneja);
 		this.vehiculos.add(maneja);		
 		return true;
 	}
@@ -209,6 +211,7 @@ public class Cliente extends Usuario implements JSONable {
 		return v;
 	}
 
+	//by juan
 	// Para saber si dos clientes son el mismo (llamado por List<Cliente> en metodo contains)
     @Override
     public boolean equals(Object object){

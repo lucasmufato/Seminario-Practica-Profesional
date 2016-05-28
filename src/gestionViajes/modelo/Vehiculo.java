@@ -160,6 +160,13 @@ public class Vehiculo implements JSONable {
 		return lista;
 	}
 	
+	//by juan
+	public boolean asignarConductor (Cliente c) {
+		Maneja maneja= new Maneja(c,this);
+		this.conductores.add(maneja);		
+		return true;
+	}
+	
 	public Integer getId_vehiculo() {
 		return id_vehiculo;
 	}
@@ -246,5 +253,18 @@ public class Vehiculo implements JSONable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	//by juan
+	// Para saber si dos vehiculos son el mismo (llamado por List<vehiculo> en metodo contains)
+    @Override
+    public boolean equals(Object object){
+        boolean igual = false;
 
+        if (object != null && object instanceof Vehiculo){
+            igual = this.getId() == ((Vehiculo) object).getId();
+        }
+
+        return igual;
+    }
+	
 }

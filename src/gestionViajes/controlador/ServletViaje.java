@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -843,9 +844,9 @@ public class ServletViaje extends HttpServlet {
 			return respuesta;
 		}
 		
-		// Chequeo que  vehiculo sea del cliente
-		Cliente logueado = daoUsuarios.clientePorNombre(AccessManager.nombreUsuario(request));
-		if (!logueado.puedeManejar(v)){
+		Cliente logueado = (Cliente) daoViajes.buscarPorPrimaryKey(new Cliente(), AccessManager.getIdUsuario(request));
+		Maneja m = daoViajes.getManejaActivoPorVehiculoConductor(v, logueado);
+		if (m==null){
 			respuesta.put("result", false);
 			respuesta.put("redirect", "/mis_vehiculos.html");
 			respuesta.put("msg", "Usted no tiene permitido manejar este vehículo");
@@ -853,7 +854,7 @@ public class ServletViaje extends HttpServlet {
 		}
 		
 		//Devuelvo conductores pero solo aquellos que estan activos
-		List<Cliente> listaConductores = v.getConductoresActivos();
+		List<Cliente> listaConductores = daoViajes.listarConductoresPorVehiculo(v.getId());
 		JSONArray conductores = new JSONArray();
 		for (Cliente c: listaConductores){
 			if (c.isActivo()){
@@ -1030,7 +1031,9 @@ public class ServletViaje extends HttpServlet {
 		} 
 		
 		try {
-			daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
+			//llamo al metodo nuevo 
+			daoViajes.asignarConductoresVehiculo2(idVehiculo,request.getParameterValues("conductores[]"));
+			//daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
 			respuesta.put("msg", e.getMessage());

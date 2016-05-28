@@ -328,6 +328,35 @@ public class TestViaje extends TestCase {
 	
 	@SuppressWarnings("unchecked")
 	@Test
+	public void testasignarConductoresVehiculo2() {		
+		//json con datos de vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//el cliente con id=2
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );	
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		String[] conductores= {"3","4"};
+		Vehiculo v=(Vehiculo)this.daoviajes.buscarPorClaveCandidata("Vehiculo", "abd123");
+		try {
+			assertTrue (this.daoviajes.asignarConductoresVehiculo2(v.getId(), conductores) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		Cliente c=(Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+		if(! c.getVehiculosQueManeja().contains(v) ){
+			fail("no maneja el vehiculo que le acabo de asignar");
+		}
+		c=(Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 4);
+		if(! c.getVehiculosQueManeja().contains(v) ){
+			fail("no maneja el vehiculo que le acabo de asignar");
+		}
+		assertEquals(v.getConductoresActivos().size(),3);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
 	public void testNuevoAutoINCorrecto1() {	
 		//test q envia 2 veces un mismo auto (pantente repetida)
 		//el sistema debe responder con una exceptcion propia		

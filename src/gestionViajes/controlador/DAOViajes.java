@@ -741,7 +741,21 @@ public class DAOViajes extends DataAccesObject {
     	qry.setParameter("pasajero", pasajero);
 		return (List<Viaje>)qry.getResultList();
 	}
-
+	
+	public List<Cliente> listarConductoresPorVehiculo(Integer idVehiculo) {
+		Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey (new Vehiculo(), idVehiculo);
+		Query qry = entitymanager.createNamedQuery("Maneja.SearchByVehiculo");
+    	qry.setParameter("vehiculo", v);
+    	List<Maneja> lista = qry.getResultList();
+    	List<Cliente> listaCliente = new ArrayList<Cliente>();;
+    	for (Maneja m : lista){
+    		if (m.getFecha_fin() == null){
+        		listaCliente.add(m.getCliente());
+    		}
+    	}
+		return listaCliente;
+	}
+          
 	//by mufa
 	public String nombreAmigablePorViaje(Integer id_viaje) {
 		Viaje v=(Viaje)this.buscarPorPrimaryKey(new Viaje(), id_viaje);
@@ -1257,7 +1271,7 @@ public class DAOViajes extends DataAccesObject {
         	// Si conductor no maneja este vehiculo, lo asigno. 
         	for (Cliente conductorNuevo : listaConductores){
         		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
-        			if (conductorNuevo.asignarVehiculo(v)){
+        			if (v.asignarConductor(conductorNuevo)){
             			this.entitymanager.persist(conductorNuevo);
             			this.entitymanager.persist(v);
         			}
@@ -1273,6 +1287,54 @@ public class DAOViajes extends DataAccesObject {
 			
 			return true;
 		}
+		
+
+        //es el mismo metodo que usa juan pero con unas correcciones
+        public boolean asignarConductoresVehiculo2(int idVehiculo,
+				String[] conductores) throws ExceptionViajesCompartidos {
+			
+			// verifico que vehiculo existe en sistema
+			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
+        	if (v==null){
+    			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
+        	}
+			
+    		if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+    		}
+    		this.entitymanager.getTransaction().begin();
+    		
+        	ArrayList<Cliente> listaConductores = new ArrayList<Cliente>();
+    		if (conductores != null) {
+				for (String c: conductores) {
+					Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), Integer.parseInt(c));
+					if (cliente==null){
+						throw new ExceptionViajesCompartidos("El cliente no existe en el sistema");
+					}
+					listaConductores.add(cliente);
+				}
+			}
+    		
+        	// Tomo los conductores activos de ese vehiculo
+        	List<Cliente> conductoresActivos = v.getConductoresActivos();
+        	
+        	// Si conductor no maneja este vehiculo, lo asigno. 
+        	for (Cliente conductorNuevo : listaConductores){
+        		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
+        			conductorNuevo.asignarVehiculo(v);
+        		}
+        	}
+        	
+    		try{
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+			
+			return true;
+		}         
+                          
 		
 		//by juan
 		// desactiva conductor a vehiculo (agarro el maneja y le mando una fecha al null de fechafin)
@@ -1395,10 +1457,5 @@ public class DAOViajes extends DataAccesObject {
                 
                 }	
 		return true;
-        
-        }
-                
-                
-                
-                
+        }             
 }
