@@ -36,8 +36,10 @@ public class Notificacion implements JSONable {
 	protected Integer id_notificacion;
 	@Column(name="FECHA",nullable=false)
 	protected Timestamp fecha;
-	@Column(name="TEXTO",nullable=false,length=200)
+	@Column(name="TEXTO",nullable=false)
 	protected String texto;
+	@Column(name="LINK",nullable=true)
+	protected String link;
 	@Column(name="ESTADO",nullable=false,length=1)
 	protected EstadoNotificacion estado;		
 	
@@ -73,6 +75,14 @@ public class Notificacion implements JSONable {
 		this.texto = texto;
 	}
 
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink() {
+		this.link = link;
+	}
+
 	public EstadoNotificacion getEstado() {
 		return estado;
 	}
@@ -101,6 +111,7 @@ public class Notificacion implements JSONable {
 		json.put("id_notificacion", this.id_notificacion);
 		json.put("fecha",this.fecha);
 		json.put("texto", this.texto);
+		json.put("link", this.link);
 		json.put("estado", this.estado);
 		return null;
 	}
