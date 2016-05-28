@@ -45,6 +45,9 @@ public class ServletViaje extends HttpServlet {
 		String entity = request.getParameter("entity");
 		/* TODO: comprobar permisos */	
 
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Type", "application/json; charset=UTF-8");
+
 		if (entity != null && entity.equals ("viaje")) {
 			if (action != null && action.equals ("new")) {
 				respuesta = this.nuevo_viaje (request);
