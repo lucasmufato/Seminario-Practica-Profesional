@@ -41,16 +41,17 @@ data.loadData = function() {
 			data.localidades = jsonData.localidades;
 			data.comentarios = jsonData.comentarios;
 			data.usuario_logueado = jsonData.usuario_logueado;
-
+			
+			if(jsonData.recargar_en != undefined) {
+				window.setTimeout(data.loadData, jsonData.recargar_en);
+			}
 			configurarUi();
 			cargarViaje();
 			cargarVehiculo();
 			//cargarComentarios();
 			cargarConductor();
 			cargarRutaEnMapa();
-			if(jsonData.recargar_en) {
-				setTimeout(data.loadData, jsonData.recargar_en);
-			}
+
 
 			
 		} else if (jsonData.redirect != undefined) {
@@ -199,6 +200,7 @@ var simular = function(json){
 	data.usuario_logueado = {
 		es_conductor: false,
 		es_aceptado: false,
+		es_rechazado: false,
 		es_postulado: false,
 		es_seguidor: false,
 		es_finalizo: false,
@@ -215,10 +217,27 @@ var configurarUi = function(){
 
 	var esConductor = data.usuario_logueado.es_conductor;
 	var esAceptado = data.usuario_logueado.es_aceptado;
+	var esRechazado = data.usuario_logueado.es_rechazado;
 	var esPostulado = data.usuario_logueado.es_postulado;
 	var esFinalizo = data.usuario_logueado.es_finalizo;
 	var esSeguidor = data.usuario_logueado.es_seguidor;
 	var haCalificado = data.usuario_logueado.ha_calificado;
+
+	$('#infomsg-conductor').hide();
+	$('#infomsg-postulado').hide();
+	$('#infomsg-seguidor').hide();
+	$('#infomsg-pasajero-aceptado').hide();
+	$('#infomsg-pasajero-rechazado').hide();
+	$('#infomsg-pasajero-finalizo').hide();
+	$('#infomsg-calificacion-pendiente').hide();
+
+	if(esConductor) {$('#infomsg-conductor').show();}
+	if(esPostulado) {$('#infomsg-postulado').show();}
+	if(esSeguidor) {$('#infomsg-seguidor').show();}
+	if(esAceptado) {$('#infomsg-pasajero-aceptado').show();}
+	if(esRechazado) {$('#infomsg-pasajero-rechazado').show();}
+	if(esFinalizo) {$('#infomsg-pasajero-finalizo').show();}
+	if(!haCalificado && esFinalizo) {$('#infomsg-calificacion-pendiente').show();}
 	
 	var estado = estadoString(data.viaje.estado);
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
@@ -272,6 +291,11 @@ var configurarUi = function(){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
 		$("#botonera-cliente").show();
+		if (esRechazado) {
+			$("#btnParticipar").hide();
+		} else {
+			$("#btnParticipar").show();
+		}
 		if (esSeguidor){
 			$("#btnDejarSeguir").show();
 			$("#btnSeguir").hide();
