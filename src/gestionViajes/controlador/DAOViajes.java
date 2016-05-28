@@ -709,7 +709,21 @@ public class DAOViajes extends DataAccesObject {
     	qry.setParameter("pasajero", pasajero);
 		return (List<Viaje>)qry.getResultList();
 	}
-
+	
+	public List<Cliente> listarConductoresPorVehiculo(Integer idVehiculo) {
+		Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey (new Vehiculo(), idVehiculo);
+		Query qry = entitymanager.createNamedQuery("Maneja.SearchByVehiculo");
+    	qry.setParameter("vehiculo", v);
+    	List<Maneja> lista = qry.getResultList();
+    	List<Cliente> listaCliente = new ArrayList<Cliente>();;
+    	for (Maneja m : lista){
+    		if (m.getFecha_fin() == null){
+        		listaCliente.add(m.getCliente());
+    		}
+    	}
+		return listaCliente;
+	}
+          
 	//by mufa
 	public String nombreAmigablePorViaje(Integer id_viaje) {
 		Viaje v=(Viaje)this.buscarPorPrimaryKey(new Viaje(), id_viaje);
@@ -1224,7 +1238,7 @@ public class DAOViajes extends DataAccesObject {
         	// Si conductor no maneja este vehiculo, lo asigno. 
         	for (Cliente conductorNuevo : listaConductores){
         		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
-        			if (conductorNuevo.asignarVehiculo(v)){
+        			if (v.asignarConductor(conductorNuevo)){
             			this.entitymanager.persist(conductorNuevo);
             			this.entitymanager.persist(v);
         			}
@@ -1363,9 +1377,6 @@ public class DAOViajes extends DataAccesObject {
                 }	
 		return true;
         
-        }
-                
-                
-                
+        }             
                 
 }
