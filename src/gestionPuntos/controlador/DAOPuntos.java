@@ -70,12 +70,11 @@ public class DAOPuntos extends DataAccesObject {
             sancion.setFecha_inicio(fecha);
             sancion.setFecha_fin(fecha);            
             sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.
-            //TO DO poner el tipo sancion correspondiente
-            //ESTO ESTA HARCODEADO CAMBIARLO!!!!
             TipoSancion tipo_sancion = new TipoSancion();
-            tipo_sancion.setDescripcion("Sancion de puntos HARCODEADA");
-            tipo_sancion.setDias_sancion(0);
-            this.entitymanager.persist(tipo_sancion);
+            //Query qry = entitymanager.createNamedQuery("TipoSancion.buscarPorClaveCandidata");
+            //qry.setParameter("clave_candidata", "Descuento de Puntos por Cancelación de viaje con Pasajeros");
+            tipo_sancion= (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(),2);
+            
             //FIN
             sancion.setTipo_sancion(tipo_sancion);
             Notificacion notificacion= new Notificacion();
@@ -87,6 +86,7 @@ public class DAOPuntos extends DataAccesObject {
             
             
             try{    
+					this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction( ).commit( );
                     this.entitymanager.getTransaction().begin();
@@ -229,12 +229,13 @@ public class DAOPuntos extends DataAccesObject {
         sancion.setFecha_inicio(fecha);
         sancion.setFecha_fin(fecha);            
         sancion.setEstado(EstadoSancion.caduca);//le pongo caduca porque es de puntos, no es por tiempo.
-        //TO DO poner el tipo sancion correspondiente
-            //ESTO ESTA HARCODEADO CAMBIARLO!!!!
+        
             TipoSancion tipo_sancion = new TipoSancion();
-            tipo_sancion.setDescripcion("Sancion de puntos HARCODEADA");
-            tipo_sancion.setDias_sancion(0);
-            this.entitymanager.persist(tipo_sancion);
+            //Query qry = entitymanager.createNamedQuery("TipoSancion.buscarPorClaveCandidata");
+            //qry.setParameter("clave_candidata", "Descuento de Puntos por Cancelación de viaje con Pasajeros");
+            tipo_sancion= (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(),1);
+            //tipo_sancion =(TipoSancion)qry.getSingleResult();
+          
             //FIN
             sancion.setTipo_sancion(tipo_sancion);
             Notificacion notificacion= new Notificacion();
@@ -243,6 +244,7 @@ public class DAOPuntos extends DataAccesObject {
             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
             notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
         try{    
+					this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction().commit();
                     this.entitymanager.getTransaction().begin();
