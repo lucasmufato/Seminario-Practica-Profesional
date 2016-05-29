@@ -6,9 +6,14 @@ var cargarNotificaciones = function() {
 		notificaciones = jsonData.notificaciones;
 		mostrarNotificaciones();
 	}
+
+	var sendData = {
+		entity: 'notificaciones',
+		action: 'ver_no_leidas'
+	};
 	
-	//vc.peticionAjax("/notificaciones", null, "POST", onsuccess);
-	simular();
+	vc.peticionAjax("/notificaciones", sendData, "GET", onsuccess);
+	//simular();
 }
  
 var simular = function () {
@@ -66,14 +71,16 @@ var verNotificacion = function (id_notificacion) {
 		if(notificaciones[i].id == id_notificacion){
 			var notificacion = notificaciones[i];
 			var sendData = {
+				'entity': 'notificaciones',
+				'action': 'marcar_leida',
 				'id_notificacion': id_notificacion
 			}
 			var onsuccess = function() {
 				window.location = notificacion.link;
 			}
-			// vc.peticionAjax("/notificaciones", sendData, "POST", onsuccess);
+			 vc.peticionAjax("/notificaciones", sendData, "GET", onsuccess);
 			// Estamos simulando
-			onsuccess();
+			//onsuccess();
 		}
 		i++;
 	}
