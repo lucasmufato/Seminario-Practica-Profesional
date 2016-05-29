@@ -1423,8 +1423,8 @@ public class DAOViajes extends DataAccesObject {
                             pasajero.setEstado(EstadoPasajeroViaje.cancelado);
                             //this.entitymanager.getTransaction( ).commit( );
                             int id_cliente_pas = pasajero.getCliente().getId_usuario();
-                            bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
-                            //SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE RECHAZADO
+                            //bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
+                            //SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE Cancelado
                             //this.entitymanager.getTransaction().begin();
                             Notificacion notificacion= new Notificacion();
                             notificacion.setCliente(pasajero.getCliente()); 
@@ -1445,7 +1445,7 @@ public class DAOViajes extends DataAccesObject {
                                           
                         
                         if(aceptados>0){//lo sanciono si tenia pasajeros
-                            bandera = daopuntos.sancionarChofer(id_viaje,id_chofer);
+                            bandera = daopuntos.sancionarChofer(id_viaje,id_chofer,aceptados);
                         }
                     }catch(RollbackException e){
                         String error= ManejadorErrores.parsearRollback(e);

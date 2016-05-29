@@ -10,6 +10,7 @@ import gestionUsuarios.modelo.EstadoNotificacion;
 import gestionUsuarios.modelo.Notificacion;
 import gestionUsuarios.modelo.Usuario;
 import gestionViajes.controlador.DAOViajes;
+import gestionViajes.modelo.EstadoPasajeroViaje;
 import gestionViajes.modelo.EstadoViaje;
 import gestionViajes.modelo.Localidad;
 import gestionViajes.modelo.PasajeroViaje;
@@ -102,7 +103,13 @@ public class DAOPuntos extends DataAccesObject {
                 //formulo
                 // dias = (1/diferencia)* SancionesAnteriores
                 double dias = (1/diferencia)*(1+num_sanciones_anteriores);
-                int dias_int = (int) dias;
+                //pongo un tope a dias maximos de suspension
+                int dias_int = 0;
+                if(dias>50){
+                    dias_int=30;
+                }else{
+                     dias_int = (int) dias;
+                }               
                             
 
                 Calendar Calendario = Calendar.getInstance();
@@ -228,9 +235,12 @@ public class DAOPuntos extends DataAccesObject {
         return true;
     }
     
-    public boolean sancionarChofer(int id_viaje, int id_chofer) throws ExceptionViajesCompartidos{
+ public boolean sancionarChofer(int id_viaje, int id_chofer,int aceptados) throws ExceptionViajesCompartidos{
         //formula
         // puntos = (CantPas * 50 ) + (1/hsfaltan * beta)
+        if(this.entitymanager.getTransaction().isActive()){
+                this.entitymanager.getTransaction().rollback();
+            }
         this.entitymanager.getTransaction().begin();
         Viaje viaje = new Viaje();
         Integer id_viaje2 = id_viaje;
@@ -238,11 +248,13 @@ public class DAOPuntos extends DataAccesObject {
         Timestamp fecha_inicio = viaje.getFecha_inicio();
         Timestamp actual= new Timestamp((new java.util.Date()).getTime());
         double dif_horas = this.diferenciaTimestamps(fecha_inicio, actual); //calculo diferencia de fechas
+        
         double segundo_termino = (1/dif_horas)*beta;
         List<PasajeroViaje> lista = viaje.getPasajeros();
         int cantidad_pasajeros = lista.size();
         double primer_termino = cantidad_pasajeros * 50;
         double resultado = primer_termino + segundo_termino;
+        
         MovimientoPuntos mov = new MovimientoPuntos();
         Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_chofer);         
         mov.setCliente(cliente);
@@ -263,7 +275,7 @@ public class DAOPuntos extends DataAccesObject {
         
             TipoSancion tipo_sancion = new TipoSancion();
             //Query qry = entitymanager.createNamedQuery("TipoSancion.buscarPorClaveCandidata");
-            //qry.setParameter("clave_candidata", "Descuento de Puntos por CancelaciÃ³n de viaje con Pasajeros");
+            //qry.setParameter("clave_candidata", "Descuento de Puntos por Cancelación de viaje con Pasajeros");
             tipo_sancion= (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(),1);
             //tipo_sancion =(TipoSancion)qry.getSingleResult();
           
@@ -274,13 +286,56 @@ public class DAOPuntos extends DataAccesObject {
             notificacion.setEstado(EstadoNotificacion.no_leido);
             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
             notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
+            
+            //sancion de dias
+            TipoSancion tipo_sancion_dias = (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(), 4);            
+            Sancion sancion_dias = new Sancion();
+            sancion_dias.setCliente(cliente);
+            sancion_dias.setFecha_inicio(fecha);
+            sancion_dias.setEstado(EstadoSancion.vigente);
+            sancion_dias.setTipo_sancion(tipo_sancion_dias);
+                //calculo los dias que lo voy a sancionar
+                               
+                Timestamp salida_viaje = viaje.getFecha_inicio();
+                double diferencia = diferenciaTimestamps(salida_viaje, actual);
+                List<Sancion> sanciones_anteriores = buscarSanciones(cliente);
+                int num_sanciones_anteriores = sanciones_anteriores.size();
+                //formulo
+                // dias = ((1/diferencia)* SancionesAnteriores)*Pasajeros Aceptados
+                double dias = ((1/diferencia)*(1+num_sanciones_anteriores)*aceptados);
+                
+                //pongo un tope a dias maximos de suspension
+                int dias_int = 0;
+                if(dias>50){
+                    dias_int=30;
+                }else{
+                     dias_int = (int) dias;
+                }  
+                
+                
+                
+                
+                            
+
+                Calendar Calendario = Calendar.getInstance();
+                Calendario.setTimeInMillis(actual.getTime());
+                Calendario.add(Calendar.DATE, dias_int);
+                Timestamp fecha_fin_ts = new Timestamp(Calendario.getTimeInMillis());
+                java.sql.Date fecha_fin = new java.sql.Date(fecha_fin_ts.getTime());
+                sancion_dias.setFecha_fin((Date) fecha_fin);
+                //fin calculo de dias
+            //fin sancion dias        
         try{    
                     this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction().commit();
                     this.entitymanager.getTransaction().begin();
                     this.entitymanager.persist(sancion);
+                     this.entitymanager.persist(sancion_dias);
                     this.entitymanager.getTransaction().commit();
+                    //this.entitymanager.getTransaction().begin();
+                   
+                   // this.entitymanager.getTransaction().commit();
                     //this.entitymanager.getTransaction( ).commit( );
                     boolean bandera = this.actualizarPuntosCliente(resultado_int, cliente.getId_usuario());
             }catch(RollbackException e){

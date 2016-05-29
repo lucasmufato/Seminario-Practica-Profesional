@@ -1117,7 +1117,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViajeQueFaltaMucho();
+		JSONObject json2 = this.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
