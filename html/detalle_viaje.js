@@ -291,11 +291,7 @@ var configurarUi = function(){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
 		$("#botonera-cliente").show();
-		if (esRechazado) {
-			$("#btnParticipar").hide();
-		} else {
-			$("#btnParticipar").show();
-		}
+		$("#btnParticipar").show();
 		if (esSeguidor){
 			$("#btnDejarSeguir").show();
 			$("#btnSeguir").hide();
