@@ -52,7 +52,7 @@ public class DAOPuntos extends DataAccesObject {
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
-              this.entitymanager.getTransaction( ).begin( );
+            this.entitymanager.getTransaction( ).begin( );
             MovimientoPuntos mov = new MovimientoPuntos();
             Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);         
             mov.setCliente(cliente);
@@ -76,21 +76,52 @@ public class DAOPuntos extends DataAccesObject {
             tipo_sancion= (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(),2);
             
             //FIN
+            //notificacion
             sancion.setTipo_sancion(tipo_sancion);
             Notificacion notificacion= new Notificacion();
             notificacion.setCliente(cliente); 
             notificacion.setEstado(EstadoNotificacion.no_leido);
             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
             notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
+            //fin notif
             
+            //sancion de dias
+            TipoSancion tipo_sancion_dias = (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(), 4);            
+            Sancion sancion_dias = new Sancion();
+            sancion_dias.setCliente(cliente);
+            sancion_dias.setFecha_inicio(fecha);
+            sancion_dias.setEstado(EstadoSancion.vigente);
+            sancion_dias.setTipo_sancion(tipo_sancion_dias);
+                //calculo los dias que lo voy a sancionar
+                Timestamp actual= new Timestamp((new java.util.Date()).getTime());
+                Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+                Timestamp salida_viaje = viaje.getFecha_inicio();
+                double diferencia = diferenciaTimestamps(salida_viaje, fechaYHoraCancelacion);
+                List<Sancion> sanciones_anteriores = buscarSanciones(cliente);
+                int num_sanciones_anteriores = sanciones_anteriores.size();
+                //formulo
+                // dias = (1/diferencia)* SancionesAnteriores
+                double dias = (1/diferencia)*(1+num_sanciones_anteriores);
+                int dias_int = (int) dias;
+                            
+
+                Calendar Calendario = Calendar.getInstance();
+                Calendario.setTimeInMillis(actual.getTime());
+                Calendario.add(Calendar.DATE, dias_int);
+                Timestamp fecha_fin_ts = new Timestamp(Calendario.getTimeInMillis());
+                java.sql.Date fecha_fin = new java.sql.Date(fecha_fin_ts.getTime());
+                sancion_dias.setFecha_fin((Date) fecha_fin);
+                //fin calculo de dias
+            //fin sancion dias            
             
-            
-            try{    
-					this.entitymanager.persist(notificacion);
+            try{    this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction( ).commit( );
                     this.entitymanager.getTransaction().begin();
                     this.entitymanager.persist(sancion);
+                    this.entitymanager.getTransaction( ).commit( );
+                    this.entitymanager.getTransaction().begin();
+                    this.entitymanager.persist(sancion_dias);
                     this.entitymanager.getTransaction( ).commit( );
                     boolean bandera = this.actualizarPuntosCliente(descuento_int, cliente.getId_usuario());
             }catch(RollbackException e){
@@ -244,7 +275,7 @@ public class DAOPuntos extends DataAccesObject {
             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
             notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
         try{    
-					this.entitymanager.persist(notificacion);
+                    this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction().commit();
                     this.entitymanager.getTransaction().begin();
