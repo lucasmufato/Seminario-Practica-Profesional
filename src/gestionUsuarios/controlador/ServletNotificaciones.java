@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import gestionUsuarios.modelo.Cliente;
 import gestionUsuarios.modelo.Notificacion;
 import gestionViajes.modelo.Vehiculo;
+import otros.AccessManager;
 import otros.ExceptionViajesCompartidos;
 
 class ServletNotificaciones extends HttpServlet {
@@ -76,7 +77,7 @@ class ServletNotificaciones extends HttpServlet {
 		JSONObject salida = new JSONObject();
 		JSONArray json_notificaciones = new JSONArray();
 		JSONObject json_notificacion;
-		Integer idCliente = Integer.parseInt(request.getParameter("idCliente"));
+		Integer idCliente = AccessManager.getIdUsuario(request);
 		try {
 			ArrayList<Notificacion> notificaciones = (ArrayList<Notificacion>) daoNotificaciones.getNotificacionesNoLeidas(idCliente);
 			for (Notificacion notificacion: notificaciones) {
