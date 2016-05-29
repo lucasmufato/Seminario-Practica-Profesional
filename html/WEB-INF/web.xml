@@ -61,4 +61,13 @@
         <servlet-name>reportes</servlet-name>
         <url-pattern>/reportes</url-pattern>
     </servlet-mapping>
+	
+	<servlet>
+        <servlet-name>notificaciones</servlet-name>
+        <servlet-class>gestionUsuarios.controlador.ServletNotificaciones</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>notificaciones</servlet-name>
+        <url-pattern>/notificaciones</url-pattern>
+    </servlet-mapping>
 </web-app>
