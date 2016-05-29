@@ -104,6 +104,10 @@ var simular = function(){
 	showViajes();
 }
 
+var verViaje = function(id){
+	window.location = 'detalle_viaje.html?id='+id;
+}
+
 var filterer = function(item){
 	var rctOrigenDestino = $('#formFilter input[name=origen-destino]').val().toLowerCase();
 	var rctConductor = $('#formFilter input[name=conductor]').val().toLowerCase();

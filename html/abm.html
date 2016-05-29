@@ -18,8 +18,13 @@
 <body>
 	<div class="loadingScreen"></div>
 
-
 	<nav id="tabBox" class="navbar-default navbar-fixed-top">
+		<!--
+		<ul class="breadcrumb" style="margin-bottom:0px;">
+		  <li><a href="/home.html">Home</a></li>
+		  <li class="active">Administración de Usuarios</li>
+		</ul>
+		-->
 		<ul class="nav nav-tabs navbar-left">
 			<li class="active"><a id="personasTabButton" class="" onclick="ui.activateTab('personas')" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Personas</a>
 			<li><a id="usuariosTabButton" class="" onclick="ui.activateTab('usuarios')" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Usuarios</a>
@@ -33,6 +38,7 @@
 	</nav>
 
 	<section class="tabSection" id="personasTab">
+
 		<form class="form-horizontal" onsubmit="ui.updatePersonasTable(); return false">
 			<header><h3 class="pull-center">Administración de Personas</h3></header>
 				
@@ -556,5 +562,4 @@
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
 	</div><!-- .modal -->
-
 </body>

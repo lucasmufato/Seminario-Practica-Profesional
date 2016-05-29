@@ -1009,7 +1009,7 @@ public class ServletViaje extends HttpServlet {
 			respuesta.put("msg", "Vehículo no es válido");
 			return respuesta;
 		}
-		
+		/*
 		ArrayList<Cliente> listaConductores = new ArrayList<>();
 		try {
 			String[] conductores = request.getParameterValues("conductores[]");
@@ -1029,7 +1029,7 @@ public class ServletViaje extends HttpServlet {
 			respuesta.put("msg", "Ha ingresado un conductor no válido");
 			return respuesta;
 		} 
-		
+		*/
 		try {
 			//llamo al metodo nuevo 
 			daoViajes.asignarConductoresVehiculo2(idVehiculo,request.getParameterValues("conductores[]"));
