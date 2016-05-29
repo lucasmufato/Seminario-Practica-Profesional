@@ -30,7 +30,7 @@
 		</div>		
 		<div class="col-sm-9"> 
 			<h4 class="bg-primary">{{fecha_inicio}}</h4>
-			<h5 class="bg-success"><span class=" glyphicon glyphicon-usd"></span><span class="precio">{{precio}}</span></h5>
+			<h5 class="bg-success"><span class=" glyphicon glyphicon-usd"></span><span class="precio">{{precio}}</span></br><small>Incluyendo todos los tramos del viaje</small></h5>
 			<p><span class="glyphicon text-success glyphicon glyphicon-globe"></span> {{origen}}</p>
 			<p><span class="glyphicon text-danger glyphicon glyphicon-globe"></span> {{destino}}</p>		
 		</div>
@@ -42,6 +42,9 @@
 	<div class="loadingScreen"></div>
 	<main>
 		<div class="container-fluid">
+			<ol class="breadcrumb">
+			  <li class="active">Home</li>
+			</ol>
 			<form class="form-horizontal" id="formBusqueda" onsubmit="buscarViaje(); return false;">
 				<header class="bg-primary"><h3 class="pull-center">Buscador de Viajes</h3></header>
 				<div class="form-group">

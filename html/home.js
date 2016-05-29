@@ -141,6 +141,9 @@ function changePage(page){
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
 		if (viajes[i]){
 			viajes[i].reputacion_stars = aux.reputacionStars(viajes[i].reputacion);
+						console.log(viajes[i].foto);
+			viajes[i].foto = viajes[i].foto || "/img/perfil/default.png";
+			console.log(viajes[i].foto);
 		    html += Mustache.render(template, viajes[i]);
 		}
     }
