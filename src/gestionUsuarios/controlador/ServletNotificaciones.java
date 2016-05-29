@@ -3,6 +3,7 @@ package gestionUsuarios.controlador;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +18,13 @@ import gestionViajes.modelo.Vehiculo;
 import otros.AccessManager;
 import otros.ExceptionViajesCompartidos;
 
-class ServletNotificaciones extends HttpServlet {
+public class ServletNotificaciones extends HttpServlet {
 	
 	protected DAONotificaciones daoNotificaciones;
 
 	@Override
 	public void init() {
+		daoNotificaciones=new DAONotificaciones();
 	}
 
 	@Override
@@ -79,7 +81,7 @@ class ServletNotificaciones extends HttpServlet {
 		JSONObject json_notificacion;
 		Integer idCliente = AccessManager.getIdUsuario(request);
 		try {
-			ArrayList<Notificacion> notificaciones = (ArrayList<Notificacion>) daoNotificaciones.getNotificacionesNoLeidas(idCliente);
+			List<Notificacion> notificaciones = daoNotificaciones.getNotificacionesNoLeidas(idCliente);
 			for (Notificacion notificacion: notificaciones) {
 				json_notificacion = notificacion.toJSON();
 				json_notificaciones.add (json_notificacion);

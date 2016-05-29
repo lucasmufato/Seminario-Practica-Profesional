@@ -109,11 +109,11 @@ public class Notificacion implements JSONable {
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		json.put("id_notificacion", this.id_notificacion);
-		json.put("fecha",this.fecha);
+		json.put("fecha",(this.fecha!=null)? this.fecha.toString(): null);
 		json.put("texto", this.texto);
 		json.put("link", this.link);
-		json.put("estado", this.estado);
-		return null;
+		json.put("estado", this.estado.toString());
+		return json;
 	}
 
 	@Override

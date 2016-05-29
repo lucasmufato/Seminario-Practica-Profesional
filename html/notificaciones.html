@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="/js/mustache.js"></script>
 	
 	<script id="notificacion-template" type="text/template">
-	  <article class="col-lg-12 col-md-12 col-sm-12 text-center noselect notificacion {{estado}}" onclick="verNotificacion({{id}})">
+	  <article id="notificacion-{{id_notificacion}}" class="col-lg-12 col-md-12 col-sm-12 text-center noselect notificacion {{estado}}" onclick="verNotificacion({{id_notificacion}})">
 		<time>{{fecha}}</time>
 		<p>{{texto}}</p>
 	  </article>
