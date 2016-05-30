@@ -34,15 +34,14 @@ import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
 
 public class DAOPuntos extends DataAccesObject {
-		//vacio por ahora
-        private float alfa = (float) 1.5;
-        private float beta = (float) 2.5;
+	//vacio por ahora
+	private float alfa = (float) 1.5;
+	private float beta = (float) 2.5;
+      
+	public DAOPuntos(){
+		super();
         
-        
-        public DAOPuntos(){
-            super();
-            
-        }
+	}
         
     //byfede    
     public boolean evaluarSancion(Integer id_cliente, Integer id_viaje, Timestamp fechaYHoraCancelacion) throws ExceptionViajesCompartidos{
@@ -109,8 +108,7 @@ public class DAOPuntos extends DataAccesObject {
                     dias_int=30;
                 }else{
                      dias_int = (int) dias;
-                }               
-                            
+                }                 
 
                 Calendar Calendario = Calendar.getInstance();
                 Calendario.setTimeInMillis(actual.getTime());
@@ -313,11 +311,6 @@ public class DAOPuntos extends DataAccesObject {
                 }else{
                      dias_int = (int) dias;
                 }  
-                
-                
-                
-                
-                            
 
                 Calendar Calendario = Calendar.getInstance();
                 Calendario.setTimeInMillis(actual.getTime());
@@ -343,9 +336,47 @@ public class DAOPuntos extends DataAccesObject {
             }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);
-            }               
-        
-        
+            }
         return true;
     }
+ 	
+ 	public boolean calificar(JSONObject datos) throws ExceptionViajesCompartidos{
+ 		/*
+ 		 * Cuando el participante califica a otro usuario, te mando esta data:	
+			id_viaje: 4,
+			nombre_usuario: nombre_usuario,
+			confirmacion: "s"
+			valoracion: "3"
+			comentario: "piola viaje loco, recomendado"
+ 		 */
+ 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), datos.get("id_viaje"));
+ 		if(viaje==null){
+ 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL VIAJE");
+ 		}
+ 		Cliente cliente= (Cliente) this.buscarPorClaveCandidata("Cliente", datos.get("nombre_usuario"));
+ 		if (cliente==null){
+ 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
+ 		}
+ 		Character confirmacion = (Character) datos.get("confirmacion") ;
+ 		if(confirmacion== null){
+ 			throw new ExceptionViajesCompartidos("ERROR: FALTA LA CONFIRMACION");
+ 		}
+ 		if(confirmacion!='S'&&confirmacion!='N'){
+ 			throw new ExceptionViajesCompartidos("ERROR: LA CONFIRMACION DEBE SER SI O NO");
+ 		}
+ 		Integer valoracion = (Integer) datos.get("valoracion");
+ 		if(valoracion==null){
+ 			throw new ExceptionViajesCompartidos("ERROR: FALTA LA VALORACION");
+ 		}
+ 		if(valoracion<0 || valoracion>5){
+ 			throw new ExceptionViajesCompartidos("ERROR: VALOR INCORRECTO DE VALORACION");
+ 		}
+ 		
+ 		if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+ 		this.entitymanager.getTransaction().begin();
+ 		
+ 		return true;
+ 	}
 }

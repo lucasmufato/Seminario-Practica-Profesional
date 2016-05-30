@@ -515,8 +515,13 @@ public class DAOViajes extends DataAccesObject {
 		//	TODO la parte de crear la comision
 		DAOComisiones daocomision= new DAOComisiones();
 		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
+		this.entitymanager.merge(comisionCobrada);
 		daocomision.cerrarConexiones();
 		daocomision=null;
+		
+		if(comisionCobrada==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO SE PUDO RECUPERAR LA COMISION A COBRAR");
+		}
 		
 		comisionCobrada.setMovimiento_saldo(null);
 		comisionCobrada.setPasajero_viaje(null);
@@ -828,6 +833,8 @@ public class DAOViajes extends DataAccesObject {
 			lista.get(i).setCantidad_pasajeros(c);
 			i++;
 		} 
+		
+		//TODO crear la calificacion
 		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
 		Notificacion notificacion= new Notificacion();

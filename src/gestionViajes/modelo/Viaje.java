@@ -90,10 +90,6 @@ public class Viaje implements JSONable {
 		return true;
 	}
 	
-	public void aniadir_localidad( Localidad loc1, Localidad loc2){
-		// TODO		nose de donde salio este metodo(lucas)
-	}
-	
 	//by mufa
 	//juan 26/05/2016: ahora verifica que ese cliente ya sea pasajero, si es asi lo saca y pone el nuevo
 	public boolean aniadir_pasajeroViaje (PasajeroViaje cliente, Localidad subida, Localidad bajada) throws ExceptionViajesCompartidos{

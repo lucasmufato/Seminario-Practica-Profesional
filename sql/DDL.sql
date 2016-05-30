@@ -131,14 +131,24 @@ CREATE TABLE COMISION_COBRADA (
 );
 
 CREATE TABLE CALIFICACION (
-	id_calificacion INTEGER AUTO_INCREMENT,
-	id_pasajero_viaje INTEGER,
-	calificacion_para_conductor INTEGER,
-	calificacion_para_pasajero INTEGER,
-	participo CHAR(1),
-	id_movimiento_puntos INTEGER,
+	id_calificacion INTEGER NOT NULL AUTO_INCREMENT ,
+	id_pasajero_viaje INTEGER NOT NULL,
+    id_conductor INTEGER NOT NULL,
+	calificacion_para_conductor INTEGER NOT NULL,
+	calificacion_para_pasajero INTEGER NOT NULL,
+	participo_conductor CHAR(1),
+    participo_pasajero CHAR(1),
+    comentario_conductor text,
+    comentario_pasajero text,
+	id_movimiento_puntos_chofer INTEGER,
+    id_movimiento_puntos_pasajero INTEGER,
 
-	PRIMARY KEY (id_calificacion)
+	UNIQUE(id_pasajero_viaje,id_conductor),
+	PRIMARY KEY (id_calificacion),
+    FOREIGN KEY (id_pasajero_viaje) REFERENCES PasajeroViaje (id_pasajero_viaje),
+    FOREIGN KEY (id_conductor) REFERENCES CLIENTE (id_usuario),
+	FOREIGN KEY (id_movimiento_puntos_chofer) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS),
+	FOREIGN KEY (id_movimiento_puntos_pasajero) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS)
 );
 
 CREATE TABLE VEHICULO (
