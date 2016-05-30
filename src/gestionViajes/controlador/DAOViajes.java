@@ -515,7 +515,7 @@ public class DAOViajes extends DataAccesObject {
 		//	TODO la parte de crear la comision
 		DAOComisiones daocomision= new DAOComisiones();
 		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
-		this.entitymanager.merge(comisionCobrada);
+		
 		daocomision.cerrarConexiones();
 		daocomision=null;
 		
@@ -529,8 +529,8 @@ public class DAOViajes extends DataAccesObject {
 		
 		//le asigno la comision al pasajero
 		pasajero.setComision(comisionCobrada);
-
 		this.entitymanager.persist(comisionCobrada);
+		
 		this.entitymanager.persist(pasajero);
 		this.entitymanager.getTransaction().commit();
 		//hago un guardado anterior por que no puedo vincular doblemente al pasajero con la calificacion y a la calificacion con el pasajero
