@@ -16,7 +16,7 @@ import gestionComisiones.modelo.ComisionCobrada;
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionPuntos.controlador.DAOPuntos;
 import gestionPuntos.modelo.Calificacion;
-import gestionPuntos.modelo.EstadoClasificacion;
+import gestionPuntos.modelo.EstadoCalificacion;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 

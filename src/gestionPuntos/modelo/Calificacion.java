@@ -32,7 +32,7 @@ public class Calificacion implements JSONable {
 	@Column(name="CALIFICACION_PARA_PASAJERO",nullable=true)
 	protected Integer calificacion_para_pasajero;
 	@Column(name="PARTICIPO",nullable=false)
-	protected EstadoClasificacion participo;
+	protected EstadoCalificacion participo;
 	
 	@JoinColumn(name="ID_MOVIMIENTO_PUNTOS")
 	@ManyToOne(cascade=CascadeType.PERSIST)
@@ -85,12 +85,12 @@ public class Calificacion implements JSONable {
 		this.id_calificacion = id;
 	}
 
-	public EstadoClasificacion getParticipo() {
+	public EstadoCalificacion getParticipo() {
 		return participo;
 	}
 
 
-	public void setParticipo(EstadoClasificacion participo) {
+	public void setParticipo(EstadoCalificacion participo) {
 		this.participo = participo;
 	}
 
