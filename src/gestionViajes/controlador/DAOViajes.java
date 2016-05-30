@@ -16,7 +16,7 @@ import gestionComisiones.modelo.ComisionCobrada;
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionPuntos.controlador.DAOPuntos;
 import gestionPuntos.modelo.Calificacion;
-import gestionPuntos.modelo.EstadoClasificacion;
+import gestionPuntos.modelo.EstadoCalificacion;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 
@@ -514,7 +514,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		//	TODO la parte de crear la comision
 		DAOComisiones daocomision= new DAOComisiones();
-		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
+		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
 		this.entitymanager.merge(comisionCobrada);
 		daocomision.cerrarConexiones();
 		daocomision=null;
@@ -566,7 +566,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		Double km = viaje.calcularKM(inicio,destino);
 		DAOComisiones daocomision= new DAOComisiones();
-		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	
+		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);
 		daocomision.cerrarConexiones();
 		daocomision=null;
 		return comisionCobrada.getMonto();

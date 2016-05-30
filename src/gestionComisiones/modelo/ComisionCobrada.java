@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
@@ -17,7 +18,9 @@ import gestionViajes.modelo.PasajeroViaje;
 import otros.JSONable;
 
 @NamedQueries({
-	
+	@NamedQuery(name="ComisionCobrada.todos",query="SELECT n FROM ComisionCobrada n"),
+	@NamedQuery(name="ComisionCobrada.porUsuario",query="SELECT n FROM ComisionCobrada n where n.pasajero_viaje= :id_cliente"),
+	@NamedQuery(name="ComisionCobrada.pagas",query="SELECT n FROM ComisionCobrada n where n.estado=gestionComisiones.modelo.EstadoComisionCobrada.pagado"),
 })
 @Entity
 @Table(name="comision_cobrada")

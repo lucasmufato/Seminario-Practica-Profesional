@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
+import gestionPuntos.modelo.Calificacion;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
@@ -163,12 +164,48 @@ public class ServletViaje extends HttpServlet {
 		
 		//Chequeo que cliente es conductor o pasajero finalizado
 		Cliente cliente = (Cliente) daoViajes.buscarPorPrimaryKey(new Cliente(), AccessManager.getIdUsuario(request));
-		viaje.getConductor().equals(cliente);
-		if (!viaje.getPasajerosFinalizadosComoListCliente().contains(cliente)){
+		boolean esConductor = viaje.getConductor().equals(cliente);
+		boolean esPasajero = viaje.getPasajerosFinalizadosComoListCliente().contains(cliente);
+		if (!esConductor && !esPasajero){
 			respuesta.put("result", false);
 			respuesta.put("redirect", "/mis_viajes.html");
 			return respuesta;
 		}
+		
+		JSONArray postulantes = new JSONArray();
+		
+		// Es pasajero o conductor?
+		if (esPasajero){
+			JSONObject json = new JSONObject();
+			
+			// DATOS DEL CONDUCTOR
+			json.put("nombre_usuario", viaje.getConductor().getNombre_usuario());
+			json.put("foto", viaje.getConductor().getFoto());
+			PasajeroViaje pv = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+			Calificacion calificacion = pv.getCalificacion();
+			
+			// CALIFICACION DADA
+			if (calificacion.getCalificacion_para_conductor() == null){
+				json.put("estado","1");// pasajero no califico al conductor
+			}else{
+				// califico, muestro data
+				json.put("estado","2"); 
+				json.put("participo", "s");
+				json.put("valoracion", calificacion.getCalificacion_para_conductor());
+				json.put("comentario", "todo ok");
+			}
+			// calificacion recibida
+			json.put("participo_recibido", "s");
+			json.put("valoracion", calificacion.getCalificacion_para_pasajero());
+			json.put("comentario_recibido", "gran pasajero, recomendado");
+			
+			postulantes.add(json);
+		}else if (esConductor){
+			postulantes.add(new JSONObject()); //no implementado.
+		}
+		
+		
+		
 		/*
 		LO QUE TENGO QUE DEVOLVER
 		 postulantes = [{
@@ -187,8 +224,7 @@ public class ServletViaje extends HttpServlet {
 		 */
 		
 		respuesta.put("result", true);
-		respuesta.put("postulantes",new JSONArray());//HARDCODE
-		respuesta.put("msg", "id: "+idViaje + "  idCliente:"+cliente.getNombre_usuario());//HARDCODE
+		respuesta.put("postulantes",postulantes);
 		return respuesta;
 	}
 

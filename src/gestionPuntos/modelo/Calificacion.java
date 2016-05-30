@@ -43,7 +43,7 @@ public class Calificacion implements JSONable {
 	@Column(name="COMENTARIO_CONDUCTOR",nullable=true)
 	protected String comentario_conductor;
 	@Column(name="COMENTARIO_PASAJERO",nullable=true)
-	protected String comentario_pasajero;	
+	protected String comentario_pasajero;
 	
 	@JoinColumn(name="ID_PASAJERO_VIAJE")
 	@ManyToOne(cascade=CascadeType.PERSIST)
@@ -99,6 +99,7 @@ public class Calificacion implements JSONable {
 		this.id_calificacion = id;
 	}
 
+
 	public PasajeroViaje getPasajero_viaje() {
 		return pasajero_viaje;
 	}
@@ -107,7 +108,6 @@ public class Calificacion implements JSONable {
 	public void setPasajero_viaje(PasajeroViaje pasajero_viaje) {
 		this.pasajero_viaje = pasajero_viaje;
 	}
-
 
 	public Character getParticipo_conductor() {
 		return participo_conductor;
