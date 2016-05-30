@@ -58,4 +58,7 @@ public class PrecioComision implements JSONable {
 		return null;
 	}
 
+	public float getMonto(){
+		return this.Monto;
+	}
 }

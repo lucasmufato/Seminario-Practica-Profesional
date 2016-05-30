@@ -514,7 +514,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		//	TODO la parte de crear la comision
 		DAOComisiones daocomision= new DAOComisiones();
-		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
+		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
 		daocomision.cerrarConexiones();
 		daocomision=null;
 		
@@ -561,7 +561,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		Double km = viaje.calcularKM(inicio,destino);
 		DAOComisiones daocomision= new DAOComisiones();
-		ComisionCobrada comisionCobrada = daocomision.NuevaComisionCobrada(km);	
+		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);	
 		daocomision.cerrarConexiones();
 		daocomision=null;
 		return comisionCobrada.getMonto();

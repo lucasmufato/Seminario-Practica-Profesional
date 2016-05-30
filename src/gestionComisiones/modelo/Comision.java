@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,7 +21,9 @@ import org.json.simple.JSONObject;
 import otros.JSONable;
 
 @NamedQueries({
-	
+	@NamedQuery(name="Comision.todos",query="SELECT n FROM Comision n"),
+	@NamedQuery(name="Comision.porKm",query="SELECT n FROM Comision n where (n.limite_inferior <= :km) and (n.limite_superior > :km)"),
+	@NamedQuery(name="Comision.SearchById",query="SELECT c FROM Comision c WHERE c.id_comision = :id"),
 })
 @Entity
 @Table(name="COMISION")
