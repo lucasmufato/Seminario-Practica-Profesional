@@ -1,28 +1,19 @@
 package gestionViajes.controlador;
 
 import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
 import static org.junit.Assert.*;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionPuntos.controlador.DAOPuntos;
 import gestionUsuarios.modelo.Cliente;
-import gestionViajes.controlador.DAOViajes;
-import gestionViajes.controlador.DAOViajes;
 import gestionViajes.modelo.*;
 import junit.framework.TestCase;
 import otros.ExceptionViajesCompartidos;
@@ -73,11 +64,10 @@ public class TestViaje extends TestCase {
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}
-		int i=0;
-		i++;
 	}
 	
 	@Test
+	@SuppressWarnings({ "unchecked" })
 	public void testNuevoViajeCorrectoCONVUELTA() {
 		//test q envie un json correcto y tendria q andar bien
 		//datos del vehiculo y cliente, para crear el vehiculo
@@ -107,6 +97,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
+	@SuppressWarnings({ "unchecked" })
 	public void testBuscarViajeCorrecto1() {
 		//test q busca un viaje recien creado que vaya desde el primero punto del viaje hasta el ultimo
 		//datos del vehiculo y cliente, para crear el vehiculo
@@ -267,7 +258,6 @@ public class TestViaje extends TestCase {
 		assertNull(this.daoviajes.getConductorViaje(null));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testbuscarManejar() {	//test q buscar en la tabla Maneja
 		//json con datos de vehiculo
@@ -278,7 +268,6 @@ public class TestViaje extends TestCase {
 			//recupero el vehiculo
 			Cliente c= (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);
 			Vehiculo auto=(Vehiculo)this.daoviajes.buscarPorClaveCandidata("Vehiculo", "abd123");
-			Integer id_auto=auto.getId();
 			//ahora pruebo el metodo 
 			Maneja maneja=(Maneja)this.daoviajes.buscarPorIDCompuesta("Maneja", c, auto);
 			assertNotNull(maneja);
@@ -289,9 +278,9 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
+	@SuppressWarnings({ "unchecked" })
 	public void testgetVehiculosPorCliente() {
 		//test q les crea 2 vehiculos a un usuario, le saca uno y comprueba que solo puede manejar el otro
-		//TODO
 		//json con datos de vehiculo
 		JSONObject json= crearVehiculo();
 		JSONObject json2= crearVehiculo();
@@ -311,7 +300,6 @@ public class TestViaje extends TestCase {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testNuevoAutoCorrecto() {	//test q envie un usuario q existe, y vehiculo con datos bien.
 		
@@ -326,7 +314,6 @@ public class TestViaje extends TestCase {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testasignarConductoresVehiculo2() {		
 		//json con datos de vehiculo
@@ -679,6 +666,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
+	@SuppressWarnings({ "rawtypes" })
 	public void testComisionPorRecorridoCorrecto() {
 		//test q compara el metodo con el monto calculado en el viaje, tendrian que ser iguales
 		
@@ -724,6 +712,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
+	@SuppressWarnings({ "rawtypes" })
 	public void testComisionPorRecorridoINCorrecto1() {
 		//test q envia un id de viaje inexistente
 		
@@ -768,6 +757,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
+	@SuppressWarnings({ "rawtypes" })
 	public void testComisionPorRecorridoINCorrecto2() {
 		//test q envia las localidades al reves (= que en desorden)
 		
@@ -814,6 +804,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@Test
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testNuevoPasajeroViajeCorrecto2() {
 		//test q hace que 2 pasajeros se postulen al mismo viaje
 		// tambien verifica que el metodo listarPasajerosPorViaje funque bien
@@ -850,9 +841,54 @@ public class TestViaje extends TestCase {
 		assertEquals(l.size(),2);
 	}
 	
+	
 	@Test
-	public void testNuevoPasajeroViajeINCorrecto1() {
-		//test que envia 2 veces al mismo postulante para un viaje
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void testNuevoVariosPasajerosViajeCorrecto0() {
+		//test que envia un pasajeroViaje que pide 2 asientos en un viaje
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = this.crearViaje();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		JSONObject json3= this.crearPostulante();
+		json3.put("nro_asientos", 2);
+		
+		try {
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		try {
+			assertTrue( this.daoviajes.aceptarPasajero(3, viaje.getId_viaje()) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+		PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
+		assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+	}
+	
+	@Test
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void testNuevoVariosPasajerosViajeINCorrecto0() {
+		//test que envia un pasajeroViaje que pide 2 asientos en un viaje, pero ya no quedan esa cantidad de asientos
 		
 		//datos del vehiculo y cliente, para crear el vehiculo
 		JSONObject json= crearVehiculo();
@@ -872,22 +908,41 @@ public class TestViaje extends TestCase {
 		
 		JSONObject json3= this.crearPostulante();
 		
+		JSONObject json4= this.crearPostulante(); 		//pasajero que no puede ser aceptado
+		json4.remove("cliente");
+		json4.put("cliente", 4);
+		json4.put("nro_asientos", 2);
 		try {
 			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}
+		
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+		
+		try {
+			assertTrue( this.daoviajes.aceptarPasajero(3, viaje.getId_viaje()) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		
 		boolean bandera=false;
 		try {
-			this.daoviajes.Cliente_se_postula_en_viaje(json3);
-			fail();
+			assertTrue( this.daoviajes.aceptarPasajero(4, viaje.getId_viaje()) );
+			fail("tenia q tirar errore de que no hay lugares suficientes");
 		} catch (ExceptionViajesCompartidos e) {
+			if(!e.getMessage().contains("NO HAY SUFICIENTES ASIENTOS DISPONIBLES")){
+				fail("tenia que tirar el error: 'ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO' y mostro el msj: "+e.getMessage());
+			}
 			bandera=true;
 		}
 		assertTrue(bandera);
 	}
 	
 	@Test
+	@SuppressWarnings({ "unchecked" })
 	public void testNuevoPasajeroViajeINCorrecto2() {
 		//test que envia postula al conductor del viaje como pasajero
 		
@@ -954,6 +1009,7 @@ public class TestViaje extends TestCase {
 	}
         
         //by fede
+	@SuppressWarnings({ "unchecked", "rawtypes" })
          public void testCancelarParticipacionTodoElViajeCorrecto() {
 		//test cancelar participacion
 		
@@ -1005,6 +1061,7 @@ public class TestViaje extends TestCase {
          
          
          //by fede
+         @SuppressWarnings({ "unchecked", "rawtypes" })
          public void testCancelarParticipacionIntermedioCorrecto() {
 		//test cancelar participacion
 		
@@ -1060,7 +1117,8 @@ public class TestViaje extends TestCase {
          
          
          //by fede
-         public void testCancelarViajeSinSancion() {
+         @SuppressWarnings({ "unchecked", "rawtypes" })
+		public void testCancelarViajeSinSancion() {
 		//test cancelar viaje
 		
 		//datos del vehiculo y cliente, para crear el vehiculo
@@ -1105,7 +1163,8 @@ public class TestViaje extends TestCase {
 	}
          
          //by fede
-         public void testCancelarViajeConSancion() {
+         @SuppressWarnings({ "unchecked", "rawtypes" })
+		public void testCancelarViajeConSancion() {
 		//test cancelar viaje
 		
 		//datos del vehiculo y cliente, para crear el vehiculo
@@ -1150,7 +1209,7 @@ public class TestViaje extends TestCase {
 		assertEquals(viaje2.getEstado(),EstadoViaje.cancelado);
 	}
 	
-	@SuppressWarnings("unchecked")
+         @SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante() {
 		/*
 		 * JSON{
@@ -1170,7 +1229,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante1() {
 		JSONObject json =new JSONObject();
 		json.put("cliente", 5);
@@ -1182,7 +1241,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante2() {
 		JSONObject json =new JSONObject();
 		json.put("cliente", 6);
@@ -1194,7 +1253,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante3() {
 		JSONObject json =new JSONObject();
 		json.put("cliente", 4);
@@ -1206,7 +1265,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante4() {
 		JSONObject json =new JSONObject();
 		json.put("cliente", 7);
@@ -1218,6 +1277,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante5() {
 		JSONObject json =new JSONObject();
 		json.put("cliente", 8);
@@ -1229,6 +1289,7 @@ public class TestViaje extends TestCase {
 		return json;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JSONObject crearPostulante6() {
 		JSONObject json =new JSONObject();
 		json.put("cliente", 9);

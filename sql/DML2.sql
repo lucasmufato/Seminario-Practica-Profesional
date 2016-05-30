@@ -21,9 +21,9 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (3, 2, C
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (4, 2, CURRENT_DATE);
 
 -- LOS CREO COMO CLIENTES A ESTOS MISMOS USUARIOS
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (2,0,0,NULL,NULL);
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (3,0,0,NULL,NULL);
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (4,0,0,NULL,NULL);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (2,default,default,NULL,NULL);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (3,default,default,NULL,NULL);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (4,default,default,NULL,NULL);
 
 
 INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "administrar_usuarios","administrar usuarios","permite ABM de usuarios","A");
@@ -55,7 +55,7 @@ VALUES (NULL,2,"juan23","juan23", "juan23@hotmail.com","usuario para participar 
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
 
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) 
-VALUES (5,0,3,null,null);
+VALUES (5,default,default,null,null);
 INSERT INTO VEHICULO (id_vehiculo, anio, marca, modelo, patente, verificado, estado, fecha_verificacion, color, cantidad_asientos, aire_acondicionado, seguro, foto) 
 VALUES (NULL, '1992', 'Ford', 'Focus', 'abc123', 'N', 'A', NULL, '000000', '5', 'N', 'N', NULL);
 INSERT INTO VEHICULO (id_vehiculo, anio, marca, modelo, patente, verificado, estado, fecha_verificacion, color, cantidad_asientos, aire_acondicionado, seguro, foto)  
@@ -70,7 +70,7 @@ VALUES (NULL, 'viaje', '2', '2', '2016-04-12 00:00:00', '2016-03-10 00:00:00','2
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) 
 VALUES (NULL,2,"usuario","usuario", "usuario@usuario.us",NULL,"A","C");
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) 
-VALUES (6,0,5,null,null);
+VALUES (6,default,default,null,null);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (6, 2, CURRENT_DATE);
 
 INSERT INTO VEHICULO (id_vehiculo, anio, marca, modelo, patente, verificado, estado, fecha_verificacion, color, cantidad_asientos, aire_acondicionado, seguro, foto) 
@@ -102,11 +102,9 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (7, 2, C
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (8, 2, CURRENT_DATE);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (9, 2, CURRENT_DATE);
 
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (7,0,0,NULL,NULL);
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (8,0,0,NULL,NULL);
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (9,0,0,NULL,NULL);
-
-
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (7,default,default,NULL,NULL);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (8,default,default,NULL,NULL);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (9,default,default,NULL,NULL);
 
 -- fede
 INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (1,"Descuento de Puntos por Cancelación de viaje con Pasajeros",0);

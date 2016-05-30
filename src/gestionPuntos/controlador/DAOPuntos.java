@@ -215,6 +215,7 @@ public class DAOPuntos extends DataAccesObject {
         return diferencia;
     }
     
+    // by fede
     public boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
         
         if(this.entitymanager.getTransaction().isActive()){
@@ -235,6 +236,7 @@ public class DAOPuntos extends DataAccesObject {
         return true;
     }
     
+   //by fede
  public boolean sancionarChofer(int id_viaje, int id_chofer,int aceptados) throws ExceptionViajesCompartidos{
         //formula
         // puntos = (CantPas * 50 ) + (1/hsfaltan * beta)

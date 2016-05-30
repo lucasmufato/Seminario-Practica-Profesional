@@ -143,21 +143,6 @@ public class DAOViajes extends DataAccesObject {
     	
     	return true;
     }
-    
-    /* //comentado por mufa
-	public Cliente getConductorViaje(Integer id_viaje) {
-                //agregado de fede
-                Cliente conductor = new Cliente();
-                Viaje v = new Viaje();
-                Query qry = entitymanager.createNamedQuery("Viaje.SearchById");
-    		qry.setParameter("id_viaje", id_viaje);
-    		v =(Viaje)qry.getSingleResult();
-                Maneja conductor_maneja = v.getConductor_vehiculo();
-                conductor = conductor_maneja.getCliente();        
-		return conductor;
-                //fin agregado fede
-	}
-	*/
 	
 	public Vehiculo getAutoViaje(Integer id_viaje) {
                 //agregado de fede
@@ -250,7 +235,6 @@ public class DAOViajes extends DataAccesObject {
 		}
 		viaje.setPrecio(precio);
 		
-		
 		// chequeo los datos de la vuelta
 		Timestamp fecha_vuelta = null;
 		Integer cantidad_asientos_vuelta=0;
@@ -278,7 +262,6 @@ public class DAOViajes extends DataAccesObject {
 				throw new ExceptionViajesCompartidos("ERROR: NO INGRESO PRECIO PARA LA VUELTA");
 			}
 		}
-		
 		
 		//creo el recorrido (lista de localidades) que tiene el viaje
 		// le JSON datos tiene un JSON que se llama localidades, q tiene origen, destino y todos los puntos intermedios
@@ -412,6 +395,7 @@ public class DAOViajes extends DataAccesObject {
 		return this.distanceCalculation(localidad1.getLatitud(), localidad1.getLongitud(), localidad2.getLatitud(), localidad2.getLongitud());
 	}
 	
+	//by pablo
 	protected double distanceCalculation(double point1_lat, double point1_long, double point2_lat, double point2_long) {
 	/*
 	Descripción: Cálculo de la distancia entre 2 puntos en función de su latitud/longitud
@@ -452,7 +436,8 @@ public class DAOViajes extends DataAccesObject {
 		 * "CLIENTE":ID_CLIENTE,
 		 * "VIAJE":ID_VIAJE,
 		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
+		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD,
+		 * "NRO_ASIENTOS": integer
 		 * } 
 		 */
 		
@@ -466,14 +451,7 @@ public class DAOViajes extends DataAccesObject {
 		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRADO");
 		}
-		/*
-		 * Nota de juan
-		 * Bajo esta restriccion el cliente no se puede postular en dos tramos diferentes
-		 * Si, es un boludito si hace eso pero lo anoto para que se sepa nomas.
-		 */
-		if( viaje.getPasajerosPostuladosComoListCliente().contains(cliente)){
-			throw new ExceptionViajesCompartidos("ERROR: YA ESTAS POSTULADO A ESTE VIAJE");
-		}
+			
 		Integer id_subida= (Integer) json.get("localidad_subida");
 		Localidad localidad_subida= (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_subida);
 		if(localidad_subida==null){
@@ -493,28 +471,40 @@ public class DAOViajes extends DataAccesObject {
 		if (!viaje.contiene_localidades_en_orden(localidad_subida,localidad_bajada)){
 			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA ESTA DESPUES QUE LA DE BAJADA");
 		}
+		
 		if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
 		}
 		this.entitymanager.getTransaction().begin();
-		
-		/*
-		 * De Fede y Juan: te comentamos esta linea Lucas:
-		 */
-		//PasajeroViaje pasajero= new PasajeroViaje();
-		/*
-		 * Porque no deberia crear una tupla en cualquier caso, 
-		 * solo debe crear esa tupla si no tiene ya una tupla en la relacion.
-		 * Mucho bardo genero esto jaja
-		 */
-		PasajeroViaje pasajero = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+	
+		PasajeroViaje pasajero=(PasajeroViaje) viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+		//si el pasajero no estaba en el viaje lo creo, si estaba lo modifico a menos q este en aceptado/finalizo/ausente
 		if (pasajero == null){
 			pasajero = new PasajeroViaje();
+		}else{
+			if(pasajero.getEstado()==EstadoPasajeroViaje.aceptado){
+				throw new ExceptionViajesCompartidos("ERROR: YA ESTAS ACEPTADO EN EL VIAJE");
+			}
+			if(pasajero.getEstado()==EstadoPasajeroViaje.finalizo_viaje){
+				throw new ExceptionViajesCompartidos("ERROR: YA FINALIZASTE EL VIAJE!");
+			}
+			if(pasajero.getEstado()==EstadoPasajeroViaje.ausente){
+				throw new ExceptionViajesCompartidos("ERROR: NO PARTICIPASTE DEL VIAJE! (FUISTE CALIFICADO COMO AUSENTE)");
+			}
 		}
 		
 		pasajero.setCalificacion(null);
 		pasajero.setCliente(cliente);
 		pasajero.setEstado(EstadoPasajeroViaje.postulado);
+		Integer nro_asientos =(Integer) json.get("nro_asientos");
+		if(nro_asientos==null){
+			nro_asientos=1;
+		}else{
+			if(nro_asientos<1 || nro_asientos>viaje.getAsientos_disponibles()){
+				throw new ExceptionViajesCompartidos("ERROR: LA CANTIDAD DE ASIENTOS NO PUEDE SER MAYOR A LA DEL VEHICULO O MENOR QUE 1");
+			}
+		}
+		pasajero.setNro_asientos(nro_asientos);
 		
 		Double km = viaje.calcularKM(localidad_subida,localidad_bajada);
 		pasajero.setKilometros(km);
@@ -814,7 +804,7 @@ public class DAOViajes extends DataAccesObject {
 			i++;
 		}
 		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
-			if ((asientos - lista.get(i).getCantidad_pasajeros()) == 0) { // SI NO HAY ASIENTOS DISPONIBLES
+			if ((asientos - lista.get(i).getCantidad_pasajeros()) < pasajero.getNro_asientos()) { // SI NO HAY ASIENTOS DISPONIBLES
 				//NO SE LO PUEDE ACEPTAR 
 				throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
 			}
@@ -834,7 +824,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
 			Integer c=lista.get(i).getCantidad_pasajeros();
-			c++;
+			c+=pasajero.getNro_asientos();
 			lista.get(i).setCantidad_pasajeros(c);
 			i++;
 		} 
@@ -1054,7 +1044,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		while (lista.get(i) != bajada) { //WHILE PARA RECORRER DESDE SUBIDA HASTA QUE SEA BAJADA
                     Integer c = lista.get(i).getCantidad_pasajeros();
-                    c--;
+                    c-=pasajero.getNro_asientos();
                     lista.get(i).setCantidad_pasajeros(c);
                     i++;
 		} 

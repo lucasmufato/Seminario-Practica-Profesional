@@ -31,39 +31,42 @@ public class PasajeroViaje implements JSONable {
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorPermiso")
 	@SequenceGenerator(allocationSize=1, schema="pruebajpa",  name="MySequenceGeneratorPasajeroViaje", sequenceName = "sequence")
 	protected Integer id_pasajero_viaje;
-	@Column(nullable=true)
+	@Column(nullable=true,name="KILOMETROS")
 	protected Double kilometros;
 
-	@Column(nullable=false)
+	@Column(nullable=false,name="ESTADO")
 	protected EstadoPasajeroViaje estado;
 	
-	@JoinColumn(name="id_calificacion")
+	@Column(nullable=false,name="NRO_ASIENTOS")
+	protected Integer nro_asientos;
+	
+	@JoinColumn(name="ID_CALIFICACION")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Calificacion calificacion;
 	
-	@JoinColumn(name="id_cliente")
+	@JoinColumn(name="ID_CLIENTE")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Cliente cliente;
 	
-	@JoinColumn(name="id_comision_cobrada")
+	@JoinColumn(name="ID_COMISION_COBRADA")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected ComisionCobrada comision;
 	
 	@JoinColumns({
-		@JoinColumn(name="id_localidad_bajada", referencedColumnName="id_localidad"),
-		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje", updatable=false, insertable=false)
+		@JoinColumn(name="ID_LOCALIDAD_BAJADA", referencedColumnName="id_localidad"),
+		@JoinColumn(name="ID_VIAJE", referencedColumnName="id_viaje", updatable=false, insertable=false)
 	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected LocalidadViaje localidad_bajada;
 	
 	@JoinColumns({
-		@JoinColumn(name="id_localidad_subida", referencedColumnName="id_localidad"),
-		@JoinColumn(name="id_viaje", referencedColumnName="id_viaje", updatable=false, insertable=false)
+		@JoinColumn(name="ID_LOCALIDAD_SUBIDA", referencedColumnName="id_localidad"),
+		@JoinColumn(name="ID_VIAJE", referencedColumnName="id_viaje", updatable=false, insertable=false)
 	})
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected LocalidadViaje localidad_subida;
 	
-	@JoinColumn(name="id_viaje")
+	@JoinColumn(name="ID_VIAJE")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Viaje viaje;
 	
@@ -141,6 +144,14 @@ public class PasajeroViaje implements JSONable {
 
 	public void setEstado(EstadoPasajeroViaje estado) {
 		this.estado = estado;
+	}
+
+	public Integer getNro_asientos() {
+		return nro_asientos;
+	}
+
+	public void setNro_asientos(Integer nro_asientos) {
+		this.nro_asientos = nro_asientos;
 	}
 
 	@Override
