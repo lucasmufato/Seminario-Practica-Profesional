@@ -4,24 +4,32 @@ var postulantes = [];
 var loadData = function() {
 
 	var sendData = {
-		action: "ver_calificar_pendientes",
+		entity:"calificacion",
+		action: "show",
 		id: idViaje
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();
 			postulantes = jsonData.postulantes;
-			if (postulantes) {
+							console.log("hola");
+
+			if (postulantes.length) {
 				cargarPostulantes();
-				cargarMisCalificaciones();
+				//cargarMisCalificaciones();
+			}else{
+				console.log("hola");
+				modalMessage("error",jsonData.msg,"Anda");
 			}
 		} else if (jsonData.redirect != undefined) {
-			window.location = jsonData.redirect;// si no es conductor de este viaje, acceso denegado
+			window.location = jsonData.redirect;// si no es conductor o pv de este viaje, acceso denegado
+		}else{
+			console.log(jsonData);
 		}
 	}
 	simular();
 	
-	sendAjax(sendData,onsuccess);
+	//sendAjax(sendData,onsuccess);
 }
 
 var initUI = function(){
@@ -166,23 +174,30 @@ var calificarPendiente = function(nombre_usuario){
 	console.log($("#comments_"+nombre_usuario).val());
 	completos(nombre_usuario);
 	var sendData = {
-		action: "calificar_pendiente",
+		entity: "calificacion",
+		action: "new",
 		id: idViaje,
-		nombre_usuario: nombre_usuario,
+		calificado: nombre_usuario,
 		confirmacion: $("#confirmacion_"+nombre_usuario).val(),
 		valoracion: $("input:radio[name=estrellas_"+nombre_usuario+"]:checked").val(),
 		comentario: $("#comments_"+nombre_usuario).val()
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
+			loadData();
+			/*
 			$('.loadingScreen').fadeOut();
 			postulantes = jsonData.postulantes;
 			cargarPostulantes();
+			*/
 		} else {
 			modalMessage("error",jsonData.msg,"Calificar");
 		}
 	}	
-	sendAjax(sendData,onsuccess);
+	if (completos(nombre_usuario)){
+		sendAjax(sendData,onsuccess);
+	}
+
 }
 
 var verViaje = function(){
@@ -191,9 +206,8 @@ var verViaje = function(){
 
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
-	/*
 	$.ajax({
-		url: '/viaje', 
+		url: '/viajes', 
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -206,7 +220,6 @@ var sendAjax = function(sendData,callback){
 			window.alert (err3);
 		}
 	});
-	*/
 }
 
 var estadoString = function (caracter) {

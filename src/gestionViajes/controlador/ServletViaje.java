@@ -87,6 +87,12 @@ public class ServletViaje extends HttpServlet {
 			} else if (action != null && action.equals ("desasignar_vehiculo_cliente")){
 				respuesta = this.desasignarVehiculoCliente(request);
 			}
+		} else if (entity != null && entity.equals ("calificacion")) {
+			if (action != null && action.equals ("new")) {
+				respuesta = this.nueva_calificacion (request);
+			} else if (action != null && action.equals ("show")) {
+				respuesta = this.listar_calificaciones (request);
+			} 
 		} else {
 			respuesta = new JSONObject();
 			respuesta.put ("result", false);
@@ -125,6 +131,101 @@ public class ServletViaje extends HttpServlet {
 		writer.println (respuesta);
 	}
 	
+//----------------------------------------------CALIFICACIONES---------------------------------------------------------------------//
+
+	private JSONObject listar_calificaciones(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/mis_viajes.html");
+			return respuesta;
+		}
+		
+		// Chequeo que viaje existe
+		Viaje viaje = daoViajes.getViajeById(idViaje);
+		if (viaje==null){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/mis_viajes.html");
+			return respuesta;
+		}
+		
+		//Chequeo que cliente es conductor o pasajero finalizado
+		Cliente cliente = (Cliente) daoViajes.buscarPorPrimaryKey(new Cliente(), AccessManager.getIdUsuario(request));
+		viaje.getConductor().equals(cliente);
+		if (!viaje.getPasajerosFinalizadosComoListCliente().contains(cliente)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/mis_viajes.html");
+			return respuesta;
+		}
+		/*
+		LO QUE TENGO QUE DEVOLVER
+		 postulantes = [{
+				estado: "1", //1: sin_calificar, 2: calificado,
+				nombre_usuario: "Carolo4",
+				foto:"img/home/administracion_usuarios.png",
+				participo: "",
+				valoracion: "",
+				comentario: "",
+				participo_recibido: "",
+				valoracion_recibida: "",
+				comentario_recibido: ""
+			},{
+			...
+			}]
+		 */
+		
+		respuesta.put("result", true);
+		respuesta.put("postulantes",new JSONArray());//HARDCODE
+		respuesta.put("msg", "id: "+idViaje + "  idCliente:"+cliente.getNombre_usuario());//HARDCODE
+		return respuesta;
+	}
+
+	private JSONObject nueva_calificacion(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("redirect", "Viaje no válido");
+			return respuesta;
+		}
+		
+		int idCalificador = AccessManager.getIdUsuario(request);
+		String nombreCalificado = request.getParameter("calificado");
+		String confirmacion = request.getParameter("confirmacion");
+		int valoracion = Integer.parseInt(request.getParameter("valoracion"));
+		String comentario = request.getParameter("comentario");
+
+		respuesta.put("result", false); //hardcode
+		respuesta.put("msg", "id: "+idViaje + "  Cliente:"+idCalificador+" calificado: "+nombreCalificado+
+				" confirmacion: "+confirmacion+" valoracion: "+valoracion+" comentario"+comentario);//HARDCODE
+		return respuesta;
+	}
+	
+//----------------------------------------------FIN-CALIFICACIONES---------------------------------------------------------------------//
+
 //----------------------------------------------VIAJES---------------------------------------------------------------------//
 	
 	@SuppressWarnings("unchecked")
