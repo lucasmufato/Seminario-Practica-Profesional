@@ -318,9 +318,11 @@ CREATE TABLE PAGO(
     fecha date not null,
     monto float not null,
     id_cliente int(11) not null,
+    id_movimiento_saldo int(11) not null,
     
     PRIMARY KEY (id_pago),
-    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario)
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
+    FOREIGN KEY (id_movimiento_saldo) REFERENCES movimiento_saldo (id_movimiento_saldo)
 );
 
 
