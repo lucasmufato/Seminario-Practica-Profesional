@@ -12,8 +12,6 @@ var loadData = function() {
 		if(jsonData.result){
 			$('.loadingScreen').fadeOut();
 			postulantes = jsonData.postulantes;
-							console.log("hola");
-
 			if (postulantes.length) {
 				cargarPostulantes();
 				//cargarMisCalificaciones();
@@ -27,9 +25,9 @@ var loadData = function() {
 			console.log(jsonData);
 		}
 	}
-	simular();
+	//simular();
 	
-	//sendAjax(sendData,onsuccess);
+	sendAjax(sendData,onsuccess);
 }
 
 var initUI = function(){
@@ -109,6 +107,7 @@ var cargarMisCalificaciones = function(elem, htmlMisCalificaciones) {
 		elem.es_mc = elem.estado;
 		//if (elem.es_mc = elem.estado == 3){
 		elem.color_panel = colorPanel(elem.estado);
+		elem.foto = elem.foto || "/img/perfil/default.png";
 		console.log("ssssssssssssssssss"+elem.nombre_usuario);
 		console.log(elem.cantidad_estrellas+elem.nombre_usuario);
 		console.log(elem.comentario_recibido+elem.nombre_usuario);
@@ -134,6 +133,7 @@ var cargarPostulantes = function(){
 	var htmlNoPendientes = "";
 	var htmlMisCalificaciones = "";
 	postulantes.forEach(function(elem){
+		elem.foto = elem.foto || "/img/perfil/default.png";
 		elem.estado_string = estadoString(elem.estado);
 		elem.color_panel = colorPanel(elem.estado);
 		elem.cantidad_estrellas = mostrarEstrellas(elem.valoracion);
@@ -146,7 +146,7 @@ var cargarPostulantes = function(){
 				htmlNoPendientes += Mustache.render(template, elem);
 			} 
 		}
-		if (elem.comentario_recibido != "") {
+		if (elem.comentario_recibido && elem.valoracion && elem.participo_recibido) {
 			console.log("hdasjkh"+elem.nombre_usuario);
 			htmlMisCalificaciones+= cargarMisCalificaciones(elem, htmlMisCalificaciones);
 		}
