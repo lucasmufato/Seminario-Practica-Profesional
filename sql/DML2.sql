@@ -112,11 +112,11 @@ INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (3,"S
 INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (4,"Sanción por Cancelación tardía de participación en viaje",0);
 -- completarlas
 
-INSERT INTO precio_comision (id_comision,monto,fecha) VALUES (1,10,CURRENT_DATE);
-INSERT INTO precio_comision (id_comision,monto,fecha) VALUES (2,50,CURRENT_DATE);
-INSERT INTO precio_comision (id_comision,monto,fecha) VALUES (3,100,CURRENT_DATE);
-INSERT INTO precio_comision (id_comision,monto,fecha) VALUES (4,500,CURRENT_DATE);
-INSERT INTO precio_comision (id_comision,monto,fecha) VALUES (5,1000,CURRENT_DATE);
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (1,10,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (2,50,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (3,100,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (4,500,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (5,1000,CURRENT_DATE,"2016-09-25");
 
 INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(1,0,20,1);
 INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(2,20,50,2);
