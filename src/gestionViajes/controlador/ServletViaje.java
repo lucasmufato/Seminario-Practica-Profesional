@@ -165,7 +165,7 @@ public class ServletViaje extends HttpServlet {
 		//Chequeo que cliente es conductor o pasajero finalizado
 		Cliente cliente = (Cliente) daoViajes.buscarPorPrimaryKey(new Cliente(), AccessManager.getIdUsuario(request));
 		boolean esConductor = viaje.getConductor().equals(cliente);
-		boolean esPasajero = viaje.getPasajerosFinalizadosComoListCliente().contains(cliente);
+		boolean esPasajero = viaje.getPasajerosFinalizadosComoListCliente().contains(cliente) || viaje.getPasajerosAceptadosComoListCliente().contains(cliente);
 		if (!esConductor && !esPasajero){
 			respuesta.put("result", false);
 			respuesta.put("redirect", "/mis_viajes.html");
@@ -179,29 +179,73 @@ public class ServletViaje extends HttpServlet {
 			JSONObject json = new JSONObject();
 			
 			// DATOS DEL CONDUCTOR
-			json.put("nombre_usuario", viaje.getConductor().getNombre_usuario());
-			json.put("foto", viaje.getConductor().getFoto());
+			Cliente conductor = viaje.getConductor();
+			json.put("nombre_usuario", conductor.getNombre_usuario());
+			json.put("foto", conductor.getFoto());
 			PasajeroViaje pv = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
-			Calificacion calificacion = pv.getCalificacion();
+
+
+			Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
 			
+			if (calificacion == null){
+				respuesta.put("result", false);
+				respuesta.put("msg", "Error interno: la calificacion no se encuentra instanciada");
+				return respuesta;
+			}
+
 			// CALIFICACION DADA
 			if (calificacion.getCalificacion_para_conductor() == null){
-				json.put("estado","1");// pasajero no califico al conductor
+				json.put("estado","1");// yo no califique al conductor
 			}else{
-				// califico, muestro data
+				// califique al conductor, muestro data
 				json.put("estado","2"); 
-				json.put("participo", "s");
+				json.put("participo", calificacion.getParticipo_conductor());
 				json.put("valoracion", calificacion.getCalificacion_para_conductor());
-				json.put("comentario", "todo ok");
+				json.put("comentario", calificacion.getComentario_pasajero());
 			}
 			// calificacion recibida
-			json.put("participo_recibido", "s");
+			json.put("participo_recibido", calificacion.getParticipo_pasajero());
 			json.put("valoracion", calificacion.getCalificacion_para_pasajero());
-			json.put("comentario_recibido", "gran pasajero, recomendado");
+			json.put("comentario_recibido", calificacion.getComentario_conductor());
 			
 			postulantes.add(json);
+			
 		}else if (esConductor){
-			postulantes.add(new JSONObject()); //no implementado.
+			List<PasajeroViaje> listaPasajeros = viaje.getPasajerosCalificables();
+			for (PasajeroViaje pv : listaPasajeros){
+				JSONObject json = new JSONObject();
+				
+				// DATOS DEL Pasajero
+				Cliente pasajeroCliente = pv.getCliente();
+				json.put("nombre_usuario", pasajeroCliente.getNombre_usuario());
+				json.put("foto", pasajeroCliente.getFoto());
+
+				// OBTENGO CALIFICACION
+				Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, cliente);
+				
+				if (calificacion == null){
+					respuesta.put("result", false);
+					respuesta.put("msg", "Error interno: la calificacion no se encuentra instanciada");
+					return respuesta;
+				}
+
+				// CALIFICACION DADA
+				if (calificacion.getCalificacion_para_pasajero() == null){
+					json.put("estado","1");// yo no califique al pasajero
+				}else{
+					// califique al pasajero, muestro data
+					json.put("estado","2"); 
+					json.put("participo", calificacion.getParticipo_pasajero());
+					json.put("valoracion", calificacion.getCalificacion_para_pasajero());
+					json.put("comentario", calificacion.getComentario_conductor());
+				}
+				// calificacion recibida
+				json.put("participo_recibido", calificacion.getParticipo_conductor());
+				json.put("valoracion", calificacion.getCalificacion_para_conductor());
+				json.put("comentario_recibido", calificacion.getComentario_pasajero());
+				
+				postulantes.add(json);
+			}
 		}
 		
 		

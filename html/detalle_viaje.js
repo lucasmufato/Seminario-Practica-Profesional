@@ -162,7 +162,7 @@ var simular = function(json){
 		destino: "880",
 		fecha_inicio: "12/09/2016",
 		precio: "30",
-		cantidad_pasajeros_aceptados: "1",
+		cantidad_pasajeros_calificables: "1",
 		recorrido: ["324", "112","880"]
 	};
 	data.conductor = {
@@ -254,7 +254,7 @@ var configurarUi = function(){
 				$("#btnViajeFinalizado").hide();
 
 				//solo califica si hay pasajeros
-				if (data.viaje.cantidad_pasajeros_aceptados > 0){
+				if (data.viaje.cantidad_pasajeros_calificables > 0){
 					// lo comento porque calificar ahora tiene calificacion dada y recibida
 					//if (haCalificado){
 						//$("#btnCalificar").hide();

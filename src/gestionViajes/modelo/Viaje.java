@@ -186,6 +186,17 @@ public class Viaje implements JSONable {
 		return pasajeros;
 	}
 
+	// calificables son los aceptados/finalizados
+	public List<PasajeroViaje> getPasajerosCalificables() {
+		List<PasajeroViaje> lista = new ArrayList<PasajeroViaje>();
+		for(PasajeroViaje pas: pasajeros) {
+			if (pas.estado == EstadoPasajeroViaje.aceptado || pas.estado == EstadoPasajeroViaje.finalizo_viaje){
+				lista.add(pas);
+			}
+		}
+		return lista;
+	}
+	
 	public List<Cliente> getPasajerosTodosComoListCliente() {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		for(PasajeroViaje pas: pasajeros) {
@@ -406,7 +417,7 @@ public class Viaje implements JSONable {
 		json_viaje.put("fecha_finalizacion", (this.getFecha_finalizacion() != null)? this.getFecha_finalizacion().toString(): null);
 		json_viaje.put("precio",this.getPrecio());
 		json_viaje.put("asientos_disponibles", this.getAsientos_disponibles());
-		json_viaje.put("cantidad_pasajeros_aceptados",this.getPasajerosAceptadosComoListCliente().size());
+		json_viaje.put("cantidad_pasajeros_calificables",this.getPasajerosCalificables().size());
 		/* NOTAS: 
 			//TODO hora debe estar dentro de fecha
 		*/
