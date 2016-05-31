@@ -309,6 +309,8 @@ window.onload = function () {
 
 	actualizarFormularioVuelta();
 	cargarVehiculosSelect();
+
+	$('.loadingScreen').fadeOut();
 }
 
 
