@@ -16,7 +16,6 @@ var loadData = function() {
 				cargarPostulantes();
 				//cargarMisCalificaciones();
 			}else{
-				console.log("hola");
 				modalMessage("error",jsonData.msg,"Anda");
 			}
 		} else if (jsonData.redirect != undefined) {
@@ -108,9 +107,6 @@ var cargarMisCalificaciones = function(elem, htmlMisCalificaciones) {
 		//if (elem.es_mc = elem.estado == 3){
 		elem.color_panel = colorPanel(elem.estado);
 		elem.foto = elem.foto || "/img/perfil/default.png";
-		console.log("ssssssssssssssssss"+elem.nombre_usuario);
-		console.log(elem.cantidad_estrellas+elem.nombre_usuario);
-		console.log(elem.comentario_recibido+elem.nombre_usuario);
 		htmlMisCalificaciones += Mustache.render(template, elem);
 		//}
 	//});
@@ -134,11 +130,11 @@ var cargarPostulantes = function(){
 	var htmlMisCalificaciones = "";
 	postulantes.forEach(function(elem){
 		elem.foto = elem.foto || "/img/perfil/default.png";
+		elem.calificable = elem.estado_string == "1";
 		elem.estado_string = estadoString(elem.estado);
 		elem.color_panel = colorPanel(elem.estado);
 		elem.cantidad_estrellas = mostrarEstrellas(elem.valoracion);
 		elem.participacion = mostrarParticipacion(elem.participo);
-		console.log("hdasjkh"+elem.nombre_usuario);	
 		if (elem.es_pendiente = elem.estado == 1){
 			htmlPendientes += Mustache.render(template, elem);
 		} else {
@@ -146,8 +142,7 @@ var cargarPostulantes = function(){
 				htmlNoPendientes += Mustache.render(template, elem);
 			} 
 		}
-		if (elem.comentario_recibido && elem.valoracion && elem.participo_recibido) {
-			console.log("hdasjkh"+elem.nombre_usuario);
+		if (elem.comentario_recibido && elem.valoracion_recibida && elem.participo_recibido) {
 			htmlMisCalificaciones+= cargarMisCalificaciones(elem, htmlMisCalificaciones);
 		}
 	});
@@ -168,10 +163,6 @@ var cargarPostulantes = function(){
 }
 
 var calificarPendiente = function(nombre_usuario){
-	console.log(nombre_usuario);
-	console.log($("#confirmacion_"+nombre_usuario).val());
-	console.log($("input:radio[name=estrellas_"+nombre_usuario+"]:checked").val());
-	console.log($("#comments_"+nombre_usuario).val());
 	completos(nombre_usuario);
 	var sendData = {
 		entity: "calificacion",
@@ -226,11 +217,11 @@ var colorPanel = function(caracter){
 
 var mostrarEstrellas = function (caracter) {
 	switch(caracter){
-		case '1': return "★"; 
-		case '2': return "★★"; 
-		case '3': return "★★★"; 
-		case '4': return "★★★★"; 
-		case '5': return "★★★★★";
+		case 1: return "★"; 
+		case 2: return "★★"; 
+		case 3: return "★★★"; 
+		case 4: return "★★★★"; 
+		case 5: return "★★★★★";
 		case null: return "";
 		default: return "";
 	}

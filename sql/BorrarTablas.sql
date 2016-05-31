@@ -26,6 +26,7 @@ drop table sponsor;
 drop table tipo_sancion;
 drop table notificacion;
 drop table estado_viaje;
-drop table precio_comision;
+drop table tipo_mov_saldo;
+drop table pago;
 drop table sequence;
 SET FOREIGN_KEY_CHECKS = 1; 

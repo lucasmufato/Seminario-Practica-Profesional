@@ -858,8 +858,9 @@ public class DAOViajes extends DataAccesObject {
 		 * NOTA JUAN:
 		 * NO me toma la calificacion con pasajeroviaje.getCalificacion
 		 * Pero si llamando a la query (buscarporclavecompuesta)
+		 *  borrar esto luego de leer
 		 */
-
+		
 		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
 		Notificacion notificacion= new Notificacion();

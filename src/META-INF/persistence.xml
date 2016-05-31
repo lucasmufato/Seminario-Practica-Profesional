@@ -6,6 +6,7 @@
 		<class>gestionComisiones.modelo.MovimientoSaldo</class>
 		<class>gestionComisiones.modelo.Pago</class>
 		<class>gestionComisiones.modelo.PrecioComision</class>
+		<class>gestionComisiones.modelo.TipoMovSaldo</class>
 		<class>gestionPuntos.modelo.Beneficio</class>
 		<class>gestionPuntos.modelo.Calificacion</class>
 		<class>gestionPuntos.modelo.Cupon</class>

@@ -188,17 +188,24 @@ public class Viaje implements JSONable {
 		return pasajeros;
 	}
 
-	// calificables son los aceptados/finalizados
+	// calificables son los aceptados/finalizados/ausentes que califican/son calificados
 	public List<PasajeroViaje> getPasajerosCalificables() {
 		List<PasajeroViaje> lista = new ArrayList<PasajeroViaje>();
 		for(PasajeroViaje pas: pasajeros) {
-			if (pas.estado == EstadoPasajeroViaje.aceptado || pas.estado == EstadoPasajeroViaje.finalizo_viaje){
+			if (pas.estado == EstadoPasajeroViaje.aceptado || pas.estado == EstadoPasajeroViaje.finalizo_viaje || pas.estado == EstadoPasajeroViaje.ausente){
 				lista.add(pas);
 			}
 		}
 		return lista;
 	}
-	
+	public List<Cliente> getPasajerosCalificablesComoListCliente() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		List<PasajeroViaje> calificables = this.getPasajerosCalificables();
+		for(PasajeroViaje pas: calificables) {
+			lista.add(pas.getCliente());
+		}
+		return lista;
+	}
 	public List<Cliente> getPasajerosTodosComoListCliente() {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		for(PasajeroViaje pas: pasajeros) {

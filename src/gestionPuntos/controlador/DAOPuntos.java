@@ -349,26 +349,27 @@ public class DAOPuntos extends DataAccesObject {
  			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL VIAJE");
  		}
  		
- 		Character confirmacion = (Character) datos.get("confirmacion") ;
+ 		Character confirmacion = datos.get("confirmacion").toString().charAt(0) ;
  		if(confirmacion== null){
  			throw new ExceptionViajesCompartidos("ERROR: FALTA LA CONFIRMACION");
  		}
  		if(confirmacion!='S'&&confirmacion!='N'){
  			throw new ExceptionViajesCompartidos("ERROR: LA CONFIRMACION DEBE SER SI O NO");
  		}
- 		Integer valoracion = (Integer) datos.get("valoracion");
+ 		Integer valoracion = Integer.parseInt(datos.get("valoracion").toString());
  		if(valoracion==null){
  			throw new ExceptionViajesCompartidos("ERROR: FALTA LA VALORACION");
  		}
  		if(valoracion<0 || valoracion>5){
  			throw new ExceptionViajesCompartidos("ERROR: VALOR INCORRECTO DE VALORACION");
  		}
- 		String nomb_user = (String) datos.get("nombre_usuario");
+ 		String nomb_user = datos.get("nombre_usuario").toString();
+
  		Cliente cliente= (Cliente) this.buscarPorClaveCandidata("Cliente",nomb_user );
  		if (cliente==null){
  			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
  		}
- 		String comentario = (String) datos.get("comentario");
+ 		String comentario = datos.get("comentario").toString();
  		//si no pusieron comentario no importa
  		
  		Calificacion calificacion;

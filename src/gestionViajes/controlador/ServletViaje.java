@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
+import gestionPuntos.controlador.DAOPuntos;
 import gestionPuntos.modelo.Calificacion;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
@@ -33,10 +34,12 @@ public class ServletViaje extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected DAOAdministracionUsuarios daoUsuarios;
 	protected DAOViajes daoViajes;
+	protected DAOPuntos daoPuntos;
 
 	public void init() throws ServletException {
 		daoUsuarios = new DAOAdministracionUsuarios();
 		daoViajes = new DAOViajes();
+		daoPuntos = new DAOPuntos();
 	}
 	
 	@Override
@@ -141,6 +144,7 @@ public class ServletViaje extends HttpServlet {
 		if (!this.usuarioEsClienteValido(request)){
 			respuesta.put("result", false);
 			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			respuesta.put("redirect", "/index.html");
 			return respuesta;
 		}
 		
@@ -150,6 +154,7 @@ public class ServletViaje extends HttpServlet {
 			idViaje = Integer.parseInt(request.getParameter("id"));
 		} catch (Exception e) {
 			respuesta.put("result", false);
+			respuesta.put("msg", "Viaje no válido");
 			respuesta.put("redirect", "/mis_viajes.html");
 			return respuesta;
 		}
@@ -158,6 +163,7 @@ public class ServletViaje extends HttpServlet {
 		Viaje viaje = daoViajes.getViajeById(idViaje);
 		if (viaje==null){
 			respuesta.put("result", false);
+			respuesta.put("msg", "No existe el viaje");
 			respuesta.put("redirect", "/mis_viajes.html");
 			return respuesta;
 		}
@@ -165,9 +171,10 @@ public class ServletViaje extends HttpServlet {
 		//Chequeo que cliente es conductor o pasajero finalizado
 		Cliente cliente = (Cliente) daoViajes.buscarPorPrimaryKey(new Cliente(), AccessManager.getIdUsuario(request));
 		boolean esConductor = viaje.getConductor().equals(cliente);
-		boolean esPasajero = viaje.getPasajerosFinalizadosComoListCliente().contains(cliente) || viaje.getPasajerosAceptadosComoListCliente().contains(cliente);
+		boolean esPasajero = viaje.getPasajerosCalificablesComoListCliente().contains(cliente);
 		if (!esConductor && !esPasajero){
 			respuesta.put("result", false);
+			respuesta.put("msg", "Usted no puede calificar en este viaje");
 			respuesta.put("redirect", "/mis_viajes.html");
 			return respuesta;
 		}
@@ -199,13 +206,14 @@ public class ServletViaje extends HttpServlet {
 			}else{
 				// califique al conductor, muestro data
 				json.put("estado","2"); 
-				json.put("participo", calificacion.getParticipo_conductor());
+				json.put("participo", calificacion.getParticipo_conductor().toString());
 				json.put("valoracion", calificacion.getCalificacion_para_conductor());
 				json.put("comentario", calificacion.getComentario_pasajero());
 			}
 			// calificacion recibida
-			json.put("participo_recibido", calificacion.getParticipo_pasajero());
-			json.put("valoracion", calificacion.getCalificacion_para_pasajero());
+			Character participo_recibido = calificacion.getParticipo_pasajero();
+			json.put("participo_recibido", (participo_recibido == null)? null : participo_recibido.toString());
+			json.put("valoracion_recibida", calificacion.getCalificacion_para_pasajero());
 			json.put("comentario_recibido", calificacion.getComentario_conductor());
 			
 			postulantes.add(json);
@@ -235,13 +243,14 @@ public class ServletViaje extends HttpServlet {
 				}else{
 					// califique al pasajero, muestro data
 					json.put("estado","2"); 
-					json.put("participo", calificacion.getParticipo_pasajero());
+					json.put("participo", calificacion.getParticipo_pasajero().toString());
 					json.put("valoracion", calificacion.getCalificacion_para_pasajero());
 					json.put("comentario", calificacion.getComentario_conductor());
 				}
 				// calificacion recibida
-				json.put("participo_recibido", calificacion.getParticipo_conductor());
-				json.put("valoracion", calificacion.getCalificacion_para_conductor());
+				Character participo_recibido = calificacion.getParticipo_conductor();
+				json.put("participo_recibido", (participo_recibido == null)? null : participo_recibido.toString());
+				json.put("valoracion_recibida", calificacion.getCalificacion_para_conductor());
 				json.put("comentario_recibido", calificacion.getComentario_pasajero());
 				
 				postulantes.add(json);
@@ -288,19 +297,35 @@ public class ServletViaje extends HttpServlet {
 			idViaje = Integer.parseInt(request.getParameter("id"));
 		} catch (Exception e) {
 			respuesta.put("result", false);
-			respuesta.put("redirect", "Viaje no válido");
+			respuesta.put("msg", "Viaje no válido");
+			return respuesta;
+		}
+		int valoracion;
+		try {
+			valoracion = Integer.parseInt(request.getParameter("valoracion"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Valoración no es un valor válido");
+			return respuesta;
+		}
+		JSONObject calificacion = new JSONObject();
+		calificacion.put("id_viaje", idViaje);
+		calificacion.put("nombre_usuario", AccessManager.nombreUsuario(request));
+		calificacion.put("nombre_calificado", request.getParameter("calificado"));
+		calificacion.put("confirmacion", request.getParameter("confirmacion").charAt(0));
+		calificacion.put("valoracion", valoracion);
+		calificacion.put("comentario", request.getParameter("comentario"));
+
+		try {
+			daoPuntos.calificar(calificacion);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
 			return respuesta;
 		}
 		
-		int idCalificador = AccessManager.getIdUsuario(request);
-		String nombreCalificado = request.getParameter("calificado");
-		String confirmacion = request.getParameter("confirmacion");
-		int valoracion = Integer.parseInt(request.getParameter("valoracion"));
-		String comentario = request.getParameter("comentario");
-
-		respuesta.put("result", false); //hardcode
-		respuesta.put("msg", "id: "+idViaje + "  Cliente:"+idCalificador+" calificado: "+nombreCalificado+
-				" confirmacion: "+confirmacion+" valoracion: "+valoracion+" comentario"+comentario);//HARDCODE
+		respuesta.put("result", true); 
+		respuesta.put("msg", "El usuario ha sido calificado con éxito");
 		return respuesta;
 	}
 	
