@@ -104,9 +104,19 @@ vc.peticionAjax = function (url, datos, method, onsuccess) {
 		'method': method,
 		'data': datos,
 		'success': callbacksuccess,
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
+		error: function (err1, err2, err3) {
+			var htmlBody = err1.responseText.replace(/.*<body[^>]*>/i, "").replace(/<\/body[^>]*>.*/i, "");
+			var modalBody = 
+			'<p>No se pudo realizar la acción solicitada. Ha ocurrido un error en el servidor.</p>'+
+			'<div class="panel panel-danger">' +
+			'	<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#vc-modal-debug-info">' +
+			'		  <h3 class="panel-title">Ver informe de depuracion</h3>' +
+			'	</div>' +
+			'	<div class="panel-body collapse" id="vc-modal-debug-info">' +
+			htmlBody +
+			'	</div>' +
+			'</div>';
+			vc.ventana_mensaje(modalBody, err3, "error");
 		}
 	});
 }
@@ -114,6 +124,10 @@ vc.peticionAjax = function (url, datos, method, onsuccess) {
 vc.ventana_mensaje = function (texto, titulo, tipo) {
 	if (titulo == undefined) {
 		titulo = "";
+	}
+	$("#common-modal").removeClass("error").removeClass("success");
+	if(tipo == "error" || tipo == "success") {
+		$("#common-modal").addClass(tipo);
 	}
 	$("#common-modal-body").html(texto);
 	$("#common-modal-title").html(titulo);
