@@ -37,6 +37,7 @@ CREATE TABLE CLIENTE(
 	reputacion Integer NOT NULL DEFAULT 3,
 	foto_registro VARCHAR(120),
 	foto VARCHAR(120),
+    saldo float NOT NULL DEFAULT 5,
 
 	PRIMARY KEY(id_usuario),
 	FOREIGN KEY (id_usuario) REFERENCES USUARIO (id_usuario)
@@ -297,7 +298,8 @@ CREATE TABLE SANCION (
 CREATE TABLE PRECIO_COMISION(
 	id_comision int(11) NOT NULL AUTO_INCREMENT,
 	MONTO float NOT NULL,
-	FECHA date NOT NULL,
+	FECHA_DESDE date NOT NULL,
+    FECHA_HASTA date not null,
 	PRIMARY KEY (id_comision)
 );
 
@@ -309,4 +311,39 @@ CREATE TABLE COMISION (
     
     PRIMARY KEY (id_comision),
     FOREIGN KEY (precio_comision) REFERENCES precio_comision (id_comision)
+);
+
+CREATE TABLE PAGO(
+	id_pago int(11) not null auto_increment,
+    fecha date not null,
+    monto float not null,
+    id_cliente int(11) not null,
+    id_movimiento_saldo int(11) not null,
+    
+    PRIMARY KEY (id_pago),
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
+    FOREIGN KEY (id_movimiento_saldo) REFERENCES movimiento_saldo (id_movimiento_saldo)
+);
+
+
+
+CREATE TABLE TIPO_MOV_SALDO(
+	id_tipo_mov_saldo int(11) NOT NULL AUTO_INCREMENT,
+	descripcion varchar(255) NOT NULL,
+    PRIMARY KEY (id_tipo_mov_saldo)
+);
+
+
+CREATE TABLE MOVIMIENTO_SALDO(
+	id_movimiento_saldo int(11) NOT NULL AUTO_INCREMENT,
+    fecha date NOT NULL,
+    monto FLOAT NOT NULL,
+    id_comision_cobrada int(11) NOT NULL,
+    id_pago int(11) NOT NULL,
+    tipo int(11) NOT NULL,
+    
+    PRIMARY KEY(id_movimiento_saldo),
+    FOREIGN KEY (id_comision_cobrada) REFERENCES comision_cobrada (id_comision_cobrada),
+    FOREIGN KEY (id_pago) REFERENCES pago (id_pago),
+    FOREIGN KEY (tipo) REFERENCES tipo_mov_saldo (id_tipo_mov_saldo)
 );

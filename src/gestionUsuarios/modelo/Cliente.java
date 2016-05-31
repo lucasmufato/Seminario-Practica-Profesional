@@ -30,6 +30,8 @@ public class Cliente extends Usuario implements JSONable {
 	protected String foto_registro;
 	@Column(nullable=true,length=120)
 	protected String foto;
+	@Column(nullable=true)
+	protected float saldo;
 	
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.PERSIST)
 	protected List<Maneja> vehiculos= new ArrayList<Maneja>();
