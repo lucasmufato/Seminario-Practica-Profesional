@@ -1,23 +1,6 @@
 var nombre_usuario = getUrlVars()["usuario"];
 var viajes = [];
 
-var sendAjax = function(sendData,callback){
-	console.log("mando: ",sendData);
-	$.ajax({
-		url: '/viajes', 
-		dataType: 'json',
-		method: 'POST',
-		data: sendData,
-		success: function (jsonData) {
-			DEBUGresponse = jsonData;
-			callback(jsonData);
-		},
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
-		}
-	});
-}
 var loadData = function() {
 
 	var sendData = {
@@ -36,7 +19,7 @@ var loadData = function() {
 	}
 	//simular();
 	
-	sendAjax(sendData,onsuccess);
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 	
 }
 

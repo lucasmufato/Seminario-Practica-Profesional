@@ -27,7 +27,7 @@ var loadData = function() {
 	}
 	//simular();
 	
-	sendAjax(sendData,onsuccess);
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
 var initUI = function(){
@@ -195,31 +195,13 @@ var calificarPendiente = function(nombre_usuario){
 		}
 	}	
 	if (completos(nombre_usuario)){
-		sendAjax(sendData,onsuccess);
+		vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 	}
 
 }
 
 var verViaje = function(){
 	window.location = "/detalle_viaje.html?id="+idViaje;
-}
-
-var sendAjax = function(sendData,callback){
-	console.log("mando: ",sendData);
-	$.ajax({
-		url: '/viajes', 
-		dataType: 'json',
-		method: 'POST',
-		data: sendData,
-		success: function (jsonData) {
-			DEBUGresponse = jsonData;
-			callback(jsonData);
-		},
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
-		}
-	});
 }
 
 var estadoString = function (caracter) {

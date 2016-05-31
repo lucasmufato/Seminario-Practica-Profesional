@@ -91,6 +91,11 @@ vc.peticionAjax = function (url, datos, method, onsuccess) {
 			}
 		}
 
+		if (jsonData.redirect != undefined) {
+			document.title = "Redirigiendo...";
+			window.setTimeout(function(){window.location = jsonData.redirect}, 1000);
+		}
+
 		if (sobreescrito) {
 			onsuccess(jsonData);
 		} else {

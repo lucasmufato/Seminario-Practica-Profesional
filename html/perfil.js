@@ -8,23 +8,6 @@ data.usuario_logueado = {};
 data.sponsor= {};
 data.super_usuario = {};
 
-var sendAjax = function(sendData,callback){
-	console.log("mando: ",sendData);
-	$.ajax({
-		url: '/perfil', 
-		dataType: 'json',
-		method: 'POST',
-		data: sendData,
-		success: function (jsonData) {
-			DEBUGresponse = jsonData;
-			callback(jsonData);
-		},
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
-		}
-	});
-}
 var loadData = function() {
 	
 	var sendData = {
@@ -127,7 +110,7 @@ var enviarFoto = function(atributo, src){
 			loadData();
 		} 
 	}
-	sendAjax(sendData,onsuccess);
+	vc.peticionAjax ("/perfil", sendData, "POST", onsuccess);
 }
 
 var activarModificar = function(){
@@ -165,7 +148,7 @@ var desactivarCuenta = function(){
 				modalMessage("error",jsonData.msg,"Desactivar Cuenta");
 			}
 		}
-		sendAjax(sendJson,onsuccess);
+		vc.peticionAjax("/perfil", sendJson, "POST", onsuccess);
 	}
 	var msg = "¿Esta seguro que desea desactivar su cuenta? Esta acción no puede deshacerse";
 	var title= "Desactivar Cuenta";
@@ -204,7 +187,7 @@ var modificarPerfilCliente = function(){
 			}
 		}
 		
-		sendAjax(sendData,onsuccess);
+		vc.peticionAjax("/perfil", sendData, "POST", onsuccess);
 	}else{
 		$("body").get(0).scrollIntoView();
 	}
@@ -246,7 +229,7 @@ var validarMail = function(){
 					customAlert(inputMail, "Mail existente");
 				}
 		}
-		sendAjax(sendData,onsuccess);
+		vc.peticionAjax("/perfil", sendData, "POST", onsuccess);
 	}
   }else{
 	customAlert(inputMail, "Completar campo obligatorio");

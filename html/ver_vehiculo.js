@@ -34,26 +34,6 @@ var simular = function(){
 	cargarDataVehiculo();
 };
 
-
-var sendAjax = function(sendData,callback){
-	console.log("mando: ",sendData);
-	
-	$.ajax({
-		url: '/viajes', 
-		dataType: 'json',
-		method: 'POST',
-		data: sendData,
-		success: function (jsonData) {
-			DEBUGresponse = jsonData;
-			callback(jsonData);
-		},
-		error: function (er1, err2, err3) {
-			document.body.innerHTML = er1.responseText;
-			window.alert (err3);
-		}
-	});
-}
-
 var loadData = function() {
 	
 	var sendData = {
@@ -75,7 +55,7 @@ var loadData = function() {
 	}
 
 	//simular();
-	sendAjax(sendData,onsuccess);
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
 var initUI = function(){
@@ -152,7 +132,7 @@ var enviarFoto = function(src){
 			modalMessage("error",jsonData.msg,"Error al subir imagen de vehiculo");
 		}
 	}
-	sendAjax(sendData,onsuccess);
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 //-----------------------------Asignar/Desasignar Conductor------------------------------------------------------------//
 var activarAsignarConductor = function(){
@@ -266,7 +246,7 @@ var modificarVehiculo = function(){
 		}
 	}
 	
-	sendAjax(sendData,onsuccess);
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
 var eliminarVehiculo = function(){
@@ -289,7 +269,7 @@ var eliminarVehiculo = function(){
 				}
 			}
 		}
-		sendAjax(sendJson,onsuccess);
+		vc.peticionAjax("/viajes", sendJson, "POST", onsuccess);
 	}
 	var msg = "¿Esta seguro que desea eliminar el vehículo? Esta acción no puede deshacerse";
 	var title= "Eliminar Vehículo";
