@@ -9,7 +9,11 @@ public class ManejadorErrores {
 		try{
 			error=e.getCause().getCause().getMessage();
 		}catch(NullPointerException e1){
-			error=e.getCause().getLocalizedMessage();
+			try{
+				error=e.getCause().getLocalizedMessage();
+			}catch(NullPointerException e2){
+				error=e.getMessage();
+			}
 		}
 		
 		//en la variable queda un string como: " Column 'patente' cannot be null "

@@ -30,14 +30,14 @@ public class TestViaje extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		//este metodo se ejecuta antes de cada "parte" del test, osea antes de cada metodo
-		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno
+		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno 
 		
 		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
+		this.daoviajes.vaciarTabla("Calificacion");
 		this.daoviajes.vaciarTabla("Sancion");
                 this.daoviajes.vaciarTabla("MovimientoPuntos");
                 this.daoviajes.vaciarTabla("PasajeroViaje");
 		this.daoviajes.vaciarTabla("ComisionCobrada");
-		this.daoviajes.vaciarTabla("Calificacion");
 		this.daoviajes.vaciarTabla("LocalidadViaje");
 		this.daoviajes.borrarRelacionesEntreViajes();
 		this.daoviajes.vaciarTabla("Viaje");
@@ -58,7 +58,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -79,7 +79,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		JSONObject vuelta = new JSONObject();
 		Timestamp fecha= new Timestamp((new java.util.Date()).getTime());
 		fecha.setMonth(12);
@@ -109,7 +109,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		JSONObject vuelta = new JSONObject();
 		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
 		fecha.setMonth(12);
@@ -153,7 +153,7 @@ public class TestViaje extends TestCase {
 		}catch(ExceptionViajesCompartidos E){
 			fail(E.getMessage());
 		}
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		json2.remove("localidades");
 		try {
 			this.daoviajes.nuevoViaje(json2);
@@ -175,7 +175,7 @@ public class TestViaje extends TestCase {
 		}catch(ExceptionViajesCompartidos E){
 			fail(E.getMessage());
 		}
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		JSONObject json3= (JSONObject) json2.get("localidades");
 		json3.remove("destino");
 		try {
@@ -204,7 +204,7 @@ public class TestViaje extends TestCase {
 		}catch(ExceptionViajesCompartidos E){
 			fail(E.getMessage());
 		}
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		JSONObject json3= (JSONObject) json2.get("localidades");
 		json3.remove("destino");
 		json3.put("destino", 1);
@@ -233,7 +233,7 @@ public class TestViaje extends TestCase {
 		}catch(ExceptionViajesCompartidos E){
 			fail(E.getMessage());
 		}
-		JSONObject json_viaje = this.crearViaje();		
+		JSONObject json_viaje = TestViaje.crearViaje();		
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json_viaje) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -394,7 +394,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -426,7 +426,7 @@ public class TestViaje extends TestCase {
 			}catch(ExceptionViajesCompartidos E){
 				fail(E.getMessage());
 			}
-				JSONObject json2 = this.crearViaje2();
+				JSONObject json2 = TestViaje.crearViaje2();
 			try {
 				assertTrue( this.daoviajes.nuevoViaje(json2) );
 			} catch (ExceptionViajesCompartidos e) {
@@ -469,7 +469,7 @@ public class TestViaje extends TestCase {
 			}catch(ExceptionViajesCompartidos E){
 				fail(E.getMessage());
 			}
-				JSONObject json2 = this.crearViaje2();
+				JSONObject json2 = TestViaje.crearViaje2();
 			try {
 				assertTrue( this.daoviajes.nuevoViaje(json2) );
 			} catch (ExceptionViajesCompartidos e) {
@@ -524,7 +524,7 @@ public class TestViaje extends TestCase {
 			}catch(ExceptionViajesCompartidos E){
 				fail(E.getMessage());
 			}
-				JSONObject json2 = this.crearViaje2();
+				JSONObject json2 = TestViaje.crearViaje2();
 			try {
 				assertTrue( this.daoviajes.nuevoViaje(json2) );
 			} catch (ExceptionViajesCompartidos e) {
@@ -579,7 +579,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje2();
+		JSONObject json2 = TestViaje.crearViaje2();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -637,7 +637,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -679,7 +679,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -725,7 +725,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -770,7 +770,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -818,7 +818,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -856,7 +856,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -899,7 +899,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -955,7 +955,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -988,7 +988,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -1022,7 +1022,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -1074,7 +1074,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViajeQueFaltaMucho();
+		JSONObject json2 = TestViaje.crearViajeQueFaltaMucho();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -1130,7 +1130,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViajeQueFaltaMucho();
+		JSONObject json2 = TestViaje.crearViajeQueFaltaMucho();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -1176,7 +1176,7 @@ public class TestViaje extends TestCase {
 			fail(E.getMessage());
 		}
 
-		JSONObject json2 = this.crearViaje();
+		JSONObject json2 = TestViaje.crearViaje();
 		try {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
@@ -1302,7 +1302,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private JSONObject crearVehiculo(){
+	public static JSONObject crearVehiculo(){
 		JSONObject json= new JSONObject();
 		json.put("conductor", 2);
 		JSONObject vehiculo= new JSONObject();
@@ -1319,7 +1319,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private JSONObject crearViaje(){
+	public static JSONObject crearViaje(){
 		/*
 		{ "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
 			 "VEHICULO": ID_VEHICULO,
@@ -1353,7 +1353,7 @@ public class TestViaje extends TestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private JSONObject crearViaje2(){
+	public static JSONObject crearViaje2(){
 		/*
 		{ "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
 			 "VEHICULO": ID_VEHICULO,
@@ -1387,7 +1387,7 @@ public class TestViaje extends TestCase {
 	}
         
         @SuppressWarnings("unchecked")
-	private JSONObject crearViajeQueFaltaMucho(){
+	public static JSONObject crearViajeQueFaltaMucho(){
 		/*
 		{ "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
 			 "VEHICULO": ID_VEHICULO,

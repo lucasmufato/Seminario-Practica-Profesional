@@ -9,6 +9,9 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
+import gestionPuntos.modelo.Calificacion;
+import gestionUsuarios.modelo.Cliente;
+import gestionViajes.modelo.PasajeroViaje;
 import gestionViajes.modelo.Viaje;
 
 public abstract class DataAccesObject {
@@ -21,10 +24,28 @@ public abstract class DataAccesObject {
     	this.entitymanager = emfactory.createEntityManager( );
 	}
 	
+	public  Object buscarPorClaveCandidataCompuesta(String nombre_clase, Object claveCandidata1, Object claveCandidata2) {
+		try{
+			Query q2 = entitymanager.createNamedQuery(nombre_clase+".ClaveCandidateCompuesta");
+		    q2.setParameter("cc1", claveCandidata1);
+		    q2.setParameter("cc2", claveCandidata2);
+		    return q2.getSingleResult();
+		}catch(NoResultException e){
+			System.out.println("no hubo resultados");
+			return null;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	//by mufa
 		//metodo que borra todas las relaciones entre los viajes, para poder eliminarlos despues.
 		@Deprecated		//le puse q es deprecated para q no lo vaya a usar sin querer y hacer boleta la BD jjajajajaja
 		public void borrarRelacionesEntreViajes() {
+			if(this.entitymanager.getTransaction().isActive()){
+				this.entitymanager.getTransaction().rollback();
+			}
 			this.entitymanager.getTransaction().begin();
 			List<Viaje> viajes=this.selectAll("Viaje");
 			for(Viaje v: viajes){

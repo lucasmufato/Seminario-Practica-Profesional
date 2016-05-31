@@ -716,6 +716,7 @@ public class DAOViajes extends DataAccesObject {
 		return viaje.getPasajeros();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Viaje> listarViajesPorCliente(Integer id_cliente) {
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_cliente);
 		Query qry = entitymanager.createNamedQuery("Viaje.SearchByCliente");
@@ -723,6 +724,7 @@ public class DAOViajes extends DataAccesObject {
 		return (List<Viaje>)qry.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Viaje> listarViajesPorConductor(Integer id_conductor) {
 		Cliente conductor = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_conductor);
 		Query qry = entitymanager.createNamedQuery("Viaje.SearchByConductor");
@@ -730,6 +732,7 @@ public class DAOViajes extends DataAccesObject {
 		return (List<Viaje>)qry.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Viaje> listarViajesPorPasajero(Integer id_pasajero) {
 		Cliente pasajero = (Cliente) this.buscarPorPrimaryKey (new Cliente(), id_pasajero);
 		Query qry = entitymanager.createNamedQuery("Viaje.SearchByPasajero");
@@ -737,6 +740,7 @@ public class DAOViajes extends DataAccesObject {
 		return (List<Viaje>)qry.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Cliente> listarConductoresPorVehiculo(Integer idVehiculo) {
 		Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey (new Vehiculo(), idVehiculo);
 		Query qry = entitymanager.createNamedQuery("Maneja.SearchByVehiculo");
@@ -821,6 +825,9 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
 		}*/ 
 		//ACEPTAR
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
 		this.entitymanager.getTransaction().begin();
 		pasajero.setEstado(EstadoPasajeroViaje.aceptado);
 		i = 0;
@@ -834,7 +841,20 @@ public class DAOViajes extends DataAccesObject {
 			i++;
 		} 
 		
-		//TODO crear la calificacion
+		//TODO crear la calificacion (creo q esta todo lo necesario)
+		Calificacion calificacion = (Calificacion) this.buscarPorClaveCandidataCompuesta("Calificacion",pasajero,viaje.getConductor());
+		if(calificacion==null){
+			calificacion= new Calificacion();
+		}
+		calificacion.setCalificacion_para_conductor(null);
+		calificacion.setCalificacion_para_pasajero(null);
+		calificacion.setComentario_conductor(null);
+		calificacion.setComentario_pasajero(null);
+		calificacion.setParticipo_pasajero(null);
+		calificacion.setParticipo_conductor(null);
+		calificacion.setPasajero_viaje(pasajero);
+		calificacion.setConductor(viaje.getConductor());
+		
 		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
 		Notificacion notificacion= new Notificacion();
@@ -844,6 +864,18 @@ public class DAOViajes extends DataAccesObject {
 		notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
 				" lo ha aceptado al viaje: "+viaje.getNombre_amigable());
 		this.entitymanager.persist(notificacion);
+		try{
+		 	entitymanager.getTransaction( ).commit( );	
+		}catch(RollbackException e){
+		  	String error= ManejadorErrores.parsearRollback(e);
+		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		}
+		
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		this.entitymanager.persist(calificacion);
 		try{
 		 	entitymanager.getTransaction( ).commit( );	
 		}catch(RollbackException e){
@@ -952,7 +984,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{	//sin test TODO
+	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{	// TODO sin test
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
@@ -1191,6 +1223,7 @@ public class DAOViajes extends DataAccesObject {
 
 		//by juan
 		//Funcion que en base a un vehiculo y un conductor devuelve todas sus relaciones de maneja
+		@SuppressWarnings("unchecked")
 		public List<Maneja> getManejaPorVehiculoConductor(Vehiculo v, Cliente c) {
 			Query q=this.entitymanager.createNamedQuery("Maneja.ListarConductorVehiculo");//nombre de query confuso
 			q.setParameter("conductor", c);
@@ -1212,6 +1245,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		//by juan
 		//Funcion que en base a un vehiculo devuelve todas las relaciones de maneja
+		@SuppressWarnings("unchecked")
 		public List<Maneja> getManejaPorVehiculo(Vehiculo v) {
 			String query="SELECT m from Maneja m "
 					+"WHERE m.vehiculo = :id_vehiculo";

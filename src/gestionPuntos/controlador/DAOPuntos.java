@@ -1,20 +1,12 @@
 package gestionPuntos.controlador;
 
-import gestionPuntos.modelo.EstadoSancion;
-import gestionPuntos.modelo.MovimientoPuntos;
-import gestionPuntos.modelo.Sancion;
-import gestionPuntos.modelo.TipoSancion;
+import gestionPuntos.modelo.*;
+
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
-import gestionUsuarios.modelo.Cliente;
-import gestionUsuarios.modelo.EstadoNotificacion;
-import gestionUsuarios.modelo.Notificacion;
-import gestionUsuarios.modelo.Usuario;
+import gestionUsuarios.modelo.*;
 import gestionViajes.controlador.DAOViajes;
-import gestionViajes.modelo.EstadoPasajeroViaje;
-import gestionViajes.modelo.EstadoViaje;
-import gestionViajes.modelo.Localidad;
-import gestionViajes.modelo.PasajeroViaje;
-import gestionViajes.modelo.Viaje;
+import gestionViajes.modelo.*;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -344,19 +336,19 @@ public class DAOPuntos extends DataAccesObject {
  		/*
  		 * Cuando el participante califica a otro usuario, te mando esta data:	
 			id_viaje: 4,
-			nombre_usuario: nombre_usuario,
+			nombre_usuario: nombre_usuario que realiza la calificacion,
+				si soy el conductor, necesito saber a quien estoy calificando
+				nombre_calificado: id_usuario, es a quien le pongo la nota
 			confirmacion: "s"
 			valoracion: "3"
 			comentario: "piola viaje loco, recomendado"
  		 */
+ 		//VALIDACIONES GENERALES
  		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), datos.get("id_viaje"));
  		if(viaje==null){
  			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL VIAJE");
  		}
- 		Cliente cliente= (Cliente) this.buscarPorClaveCandidata("Cliente", datos.get("nombre_usuario"));
- 		if (cliente==null){
- 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
- 		}
+ 		
  		Character confirmacion = (Character) datos.get("confirmacion") ;
  		if(confirmacion== null){
  			throw new ExceptionViajesCompartidos("ERROR: FALTA LA CONFIRMACION");
@@ -371,11 +363,75 @@ public class DAOPuntos extends DataAccesObject {
  		if(valoracion<0 || valoracion>5){
  			throw new ExceptionViajesCompartidos("ERROR: VALOR INCORRECTO DE VALORACION");
  		}
+ 		String nomb_user = (String) datos.get("nombre_usuario");
+ 		Cliente cliente= (Cliente) this.buscarPorClaveCandidata("Cliente",nomb_user );
+ 		if (cliente==null){
+ 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
+ 		}
+ 		String comentario = (String) datos.get("comentario");
+ 		//si no pusieron comentario no importa
+ 		
+ 		Calificacion calificacion;
+ 		PasajeroViaje pasajeroviaje;
  		
  		if(this.entitymanager.getTransaction().isActive()){
             this.entitymanager.getTransaction().rollback();
         }
  		this.entitymanager.getTransaction().begin();
+ 		
+ 		if(cliente.equals(viaje.getConductor())){ 
+ 			//si soy el conductor, necesito saber a q pasajero puntuo
+ 			nomb_user=(String) datos.get("nombre_calificado");
+ 			if(nomb_user==null){
+ 				throw new ExceptionViajesCompartidos("ERROR: FALTA EL PASAJERO A CALIFICAR");
+ 			}
+ 			Cliente cliente_a_calificar= (Cliente) this.buscarPorClaveCandidata("Cliente", nomb_user);
+ 	 		if (cliente==null){
+ 	 			throw new ExceptionViajesCompartidos("ERROR: EL PASAJERO A CALIFICAR NO EXISTE");
+ 	 		}
+ 	 		pasajeroviaje = viaje.recuperar_pasajeroViaje_por_cliente(cliente_a_calificar);
+ 	 		if(pasajeroviaje==null){
+ 	 			throw new ExceptionViajesCompartidos("ERROR: EL PASAJERO NO PARTICIPO DEL VIAJE");
+ 	 		}
+ 	 		// ya se a q pasajero puntuar
+ 	 		//busco la calificacion que tiene como unique al conductor y al pasajero
+ 	 		calificacion = (Calificacion) this.buscarPorClaveCandidataCompuesta("Calificacion", pasajeroviaje, cliente);
+ 	 		if(calificacion==null){
+ 	 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE LA CALIFICACION");
+ 	 		}
+ 	 		if(calificacion.getCalificacion_para_pasajero()!=null){	//significa que ya lo puntuo
+ 	 			throw new ExceptionViajesCompartidos("ERROR: YA PUNTUASTE AL PASAJERO");
+ 	 		}
+ 	 		calificacion.setCalificacion_para_pasajero(valoracion);		//puntuacion que el chofer le da al pasajero
+ 	 		calificacion.setComentario_conductor(comentario);			//comentarios que da el chofer
+ 	 		calificacion.setParticipo_pasajero(confirmacion);			//lo que dice el chofer de si el pasajero participo
+ 	 		
+ 		}else{
+ 			//si soy el pasajero puntuando al conductor
+ 			pasajeroviaje = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+ 	 		if(pasajeroviaje==null){
+ 	 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PARTICIPO DEL VIAJE");
+ 	 		}
+ 	 		calificacion = (Calificacion) this.buscarPorClaveCandidataCompuesta("Calificacion", pasajeroviaje, viaje.getConductor());
+ 	 		if(calificacion==null){
+ 	 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE LA CALIFICACION");
+ 	 		}
+ 	 		if(calificacion.getCalificacion_para_conductor()!=null){	//significa que ya lo puntuo
+ 	 			throw new ExceptionViajesCompartidos("ERROR: YA PUNTUASTE AL CONDUCTOR");
+ 	 		}
+ 	 		calificacion.setCalificacion_para_conductor(valoracion);		//puntuacion que el pasajero le da al chofer
+ 	 		calificacion.setComentario_pasajero(comentario);				//comentarios que deja el pasajero
+ 	 		calificacion.setParticipo_conductor(confirmacion);				//lo que dice el pasajero de "si lo pasaron a buscar"
+ 		}
+ 		
+ 		//TODO modificar puntos en base a calificacion!
+ 		
+ 		try{    
+            this.entitymanager.getTransaction().commit();
+	    }catch(RollbackException e){
+	    	String error= ManejadorErrores.parsearRollback(e);
+	        throw new ExceptionViajesCompartidos("ERROR: "+error);
+	    }
  		
  		return true;
  	}

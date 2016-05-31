@@ -10,16 +10,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.json.simple.JSONObject;
 
+import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.PasajeroViaje;
 import otros.JSONable;
 
 @NamedQueries({
 	@NamedQuery(name="Calificacion.todos",query="SELECT c FROM Calificacion c"),
 	@NamedQuery(name="Calificacion.SearchById",query="SELECT c FROM Calificacion c WHERE c.id_calificacion= :id"),
+	@NamedQuery(name="Calificacion.ClaveCandidateCompuesta",query="SELECT c FROM Calificacion c WHERE c.pasajero_viaje= :cc1 AND c.conductor= :cc2"),
 })
 @Entity
 @Table(name="calificacion")
@@ -29,32 +32,45 @@ public class Calificacion implements JSONable {
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name="ID_CALIFICACION")
 	protected Integer id_calificacion;
+	
 	@Column(name="CALIFICACION_PARA_CONDUCTOR",nullable=true)
 	protected Integer calificacion_para_conductor;
+	
 	@Column(name="CALIFICACION_PARA_PASAJERO",nullable=true)
 	protected Integer calificacion_para_pasajero;
+	
 	//@Column(name="PARTICIPO",nullable=false)
 	//protected EstadoClasificacion participo;
+	
 	@Column(name="PARTICIPO_CONDUCTOR",nullable=true)
 	protected Character participo_conductor;
+	
 	@Column(name="PARTICIPO_PASAJERO",nullable=true)
 	protected Character participo_pasajero;
 	
 	@Column(name="COMENTARIO_CONDUCTOR",nullable=true)
 	protected String comentario_conductor;
+	
 	@Column(name="COMENTARIO_PASAJERO",nullable=true)
 	protected String comentario_pasajero;
 	
 	@JoinColumn(name="ID_PASAJERO_VIAJE")
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.PERSIST)
 	protected PasajeroViaje pasajero_viaje;
 	
+	@JoinColumn(name="ID_CONDUCTOR")
+	@OneToOne(cascade=CascadeType.PERSIST)
+	protected Cliente conductor;
+	
 	@JoinColumn(name="ID_MOVIMIENTO_PUNTOS_CHOFER")
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.PERSIST)
 	protected MovimientoPuntos movimiento_puntos_chofer;
+	
 	@JoinColumn(name="ID_MOVIMIENTO_PUNTOS_PASAJERO")
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.PERSIST)
 	protected MovimientoPuntos movimiento_puntos_pasajero;
+	
+	
 	public Calificacion(){
 		
 	}
@@ -166,6 +182,16 @@ public class Calificacion implements JSONable {
 
 	public void setMovimiento_puntos_pasajero(MovimientoPuntos movimiento_puntos_pasajero) {
 		this.movimiento_puntos_pasajero = movimiento_puntos_pasajero;
+	}
+
+
+	public Cliente getConductor() {
+		return conductor;
+	}
+
+
+	public void setConductor(Cliente conductor) {
+		this.conductor = conductor;
 	}
 
 

@@ -130,27 +130,6 @@ CREATE TABLE COMISION_COBRADA (
 	PRIMARY KEY (id_comision_cobrada)
 );
 
-CREATE TABLE CALIFICACION (
-	id_calificacion INTEGER NOT NULL AUTO_INCREMENT ,
-	id_pasajero_viaje INTEGER NOT NULL,
-    id_conductor INTEGER NOT NULL,
-	calificacion_para_conductor INTEGER NOT NULL,
-	calificacion_para_pasajero INTEGER NOT NULL,
-	participo_conductor CHAR(1),
-    participo_pasajero CHAR(1),
-    comentario_conductor text,
-    comentario_pasajero text,
-	id_movimiento_puntos_chofer INTEGER,
-    id_movimiento_puntos_pasajero INTEGER,
-
-	UNIQUE(id_pasajero_viaje,id_conductor),
-	PRIMARY KEY (id_calificacion),
-    FOREIGN KEY (id_pasajero_viaje) REFERENCES PasajeroViaje (id_pasajero_viaje),
-    FOREIGN KEY (id_conductor) REFERENCES CLIENTE (id_usuario),
-	FOREIGN KEY (id_movimiento_puntos_chofer) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS),
-	FOREIGN KEY (id_movimiento_puntos_pasajero) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS)
-);
-
 CREATE TABLE VEHICULO (
 	id_vehiculo INTEGER NOT NULL AUTO_INCREMENT,
 	anio INTEGER NOT NULL,
@@ -245,6 +224,38 @@ CREATE TABLE PASAJERO_VIAJE (
 	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)
 );
 
+CREATE TABLE MOVIMIENTO_PUNTOS (
+  ID_MOVIMIENTOS_PUNTOS int(11) NOT NULL AUTO_INCREMENT,
+  FECHA date NOT NULL,
+  MONTO int(11) NOT NULL,
+  ID_CLIENTE int(11) DEFAULT NULL,
+  
+  PRIMARY KEY (ID_MOVIMIENTOS_PUNTOS),
+ 
+  FOREIGN KEY (ID_CLIENTE) REFERENCES USUARIO (ID_USUARIO)
+);
+
+CREATE TABLE CALIFICACION (
+	id_calificacion INTEGER NOT NULL AUTO_INCREMENT ,
+	id_pasajero_viaje INTEGER NOT NULL,
+    id_conductor INTEGER NOT NULL,
+	calificacion_para_conductor INTEGER,
+	calificacion_para_pasajero INTEGER,
+	participo_conductor CHAR(1),
+    participo_pasajero CHAR(1),
+    comentario_conductor text,
+    comentario_pasajero text,
+	id_movimiento_puntos_chofer INTEGER,
+    id_movimiento_puntos_pasajero INTEGER,
+
+	UNIQUE(id_pasajero_viaje,id_conductor),
+	PRIMARY KEY (id_calificacion),
+    FOREIGN KEY (id_pasajero_viaje) REFERENCES pasajero_viaje (id_pasajero_viaje),
+    FOREIGN KEY (id_conductor) REFERENCES CLIENTE (id_usuario),
+	FOREIGN KEY (id_movimiento_puntos_chofer) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS),
+	FOREIGN KEY (id_movimiento_puntos_pasajero) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS)
+);
+
 CREATE TABLE NOTIFICACION(
 	ID_NOTIFICACION INTEGER NOT NULL AUTO_INCREMENT,
 	FECHA DATETIME NOT NULL,
@@ -265,17 +276,6 @@ CREATE TABLE NOTIFICACION(
   DIAS_SANCION int(11) NOT NULL,
   
   PRIMARY KEY (ID_TIPO_SANCION)
-);
-
-CREATE TABLE MOVIMIENTO_PUNTOS (
-  ID_MOVIMIENTOS_PUNTOS int(11) NOT NULL AUTO_INCREMENT,
-  FECHA date NOT NULL,
-  MONTO int(11) NOT NULL,
-  ID_CLIENTE int(11) DEFAULT NULL,
-  
-  PRIMARY KEY (ID_MOVIMIENTOS_PUNTOS),
- 
-  FOREIGN KEY (ID_CLIENTE) REFERENCES USUARIO (ID_USUARIO)
 );
 
 CREATE TABLE SANCION (
