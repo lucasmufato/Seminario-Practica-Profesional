@@ -342,13 +342,38 @@ var cargarViaje = function(){
 	$("#fecha").text(data.viaje.fecha_inicio);
 	$("#precio").text("$"+data.viaje.precio);
 	$("#nombre_amigable").text(data.viaje.nombre_amigable);
-	$("#asientos").text(data.viaje.asientos_disponibles);
-
 	
 	$("#recorrido").html("");
+	var ultimo = data.viaje.recorrido.length -1;
 	data.viaje.recorrido.forEach(function(elem, index){
 		if (index>0)$("#recorrido").append(' <span class="glyphicon glyphicon-arrow-right"></span> ');
-		$("#recorrido").append('<span class="label label-primary">'+localidadNombre(elem)+'</span>');
+
+		var label_class="";
+		var asientos_tramo = data.viaje.disponibilidad_asientos[index]; 
+		var msg_asientos=localidadNombre(elem);
+
+		// Label colors
+		if(data.viaje.estado != "iniciado" && data.viaje.estado != "no_iniciado") {
+			label_class="label-primary";
+		} else if (asientos_tramo < 1 || index == ultimo) {
+			label_class="label-danger";
+		} else {
+			label_class="label-success";
+		}
+
+		// Mensaje asientos
+		if(data.viaje.estado == "iniciado" || data.viaje.estado == "no_iniciado") {
+			if (index == ultimo) {
+				msg_asientos = "Este es el final del viaje";
+			} else if (asientos_tramo < 1) {
+				msg_asientos = "No hay asientos libres";
+			} else if (asientos_tramo == 1) {
+				msg_asientos = "1 asiento libre";
+			} else if (asientos_tramo > 1) {
+				msg_asientos = asientos_tramo + " asientos libres";
+			}
+		}
+		$("#recorrido").append('<span class="label '+label_class+'" title="'+msg_asientos+'">'+localidadNombre(elem)+'</span>');
 	});
 
 }

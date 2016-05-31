@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -71,6 +72,7 @@ public class Viaje implements JSONable {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Maneja conductor_vehiculo;
 	@OneToMany(mappedBy="viaje", cascade=CascadeType.PERSIST)
+	@OrderBy("ordinal ASC")
 	protected List<LocalidadViaje> localidades= new ArrayList<LocalidadViaje>();
 	@OneToMany(mappedBy="viaje", cascade=CascadeType.PERSIST)
 	protected List<PasajeroViaje> pasajeros= new ArrayList<PasajeroViaje>();
@@ -403,12 +405,15 @@ public class Viaje implements JSONable {
 		}
 		List<LocalidadViaje> locs = this.getLocalidades();
 		JSONArray recorrido = new JSONArray();
+		JSONArray disponibilidad_asientos = new JSONArray();
 		for (LocalidadViaje locviaje: locs) {
 			recorrido.add (locviaje.getLocalidad().getId());
+			disponibilidad_asientos.add (this.getAsientos_disponibles() - locviaje.getCantidad_pasajeros() -1);
 		}
 
 		// WARNING: recorrido debe tener al menos dos puntos o va a fallar
 		json_viaje.put("recorrido", recorrido);
+		json_viaje.put("disponibilidad_asientos", disponibilidad_asientos);
 		json_viaje.put("origen", recorrido.get(0));
 		json_viaje.put("destino", recorrido.get(recorrido.size()-1));
 		json_viaje.put("fecha_inicio", (this.getFecha_inicio() != null)? this.getFecha_inicio().toString().toString(): null);
