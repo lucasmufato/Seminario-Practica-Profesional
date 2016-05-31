@@ -1,6 +1,7 @@
 package gestionComisiones.modelo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import gestionPuntos.modelo.TipoSancion;
 
 @NamedQueries({
 	
@@ -41,6 +44,10 @@ public class MovimientoSaldo {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected ComisionCobrada comision_cobrada;
 	
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name="ID_TIPO_MOV_SALDO")
+	protected TipoMovSaldo tipo;
+	
 	public MovimientoSaldo(){
 		
 	}
@@ -57,8 +64,8 @@ public class MovimientoSaldo {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setFecha(Date fecha2) {
+		this.fecha = fecha2;
 	}
 
 	public float getMonto() {
@@ -84,4 +91,14 @@ public class MovimientoSaldo {
 	public void setComision_cobrada(ComisionCobrada comision_cobrada) {
 		this.comision_cobrada = comision_cobrada;
 	}
+	
+	public TipoMovSaldo getTipo_mov_saldo() {
+		return tipo;
+	}
+
+	public void setTipo_mov_saldo(TipoMovSaldo tipo_mov_saldo) {
+		this.tipo = tipo_mov_saldo;
+	}
+	
+	
 }

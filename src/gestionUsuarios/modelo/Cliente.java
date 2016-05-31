@@ -33,6 +33,7 @@ public class Cliente extends Usuario implements JSONable {
 	@Column(nullable=true)
 	protected float saldo;
 	
+	
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.PERSIST)
 	protected List<Maneja> vehiculos= new ArrayList<Maneja>();
 	
@@ -57,6 +58,16 @@ public class Cliente extends Usuario implements JSONable {
 		
 	}
 
+	
+	public void setSaldo(float saldo){
+		this.saldo=saldo;
+	}
+	
+	public float getSaldo(){
+		return saldo;
+	}
+	
+	
 	public Integer getReputacion() {
 		return reputacion;
 	}
