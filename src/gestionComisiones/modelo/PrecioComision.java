@@ -29,8 +29,10 @@ public class PrecioComision implements JSONable {
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorPrecioComision")
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorPrecioComision", sequenceName = "sequence")
 	protected Integer id_comision;
-	@Column(nullable=false,name="FECHA")
-	protected Date fecha;
+	@Column(nullable=false,name="FECHA_DESDE")
+	protected Date fecha_desde;
+	@Column(nullable=false,name="FECHA_HASTA")
+	protected Date fecha_hasta;
 	@Column(nullable=false,name="MONTO")
 	protected float Monto;
 	@OneToMany(mappedBy="precio_comision", cascade=CascadeType.PERSIST)
