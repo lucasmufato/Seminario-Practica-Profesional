@@ -434,7 +434,8 @@ var participarViaje = function(){
 		action: "participar",
 		id_viaje: data.viaje.id,
 		origen:  $("select[name=origenPasajero]").val(),
-		destino:  $("select[name=destinoPasajero]").val()
+		destino:  $("select[name=destinoPasajero]").val(),
+		asientos:  $("input[name=asientosPasajero]").val()
 	}
 	var onsuccess = function(jsonData){
 		closeModal('participar');
