@@ -30,13 +30,13 @@
 					<div class="col-md-6">
 						<label for="marca" class="control-label col-md-4">Marca:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="marca" name="marca" placeholder="Marca"></input>
+							<input type="text" class="form-control vc-validar" id="marca" name="marca" placeholder="Marca" required maxlength="30"></input>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="patente" class="control-label col-md-5">Patente:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="patente" name="patente" placeholder="Patente"></input>
+							<input type="text" class="form-control vc-validar" id="patente" name="patente" placeholder="Patente" pattern="([A-Z]{3}[0-9]{3})|([A-Z]{2}[0-9]{3}[A-Z]{3})" data-invalid-msg="Formato: ABC123 o AB123CD (Usar solo letras mayusculas y números, sin espacios ni guiones). "></input>
 						</div>
 					</div>
 				</div>
@@ -45,13 +45,13 @@
 					<div class="col-md-6">
 						<label for="modelo" class="control-label col-md-4">Modelo:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="modelo" name="modelo" placeholder="Modelo">
+							<input type="text" class="form-control vc-validar" id="modelo" name="modelo" placeholder="Modelo" required maxlength="30">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="color" class="control-label col-md-5">Color:</label>
 						<div class="col-md-6">
-							<input class="form-control jscolor" id="color" name="color" style="font-size: 0px" placeholder="Color" value="ff0000">
+							<input class="form-control jscolor" id="color" name="color" style="font-size: 0px" placeholder="Color" value="ff0000" required pattern="[0-9a-fA-F]{6}">
 						</div>
 					</div>
 				</div>
@@ -60,22 +60,14 @@
 					<div class="col-md-6">
 						<label for="anio" class="control-label col-md-4">Año:</label>
 						<div class="input-group date form_date col-md-6" id="divanio">
-							<input type="text" class="form-control" id="anio" name="anio" placeholder="Año" required>
+							<input type="text" class="form-control vc-validar" id="anio" name="anio" placeholder="Año" required pattern="[0-9]{4}" data-invalid-msg="Ingresar un año en formato 4 digitos. Ejemplo: 2012">
 							<span class="input-group-addon " onclick="$('#anio').datetimepicker('show')"><span class="glyphicon glyphicon-calendar"></span></span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="asientos" class="control-label col-md-5">Cantidad de asientos:</label>
 						<div class="col-md-6">
-							<select class="form-control" name="asientos" id="asientos">
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-							</select>					
+							<input type="number" step="1" value="4" class="form-control vc-validar" name="asientos" id="asientos" min="2" max="30" required pattern="[0-9]*" data-invalid-msg="Ingresar un numero entre 2 y 30">
 						</div>
 					</div>
 				</div>

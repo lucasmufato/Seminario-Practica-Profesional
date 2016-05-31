@@ -183,7 +183,7 @@ actualizarCantidadAsientos = function() {
 	$('select[name=asientos-vuelta]').html('');
 
 	if(vehiculo) {
-		for (i = 1; i <= vehiculo.cantidad_asientos; i++) {
+		for (i = vehiculo.cantidad_asientos-1; i>0; i--) {
 			var opt1 = document.createElement("OPTION");
 			var opt2 = document.createElement("OPTION");
 			opt1.value=i;

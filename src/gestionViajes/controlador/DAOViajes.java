@@ -216,7 +216,7 @@ public class DAOViajes extends DataAccesObject {
 		if(cantidad_asientos==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES");
 		}
-		if (cantidad_asientos>maneja.getVehiculo().getCantidad_asientos()){
+		if (cantidad_asientos+1>maneja.getVehiculo().getCantidad_asientos()){
 			throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO");
 		}
 		viaje.setAsientos_disponibles(cantidad_asientos);

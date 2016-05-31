@@ -25,7 +25,7 @@ submitFormVehiculo = function () {
 		modelo: $('#form-vehiculo input[name=modelo]').val(),
 		color: $('#form-vehiculo input[name=color]').val(),
 		anio: $('#form-vehiculo input[name=anio]').val(),
-		asientos: $('#form-vehiculo select[name=asientos]').val(),
+		asientos: $('#form-vehiculo input[name=asientos]').val(),
 		aire: $('#form-vehiculo select[name=aire]').val(),
 		seguro: $('#form-vehiculo select[name=seguro]').val(),
 		foto: $('#foto_vehiculo').attr("src")
