@@ -1,7 +1,6 @@
 package gestionPuntos.controlador;
 
 import gestionPuntos.modelo.*;
-
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
 import gestionViajes.controlador.DAOViajes;
@@ -12,15 +11,19 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 
 import static java.time.Instant.now;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
+
 import org.json.simple.JSONObject;
+
 import otros.DataAccesObject;
 import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
@@ -35,6 +38,13 @@ public class DAOPuntos extends DataAccesObject {
         
 	}
         
+	public Calificacion getCalificacionPorConductorPasajero(PasajeroViaje pv, Cliente c){
+		Query q = this.entitymanager.createNamedQuery("Calificacion.ClaveCandidateCompuesta");
+		q.setParameter("cc1", pv);
+		q.setParameter("cc2", c);
+		return (Calificacion) q.getSingleResult();
+	}
+	
     //byfede    
     public boolean evaluarSancion(Integer id_cliente, Integer id_viaje, Timestamp fechaYHoraCancelacion) throws ExceptionViajesCompartidos{
        

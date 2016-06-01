@@ -130,7 +130,7 @@ var cargarPostulantes = function(){
 	var htmlMisCalificaciones = "";
 	postulantes.forEach(function(elem){
 		elem.foto = elem.foto || "/img/perfil/default.png";
-		elem.calificable = elem.estado_string == "1";
+		elem.calificable = elem.estado == "1";
 		elem.estado_string = estadoString(elem.estado);
 		elem.color_panel = colorPanel(elem.estado);
 		elem.cantidad_estrellas = mostrarEstrellas(elem.valoracion);

@@ -180,20 +180,29 @@ public class ServletViaje extends HttpServlet {
 		}
 		
 		JSONArray postulantes = new JSONArray();
-		
+		Cliente conductor = viaje.getConductor();
+
 		// Es pasajero o conductor?
 		if (esPasajero){
 			JSONObject json = new JSONObject();
 			
 			// DATOS DEL CONDUCTOR
-			Cliente conductor = viaje.getConductor();
 			json.put("nombre_usuario", conductor.getNombre_usuario());
 			json.put("foto", conductor.getFoto());
 			PasajeroViaje pv = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
 
 
-			Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
-			
+			//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
+			Calificacion calificacion = daoPuntos.getCalificacionPorConductorPasajero(pv, conductor);
+
+			System.out.println("");
+			System.out.println("es pasajero");
+			System.out.println("");
+			System.out.println("conductor dijo:"+calificacion.getComentario_conductor()+" pasajero dijo:"+calificacion.getComentario_pasajero());
+			System.out.println("conductor recibio:"+calificacion.getCalificacion_para_conductor()+" pasajero recibio:"+calificacion.getCalificacion_para_pasajero());
+			System.out.println("conductor recibio:"+calificacion.getParticipo_conductor()+" pasajero recibio:"+calificacion.getParticipo_pasajero());
+			System.out.println("");
+
 			if (calificacion == null){
 				respuesta.put("result", false);
 				respuesta.put("msg", "Error interno: la calificacion no se encuentra instanciada");
@@ -229,7 +238,15 @@ public class ServletViaje extends HttpServlet {
 				json.put("foto", pasajeroCliente.getFoto());
 
 				// OBTENGO CALIFICACION
-				Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, cliente);
+				//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
+				Calificacion calificacion = daoPuntos.getCalificacionPorConductorPasajero(pv, conductor);
+				System.out.println("");
+				System.out.println("es conductor");
+				System.out.println("");
+				System.out.println("conductor dijo:"+calificacion.getComentario_conductor()+" pasajero dijo:"+calificacion.getComentario_pasajero());
+				System.out.println("conductor recibio:"+calificacion.getCalificacion_para_conductor()+" pasajero recibio:"+calificacion.getCalificacion_para_pasajero());
+				System.out.println("conductor recibio:"+calificacion.getParticipo_conductor()+" pasajero recibio:"+calificacion.getParticipo_pasajero());
+				System.out.println("");
 				
 				if (calificacion == null){
 					respuesta.put("result", false);
