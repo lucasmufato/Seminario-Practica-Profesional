@@ -1,4 +1,3 @@
-
 INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (NULL, "super_usuario", "Super Usuario", "Este usuario tiene todos los privilegios", "A");
 INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (NULL, "cliente", "Cliente", "Este usuario es cliente", "A");
 
@@ -19,13 +18,27 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, C
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (2, 2, CURRENT_DATE);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (3, 2, CURRENT_DATE);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (4, 2, CURRENT_DATE);
+
 -- LOS CREO COMO CLIENTES A ESTOS MISMOS USUARIOS
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (2,0,0,NULL,NULL);
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (3,0,0,NULL,NULL);
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) VALUES (4,0,0,NULL,NULL);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (2,default,default,NULL,NULL,default);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (3,default,default,NULL,NULL,default);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (4,default,default,NULL,NULL,default);
+
 
 INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "administrar_usuarios","administrar usuarios","permite ABM de usuarios","A");
 INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES(1,1,CURRENT_DATE);
+
+-- agrego permisos de funcional
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "crear_viajes","crear viajes","permite crear viajes","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "buscar_viajes","buscar viajes","permite buscar viajes","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "loguearse","loguearse","permite ingresar al sistema","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "participar_viajes","participar viajes","permite participar en viajes","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "calificar","calificar","permite calificar usuarios","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "crear_vehiculos","crear vehiculos","permite crear vehiculos","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "modificar_vehiculo","modificar vehiculo determinado","permite modificar un vehiculo en particular","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "asignar_conductores","asignar conductores","permite asignarle conductores a un vehiculo","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "desasignar_conductores","desasignar conductores","permite desasignarle conductores a un vehiculo","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "canelar_viaje","cancelar viaje","permite cancelar un viaje","A");
 
 INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("A", "Ciudad/Estado/Región"),
@@ -40,8 +53,8 @@ INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	
 INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
 	("2", "Finalizado"),
-	("1", "No iniciado"),
-	("0", "Iniciado"),
+	("0", "No iniciado"),
+	("1", "Iniciado"),
 	("3", "Cancelado");
 	
 -- Para crear viajes:
@@ -52,8 +65,8 @@ INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, de
 VALUES (NULL,2,"juan23","juan23", "juan23@hotmail.com","usuario para participar en viajes","A","C");
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
 
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) 
-VALUES (5,0,3,null,null);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) 
+VALUES (5,default,default,null,null,default);
 INSERT INTO VEHICULO (id_vehiculo, anio, marca, modelo, patente, verificado, estado, fecha_verificacion, color, cantidad_asientos, aire_acondicionado, seguro, foto) 
 VALUES (NULL, '1992', 'Ford', 'Focus', 'abc123', 'N', 'A', NULL, '000000', '5', 'N', 'N', NULL);
 INSERT INTO VEHICULO (id_vehiculo, anio, marca, modelo, patente, verificado, estado, fecha_verificacion, color, cantidad_asientos, aire_acondicionado, seguro, foto)  
@@ -67,8 +80,8 @@ VALUES (NULL, 'viaje', '2', '2', '2016-04-12 00:00:00', '2016-03-10 00:00:00','2
 -- USUARIO Nro 6:
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) 
 VALUES (NULL,2,"usuario","usuario", "usuario@usuario.us",NULL,"A","C");
-INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto) 
-VALUES (6,0,5,null,null);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) 
+VALUES (6,default,default,null,null,default);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (6, 2, CURRENT_DATE);
 
 INSERT INTO VEHICULO (id_vehiculo, anio, marca, modelo, patente, verificado, estado, fecha_verificacion, color, cantidad_asientos, aire_acondicionado, seguro, foto) 
@@ -92,4 +105,36 @@ VALUES ('3', '3430987', '0', '10','1'), ('3', '3433780', '0', '10','2'), ('3', '
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal) 
 VALUES ('4', '3430977', '0', '5','1'), ('4', '3430978', '0', '5','2'), ('4', '3430979', '0', '0','3');
 
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero7","pasajero7", "pasajero7@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero8","pasajero8", "pasajero8@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero9","pasajero9", "pasajero9@mail.com","usuario para participar en viajes","A","C");
 
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (7, 2, CURRENT_DATE);
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (8, 2, CURRENT_DATE);
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (9, 2, CURRENT_DATE);
+
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (7,default,default,NULL,NULL,default);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (8,default,default,NULL,NULL,default);
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (9,default,default,NULL,NULL,default);
+
+-- fede
+INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (1,"Descuento de Puntos por Cancelación de viaje con Pasajeros",0);
+INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (2,"Descuento de Puntos por Cancelación tardía de participación en viaje",0);
+INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (3,"Sanción por Cancelación de viaje con Pasajeros",0);
+INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (4,"Sanción por Cancelación tardía de participación en viaje",0);
+-- completarlas
+
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (1,10,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (2,50,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (3,100,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (4,500,CURRENT_DATE,"2016-09-25");
+INSERT INTO precio_comision (id_comision,monto,fecha_desde,fecha_hasta) VALUES (5,1000,CURRENT_DATE,"2016-09-25");
+
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(1,0,20,1);
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(2,20,50,2);
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(3,50,100,3);
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(4,100,1000,4);
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISION) VALUES(5,1000,6000,5);
+
+INSERT INTO TIPO_MOV_SALDO(id_tipo_mov_saldo,descripcion) VALUES (1,"Cobro de comisión por viaje");
+INSERT INTO TIPO_MOV_SALDO(id_tipo_mov_saldo,descripcion) VALUES (2,"Acreditación de saldo por pago");
