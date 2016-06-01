@@ -586,6 +586,15 @@ public class ServletViaje extends HttpServlet {
 		postulacion.put("localidad_subida", origen);
 		postulacion.put("localidad_bajada", destino);
 
+		try {
+			int asientos_ocupar = Integer.parseInt(request.getParameter("asientos"));
+			postulacion.put("nro_asientos", asientos_ocupar);
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Cantidad de asientos a ocupar no es válida");
+			return respuesta;
+		}
+
 		//invoco al gran Lucas
 		try {
 			daoViajes.Cliente_se_postula_en_viaje(postulacion);
