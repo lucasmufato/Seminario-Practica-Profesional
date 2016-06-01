@@ -346,12 +346,16 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
         //--------------------- SPONSORS ------------
     
     //by fede
-    public Boolean nuevoSponsor(JSONObject persona,JSONObject sponsor) {
+    public Boolean nuevoSponsor(JSONObject json) {
     	//creo los objectos a partir de los JSON recibidos
     	
-    	try{
-                        Persona p= new Persona(persona);
-                        Sponsor sp = new Sponsor(sponsor);
+    	try{            
+                        JSONObject json_persona = (JSONObject) json.get("persona");
+                        JSONObject json_sponsor= (JSONObject) json.get("sponsor");
+            
+            
+                        Persona p= new Persona(json_persona);
+                        Sponsor sp = new Sponsor(json_sponsor);
 			 entitymanager.getTransaction( ).begin( );
 			 sp.setPersona(p);
 			// System.out.println("id persona antes de insert: "+p.getId_persona());

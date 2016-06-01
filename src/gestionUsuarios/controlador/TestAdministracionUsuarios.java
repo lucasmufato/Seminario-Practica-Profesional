@@ -17,12 +17,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import junit.framework.TestCase;
 import org.json.simple.JSONObject;
+import org.junit.Before;
 import otros.ExceptionViajesCompartidos;
 
 public class TestAdministracionUsuarios extends TestCase {
 	protected DAONotificaciones dao = new DAONotificaciones();
 	protected DAOAdministracionUsuarios daoAdmUsu = new DAOAdministracionUsuarios();
+        
+        
 	
+        
+        
 	@Test
 	public void testGetNotificaciones() throws ExceptionViajesCompartidos {
 		List<Notificacion> notificaciones=this.dao.getNotificaciones(2);		//2=id_cliente
@@ -53,6 +58,11 @@ public class TestAdministracionUsuarios extends TestCase {
 	
 	@Test
         public void testNuevoSponsor(){
+            
+            //Lo malo es que no puedo hacer BORRAR TABLAS porque sino borro usuarios!!!
+            //Por FK no puedo vaciar sponsor.
+            
+            
             Persona p = (Persona) this.daoAdmUsu.buscarPorPrimaryKey(new Persona(), 2);
             JSONObject persona = new JSONObject();
             persona.put("id_persona", p.getId_persona());
@@ -88,10 +98,12 @@ public class TestAdministracionUsuarios extends TestCase {
             sp.put("id_usuario", sponsor.getId_usuario());
             
             
+            JSONObject json = new JSONObject();
+            json.put("persona",persona );
+            json.put("sponsor",sp);
             
             
-            
-            this.daoAdmUsu.nuevoSponsor(persona, sp);
+            this.daoAdmUsu.nuevoSponsor(json);
             boolean bandera = false;
             Sponsor sp_recuperado = (Sponsor) this.daoAdmUsu.buscarPorClaveCandidata("Sponsor", "juan_cardona_sponsor");
             if ( (sp_recuperado.getNombre_usuario().equals("juan_cardona_sponsor")) && (sp_recuperado.getRubro().equals("Informática")) ){
