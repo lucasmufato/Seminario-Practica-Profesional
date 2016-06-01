@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.NamedQuery;
 
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -446,4 +447,30 @@ public class DAOPuntos extends DataAccesObject {
  		
  		return true;
  	}
+        
+        
+        public boolean nuevoBeneficio(JSONObject json) throws ExceptionViajesCompartidos{
+            Beneficio beneficio = new Beneficio();
+            beneficio.setId_beneficio(Integer.MIN_VALUE);
+            String nombre_usuario = (String) json.get("nombre_usuario");
+            Query qry = entitymanager.createNamedQuery("Sponsor.buscarPorClaveCandidata");
+            qry.setParameter("clave_candidata", nombre_usuario);
+            Sponsor sponsor =(Sponsor)qry.getSingleResult();
+            beneficio.setSponsor(sponsor);
+            beneficio.setPuntos_necesarios((Integer) json.get("puntos_necesarios"));
+            beneficio.setProducto((String) json.get("producto"));
+            beneficio.setFecha_caduca((Date) json.get("fecha_caduca"));
+           try{
+                this.entitymanager.getTransaction().begin(); 
+                this.entitymanager.persist(beneficio);
+                this.entitymanager.getTransaction().commit();
+                
+	    }catch(RollbackException e){
+                
+	    	String error= ManejadorErrores.parsearRollback(e);
+	        throw new ExceptionViajesCompartidos("ERROR: "+error);
+                
+	    } 
+            return true;
+        }
 }
