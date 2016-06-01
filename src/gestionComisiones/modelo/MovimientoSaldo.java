@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -37,14 +38,14 @@ public class MovimientoSaldo {
 	protected float monto;
 	
 	@JoinColumn(name="ID_PAGO")
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.PERSIST)
 	protected Pago pago;
 	
 	@JoinColumn(name="ID_COMISION_COBRADA")
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.MERGE)
 	protected ComisionCobrada comision_cobrada;
         
-	@JoinColumn(name="ID_TIPO_MOV_SALDO")
+	@JoinColumn(name="TIPO")
 	@ManyToOne(cascade=CascadeType.PERSIST)	
 	protected TipoMovSaldo tipo;
 	
