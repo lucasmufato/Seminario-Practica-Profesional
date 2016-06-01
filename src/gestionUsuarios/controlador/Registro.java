@@ -154,9 +154,19 @@ public class Registro extends HttpServlet {
 		boolean bandera=false;
 		String campo = request.getParameter("campo");
 		if (campo.equals("foto_registro")){
-			bandera = dao.subirFotoRegistro(foto);
+			try {
+				bandera = dao.subirFotoRegistro(foto);
+			} catch (ExceptionViajesCompartidos e) {
+				out.put ("result", false);
+				out.put ("msg", e.getMessage());
+			}
 		}else if(campo.equals("foto")){
-			bandera = dao.subirFotoCliente(foto);
+			try {
+				bandera = dao.subirFotoCliente(foto);
+			} catch (ExceptionViajesCompartidos e) {
+				out.put ("result", false);
+				out.put ("msg", e.getMessage());
+			}
 		}
 		System.out.println("servlet: foto subida");
 

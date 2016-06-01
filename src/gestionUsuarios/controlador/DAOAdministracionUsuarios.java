@@ -2,12 +2,15 @@ package gestionUsuarios.controlador;
 
 import java.math.BigInteger;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 
 import org.eclipse.persistence.jpa.JpaHelper;
 import org.json.simple.JSONArray;
@@ -46,13 +49,19 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     //metodod que comprueba que el dado nombre de usuario y su password existan y sean el correcto.
     public boolean isUsuarioPass(String user, String pass) {
     	try{
-			Usuario u=this.buscarUsuarioPorNombre(user);
+    		Query q = this.entitymanager.createNamedQuery("Usuario.porNombrePass");
+    		q.setParameter("nombre", user);
+    		q.setParameter("pass", pass);
+    		Usuario u = (Usuario) q.getSingleResult();
+    		return u!=null;
+			/*
+    		Usuario u=this.buscarUsuarioPorNombre(user);
 			String p= u.getPassword();
 			if(p.equals(pass)){
 				return true;
 			}else{
 				return false;
-			}
+			}*/
     	}catch(Exception e){
     		return false;
     	}
@@ -274,36 +283,44 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		}    	
 	}
     
-	public boolean subirFotoRegistro(JSONObject foto) {
+	public boolean subirFotoRegistro(JSONObject foto) throws ExceptionViajesCompartidos {
 		Cliente c = this.clientePorNombre(foto.get("usuario").toString());
 		if (c!=null){
+			if(this.entitymanager.getTransaction().isActive()){
+				this.entitymanager.getTransaction().rollback();
+			}
+			this.entitymanager.getTransaction().begin();
+
+			 c.setFoto_registro(foto.get("imagen").toString());
+			
 			try{
-				 entitymanager.getTransaction( ).begin( );
-				 c.setFoto_registro(foto.get("imagen").toString());
-				 entitymanager.persist(c);
-				 entitymanager.getTransaction( ).commit( );	
-				 return true;
-			}catch(Exception e){
-				e.printStackTrace();
-				return false;
-			}    	
+			 	entitymanager.getTransaction( ).commit( );	
+			}catch(RollbackException e){
+			  	String error= ManejadorErrores.parsearRollback(e);
+			 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+			} 
+			return true;   	
 		}
 		return false;
 	}	
     
-	public boolean subirFotoCliente(JSONObject foto) {
+	public boolean subirFotoCliente(JSONObject foto) throws ExceptionViajesCompartidos {
     	Cliente c = this.clientePorNombre(foto.get("usuario").toString());
 		if (c!=null){
-			try{
-			 entitymanager.getTransaction( ).begin( );
+			if(this.entitymanager.getTransaction().isActive()){
+				this.entitymanager.getTransaction().rollback();
+			}
+			this.entitymanager.getTransaction().begin();
+
 			 c.setFoto(foto.get("imagen").toString());
-			 entitymanager.persist(c);
-			 entitymanager.getTransaction( ).commit( );	
-			 return true;
-			}catch(Exception e){
-				e.printStackTrace();
-				return false;
-			}    
+			
+			try{
+			 	entitymanager.getTransaction( ).commit( );	
+			}catch(RollbackException e){
+			  	String error= ManejadorErrores.parsearRollback(e);
+			 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+			} 
+			return true;
 		}
 		return false;
 	}	
@@ -343,5 +360,128 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     }
     
 	//-------------------------------------------fin de la parte de registro de clientes----------------------------------------------
+    
+	//-------------------------------------------PERFIL-------------------------------------------------------------------------------
+
+    public boolean desactivarPerfil(String nombreUsuario) throws ExceptionViajesCompartidos{
+		Usuario u = this.buscarUsuarioPorNombre(nombreUsuario);
+		if (u == null){
+			throw new ExceptionViajesCompartidos("El usuario ha desactivar no se encuentra registrado en el sistema");
+		}
+		if (!this.isUsuarioActivo(nombreUsuario)){
+			throw new ExceptionViajesCompartidos("El usuario ya se encuentra desactivado");
+		}
+		
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		Character inactivo = "B".charAt(0);
+		u.setEstado(inactivo);
+		try{
+		 	entitymanager.getTransaction( ).commit( );	
+		}catch(RollbackException e){
+		  	String error= ManejadorErrores.parsearRollback(e);
+		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		}
+		
+		return true;
+    }
+    
+    public boolean modificarPerfil(JSONObject perfil) throws ExceptionViajesCompartidos{
+    	String nombre_usuario = perfil.get("nombre_usuario").toString();
+    	if (nombre_usuario == null || nombre_usuario.isEmpty()){
+    		throw new ExceptionViajesCompartidos("El nombre de usuario no es un valor válido");
+    	}
+    	Usuario u = this.buscarUsuarioPorNombre(nombre_usuario);
+    	if (u==null){
+    		throw new ExceptionViajesCompartidos("El usuario no se encuentra en el sistema");
+    	}
+    	Persona p = u.getPersona();
+    	if (p==null){
+    		throw new ExceptionViajesCompartidos("El usuario no tiene asignada una persona física válida");
+    	}
+    	String apellidos = perfil.get("apellidos").toString();
+    	String nombres = perfil.get("nombres").toString();
+    	String domicilio = perfil.get("domicilio").toString();
+    	String telefono = perfil.get("telefono").toString();
+    	java.sql.Date fecha_nacimiento = toDate(perfil.get("fecha_nacimiento").toString());
+    	Character sexo = perfil.get("sexo").toString().charAt(0);
+    	String mail = perfil.get("mail").toString();
+    	String pass = perfil.get("pass").toString();
+    	
+    	if (apellidos==null || apellidos.isEmpty()){
+    		throw new ExceptionViajesCompartidos("Debe completar el campo apellidos");
+    	}
+    	if (nombres == null || nombres.isEmpty()){
+    		throw new ExceptionViajesCompartidos("Debe completar el campo nombres");
+    	}    	
+    	if (domicilio == null || domicilio.isEmpty() ){
+    		throw new ExceptionViajesCompartidos("Debe completar el campo domicilio");
+    	}
+    	if (telefono == null || telefono.isEmpty()){
+    		throw new ExceptionViajesCompartidos("Debe completar el campo telefono");
+    	}
+    	if (sexo == null){
+    		throw new ExceptionViajesCompartidos("Debe completar el campo sexo");
+    	}
+    	if (mail == null || mail.isEmpty()){
+    		throw new ExceptionViajesCompartidos("Debe completar el campo apellidos");
+    	}else if (!mail.equals(u.getEmail()) && this.mailExiste(mail)){
+    		throw new ExceptionViajesCompartidos("Mail ya existe en el sistema");
+    	}
+    	if (pass == null || pass.length()<6){
+    		throw new ExceptionViajesCompartidos("Contraseña no válida");
+    	}
+    	
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+
+		p.setApellidos(apellidos);
+		p.setDomicilio(domicilio);
+		p.setFecha_nacimiento(fecha_nacimiento);
+		p.setNombres(nombres);
+		p.setSexo(sexo);
+		p.setTelefono(telefono);
+
+		try{
+		 	entitymanager.getTransaction( ).commit( );	
+		}catch(RollbackException e){
+		  	String error= ManejadorErrores.parsearRollback(e);
+		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		}
+
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+
+		u.setPersona(p);
+		u.setEmail(mail);
+		u.setPassword(pass);
+		try{
+		 	entitymanager.getTransaction( ).commit( );	
+		}catch(RollbackException e){
+		  	String error= ManejadorErrores.parsearRollback(e);
+		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
+		}
+		
+    	return true;
+    }
+    
+	private Date toDate(String fecha_nacimiento) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date parsed=null;
+		try {
+			parsed = format.parse(fecha_nacimiento);
+		} catch (ParseException e) {
+			//this.fecha_nacimiento=null;
+			e.printStackTrace();
+		}
+        return new java.sql.Date(parsed.getTime());
+	}
+	//-------------------------------------------FIN de la parte de registro de PERFIL----------------------------------------------
 
 }

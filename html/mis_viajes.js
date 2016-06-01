@@ -92,8 +92,8 @@ var verViaje = function(id){
 }
 
 var filterer = function(item){
-	var rctOrigenDestino = $('#formFilter input[name=origen-destino]').val().toLowerCase();
-	var rctConductor = $('#formFilter input[name=conductor]').val().toLowerCase();
+	var rctOrigenDestino = omitirAcentos($('#formFilter input[name=origen-destino]').val().toLowerCase());
+	var rctConductor = omitirAcentos($('#formFilter input[name=conductor]').val().toLowerCase());
 	var rctFechaDesde = $('#formFilter input[name=fechadesde]').val();
 	var rctFechaHasta = $('#formFilter input[name=fechahasta]').val();
 	var rctPrecioDesde = Number($('#formFilter input[name=preciodesde]').val());
@@ -102,9 +102,13 @@ var filterer = function(item){
 	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(rctFechaDesde); 
 	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(rctFechaHasta); 
 
+	var destinoNormalizado = omitirAcentos(item.destino.toLowerCase());
+	var origenNormalizado = omitirAcentos(item.origen.toLowerCase());
+	var conductorNormalizado = omitirAcentos(item.conductor.toLowerCase());
+	
 	var fecha = new Date(item.fecha_inicio);
-	return (item.destino.toLowerCase().contains(rctOrigenDestino) || item.origen.toLowerCase().contains(rctOrigenDestino))
-			&& (item.conductor.toLowerCase().contains(rctConductor))
+	return (destinoNormalizado.contains(rctOrigenDestino) || origenNormalizado.contains(rctOrigenDestino))
+			&& (conductorNormalizado.contains(rctConductor))
 			&& (fecha >= rctFechaDesde || rctFechaDesde==="") 
 			&& (fecha <= rctFechaHasta || rctFechaHasta==="")
 			&& (item.precio >= rctPrecioDesde || rctPrecioDesde==0) 
@@ -258,3 +262,11 @@ function getUrlVars() {
 	return vars;
 }
 
+function omitirAcentos(text) {
+    var acentos = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç";
+    var original = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc";
+    for (var i=0; i<acentos.length; i++) {
+        text = text.replace(acentos.charAt(i), original.charAt(i));
+    }
+    return text;
+}

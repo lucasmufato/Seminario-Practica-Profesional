@@ -16,6 +16,7 @@ import org.json.simple.JSONArray;
 	@NamedQuery(name="Usuario.todos",query="SELECT u FROM Usuario u"),
 	@NamedQuery(name="Usuario.porNombre",query="SELECT u FROM Usuario u	WHERE u.nombre_usuario LIKE :nombre"),
 	@NamedQuery(name="Usuario.porNombreExacto",query="SELECT u FROM Usuario u	WHERE u.nombre_usuario = :nombre"),
+	@NamedQuery(name="Usuario.porNombrePass",query="SELECT u FROM Usuario u	WHERE u.nombre_usuario = :nombre AND u.password = :pass"),
 	@NamedQuery(name="Usuario.SearchById",query="SELECT u FROM Usuario u WHERE u.id_usuario = :id"),
 	@NamedQuery(name="Usuario.porEmail",query="SELECT u FROM Usuario u WHERE u.email = :email"),
 	@NamedQuery(name="Usuario.porEstado",query="SELECT u FROM Usuario u WHERE u.estado = :estado"),
