@@ -246,6 +246,9 @@ var configurarUi = function(){
 			$("#botonera-conductor").show();
 			$("#botonera-pasajero").hide();
 			
+			if (data.viaje.cantidad_pasajeros_calificables > 0){
+				$("#btnModificar").hide();
+			}
 			//Boton finalizar solo si esta en iniciado
 			if (estado == "Iniciado"){
 				$("#btnViajeFinalizado").show();
@@ -308,7 +311,7 @@ var configurarUi = function(){
 		$("#btnCalificar").hide();
 		$("#btnViajeFinalizado").hide();
 	} else if(estado == "Iniciado"){
-
+		
 	} else if(estado == "No iniciado"){ 
 		$("#btnCalificar").hide();
 		$("#btnViajeFinalizado").hide();
