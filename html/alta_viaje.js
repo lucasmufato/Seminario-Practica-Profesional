@@ -154,7 +154,9 @@ cargarVehiculosSelect = function() {
 		vehiculos = jsonData.vehiculos;
 		if(vehiculos.length) {
 			vehiculos.forEach(function (vehiculo) {
-				addVehiculosSelectOption(vehiculo);
+				if(vehiculo.estado=="A") {
+					addVehiculosSelectOption(vehiculo);
+				}
 			});
 			actualizarCantidadAsientos();
 		} else {
