@@ -128,7 +128,11 @@ public class DAOViajes extends DataAccesObject {
     	}
     	vehiculo.setCantidad_asientos(asientos);
     	vehiculo.setSeguro( (Character) datos_vehiculo.get("seguro"));
-    	//vehiculo.setFoto(foto);		//TODO falta guardar la foto del auto
+    
+    	String foto = (String) datos_vehiculo.get("foto");
+    	if (foto != null) {
+    		vehiculo.setFoto(foto);
+    	}
     	
     	vehiculo.setEstado('A');
     	vehiculo.setVerificado('N');
