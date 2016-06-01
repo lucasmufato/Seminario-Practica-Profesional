@@ -354,7 +354,7 @@ CREATE TABLE COMENTARIO_VIAJE(
     fecha date NOT NULL,
     id_cliente int(11) NOT NULL,
     id_viaje int(11) default null,
-    
+    texto TEXT,
     
     PRIMARY KEY(id_comentario_viaje),
     FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
