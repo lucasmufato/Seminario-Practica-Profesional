@@ -113,6 +113,7 @@ CREATE TABLE LOCALIDAD (
 	PRIMARY KEY (id_localidad)
 );
 */
+
 CREATE TABLE LOCALIDAD_CLASIFICACION (
 	codigo CHAR(1),
 	nombre_clase VARCHAR(50),
@@ -318,11 +319,11 @@ CREATE TABLE PAGO(
     fecha date not null,
     monto float not null,
     id_cliente int(11) not null,
-    id_movimiento_saldo int(11) not null,
+    
     
     PRIMARY KEY (id_pago),
-    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
-    FOREIGN KEY (id_movimiento_saldo) REFERENCES movimiento_saldo (id_movimiento_saldo)
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario)
+   
 );
 
 
@@ -338,8 +339,8 @@ CREATE TABLE MOVIMIENTO_SALDO(
 	id_movimiento_saldo int(11) NOT NULL AUTO_INCREMENT,
     fecha date NOT NULL,
     monto FLOAT NOT NULL,
-    id_comision_cobrada int(11) NOT NULL,
-    id_pago int(11) NOT NULL,
+    id_comision_cobrada int(11) default null,
+    id_pago int(11) default null,
     tipo int(11) NOT NULL,
     
     PRIMARY KEY(id_movimiento_saldo),

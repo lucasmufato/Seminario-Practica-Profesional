@@ -28,5 +28,6 @@ drop table notificacion;
 drop table estado_viaje;
 drop table tipo_mov_saldo;
 drop table pago;
+drop table precio_comision;
 drop table sequence;
 SET FOREIGN_KEY_CHECKS = 1; 
