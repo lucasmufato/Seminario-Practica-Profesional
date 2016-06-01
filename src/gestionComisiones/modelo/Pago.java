@@ -37,9 +37,9 @@ public class Pago {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Cliente cliente;
 	
-	@JoinColumn(name="ID_MOVIMIENTO_SALDO")
-	@ManyToOne(cascade=CascadeType.PERSIST)
-	protected MovimientoSaldo movimiento_saldo;
+	//@JoinColumn(name="ID_MOVIMIENTO_SALDO")
+	//@ManyToOne(cascade=CascadeType.PERSIST)
+	//protected MovimientoSaldo movimiento_saldo;
 	
 	public Pago(){
 		
@@ -77,6 +77,7 @@ public class Pago {
 		this.cliente = cliente;
 	}
 
+        /*
 	public MovimientoSaldo getMovimiento_saldo() {
 		return movimiento_saldo;
 	}
@@ -84,4 +85,5 @@ public class Pago {
 	public void setMovimiento_saldo(MovimientoSaldo movimiento_saldo) {
 		this.movimiento_saldo = movimiento_saldo;
 	}
+*/
 }

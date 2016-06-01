@@ -32,7 +32,7 @@ public class TipoMovSaldo {
 	@Column(nullable=false,length=255,name="DESCRIPCION")
 	protected String descripcion;
 	
-
+        
 	
 	public TipoMovSaldo(){
 		

@@ -43,9 +43,9 @@ public class MovimientoSaldo {
 	@JoinColumn(name="ID_COMISION_COBRADA")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected ComisionCobrada comision_cobrada;
-	
-	@ManyToOne(cascade=CascadeType.PERSIST)
+        
 	@JoinColumn(name="ID_TIPO_MOV_SALDO")
+	@ManyToOne(cascade=CascadeType.PERSIST)	
 	protected TipoMovSaldo tipo;
 	
 	public MovimientoSaldo(){
