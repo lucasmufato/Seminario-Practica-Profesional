@@ -1,6 +1,8 @@
 package gestionViajes.controlador;
 
 import gestionViajes.controlador.*;
+import gestionViajes.controlador.*;
+import gestionViajes.controlador.*;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
@@ -63,6 +65,36 @@ public class TestViaje extends TestCase {
 			assertTrue( this.daoviajes.nuevoViaje(json2) );
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
+		}
+	}
+        
+        @Test
+	public void testNuevoViajeCorrectoSINSALDO() {
+		//test q envie un json correcto y tendria q andar bien
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo2();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json_sin_saldo = TestViaje.crearViajeSinSaldo();
+		try {
+			boolean bandera = this.daoviajes.nuevoViaje(json_sin_saldo) ;
+                        if(bandera){
+                            fail("lo creó sin error");
+                        }
+		} catch (ExceptionViajesCompartidos e) {
+			String msj_error=e.getMessage();
+                        boolean bandera2 = false;
+			if(msj_error.contains("USTED NO TIENE SALDO")){
+                             bandera2 = true;      
+			}else{
+                             bandera2=false;				
+			}
+                        assertTrue(bandera2);
 		}
 	}
 	
@@ -1208,7 +1240,10 @@ public class TestViaje extends TestCase {
 		Viaje viaje2 = (Viaje) this.daoviajes.buscarPorPrimaryKey(viaje, id_viaje);
 		assertEquals(viaje2.getEstado(),EstadoViaje.cancelado);
 	}
-	
+                
+    
+        
+        
          @SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante() {
 		/*
@@ -1419,5 +1454,47 @@ public class TestViaje extends TestCase {
 		json2.put("localidades", localidades);
 		return json2;
 	}
-	
+	@SuppressWarnings("unchecked")
+	public static JSONObject crearViajeSinSaldo(){
+		
+		JSONObject viaje = new JSONObject();
+		JSONObject json2 = new JSONObject();
+		json2.put("vehiculo", "abd123");
+		json2.put("cliente", 3);
+		Timestamp fecha = new Timestamp((new java.util.Date()).getTime());
+		
+		viaje.put("fecha_inicio", fecha);
+		viaje.put("cantidad_asientos", 1);
+		viaje.put("precio", new Float(50.0));
+		viaje.put("nombre_amigable", "prueba viaje");
+		json2.put("viaje", viaje);
+		JSONObject localidades= new JSONObject();
+		localidades.put("origen",3427200 );
+		localidades.put("destino",3427205 );
+		JSONArray intermedio= new JSONArray();
+		intermedio.add(3427201);
+		intermedio.add(3427202);
+		intermedio.add(3427203);
+		intermedio.add(3427204);
+		localidades.put("intermedios", intermedio);
+		json2.put("localidades", localidades);
+		return json2;
+	}
+        
+        @SuppressWarnings("unchecked")
+	public static JSONObject crearVehiculo2(){
+		JSONObject json= new JSONObject();
+		json.put("conductor", 3);
+		JSONObject vehiculo= new JSONObject();
+		vehiculo.put("patente", "abd123");
+		vehiculo.put("anio", 1992);
+		vehiculo.put("modelo", "viejo");
+		vehiculo.put("marca", "mondeo");
+		vehiculo.put("seguro", 'C');
+		vehiculo.put("color","arcoiris");
+		vehiculo.put("aire", 'S');
+		vehiculo.put("asientos",5);
+		json.put("vehiculo", vehiculo);
+		return json;
+	}
 }
