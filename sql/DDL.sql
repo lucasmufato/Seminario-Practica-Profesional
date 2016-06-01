@@ -348,3 +348,16 @@ CREATE TABLE MOVIMIENTO_SALDO(
     FOREIGN KEY (id_pago) REFERENCES pago (id_pago),
     FOREIGN KEY (tipo) REFERENCES tipo_mov_saldo (id_tipo_mov_saldo)
 );
+
+CREATE TABLE COMENTARIO_VIAJE(
+	id_comentario_viaje int(11) NOT NULL AUTO_INCREMENT,
+    fecha date NOT NULL,
+    id_cliente int(11) NOT NULL,
+    id_viaje int(11) default null,
+    
+    
+    PRIMARY KEY(id_comentario_viaje),
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
+    FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje)
+    
+);
