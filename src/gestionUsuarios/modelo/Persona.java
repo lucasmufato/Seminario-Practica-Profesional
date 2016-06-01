@@ -74,14 +74,14 @@ public class Persona implements JSONable {
 		this.nro_doc=new BigInteger(json.get("nro_doc").toString());
 		String fn=(String)json.get("fecha_nacimiento");
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date parsed=null;
+                java.util.Date parsed=null;
 		try {
 			parsed = format.parse(fn);
 		} catch (ParseException e) {
 			//this.fecha_nacimiento=null;
 			e.printStackTrace();
 		}
-        this.fecha_nacimiento = new java.sql.Date(parsed.getTime());
+                this.fecha_nacimiento = new java.sql.Date(parsed.getTime());
 		this.sexo=json.get("sexo").toString().charAt(0);
 		this.domicilio=(String)json.get("domicilio");
 		this.telefono=(String)json.get("telefono");
