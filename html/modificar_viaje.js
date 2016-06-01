@@ -209,7 +209,10 @@ cargarVehiculosSelect = function() {
 		vehiculos = jsonData.vehiculos;
 		if(vehiculos.length) {
 			vehiculos.forEach(function (vehiculo) {
-				addVehiculosSelectOption(vehiculo);
+				console.log(vehiculo);
+				if (vehiculo.estado=="A") {
+					addVehiculosSelectOption(vehiculo);
+				}
 			});
 			actualizarCantidadAsientos();
 		} else {
