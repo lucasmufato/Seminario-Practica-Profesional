@@ -236,6 +236,7 @@ public class Vehiculo implements JSONable {
 		json.put("anio", this.getAnio());
 		json.put("patente", this.getPatente());
 		json.put("cantidad_asientos", this.getCantidad_asientos());
+		json.put("estado", this.getEstado().toString());
 		json.put("aire", (this.getAire_acondicionado() != null)? this.getAire_acondicionado().toString(): null);
 		json.put("seguro", (this.getSeguro() != null)? this.getSeguro().toString(): null);
 		json.put("verificado", (this.getVerificado() != null)? this.getVerificado().toString(): null);

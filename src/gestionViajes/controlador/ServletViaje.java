@@ -597,6 +597,15 @@ public class ServletViaje extends HttpServlet {
 		postulacion.put("localidad_subida", origen);
 		postulacion.put("localidad_bajada", destino);
 
+		try {
+			int asientos_ocupar = Integer.parseInt(request.getParameter("asientos"));
+			postulacion.put("nro_asientos", asientos_ocupar);
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Cantidad de asientos a ocupar no es válida");
+			return respuesta;
+		}
+
 		//invoco al gran Lucas
 		try {
 			daoViajes.Cliente_se_postula_en_viaje(postulacion);
@@ -970,13 +979,25 @@ public class ServletViaje extends HttpServlet {
 		json_vehiculo.put("color", request.getParameter("color"));
 		json_vehiculo.put("asientos", Integer.parseInt(request.getParameter("asientos")));
 		json_vehiculo.put("seguro", request.getParameter("seguro").toString().charAt(0));
-		//json_vehiculo.put("foto", request.getParameter("foto"));
 
 		params.put("conductor", id_usuario);
 		params.put("vehiculo", json_vehiculo);
 
 		try{
+
+			//Subir imagen
+			String foto_param = request.getParameter("foto");
+			String foto_url = null;
+			if(foto_param != null) {
+				foto_url = FileManager.uploadImage(request, foto_param);
+			}
+
+			if (foto_url != null){
+				json_vehiculo.put("foto", foto_url);
+			}
+
 			daoViajes.NuevoVehiculo(params);
+
 			salida.put("result", true);
 			salida.put("msg", "Se ha creado el vehiculo correctamente");
 		} catch (ExceptionViajesCompartidos e) {

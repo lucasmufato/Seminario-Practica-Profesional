@@ -28,6 +28,18 @@ INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VAL
 INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "administrar_usuarios","administrar usuarios","permite ABM de usuarios","A");
 INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES(1,1,CURRENT_DATE);
 
+-- agrego permisos de funcional
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "crear_viajes","crear viajes","permite crear viajes","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "buscar_viajes","buscar viajes","permite buscar viajes","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "loguearse","loguearse","permite ingresar al sistema","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "participar_viajes","participar viajes","permite participar en viajes","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "calificar","calificar","permite calificar usuarios","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "crear_vehiculos","crear vehiculos","permite crear vehiculos","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "modificar_vehiculo","modificar vehiculo determinado","permite modificar un vehiculo en particular","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "asignar_conductores","asignar conductores","permite asignarle conductores a un vehiculo","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "desasignar_conductores","desasignar conductores","permite desasignarle conductores a un vehiculo","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "canelar_viaje","cancelar viaje","permite cancelar un viaje","A");
+
 INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("A", "Ciudad/Estado/Región"),
 	("H", "Flujo de agua/Lago"),

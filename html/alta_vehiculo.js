@@ -7,6 +7,7 @@ window.onload = function () {
     	startView: 4,
     	minView: 4,
     	maxView: 4,
+		endDate: new Date(),
     	autoclose: true
 	});
 
@@ -16,7 +17,6 @@ window.onload = function () {
 }
 
 submitFormVehiculo = function () {
-	// Falta foto
 	var sendData = {
 		entity: 'vehiculo',
 		action: 'new',
@@ -28,11 +28,15 @@ submitFormVehiculo = function () {
 		asientos: $('#form-vehiculo input[name=asientos]').val(),
 		aire: $('#form-vehiculo select[name=aire]').val(),
 		seguro: $('#form-vehiculo select[name=seguro]').val(),
-		foto: $('#foto_vehiculo').attr("src")
 	}
 
+	var foto = $('#foto_vehiculo').attr("src")
+	if (foto) {
+			sendData.foto= foto;
+		}
+
 	var redirec = new function() {
-		vc.ventana_mensaje ("Vehiculo creado correctamente<br>Redireccionando a mis vehiculos");
+		vc.ventana_mensaje ("Vehiculo creado correctamente<br>Redireccionando a mis vehiculos", "Vehiculo creado", "success");
 		window.setTimeout(function(){window.location="/mis_vehiculos.html"}, 1000);
 	}
 

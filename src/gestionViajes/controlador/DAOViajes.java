@@ -128,7 +128,11 @@ public class DAOViajes extends DataAccesObject {
     	}
     	vehiculo.setCantidad_asientos(asientos);
     	vehiculo.setSeguro( (Character) datos_vehiculo.get("seguro"));
-    	//vehiculo.setFoto(foto);		//TODO falta guardar la foto del auto
+    
+    	String foto = (String) datos_vehiculo.get("foto");
+    	if (foto != null) {
+    		vehiculo.setFoto(foto);
+    	}
     	
     	vehiculo.setEstado('A');
     	vehiculo.setVerificado('N');
@@ -304,11 +308,29 @@ public class DAOViajes extends DataAccesObject {
 		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
 		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
 			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
-			lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+			
+                        
+                        
+                        lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
 		}
 		Integer ultimo=lista_localidad_viaje.size();
 		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
 		
+
+
+                //calculo saldo necesario (by fede)
+                Double distancia_origen_primerpunto = lista_localidad_viaje.get(0).getKms_a_localidad_siguiente() ;
+                DAOComisiones daocomisiones = new DAOComisiones();
+                ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
+                float saldo_necesario = cc.getMonto();
+                float saldo_cliente = cliente.getSaldo();
+                
+                if(saldo_necesario>saldo_cliente){
+                	throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
+                }
+                                
+                
+                //fin saldo
 		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
 		vuelta=(JSONObject) datos.get("vuelta");
 		if(vuelta!=null){ 
