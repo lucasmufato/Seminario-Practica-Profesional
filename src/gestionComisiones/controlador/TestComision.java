@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public class TestComision extends TestCase{
     
-        protected DAOViajes daoviajes = new DAOViajes();
+    protected DAOViajes daoviajes = new DAOViajes();
 	protected DAOComisiones daocomisiones = new DAOComisiones();
 	
 		
@@ -50,7 +50,7 @@ public class TestComision extends TestCase{
 		this.daoviajes.vaciarTabla("Vehiculo");
         }
         
-                @Test
+  @Test
 		public void testCobrarComisionCorrecto(){
 			//datos del vehiculo y cliente, para crear el vehiculo
 			JSONObject json= crearVehiculo();
@@ -68,11 +68,11 @@ public class TestComision extends TestCase{
 			}
 			
 			JSONObject json3= this.crearPostulante5();
-			JSONObject json4= this.crearPostulante6();
+	
 			
 			try {
+				//ACA YA LE SETTEE LA COMISION AL PASAJERO
 				assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
-				assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json4) );
 				
 			} catch (ExceptionViajesCompartidos e) {
 				fail(e.getMessage());
@@ -82,7 +82,6 @@ public class TestComision extends TestCase{
 			Viaje viaje=(Viaje) viajes.get(0);
 			try { 
 				assertTrue( this.daoviajes.aceptarPasajero(8, viaje.getId_viaje()));
-				assertTrue( this.daoviajes.aceptarPasajero(9, viaje.getId_viaje()));
 			} catch (ExceptionViajesCompartidos e) {
 				fail(e.getMessage());
 			}
@@ -95,44 +94,27 @@ public class TestComision extends TestCase{
                         //verifico si le cobré la comision
                         if( (pv.getEstado().equals(EstadoPasajeroViaje.aceptado))	&& (pv.getComision().getEstado().equals(EstadoComisionCobrada.pendiente)) ){
                             this.daocomisiones.cobrarComision(pv);
-                            if(pv.getComision().getEstado().equals(EstadoComisionCobrada.pagado)){
+                            
+                            
+                         if(pv.getComision().getEstado().equals(EstadoComisionCobrada.pagado)){
                                  bandera = true;
-                            }else{ bandera= false;}
+                         }else{ bandera= false;}
                         }
-                        assertTrue(bandera);
-			//Cliente cliente1 = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 9);
-			//PasajeroViaje pv1=viaje.recuperar_pasajeroViaje_por_cliente(cliente1);
-			//assertEquals(pv1.getEstado(),EstadoPasajeroViaje.aceptado);
-			//assertEquals(pv1.getComision().getEstado(),EstadoComisionCobrada.pendiente);
-			
+            assertTrue(bandera);
 		}
-        
-                  @Test
+		
+    
+   
+    @Test
 		public void testAcreditarPago(){
-			
-                        /*
-                        DAOAdministracionUsuarios daousr = new DAOAdministracionUsuarios();
-                        Persona persona = new Persona();
-                        JSONObject jsonP = new JSONObject();
-                        jsonP.put("Id_persona", 1);
-                        jsonP.put("tipo_dni", "dni");
-                        jsonP.put("num_dni",35535238);
-                        
-                        JSONObject jsonC = new JSONObject();
-                        jsonC.put("id_cliente", 2);
-                        jsonC.put("nombre_usuario", "prueba_saldo");
-                        daousr.nuevoCliente(jsonP, jsonC);
-                        */
-                        Pago pago = new Pago();
-                        //Cliente cliente_busco = (Cliente) daousr.buscarUsuarioPorNombre("prueba_saldo");
-                        Cliente cliente_busco= (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);
-                        daocomisiones.sumarSaldo(cliente_busco.getId_usuario(), 100);
+                  		Cliente cliente_busco= (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);
+                        assertTrue(daocomisiones.sumarSaldo(cliente_busco.getId_usuario(), 200));
                         //recupero con saldo nuevo
-                        Cliente cliente_actualizado = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);
-                        float nuevo_saldo= cliente_actualizado.getSaldo();
-                        assertEquals(nuevo_saldo, 105);
+                        //Cliente cliente_actualizado = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);
+                        //float nuevo_saldo= cliente_actualizado.getSaldo();
+                        //assertEquals(nuevo_saldo, 105);
 		}
-        
+       
         
         
         
@@ -140,54 +122,6 @@ public class TestComision extends TestCase{
         
         
         //---------------------------------------------------------------------------//
-        
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-	private JSONObject crearPostulante1() {
-		JSONObject json =new JSONObject();
-		json.put("cliente", 5);
-		List viajes= this.daoviajes.selectAll("Viaje");
-		Viaje viaje=(Viaje) viajes.get(0);
-		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427201);
-		json.put("localidad_bajada", 3427203);
-		return json;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private JSONObject crearPostulante2() {
-		JSONObject json =new JSONObject();
-		json.put("cliente", 6);
-		List viajes=this.daoviajes.selectAll("Viaje");
-		Viaje viaje=(Viaje) viajes.get(0);
-		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427202);
-		json.put("localidad_bajada", 3427204);
-		return json;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private JSONObject crearPostulante3() {
-		JSONObject json =new JSONObject();
-		json.put("cliente", 4);
-		List viajes=this.daoviajes.selectAll("Viaje");
-		Viaje viaje=(Viaje) viajes.get(0);
-		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427200);
-		json.put("localidad_bajada", 3427202);
-		return json;
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private JSONObject crearPostulante4() {
-		JSONObject json =new JSONObject();
-		json.put("cliente", 7);
-		List viajes=this.daoviajes.selectAll("Viaje");
-		Viaje viaje=(Viaje) viajes.get(0);
-		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427204);
-		json.put("localidad_bajada", 3427205);
-		return json;
-	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante5() {
@@ -201,36 +135,7 @@ public class TestComision extends TestCase{
 		return json;
 	}
 	
-           @SuppressWarnings({ "unchecked", "rawtypes" })
-	private JSONObject crearPostulante() {
-		/*
-		 * JSON{
-		 * "CLIENTE":ID_CLIENTE,
-		 * "VIAJE":ID_VIAJE,
-		 * "LOCALIDAD_SUBIDA":ID_LOCALIDAD,
-		 * "LOCALIDAD_BAJADA": ID_LOCALIDAD
-		 * } 
-		 */
-		JSONObject json =new JSONObject();
-		json.put("cliente", 3);
-		List viajes= this.daoviajes.selectAll("Viaje");
-		Viaje viaje=(Viaje) viajes.get(0);
-		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427200);
-		json.put("localidad_bajada", 3427205);
-		return json;
-	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private JSONObject crearPostulante6() {
-		JSONObject json =new JSONObject();
-		json.put("cliente", 9);
-		List viajes=this.daoviajes.selectAll("Viaje");
-		Viaje viaje=(Viaje) viajes.get(0);
-		json.put("viaje", viaje.getId_viaje());
-		json.put("localidad_subida", 3427202);
-		json.put("localidad_bajada", 3427204);
-		return json;
-	}
+ 
         
         @SuppressWarnings("unchecked")
 	public static JSONObject crearVehiculo(){
