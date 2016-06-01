@@ -484,4 +484,43 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	}
 	//-------------------------------------------FIN de la parte de registro de PERFIL----------------------------------------------
 
+        //--------------------- SPONSORS ------------
+    
+    //by fede
+    public Boolean nuevoSponsor(JSONObject json) {
+    	//creo los objectos a partir de los JSON recibidos
+    	
+    	try{            
+                        JSONObject json_persona = (JSONObject) json.get("persona");
+                        JSONObject json_sponsor= (JSONObject) json.get("sponsor");
+            
+            
+                        Persona p= new Persona(json_persona);
+                        Sponsor sp = new Sponsor(json_sponsor);
+			 entitymanager.getTransaction( ).begin( );
+			 sp.setPersona(p);
+			// System.out.println("id persona antes de insert: "+p.getId_persona());
+			 //entitymanager.persist(p);
+			// System.out.println("id persona despues de insert: "+p.getId_persona());
+			// System.out.println("id cliente antes de insert: "+sp.getId_usuario());
+			 entitymanager.persist(sp);
+			 //System.out.println("id cliente despues de insert: "+sp.getId_usuario());
+			 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
+                         //qry.setParameter("nombre", "sponsor");
+			 //Rol r= (Rol) qry.getSingleResult();
+			 //sp.asignarRol(r);
+			 entitymanager.getTransaction( ).commit( );	
+			 
+			 //System.out.println("id persona despues de commit: "+p.getId_persona());
+			 //System.out.println("id cliente despues de commit: "+sp.getId_usuario());
+			 //Rol rol_recien_asignado= sp.getRoles().get(0).getRol();
+			 //System.out.println("nombre del rol recien asignado: "+rol_recien_asignado.getNombre_rol());
+			 
+			 return true;
+		}catch(Exception e){
+
+			e.printStackTrace();
+			return false;
+		}    	
+	}
 }

@@ -26,7 +26,15 @@ public class Sponsor extends Usuario implements JSONable {
 		
 	}
 	
-	
+	public Sponsor (JSONObject sponsor) {
+		super(sponsor);
+                this.cuit = (Integer) sponsor.get("CUIT");
+		this.rubro = (String) sponsor.get("rubro");
+		this.tipo='S';
+		
+	}
+
+ 
 	public Integer getCuit() {
 		return cuit;
 	}
