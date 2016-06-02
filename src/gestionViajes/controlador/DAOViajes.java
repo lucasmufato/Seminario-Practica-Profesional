@@ -271,34 +271,53 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: EL DESTINO NO EXISTE EN EL SISTEMA");
 		}
 		recorrido.add(destino);
-		
-		//borro anterior recorrido
-		List<LocalidadViaje> viejasLoc = viaje.getLocalidades();
-		for (LocalidadViaje lv : viejasLoc){
-			this.entitymanager.merge(lv);
-			this.entitymanager.remove(lv);
-		}
-		viaje.setLocalidades(new ArrayList<LocalidadViaje>());
-		
-		try{
-    		this.entitymanager.getTransaction( ).commit( );	
-			SchedulerViajes.nuevoViaje(viaje);
-    	}catch(RollbackException e){
-    		String error= ManejadorErrores.parsearRollback(e);
-    		throw new ExceptionViajesCompartidos("ERROR: "+error);
-    	}
-		//
-		entitymanager.getTransaction().begin();
 
-		viaje.crearRecorrido(recorrido);
-		
-		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
-		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
-			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
-	        lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+		//Verifico si el nuevo recorrido dado es igual al anterior
+		boolean esMismoRecorrido = true;
+		List<LocalidadViaje> viejasLoc = viaje.getLocalidades();
+		for (LocalidadViaje viejaLoc : viejasLoc){
+			int ordinal= viejaLoc.getOrdinal();
+			esMismoRecorrido = ordinal<=recorrido.size() 
+					&& viejaLoc.getLocalidad().getId() == recorrido.get(ordinal-1).getId();
+			if (!esMismoRecorrido) break;			
 		}
-		Integer ultimo=lista_localidad_viaje.size();
-		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+		
+		if (!esMismoRecorrido){
+			//Hay pasajeros de cualquier tipo relacionado con localidadviaje?
+			boolean hayPasajeros = viaje.getPasajeros().size()>0;
+			if (hayPasajeros){
+				throw new ExceptionViajesCompartidos("Usted ya no tiene permitido modificar el recorrido de este viaje: existen clientes asociados al viaje.");
+			}
+			
+			// No hay pasajeros entonces puedo eliminar el anterior recorrido sin que estalle la bd 
+			//borro anterior recorrido
+			for (LocalidadViaje lv : viejasLoc){
+				this.entitymanager.merge(lv);
+				this.entitymanager.remove(lv);
+			}
+			viaje.setLocalidades(new ArrayList<LocalidadViaje>());
+			
+			try{
+	    		this.entitymanager.getTransaction( ).commit( );	
+				SchedulerViajes.nuevoViaje(viaje);
+	    	}catch(RollbackException e){
+	    		String error= ManejadorErrores.parsearRollback(e);
+	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+	    	}
+			//
+			//creo recorrido nuevo
+			entitymanager.getTransaction().begin();
+
+			viaje.crearRecorrido(recorrido);
+			
+			List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
+			for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
+				Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
+		        lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+			}
+			Integer ultimo=lista_localidad_viaje.size();
+			lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+		}
 
 		try{
     		this.entitymanager.getTransaction( ).commit( );	

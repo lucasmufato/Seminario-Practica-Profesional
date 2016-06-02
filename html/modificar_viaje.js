@@ -140,14 +140,14 @@ cargarRecorrido = function(recorrido){
 		var l = getItem(localidadPorId(recorrido[i]));
 		if (i==0){
 			magic.inputOrigen.addToSelection(l);
-		}else if (i==recorrido.length-1){			
+		}else if (i==recorrido.length-1){	
 			magic.inputDestino.addToSelection(l);
 		}else{
 			magic.inputIntermedios.addToSelection(l);
 		}
 	}
-	redibujar();	
-	
+	setTimeout(function(){redibujar()}, 2000);
+
 	function getItem(l){
 		return item = {
 			id:l.id,
@@ -210,7 +210,6 @@ cargarVehiculosSelect = function() {
 		vehiculos = jsonData.vehiculos;
 		if(vehiculos.length) {
 			vehiculos.forEach(function (vehiculo) {
-				console.log(vehiculo);
 				if (vehiculo.estado=="A") {
 					addVehiculosSelectOption(vehiculo);
 				}

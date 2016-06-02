@@ -566,12 +566,6 @@ public class ServletViaje extends HttpServlet {
 		
 		try {
 			daoViajes.modificarViaje(params);
-			/*
-			System.out.println("");
-			System.out.println(params.toJSONString());
-			System.out.println("");
-			*/
-			
 		} catch (ExceptionViajesCompartidos e) {
 			salida.put("result", false);
 			salida.put("msg", e.getMessage());
