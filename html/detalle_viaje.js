@@ -237,7 +237,7 @@ var configurarUi = function(){
 	if(esAceptado) {$('#infomsg-pasajero-aceptado').show();}
 	if(esRechazado) {$('#infomsg-pasajero-rechazado').show();}
 	if(esFinalizo) {$('#infomsg-pasajero-finalizo').show();}
-	if(!haCalificado && esFinalizo) {$('#infomsg-calificacion-pendiente').show();}
+	if(!haCalificado && (esConductor || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
 	
 	var estado = estadoString(data.viaje.estado);
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
@@ -245,8 +245,8 @@ var configurarUi = function(){
 		if (esConductor){
 			$("#botonera-conductor").show();
 			$("#botonera-pasajero").hide();
-			
-			if (data.viaje.cantidad_pasajeros_calificables > 0){
+			console.log(data.viaje.cantidad_pasajeros_postulados);
+			if (data.viaje.cantidad_pasajeros_calificables > 0 || data.viaje.cantidad_pasajeros_postulados > 0){
 				$("#btnModificar").hide();
 			}
 			//Boton finalizar solo si esta en iniciado
@@ -576,13 +576,17 @@ var cancelarViaje = function(){
 	var confirmarCancelacion = function(){
 		closeModal(modalName);
 		var sendJson = {
-			action: "cancelar_viaje",
+			entity:"viaje",
+			action: "cancelar",
 			id_viaje: data.viaje.id
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
-				window.location = "/home.html"; //mejorar esto
-			}else{
+				data.loadData();
+				//window.location = "/mis_viajes.html"; //mejorar esto
+			} else if (jsonData.relocate){
+				window.location = jsonData.relocate;
+			} else if (jsonData.msg){
 				errorMessage(jsonData.msg);
 			}
 		}

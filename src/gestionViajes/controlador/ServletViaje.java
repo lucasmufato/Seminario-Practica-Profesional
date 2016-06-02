@@ -58,6 +58,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.nuevo_viaje (request);
 			} else if (action != null && action.equals("edit")) {
 				respuesta = this.modificar_viaje (request);
+			} else if (action != null && action.equals("cancelar")) {
+				respuesta = this.cancelar_viaje (request);
 			} else if (action != null && action.equals("buscar")) {
 				respuesta = this.buscar_viaje (request);
 			} else if (action != null && action.equals("detalle")) {
@@ -110,6 +112,7 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
+
 
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -194,7 +197,7 @@ public class ServletViaje extends HttpServlet {
 
 
 			//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
-			Calificacion calificacion = daoPuntos.getCalificacionPorConductorPasajero(pv, conductor);
+			Calificacion calificacion = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
 
 			System.out.println("");
 			System.out.println("es pasajero");
@@ -240,7 +243,7 @@ public class ServletViaje extends HttpServlet {
 
 				// OBTENGO CALIFICACION
 				//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
-				Calificacion calificacion = daoPuntos.getCalificacionPorConductorPasajero(pv, conductor);
+				Calificacion calificacion = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
 				System.out.println("");
 				System.out.println("es conductor");
 				System.out.println("");
@@ -576,6 +579,49 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+	private JSONObject cancelar_viaje(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		
+		//Chequeo que cliente es conductor
+		Viaje viaje = daoViajes.getViajeById(idViaje);
+		int idCliente = AccessManager.getIdUsuario(request);
+		int idConductor = viaje.getConductor().getId_usuario();
+		if (idCliente != idConductor){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
+			return respuesta;
+		}
+		
+		try {
+			daoViajes.cancelarViaje(idViaje, idCliente);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "El viaje ha sido cancelado correctamente");
+		return respuesta;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public JSONObject ver_viaje_detallado(HttpServletRequest request) {
 		int id_viaje;
@@ -648,7 +694,30 @@ public class ServletViaje extends HttpServlet {
 		json_logged.put("es_rechazado", esRechazado);
 		json_logged.put("es_finalizo", esFinalizo);
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
-		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
+		
+		// Ha calificado a todos?
+		boolean haCalificado = false;
+		if (esConductor){
+			List<PasajeroViaje> pasajeros = viaje.getPasajerosCalificables();
+			System.out.println("");
+			System.out.println("fuera del for: "+haCalificado);
+			System.out.println("");
+			for (PasajeroViaje pv : pasajeros){
+				System.out.println("");
+				System.out.println("dentro del for: "+haCalificado);
+				System.out.println("");
+				Calificacion c = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
+				haCalificado = c!=null && c.getCalificacion_para_pasajero()!=null;
+				if (!haCalificado) break;
+			}
+		}else if (esFinalizo){
+			PasajeroViaje pv = viaje.recuperar_pasajeroViaje_por_cliente(usuario_logueado);
+			if (haCalificado = pv!=null){
+				Calificacion c = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
+				haCalificado = c!=null && c.getCalificacion_para_conductor()!=null;
+			}
+		}
+		json_logged.put("ha_calificado", haCalificado); //IMPLEMENTAR DESPUES
 		salida.put("usuario_logueado", json_logged);
 		salida.put("result", true);
 		
