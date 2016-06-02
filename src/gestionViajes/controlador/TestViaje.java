@@ -1286,6 +1286,53 @@ public class TestViaje extends TestCase {
                 
         }
         
+        @Test
+        public void testDejarComentarioINCorrecto() throws ExceptionViajesCompartidos{
+            
+            
+            String texto = "Este es un comentario de prueba para ver si persiste y ademas puede guardar muchos caracteres porque le puse string y no text y blablablblablabllasjdalsjdasjdkasjdkasdksajdkasjdkajskd";
+            Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+            
+            JSONObject json2 = TestViaje.crearViaje();
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+            
+            
+            try {	
+                    assertTrue( this.daoviajes.nuevoViaje(json2) );
+                } catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+            
+                 List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+                Integer id_viaje = viaje.getId_viaje();
+                JSONObject json_comentario = new JSONObject();
+                json_comentario.put("id_viaje", viaje.getId_viaje());
+                json_comentario.put("id_cliente", -1);
+                json_comentario.put("texto", texto);
+                boolean bandera = false;
+                try {
+                    bandera =false;
+                    bandera = this.daoviajes.dejarComentarioEnViaje(json_comentario) ;
+                } catch (ExceptionViajesCompartidos e) {
+			if(!e.getMessage().contains("CLIENTE NO EXISTE")){
+				fail("No tiro excepcion que no existe cliente");
+			}
+			bandera=true;
+		}
+		assertTrue(bandera);
+	}
+         
+                
+                
+                
+        
         
           @Test
         public void testgetComentarios() throws ExceptionViajesCompartidos{
