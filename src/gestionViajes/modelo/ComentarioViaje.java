@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.json.simple.JSONObject;
@@ -25,6 +27,11 @@ import otros.JSONable;
  * @author Fede
  */
 
+
+
+@NamedQueries({
+	    @NamedQuery(name="Comentarios.BuscarPorViaje", query="SELECT c FROM ComentarioViaje c WHERE c.viaje= :viaje")
+})
 @Entity
 @Table(name="comentario_viaje")
 public class ComentarioViaje implements JSONable {

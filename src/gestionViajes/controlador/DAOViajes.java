@@ -128,12 +128,10 @@ public class DAOViajes extends DataAccesObject {
     	}
     	vehiculo.setCantidad_asientos(asientos);
     	vehiculo.setSeguro( (Character) datos_vehiculo.get("seguro"));
-    	
     	String foto = (String) datos_vehiculo.get("foto");
     	if (foto != null) {
     		vehiculo.setFoto(foto);
     	}
-    	
     	
     	vehiculo.setEstado('A');
     	vehiculo.setVerificado('N');
@@ -1548,4 +1546,15 @@ public class DAOViajes extends DataAccesObject {
             }
             
         }
+        
+        public List<ComentarioViaje> getComentariosViaje(int id_viaje){
+            List<ComentarioViaje> lista = null;
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+            Query qry = entitymanager.createNamedQuery("Comentarios.BuscarPorViaje");
+            qry.setParameter("viaje", viaje);
+            lista = qry.getResultList();           
+            
+            return lista;
+        }
+        
 }
