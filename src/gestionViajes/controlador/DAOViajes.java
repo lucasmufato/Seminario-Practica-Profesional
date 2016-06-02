@@ -128,11 +128,12 @@ public class DAOViajes extends DataAccesObject {
     	}
     	vehiculo.setCantidad_asientos(asientos);
     	vehiculo.setSeguro( (Character) datos_vehiculo.get("seguro"));
-    
+    	
     	String foto = (String) datos_vehiculo.get("foto");
     	if (foto != null) {
     		vehiculo.setFoto(foto);
     	}
+    	
     	
     	vehiculo.setEstado('A');
     	vehiculo.setVerificado('N');
@@ -1516,5 +1517,35 @@ public class DAOViajes extends DataAccesObject {
                 
                 }	
 		return true;
-        }             
+        }
+        
+        //by fede
+        public boolean dejarComentarioEnViaje(JSONObject json) throws ExceptionViajesCompartidos{
+            if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+            }
+            
+            
+            ComentarioViaje cv = new ComentarioViaje();
+            cv.setTexto((String) json.get("texto"));
+            int id_cliente = (int) json.get("id_cliente");
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+            cv.setCliente(cliente);
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), json.get("id_viaje"));
+            cv.setViaje(viaje);
+            java.util.Date utilDate = new java.util.Date();
+            java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
+            cv.setFecha(fecha);
+            this.entitymanager.getTransaction().begin();
+            try{
+                this.entitymanager.persist(cv);
+                this.entitymanager.getTransaction().commit();
+                return true;
+            
+            }catch(RollbackException e){
+                        String error= ManejadorErrores.parsearRollback(e);
+                        throw new ExceptionViajesCompartidos("ERROR: "+error);
+            }
+            
+        }
 }
