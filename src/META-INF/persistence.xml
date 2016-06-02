@@ -29,6 +29,8 @@
 		<class>gestionViajes.modelo.PasajeroViaje</class>
 		<class>gestionViajes.modelo.Vehiculo</class>
 		<class>gestionViajes.modelo.Viaje</class>
+		<class>gestionViajes.modelo.ComentarioViaje</class>
+		
 		
 		<properties>
          <property name="eclipselink.logging.level" value="FINE"/>

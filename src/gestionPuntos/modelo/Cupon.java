@@ -27,7 +27,7 @@ public class Cupon implements JSONable {
 	@Id
 	@Column(nullable=false,name="ID_CUPON")
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorCupon")
-	@SequenceGenerator(allocationSize=1, schema="pruebajpa",  name="MySequenceGeneratorCupon", sequenceName = "sequence")
+	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorCupon", sequenceName = "sequence")
 	protected Integer id_cupon;
 	
 	protected EstadoCupon estado;

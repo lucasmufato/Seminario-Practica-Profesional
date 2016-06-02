@@ -3,6 +3,8 @@ package gestionViajes.controlador;
 import gestionViajes.controlador.*;
 import gestionViajes.controlador.*;
 import gestionViajes.controlador.*;
+import gestionViajes.controlador.*;
+import gestionViajes.controlador.*;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
@@ -35,7 +37,8 @@ public class TestViaje extends TestCase {
 		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno 
 		
 		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
-		this.daoviajes.vaciarTabla("Calificacion");
+		this.daoviajes.vaciarTabla("ComentarioViaje");
+                this.daoviajes.vaciarTabla("Calificacion");
 		this.daoviajes.vaciarTabla("Sancion");
                 this.daoviajes.vaciarTabla("MovimientoPuntos");
                 this.daoviajes.vaciarTabla("PasajeroViaje");
@@ -1241,7 +1244,47 @@ public class TestViaje extends TestCase {
 		assertEquals(viaje2.getEstado(),EstadoViaje.cancelado);
 	}
                 
-    
+               
+        @Test
+        public void testDejarComentario() throws ExceptionViajesCompartidos{
+            
+            
+            String texto = "Este es un comentario de prueba para ver si persiste y ademas puede guardar muchos caracteres porque le puse string y no text y blablablblablabllasjdalsjdasjdkasjdkasdksajdkasjdkajskd";
+            Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+            
+            JSONObject json2 = TestViaje.crearViaje();
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+            
+            
+            try {	
+                    assertTrue( this.daoviajes.nuevoViaje(json2) );
+                } catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+            
+                 List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+                Integer id_viaje = viaje.getId_viaje();
+                JSONObject json_comentario = new JSONObject();
+                json_comentario.put("id_viaje", viaje.getId_viaje());
+                json_comentario.put("id_cliente", cliente.getId_usuario());
+                json_comentario.put("texto", texto);
+                try {	
+                    assertTrue( this.daoviajes.dejarComentarioEnViaje(json_comentario) );
+                } catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+                
+                
+                
+                
+        }
         
         
          @SuppressWarnings({ "unchecked", "rawtypes" })
