@@ -490,6 +490,7 @@ public class ServletViaje extends HttpServlet {
 			id_viaje = Integer.parseInt(request.getParameter("id_viaje"));
 		} catch (Exception e) {
 			salida.put("result", false);
+			salida.put("redirect", "/mis_viajes.html");
 			salida.put("msg", "id_viaje invalido");
 			return salida;
 		}
@@ -498,7 +499,17 @@ public class ServletViaje extends HttpServlet {
 		
 		if (viaje == null) {
 			salida.put("result", false);
+			salida.put("redirect", "/mis_viajes.html");
 			salida.put("msg", "Viaje no valido");
+			return salida;
+		}
+		
+		// Si se pide privacy conductor, solo el conductor puede ver viaje (para el modificar viaje)
+		String privacy = request.getParameter("privacy");
+		if (privacy != null && privacy.equals("conductor") && !viaje.getConductor().getNombre_usuario().equals(AccessManager.nombreUsuario(request))){
+			salida.put("result", false);
+			salida.put("redirect", "/mis_viajes.html");
+			salida.put("msg", "Usted no es el conductor de este viaje");
 			return salida;
 		}
 		
