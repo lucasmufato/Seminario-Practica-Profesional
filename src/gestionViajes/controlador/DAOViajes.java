@@ -165,6 +165,152 @@ public class DAOViajes extends DataAccesObject {
 		
 	}
 	
+    //by juan
+	//practicamente un copiar y pegar de nuevoViaje
+	public void modificarViaje(JSONObject datos) throws ExceptionViajesCompartidos {
+		JSONObject viajeJson= (JSONObject) datos.get("viaje");
+		Integer id_cliente= (Integer) datos.get("cliente");
+		Cliente cliente= (Cliente)this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+		if (cliente==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+		}
+		Integer id_viaje= (Integer) viajeJson.get("id_viaje");
+		Viaje viaje= (Viaje)this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if (viaje==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
+		}
+		if (viaje.getPasajerosCalificablesComoListCliente().size()>0){
+			throw new ExceptionViajesCompartidos("No se permite modificar este viaje ya que existen pasajeros que han sido aceptados");
+		}
+		String patente = (String) datos.get("vehiculo");
+		Vehiculo vehiculo = (Vehiculo) this.buscarPorClaveCandidata("Vehiculo", patente);
+		if(vehiculo==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO NO EXISTE");
+		}
+		//METODO QUE VERIFICA SI UN CLIENTE TIENE UNA RELACION ACTUAL CON ESE VEHICULO
+		if( cliente.puedeManejar(vehiculo)==false ){
+			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
+		}
+		
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		//pongo quien es el conductor del viaje y en q vehiculo
+		Maneja maneja= this.getManejaActivoPorVehiculoConductor(vehiculo, cliente);
+		viaje.setConductor_vehiculo(maneja);
+		//seteo los otros datos
+		Timestamp fecha_inicio= (Timestamp) viajeJson.get("fecha_inicio");
+		if(fecha_inicio.before(new Timestamp((new java.util.Date()).getTime()))){
+			throw new ExceptionViajesCompartidos("ERROR:LA FECHA DE INICIO NO PUEDE SER ANTERIOR A LA ACTUAL");
+		}
+		if(fecha_inicio==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE FECHA DE INICIO");
+		}
+		viaje.setFecha_inicio(fecha_inicio);
+		viaje.setFecha_alta(new Timestamp((new java.util.Date()).getTime()));
+		viaje.setFecha_cancelacion(null);
+		viaje.setFecha_finalizacion(null);
+		
+		Integer cantidad_asientos = (Integer) viajeJson.get("cantidad_asientos");
+		if(cantidad_asientos==null){
+			throw new ExceptionViajesCompartidos("ERROR: NO INGRESO LA CANTIDAD DE ASIENTOS DISPONIBLES");
+		}
+		if (cantidad_asientos+1>maneja.getVehiculo().getCantidad_asientos()){
+			throw new ExceptionViajesCompartidos("ERROR: INGRESO MAS ASIENTOS DISPONIBLES QUE LA CANTIDAD DE ASIENTOS DEL VEHICULO");
+		}
+		viaje.setAsientos_disponibles(cantidad_asientos);
+		String nombre_amigable = (String) viajeJson.get("nombre_amigable");
+		if(nombre_amigable==null){
+			nombre_amigable="Viaje sin nombre "+fecha_inicio.toString();
+		}else if (nombre_amigable.length()>30){
+			throw new ExceptionViajesCompartidos("ERROR: NOMBRE DE VIAJE DEMASIADO LARGO");
+		}
+		viaje.setNombre_amigable(nombre_amigable);
+
+		Float precio=(Float) viajeJson.get("precio");
+		if(precio==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO TIENE PRECIO");
+		}
+		if(precio<0){
+			throw new ExceptionViajesCompartidos("ERROR: EL PRECIO NO PUEDE SER NEGATIVO");
+		}
+		viaje.setPrecio(precio);
+
+		//creo el recorrido (lista de localidades) que tiene el viaje
+		// le JSON datos tiene un JSON que se llama localidades, q tiene origen, destino y todos los puntos intermedios
+		JSONObject localidades =(JSONObject) datos.get("localidades");
+		if(localidades==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTAN TODAS LAS LOCALIDADES DEL VIAJE");
+		}
+		Integer id_origen = (Integer) localidades.get("origen");
+		if(id_origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL ORIGEN DEL VIAJE");
+		}
+		Integer id_destino = (Integer) localidades.get("destino");
+		if(id_destino==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DESTINO DEL VIAJE");
+		}
+		JSONArray intermedios = (JSONArray) localidades.get("intermedios");
+		ArrayList<Localidad> recorrido= new ArrayList<Localidad>();
+		//armo la lista de localidades en ORDEN, el ordinal lo pone el viaje
+		Localidad origen= (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_origen);
+		if(origen==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL ORIGEN NO EXISTE EN EL SISTEMA");
+		}
+		recorrido.add(origen);
+		if(intermedios!=null){
+			for(Object o: intermedios){
+				Localidad l =(Localidad) this.buscarPorPrimaryKey(new Localidad(), o);
+				if(l==null){
+					throw new ExceptionViajesCompartidos("ERROR: UNO DE LOS PUNTOS INTERMEDIOS INGRESADOS NO EXISTE EN EL SISTEMA");
+				}
+				recorrido.add( l );			
+			}
+		}
+		Localidad destino=(Localidad) this.buscarPorPrimaryKey(new Localidad(), id_destino); //cambio el origen por el destino, mantengo la variable
+		if(destino==null){
+			throw new ExceptionViajesCompartidos("ERROR: EL DESTINO NO EXISTE EN EL SISTEMA");
+		}
+		recorrido.add(destino);
+		
+		//borro anterior recorrido
+		List<LocalidadViaje> viejasLoc = viaje.getLocalidades();
+		for (LocalidadViaje lv : viejasLoc){
+			this.entitymanager.merge(lv);
+			this.entitymanager.remove(lv);
+		}
+		viaje.setLocalidades(new ArrayList<LocalidadViaje>());
+		
+		try{
+    		this.entitymanager.getTransaction( ).commit( );	
+			SchedulerViajes.nuevoViaje(viaje);
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		//
+		entitymanager.getTransaction().begin();
+
+		viaje.crearRecorrido(recorrido);
+		
+		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
+		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
+			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
+	        lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+		}
+		Integer ultimo=lista_localidad_viaje.size();
+		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
+
+		try{
+    		this.entitymanager.getTransaction( ).commit( );	
+			SchedulerViajes.nuevoViaje(viaje);
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+	}
+	
 	//by mufa
 	@SuppressWarnings("unused")
 	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {		//tiene tests
@@ -1548,4 +1694,5 @@ public class DAOViajes extends DataAccesObject {
             }
             
         }
+
 }

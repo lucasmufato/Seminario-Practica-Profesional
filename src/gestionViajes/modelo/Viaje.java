@@ -82,6 +82,7 @@ public class Viaje implements JSONable {
 	
 	//by mufa
 	public boolean crearRecorrido(List<Localidad> arreglo_de_localidades){
+		this.localidades.clear();
 		Integer ordinal=1;
 		for(Localidad l: arreglo_de_localidades){
 			LocalidadViaje lv = new LocalidadViaje(this,l);
