@@ -1701,22 +1701,61 @@ public class DAOViajes extends DataAccesObject {
             if(viaje==null){
                 throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE!");
             }
-            
+            Cliente conductor = viaje.getConductor();
             cv.setViaje(viaje);
             java.util.Date utilDate = new java.util.Date();
             java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
             cv.setFecha(fecha);
             this.entitymanager.getTransaction().begin();
-            try{
-                this.entitymanager.persist(cv);
-                this.entitymanager.getTransaction().commit();
-                return true;
-            
-            }catch(RollbackException e){
+
+            Notificacion notif = new Notificacion();
+            if(cliente!=conductor){ //si no es el conductor, lo notifico al conductor
+                //notificacion para el chofer
+                
+                    notif.setCliente(conductor);
+                    notif.setEstado(EstadoNotificacion.no_leido);
+                    notif.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                    //notif.setId_notificacion();
+                    notif.setTexto(cliente.getNombre_usuario()+" ha realizado un comentario en su viaje "+viaje.getNombre_amigable());
+                    this.entitymanager.persist(cv);
+                    this.entitymanager.persist(notif);
+                    this.entitymanager.getTransaction().commit();
+                    //TO DO Set LINK!!
+                //fin notif
+            }else{
+                if(cliente==conductor){ //si comenta el conductor, le aviso a los pasajeros
+                    try{
+                        this.entitymanager.persist(cv); //persisto el comentario y los notifico a todos
+                        this.entitymanager.getTransaction().commit();
+                        List<ComentarioViaje> lista = this.getComentariosViaje(viaje.getId_viaje());
+                        List<Cliente> notificados = new ArrayList<Cliente>();
+                        notificados.add(conductor); //le agrego el conductor asi no se notifica de su comentario
+                        for(int i=0;i<lista.size();i++){ //tengo que notificar a todos pero solo una vez
+                            Cliente clienteANotificar = lista.get(i).getCliente();
+                            
+                                if( (!notificados.contains(clienteANotificar))){ //si no lo notifique, lo notifico ahora   
+                                    Notificacion notificacion = new Notificacion(); 
+                                    this.entitymanager.getTransaction().begin();
+                                                                       
+                                    notificacion.setEstado(EstadoNotificacion.no_leido);
+                                    notificacion.setCliente(clienteANotificar);
+                                    notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                                    
+                                    notificacion.setTexto("El conductor del viaje "+viaje.getNombre_amigable()+" ha realizado un comentario en el mismo.");
+                                    this.entitymanager.persist(notificacion);
+                                    this.entitymanager.getTransaction().commit();
+                                    notificados.add(clienteANotificar); //lo agrego para no notificarlo mas
+                                }
+                            
+                        }
+                        
+                    }catch(RollbackException e){
                         String error= ManejadorErrores.parsearRollback(e);
                         throw new ExceptionViajesCompartidos("ERROR: "+error);
+                    }
+                }
             }
-            
+            return true;
         }
         
         public List<ComentarioViaje> getComentariosViaje(int id_viaje) throws ExceptionViajesCompartidos{

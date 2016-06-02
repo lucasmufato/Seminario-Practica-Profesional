@@ -48,7 +48,7 @@ public class TestViaje extends TestCase {
 		this.daoviajes.vaciarTabla("Viaje");
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
-                
+                this.daoviajes.vaciarTabla("Notificacion");
 	}
 
 	@Test
@@ -1373,14 +1373,14 @@ public class TestViaje extends TestCase {
                 JSONObject json_comentario2 = new JSONObject();
                 json_comentario2.put("id_viaje", id_viaje);
                 json_comentario2.put("id_cliente", cliente2.getId_usuario());
-                json_comentario2.put("texto", texto);
+                json_comentario2.put("texto", texto2);
                 try {	
                     assertTrue( this.daoviajes.dejarComentarioEnViaje(json_comentario2) );
                 } catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}
                 //3er comentario
-                String texto3 = "comentariooooo";
+                String texto3 = "comentario de chofer";
                 Cliente cliente3 = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 2);       
                 		
             
@@ -1388,7 +1388,7 @@ public class TestViaje extends TestCase {
                 JSONObject json_comentario3 = new JSONObject();
                 json_comentario3.put("id_viaje", id_viaje);
                 json_comentario3.put("id_cliente", cliente3.getId_usuario());
-                json_comentario3.put("texto", texto);
+                json_comentario3.put("texto", texto3);
                 try {	
                     assertTrue( this.daoviajes.dejarComentarioEnViaje(json_comentario3) );
                 } catch (ExceptionViajesCompartidos e) {
