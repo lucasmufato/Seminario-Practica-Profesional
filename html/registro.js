@@ -207,6 +207,7 @@ ui.cargarForm = function () {
 			//podria limpiar formularios en esta linea
 			ui.setNewForm();
 			successMessage(jsonData.msg);
+			setTimeout(function(){window.location="/login.html"}, 2000);
 		} else {
 			errorMessage (jsonData.msg);
 		}

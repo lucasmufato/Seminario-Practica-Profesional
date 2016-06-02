@@ -251,10 +251,11 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	//-------------------------------------------fin de la parte de administracion de usuarios----------------------------------------------
 	//-------------------------------------------Registro Clientes-------------------------------------------------------------------------
 	
-    public Boolean nuevoCliente(JSONObject persona,JSONObject cliente) {
+    public Boolean nuevoCliente(JSONObject persona,JSONObject cliente) throws ExceptionViajesCompartidos {
     	//creo los objectos a partir de los JSON recibidos
     	Persona p= new Persona(persona);
     	Cliente c= new Cliente(cliente);
+    	/*
     	try{
 			 entitymanager.getTransaction( ).begin( );
 			 c.setPersona(p);
@@ -280,7 +281,29 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 
 			e.printStackTrace();
 			return false;
-		}    	
+		}    
+		*/	
+		if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		 c.setPersona(p);
+		 c.setPuntos(0);
+		 c.setReputacion(3);
+		 entitymanager.persist(p);
+		 entitymanager.persist(c);
+		 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
+		 qry.setParameter("nombre", "cliente");
+		 Rol r= (Rol) qry.getSingleResult();
+		 c.asignarRol(r);
+        try{
+            this.entitymanager.getTransaction().commit();
+            return true;
+        
+        }catch(RollbackException e){
+            String error= ManejadorErrores.parsearRollback(e);
+            throw new ExceptionViajesCompartidos("ERROR: "+error);
+        }
 	}
     
 	public boolean subirFotoRegistro(JSONObject foto) throws ExceptionViajesCompartidos {
