@@ -1,5 +1,5 @@
-INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (NULL, "super_usuario", "Super Usuario", "Este usuario tiene todos los privilegios", "A");
-INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (NULL, "cliente", "Cliente", "Este usuario es cliente", "A");
+INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (1, "super_usuario", "Super Usuario", "Este usuario tiene todos los privilegios", "A");
+INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (2, "cliente", "Cliente", "Este usuario es cliente", "A");
 
 INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "raul", "admin", "1", "33111311", "1992-09-25", "O", "Lavalle, 123", "011-15-422123", NULL, "A");
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL, 1, "administrador", "adminpass0", "admin@localhost", "Usuario administrador", "A","U");
@@ -25,20 +25,55 @@ INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VAL
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (4,default,default,NULL,NULL,default);
 
 
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "administrar_usuarios","administrar usuarios","permite ABM de usuarios","A");
-INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES(1,1,CURRENT_DATE);
-
 -- agrego permisos de funcional
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "crear_viajes","crear viajes","permite crear viajes","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "buscar_viajes","buscar viajes","permite buscar viajes","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "loguearse","loguearse","permite ingresar al sistema","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "participar_viajes","participar viajes","permite participar en viajes","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "calificar","calificar","permite calificar usuarios","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "crear_vehiculos","crear vehiculos","permite crear vehiculos","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "modificar_vehiculo","modificar vehiculo determinado","permite modificar un vehiculo en particular","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "asignar_conductores","asignar conductores","permite asignarle conductores a un vehiculo","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "desasignar_conductores","desasignar conductores","permite desasignarle conductores a un vehiculo","A");
-INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES (null, "canelar_viaje","cancelar viaje","permite cancelar un viaje","A");
+INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES
+	(1, "administrar_usuarios","Administrar usuarios","Permite Alta/Baja/Modificacion de usuarios","A"),
+	(2, "generar_reportes", "Generar reportes", "Permite generar reportes", "A"),
+	
+	(3, "loguearse","loguearse","permite ingresar al sistema","A"),
+	(4, "acceder_perfil", "Acceder a perfil de usuario", "Permite acceder a perfil de usuario", "A"),
+	(5, "modificar_perfil", "Modificar datos de perfil", "Permite modificar perfil de usuario", "A"),
+	(6, "desactivar_cuenta", "Desactivar cuenta de usuario", "Permite desactivar la cuenta de un usuario", "A"),
+
+	(7, "crear_viajes","Crear viajes","Permite crear viajes","A"),
+	(8, "buscar_viajes","Buscar viajes","Permite buscar viajes","A"),
+	(9, "eliminar_viajes", "Eliminar viajes", "Permite eliminar un viaje", "A"),
+	(10, "acceder_mis_viajes", "Acceder a 'Mis viajes'", "Permite acceder a listado 'Mis viajes'", "A"),
+	(11, "ver_detalle_viajes", "Ver detalle de viajes", "Permite ver detalles de un viaje", "A"),
+	(12, "participar_viajes","Participar viajes","Permite participar en viajes","A"),
+	(13, "cancelar_viajes","Cancelar viaje","Permite cancelar un viaje","A"),
+
+	(14, "calificar","Calificar","Permite calificar usuarios","A"),
+
+	(15, "crear_vehiculos","Crear vehiculos","Permite crear vehiculos","A"),
+	(16, "ver_vehiculos", "Ver vehiculos", "Permite ver informacion de un vehiculo", "A"),
+	(17, "modificar_vehiculos", "Modificar vehiculos", "Permite modificar datos de un vehiculo", "A"),
+	(18, "asignar_conductores","Asignar conductores","Permite asignar conductores a un vehiculo","A"),
+	(19, "desasignar_conductores","Desasignar conductores","Permite desasignar conductores a un vehiculo","A"),
+
+	(20, "cargar_saldo", "Cargar saldo", "Permite cargar saldo", "A");
+
+INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
+	(1,1,CURRENT_DATE),
+	(2,1,CURRENT_DATE),
+	(3,2,CURRENT_DATE),
+	(4,2,CURRENT_DATE),
+	(5,2,CURRENT_DATE),
+	(6,2,CURRENT_DATE),
+	(7,2,CURRENT_DATE),
+	(8,2,CURRENT_DATE),
+	(9,2,CURRENT_DATE),
+	(10,2,CURRENT_DATE),
+	(11,2,CURRENT_DATE),
+	(12,2,CURRENT_DATE),
+	(13,2,CURRENT_DATE),
+	(14,2,CURRENT_DATE),
+	(15,2,CURRENT_DATE),
+	(16,2,CURRENT_DATE),
+	(17,2,CURRENT_DATE),
+	(18,2,CURRENT_DATE),
+	(19,2,CURRENT_DATE),
+	(20,2,CURRENT_DATE);
 
 INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("A", "Ciudad/Estado/Región"),
