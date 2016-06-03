@@ -63,6 +63,8 @@ var mostrarNotificaciones = function () {
 		
 		$("#contenedor-notificaciones").append(Mustache.render(notificacionTemplate, notificacion));
 	});
+
+	$(".loadingScreen").fadeOut();
 }
 
 var verNotificacion = function (id_notificacion) {

@@ -36,6 +36,8 @@ public class ServletNotificaciones extends HttpServlet {
 		if (entity != null && entity.equals ("notificaciones")) {
 			if (action != null && action.equals("ver_no_leidas")) {
 				respuesta = this.verNoLeidas(request);
+			} else if (action != null && action.equals("cantidad_no_leidas")) {
+				respuesta = this.verCantidadNoLeidas(request);
 			}
 		} else {
 			respuesta = new JSONObject();
@@ -96,6 +98,23 @@ public class ServletNotificaciones extends HttpServlet {
 		salida.put("result", true);
 		return salida;
 	}
+
+	private JSONObject verCantidadNoLeidas(HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		Integer idCliente = AccessManager.getIdUsuario(request);
+		try {
+			int cantidad = daoNotificaciones.getCantidadNotificacionesNoLeidas(idCliente);
+			salida.put("cantidad", cantidad);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", "Error interno del servidor: ");
+			return salida;
+		}
+		salida.put("result", true);
+		return salida;
+	}
+
+
 
 	private JSONObject marcarComoLeida(HttpServletRequest request) {
 		JSONObject salida = new JSONObject();

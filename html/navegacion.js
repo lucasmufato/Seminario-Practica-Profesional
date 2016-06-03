@@ -1,5 +1,3 @@
-//(function () {
-
 var toggleSidebar = function () {
 	$('body').toggleClass("sidebar-on");
 }
@@ -46,6 +44,9 @@ var navegacionInit = function () {
 			}
 		}
 	};
+
+	// Notificaciones
+	comprobarNotificaciones();
 }
 
 var oldFunc = window.onload;
@@ -58,7 +59,25 @@ if(oldFunc) {
 } else {
 		window.onload = navegacionInit;
 }
-//}) ();
+
+var comprobarNotificaciones = function() {
+	$.ajax({
+		url: "/notificaciones",
+		method: "GET",
+		dataType: "json",
+		data: {
+			entity: "notificaciones",
+			action: "cantidad_no_leidas",
+		},
+		success: function (recieved) {
+			if (recieved.cantidad) {
+				$('#cantidad_notificaciones').text(recieved.cantidad);
+				$('#boton_notificaciones').show();
+				window.setTimeout(comprobarNotificaciones, 60000);
+			}
+		}
+	});
+}
 
 /* FUNCIONES DE USO GENERAL */
 vc = {};

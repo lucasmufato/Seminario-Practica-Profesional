@@ -83,6 +83,10 @@ nav#common-navbar .navbar-header a {
 	background-size: contain;
 }
 
+#boton_notificaciones {
+	display: none;
+}
+
 #divanio {
 	padding-left: 15px;
 	padding-right: 15px;
