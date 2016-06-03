@@ -4,7 +4,7 @@ data.viaje.id = getUrlVars()["id"];
 data.conductor = {};
 data.vehiculo = {};
 data.localidades = [];
-data.comentarios = {};
+data.comentarios = [];
 data.usuario_logueado = {};
 
 var sendAjax = function(sendData,callback){
@@ -41,6 +41,7 @@ data.loadData = function() {
 			data.localidades = jsonData.localidades;
 			data.comentarios = jsonData.comentarios;
 			data.usuario_logueado = jsonData.usuario_logueado;
+			data.comentarios = jsonData.comentarios;
 			
 			if(jsonData.recargar_en != undefined) {
 				window.setTimeout(data.loadData, jsonData.recargar_en);
@@ -48,7 +49,7 @@ data.loadData = function() {
 			configurarUi();
 			cargarViaje();
 			cargarVehiculo();
-			//cargarComentarios();
+			cargarComentarios();
 			cargarConductor();
 			cargarRutaEnMapa();
 
@@ -237,7 +238,7 @@ var configurarUi = function(){
 	if(esAceptado) {$('#infomsg-pasajero-aceptado').show();}
 	if(esRechazado) {$('#infomsg-pasajero-rechazado').show();}
 	if(esFinalizo) {$('#infomsg-pasajero-finalizo').show();}
-	if(!haCalificado && esFinalizo) {$('#infomsg-calificacion-pendiente').show();}
+	if(!haCalificado && (esConductor || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
 	
 	var estado = estadoString(data.viaje.estado);
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
@@ -245,8 +246,8 @@ var configurarUi = function(){
 		if (esConductor){
 			$("#botonera-conductor").show();
 			$("#botonera-pasajero").hide();
-			
-			if (data.viaje.cantidad_pasajeros_calificables > 0){
+			console.log(data.viaje.cantidad_pasajeros_postulados);
+			if (data.viaje.cantidad_pasajeros_calificables > 0 || data.viaje.cantidad_pasajeros_postulados > 0){
 				$("#btnModificar").hide();
 			}
 			//Boton finalizar solo si esta en iniciado
@@ -389,6 +390,138 @@ var cargarConductor = function(){
 	$("#reputacion").text(reputacionStars(data.conductor.reputacion));;
 	$("#nombreConductor").text(data.conductor.nombre_usuario);
 	$("#nombreConductor").attr('href',"/perfil.html?usuario="+data.conductor.nombre_usuario);
+}
+
+var cargarComentarios = function(){
+	/*
+	data.comentarios=[{
+		foto:"/img/perfil/default.png",
+		nombre_usuario:"juan23",
+		fecha:"01/06/2016",
+		comentario:"Excelente viaje pero aceptas pagos con tarjeta?"
+	},{
+		foto:"/img/perfil/default.png",
+		nombre_usuario:"usuario",
+		fecha:"01/06/2016",
+		comentario:"Hola! pasarias por rodríguez luego de Luján? gracias"
+	}];
+	*/
+	if (!data.comentarios || !data.comentarios.length){
+		$("#busqueda-paginacion").hide();
+		var html = "<div class='jumbotron'>"
+			+"<h4 class='text-center text-primary'>No hay comentarios</h4>"
+			+"</div>";
+		$("#panel-comentarios").html(html);
+	}else{
+		$("#comentarios-paginacion").show();
+		autogeneratePages();
+		changePage(1);
+		/*
+		var template = $("#comentario-template").html();
+		html = Mustache.render(template, data);
+		*/
+	}	
+}
+
+var enviarComentario = function(){
+	var sendData = {
+		entity: "comentario",
+		action: "new",
+		id_viaje: data.viaje.id,
+		comentario: $("#message-text").val()
+	}
+	var onsuccess = function(jsonData){
+		data.loadData();
+	}
+	console.log("mando: ",sendData);
+	vc.peticionAjax("/viajes",sendData,"POST",onsuccess);
+}
+
+/////paginacion////
+var current_page = 1;
+var records_per_page = 10;
+
+function autogeneratePages(){
+	//Ir a pagina anterior
+	var prevPage = "<li id='previous-page'>"+
+					  "<a href='javascript:prevPage()' aria-label='Previous'>"+
+						"<span aria-hidden='true'>&laquo;</span>"+
+					  "</a>"+
+					"</li>";
+	
+	//paginas de resultado
+	var html="";
+	for (i=1; i<=numPages();i++){
+		html += "<li><a href='javascript:changePage("+i+")'>"+i+"</a></li>";
+	}
+	
+	// Siguiente pagina
+	var nextPage = "<li id='next-page'>"+
+					  "<a href='javascript:nextPage()' aria-label='Next'>"+
+						"<span aria-hidden='true'>&raquo;</span>"+
+					  "</a>"+
+					"</li>";
+									
+	$("#comentarios-paginacion").html(prevPage+html+nextPage);
+}
+
+function changePage(page){
+	current_page = page;
+
+    var btn_prev = $("#previous-page");
+    var btn_next = $("#next-page");
+
+ 
+    // Validate page
+    if (page < 1) page = 1;
+    if (page > numPages()) page = numPages();
+
+    for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
+		generarHtmlComentario(i);
+    }
+	
+	$( "#comentarios-paginacion").find(".active").removeClass("active");
+	$( "#comentarios-paginacion li:eq("+page+")" ).addClass("active");
+
+    if (page == 1) {
+        btn_prev.addClass("disabled");
+    } else {
+        btn_prev.removeClass("disabled");
+    }
+
+    if (page == numPages()) {
+        btn_next.addClass("disabled");
+    } else {
+        btn_next.removeClass("disabled");
+    }
+}
+function numPages(){
+    return Math.ceil(data.comentarios.length / records_per_page);
+}
+function prevPage(){
+    if (current_page > 1) {
+        current_page--;
+        changePage(current_page);
+    }
+}
+
+function nextPage(){
+    if (current_page < numPages()) {
+        current_page++;
+        changePage(current_page);
+    }
+}
+
+///////////fin-paginacion//////////
+
+var generarHtmlComentario = function(indiceComentario){
+	// si es el primer comentario borro datos del panel
+	if (indiceComentario % records_per_page == 0) $("#panel-comentarios").html("");
+	var comentario = data.comentarios[indiceComentario];
+	if (comentario){
+		var template = $("#comentario-template").html();
+		$("#panel-comentarios").append(Mustache.render(template, comentario));
+	}
 }
 
 function setearViajeComplementario(idComp){
@@ -576,13 +709,17 @@ var cancelarViaje = function(){
 	var confirmarCancelacion = function(){
 		closeModal(modalName);
 		var sendJson = {
-			action: "cancelar_viaje",
+			entity:"viaje",
+			action: "cancelar",
 			id_viaje: data.viaje.id
 		}
 		var onsuccess = function(jsonData){
 			if (jsonData.result){
-				window.location = "/home.html"; //mejorar esto
-			}else{
+				data.loadData();
+				//window.location = "/mis_viajes.html"; //mejorar esto
+			} else if (jsonData.relocate){
+				window.location = jsonData.relocate;
+			} else if (jsonData.msg){
 				errorMessage(jsonData.msg);
 			}
 		}

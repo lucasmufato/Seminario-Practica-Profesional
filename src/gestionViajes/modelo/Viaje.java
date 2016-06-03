@@ -82,6 +82,7 @@ public class Viaje implements JSONable {
 	
 	//by mufa
 	public boolean crearRecorrido(List<Localidad> arreglo_de_localidades){
+		this.localidades.clear();
 		Integer ordinal=1;
 		for(Localidad l: arreglo_de_localidades){
 			LocalidadViaje lv = new LocalidadViaje(this,l);
@@ -430,6 +431,7 @@ public class Viaje implements JSONable {
 		json_viaje.put("precio",this.getPrecio());
 		json_viaje.put("asientos_disponibles", this.getAsientos_disponibles());
 		json_viaje.put("cantidad_pasajeros_calificables",this.getPasajerosCalificables().size());
+		json_viaje.put("cantidad_pasajeros_postulados", this.getPasajerosPostuladosComoListCliente().size());
 		/* NOTAS: 
 			//TODO hora debe estar dentro de fecha
 		*/

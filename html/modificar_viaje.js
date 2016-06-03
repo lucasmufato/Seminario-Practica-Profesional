@@ -103,7 +103,7 @@ pedirRuta = function () {
 
 }
 
-cargarViaje= function(){
+cargarViaje = function(){
 	var sendData = {
 		entity: "viaje",
 		action: "detalle",
@@ -140,14 +140,14 @@ cargarRecorrido = function(recorrido){
 		var l = getItem(localidadPorId(recorrido[i]));
 		if (i==0){
 			magic.inputOrigen.addToSelection(l);
-		}else if (i==recorrido.length-1){			
+		}else if (i==recorrido.length-1){	
 			magic.inputDestino.addToSelection(l);
 		}else{
 			magic.inputIntermedios.addToSelection(l);
 		}
 	}
-	redibujar();	
-	
+	setTimeout(function(){redibujar()}, 2000);
+
 	function getItem(l){
 		return item = {
 			id:l.id,
@@ -168,6 +168,7 @@ enviarForm = function ()  {
 		var sendData = {
 			entity: 'viaje',
 			action: 'edit',
+			id_viaje: id_viaje,
 			origen: magic.inputOrigen.getValue()[0],
 			destino: magic.inputDestino.getValue()[0],
 			intermedios: magic.inputIntermedios.getValue(),
@@ -184,10 +185,10 @@ enviarForm = function ()  {
 			// Viaje modificado
 			// Deberia redireccionar a detalle viaje
 			// Pero como parche va a redireccionar a mis viajes
-			vc.ventana_mensaje ("Viaje modificado correctamente<br>Redireccionando al detalle del viajes");
+			vc.ventana_mensaje ("Viaje modificado correctamente<br>Redireccionando al detalle del viaje");
 			setTimeout(function(){window.location="/detalle_viaje.html?id="+id_viaje}, 3000);
 		};
-
+		console.log("mando: ",sendData);
 		vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 	} 
 
@@ -209,7 +210,6 @@ cargarVehiculosSelect = function() {
 		vehiculos = jsonData.vehiculos;
 		if(vehiculos.length) {
 			vehiculos.forEach(function (vehiculo) {
-				console.log(vehiculo);
 				if (vehiculo.estado=="A") {
 					addVehiculosSelectOption(vehiculo);
 				}

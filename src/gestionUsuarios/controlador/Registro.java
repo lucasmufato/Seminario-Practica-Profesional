@@ -91,12 +91,17 @@ public class Registro extends HttpServlet {
 		JSONObject persona = this.cargarPersona(request);
 		JSONObject cliente = this.cargarCliente(request);
 
-		if (dao.nuevoCliente(persona,cliente)){
-			out.put ("result", true);
-			out.put ("msg", "El usuario ha sido registrado correctamente");
-		}else{
+		try {
+			if (dao.nuevoCliente(persona,cliente)){
+				out.put ("result", true);
+				out.put ("msg", "El usuario ha sido registrado correctamente");
+			}else{
+				out.put ("result", false);
+				out.put ("msg", "Error en registro de usuario");
+			}
+		} catch (ExceptionViajesCompartidos e) {
 			out.put ("result", false);
-			out.put ("msg", "Error en registro de usuario");
+			out.put ("msg", e.getMessage());
 		}
 
 		return out;

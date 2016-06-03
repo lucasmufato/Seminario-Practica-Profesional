@@ -56,6 +56,10 @@ public class ServletViaje extends HttpServlet {
 		if (entity != null && entity.equals ("viaje")) {
 			if (action != null && action.equals ("new")) {
 				respuesta = this.nuevo_viaje (request);
+			} else if (action != null && action.equals("edit")) {
+				respuesta = this.modificar_viaje (request);
+			} else if (action != null && action.equals("cancelar")) {
+				respuesta = this.cancelar_viaje (request);
 			} else if (action != null && action.equals("buscar")) {
 				respuesta = this.buscar_viaje (request);
 			} else if (action != null && action.equals("detalle")) {
@@ -193,7 +197,7 @@ public class ServletViaje extends HttpServlet {
 
 
 			//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
-			Calificacion calificacion = daoPuntos.getCalificacionPorConductorPasajero(pv, conductor);
+			Calificacion calificacion = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
 
 			System.out.println("");
 			System.out.println("es pasajero");
@@ -239,7 +243,7 @@ public class ServletViaje extends HttpServlet {
 
 				// OBTENGO CALIFICACION
 				//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
-				Calificacion calificacion = daoPuntos.getCalificacionPorConductorPasajero(pv, conductor);
+				Calificacion calificacion = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
 				System.out.println("");
 				System.out.println("es conductor");
 				System.out.println("");
@@ -471,6 +475,153 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+	private JSONObject modificar_viaje(HttpServletRequest request) {
+		int id_viaje=-1, id_origen=-1, id_destino=-1, id_conductor=-1;
+		JSONArray id_intermedios=null;
+		int asientos=-1;
+		float precio=-1f;
+		String nombre_amigable=null, patente_vehiculo=null;
+		Timestamp fecha=null;
+
+		JSONObject salida = new JSONObject();
+		JSONObject params = new JSONObject();
+		id_intermedios = new JSONArray();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		try {
+			id_viaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Viaje no es válido");
+			return salida;
+		}try {
+			id_origen = Integer.parseInt(request.getParameter("origen"));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Origen no es válido");
+			return salida;
+		} try {
+			id_destino = Integer.parseInt(request.getParameter("destino"));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Destino no es válido");
+			return salida;
+		} try {
+			String[] locs = request.getParameterValues("intermedios[]");
+			if (locs != null) {
+				for (String loc: locs) {
+					id_intermedios.add(Integer.parseInt(loc));
+					System.out.println("PUNTO INTERMEDIO: ID"+loc);
+				}
+			}
+		} catch (NumberFormatException e) {
+			salida.put("result", false);
+			salida.put("msg", "Punto Intermedio no es válido");
+			return salida;
+		} try {
+			nombre_amigable = request.getParameter("nombre_amigable");
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Nombre de viaje no es válido");
+			return salida;
+		} try {
+			precio = Float.parseFloat(request.getParameter ("precio"));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Precio no es válido");
+			return salida;
+		} try {
+			fecha = new Timestamp (format.parse(request.getParameter("fecha")).getTime());
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "fecha no es válida");
+			return salida;
+		} try {
+			patente_vehiculo = request.getParameter("vehiculo");
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Vehiculo no es válido");
+			return salida;
+		} try {
+			asientos = Integer.parseInt(request.getParameter("asientos"));
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", "Cantidad de asientos en viaje de ida no es válida");
+			return salida;
+		} 
+
+		params.put("cliente", AccessManager.getIdUsuario(request));
+		params.put("vehiculo", patente_vehiculo);
+
+		JSONObject localidades = new JSONObject();
+		localidades.put("origen", id_origen);
+		localidades.put("intermedios", id_intermedios);
+		localidades.put("destino", id_destino);
+		params.put("localidades", localidades);
+
+		JSONObject viaje = new JSONObject();
+		viaje.put("id_viaje", id_viaje);
+		viaje.put("fecha_inicio", fecha);
+		viaje.put("cantidad_asientos", asientos);
+		viaje.put("nombre_amigable", nombre_amigable);
+		viaje.put("precio", precio);
+		params.put("viaje", viaje);
+		
+		try {
+			daoViajes.modificarViaje(params);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			return salida;
+		}
+		salida.put("result", true);
+		salida.put("msg", "Se ha modificado el viaje con éxito");
+		return salida;
+	}
+	
+	private JSONObject cancelar_viaje(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		
+		//Chequeo que cliente es conductor
+		Viaje viaje = daoViajes.getViajeById(idViaje);
+		int idCliente = AccessManager.getIdUsuario(request);
+		int idConductor = viaje.getConductor().getId_usuario();
+		if (idCliente != idConductor){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/acceso_denegado.html");
+			return respuesta;
+		}
+		
+		try {
+			daoViajes.cancelarViaje(idViaje, idCliente);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "El viaje ha sido cancelado correctamente");
+		return respuesta;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public JSONObject ver_viaje_detallado(HttpServletRequest request) {
 		int id_viaje;
@@ -543,7 +694,30 @@ public class ServletViaje extends HttpServlet {
 		json_logged.put("es_rechazado", esRechazado);
 		json_logged.put("es_finalizo", esFinalizo);
 		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
-		json_logged.put("ha_calificado", false); //IMPLEMENTAR DESPUES
+		
+		// Ha calificado a todos?
+		boolean haCalificado = false;
+		if (esConductor){
+			List<PasajeroViaje> pasajeros = viaje.getPasajerosCalificables();
+			System.out.println("");
+			System.out.println("fuera del for: "+haCalificado);
+			System.out.println("");
+			for (PasajeroViaje pv : pasajeros){
+				System.out.println("");
+				System.out.println("dentro del for: "+haCalificado);
+				System.out.println("");
+				Calificacion c = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
+				haCalificado = c!=null && c.getCalificacion_para_pasajero()!=null;
+				if (!haCalificado) break;
+			}
+		}else if (esFinalizo){
+			PasajeroViaje pv = viaje.recuperar_pasajeroViaje_por_cliente(usuario_logueado);
+			if (haCalificado = pv!=null){
+				Calificacion c = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
+				haCalificado = c!=null && c.getCalificacion_para_conductor()!=null;
+			}
+		}
+		json_logged.put("ha_calificado", haCalificado); //IMPLEMENTAR DESPUES
 		salida.put("usuario_logueado", json_logged);
 		salida.put("result", true);
 		
