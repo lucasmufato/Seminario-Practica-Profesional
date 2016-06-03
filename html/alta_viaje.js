@@ -115,7 +115,7 @@ enviarForm = function ()  {
 			precio_ida: $('#form-alta-viaje input[name=precio-ida]').val(),
 			precio_vuelta: $('#form-alta-viaje input[name=precio-vuelta]').val(),
 			tipo_viaje: $('#form-alta-viaje select[name=tipo_viaje]').val(),
-			fecha_ida: $('#form-alta-viaje input[name=fecha-ida]').val(),
+			fecha_ida: vc.fechaAMD($('#form-alta-viaje input[name=fecha-ida]').val()),
 			vehiculo_ida: $('#form-alta-viaje select[name=vehiculo]').val(),
 			asientos_ida: $('#form-alta-viaje select[name=asientos-ida]').val(),
 
@@ -123,7 +123,7 @@ enviarForm = function ()  {
 
 
 		if ($('#form-alta-viaje select[name=tipo_viaje]').val() == 'ida_vuelta') {
-			sendData.fecha_vuelta = $('#form-alta-viaje input[name=fecha-vuelta]').val();
+			sendData.fecha_vuelta = vc.fechaAMD($('#form-alta-viaje input[name=fecha-vuelta]').val());
 			sendData.vehiculo_vuelta = $('#form-alta-viaje select[name=vehiculo]').val();
 			sendData.asientos_vuelta= $('#form-alta-viaje select[name=asientos-vuelta]').val();
 		}
@@ -216,7 +216,7 @@ getSelectedVehiculo = function() {
 window.onload = function () {
 
 	$('#fecha').datetimepicker({
-		format: 'yyyy-mm-dd hh:ii:00',
+		format: 'dd/mm/yyyy hh:ii:00',
 		language: 'es',
 		todayBtn: 1,
 		autoclose: 1,
@@ -228,7 +228,7 @@ window.onload = function () {
 	})
 
 	$('#fechahasta').datetimepicker({
-		format: 'yyyy-mm-dd hh:ii:00',
+		format: 'dd/mm/yyyy hh:ii:00',
 		language: 'es',
 		todayBtn: 1,
 		autoclose: 1,
