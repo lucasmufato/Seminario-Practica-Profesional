@@ -79,7 +79,7 @@ public class Notificacion implements JSONable {
 		return link;
 	}
 
-	public void setLink() {
+	public void setLink(String link) {
 		this.link = link;
 	}
 

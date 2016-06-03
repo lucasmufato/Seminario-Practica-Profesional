@@ -729,6 +729,7 @@ public class DAOViajes extends DataAccesObject {
 		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
 		notificacion.setTexto("El usuario: "+cliente.getNombre_usuario()+
 				" se ha postulado para participar en tu viaje: "+viaje.getNombre_amigable());
+		notificacion.setLink("/listado_postulantes.html?id="+viaje.getId_viaje());
 		this.entitymanager.persist(notificacion);
 		//ahora que ya tengo guardado el pasajero en la BD, la calificacion y la comision tiene una entidad a la cual apuntar
 		comisionCobrada.setPasajero_viaje(pasajero);
@@ -878,6 +879,7 @@ public class DAOViajes extends DataAccesObject {
 			notificacion.setEstado(EstadoNotificacion.no_leido);
 			notificacion.setFecha(viaje.getFecha_inicio()); 
 			notificacion.setTexto ("Ha llegado el momento de iniciar tu viaje <<" + viaje.getNombre_amigable() + ">> con destino a " + viaje.getDestino().getNombre());
+			notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
 			this.entitymanager.persist(notificacion);
 			List<PasajeroViaje> pasajeros = viaje.getPasajeros();
 			for(PasajeroViaje pasajero: pasajeros) {
@@ -887,6 +889,7 @@ public class DAOViajes extends DataAccesObject {
 					notificacion.setEstado(EstadoNotificacion.no_leido);
 					notificacion.setFecha(viaje.getFecha_inicio()); 
 					notificacion.setTexto ("Ha llegado la hora de inicio del viaje <<" + viaje.getNombre_amigable() + ">> con destino a " + viaje.getDestino().getNombre() + " en el cual esta inscripto como pasajero");
+					notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
 					this.entitymanager.persist(notificacion);
 				}
 			}
@@ -1055,6 +1058,7 @@ public class DAOViajes extends DataAccesObject {
 		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
 		notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
 				" lo ha aceptado al viaje: "+viaje.getNombre_amigable());
+		notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
 		this.entitymanager.persist(notificacion);
 		try{
 		 	entitymanager.getTransaction( ).commit( );	
@@ -1110,6 +1114,7 @@ public class DAOViajes extends DataAccesObject {
 		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
 		notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
 				" ha rechazado su participacion en el viaje: "+viaje.getNombre_amigable());
+		notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
 		this.entitymanager.persist(notificacion);
 		try{
     		entitymanager.getTransaction( ).commit( );	
@@ -1290,6 +1295,7 @@ public class DAOViajes extends DataAccesObject {
 		notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
 		notificacion.setTexto("El pasajero: "+ pasajero.getCliente().getNombre_usuario() +
 				" ha cancelado su participacion su viaje <<"+viaje.getNombre_amigable()+">> con destino a "+viaje.getDestino().getNombre());
+		notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
 		this.entitymanager.persist(notificacion);
 		try{
                     entitymanager.getTransaction( ).commit( );
@@ -1655,6 +1661,7 @@ public class DAOViajes extends DataAccesObject {
                             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
                             notificacion.setTexto("El conductor: "+ viaje.getConductor().getNombre_usuario() +
                                             " ha cancelado el viaje: "+viaje.getNombre_amigable());
+                            notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
                             this.entitymanager.persist(notificacion);
                             this.entitymanager.getTransaction( ).commit( );
                             //fin notificar pasajero viaje
@@ -1717,6 +1724,7 @@ public class DAOViajes extends DataAccesObject {
                     notif.setFecha(new Timestamp((new java.util.Date()).getTime()));
                     //notif.setId_notificacion();
                     notif.setTexto(cliente.getNombre_usuario()+" ha realizado un comentario en su viaje "+viaje.getNombre_amigable());
+                    notif.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
                     this.entitymanager.persist(cv);
                     this.entitymanager.persist(notif);
                     this.entitymanager.getTransaction().commit();
@@ -1742,6 +1750,7 @@ public class DAOViajes extends DataAccesObject {
                                     notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
                                     
                                     notificacion.setTexto("El conductor del viaje "+viaje.getNombre_amigable()+" ha realizado un comentario en el mismo.");
+                                    notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
                                     this.entitymanager.persist(notificacion);
                                     this.entitymanager.getTransaction().commit();
                                     notificados.add(clienteANotificar); //lo agrego para no notificarlo mas
