@@ -9,7 +9,7 @@ initUI = function() {
 	$('label').addClass('control-label');
 
 	$('#fechadesde').datetimepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd/mm/yyyy',
     	language: "es",
     	startView: 3,
     	minView: 2,
@@ -22,9 +22,9 @@ initUI = function() {
 	var mes = ahora.getMonth()+1;
 	if(mes<10) {mes = "0"+mes;}
 	var dia = ahora.getDate();
-	$('#fechadesde').val(""+anio+"-"+mes+"-"+dia);
+	$('#fechadesde').val(dia+"/"+mes+"/"+anio);
 	$('#fechahasta').datetimepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd/mm/yyyy',
     	language: "es",
     	startView: 3,
     	minView: 2,
@@ -190,8 +190,8 @@ var buscarViaje = function(){
 	sendData.entity="viaje";
 	sendData.origen = magic.inputOrigen.getValue()[0];
 	sendData.destino = magic.inputDestino.getValue()[0];
-	sendData.fecha_desde = $('#formBusqueda input[name=fechadesde]').val();
-	sendData.fecha_hasta = $('#formBusqueda input[name=fechahasta]').val();
+	sendData.fecha_desde = vc.fechaAMD($('#formBusqueda input[name=fechadesde]').val());
+	sendData.fecha_hasta = vc.fechaAMD($('#formBusqueda input[name=fechahasta]').val());
 	sendData.conductor = $('#formBusqueda input[name=conductor]').val().toLowerCase();
 	sendData.estado = $('#formBusqueda select[name=estadoviaje]').val();
 		
