@@ -238,6 +238,7 @@ var configurarUi = function(){
 	var esFinalizo = data.usuario_logueado.es_finalizo;
 	var esSeguidor = data.usuario_logueado.es_seguidor;
 	var haCalificado = data.usuario_logueado.ha_calificado;
+	var estado = estadoString(data.viaje.estado);
 
 	$('#infomsg-conductor').hide();
 	$('#infomsg-postulado').hide();
@@ -253,9 +254,8 @@ var configurarUi = function(){
 	if(esAceptado) {$('#infomsg-pasajero-aceptado').show();}
 	if(esRechazado) {$('#infomsg-pasajero-rechazado').show();}
 	if(esFinalizo) {$('#infomsg-pasajero-finalizo').show();}
-	if(!haCalificado && (esConductor || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
+	if(!haCalificado && ((esConductor && estado=="Finalizado") || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
 
-	var estado = estadoString(data.viaje.estado);
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
 		$("#botonera-cliente").hide();
 		if (esConductor){

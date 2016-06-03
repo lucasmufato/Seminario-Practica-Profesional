@@ -14,7 +14,6 @@ var loadData = function() {
 			postulantes = jsonData.postulantes;
 			if (postulantes.length) {
 				cargarPostulantes();
-				//cargarMisCalificaciones();
 			}else{
 				modalMessage("error",jsonData.msg,"Anda");
 			}
@@ -25,14 +24,14 @@ var loadData = function() {
 		}
 	}
 	//simular();
-	
+
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
 var initUI = function(){
 	loadData();
-	$('[data-toggle="tooltip"]').tooltip(); 
-	
+	$('[data-toggle="tooltip"]').tooltip();
+
 }
 
 window.onload=initUI;
@@ -77,7 +76,7 @@ var simular = function(){
 		participo: "",
 		valoracion: "",
 		comentario: "",
-		participo_recibido: "n",	
+		participo_recibido: "n",
 		valoracion_recibida: "0",
 		comentario_recibido: "no viajo!"
 	},{
@@ -93,12 +92,11 @@ var simular = function(){
 	}];
 	if (postulantes.length) {
 		cargarPostulantes();
-		//cargarMisCalificaciones();
 	}
 }
 var cargarMisCalificaciones = function(elem, htmlMisCalificaciones) {
 	var template = $("#misCalificaciones-template").html();
-	
+
 	//postulantes.forEach(function(elem){
 		elem.cantidad_estrellas = mostrarEstrellas(elem.valoracion_recibida);
 		elem.participacion = mostrarParticipacion(elem.participo_recibido);
@@ -111,7 +109,7 @@ var cargarMisCalificaciones = function(elem, htmlMisCalificaciones) {
 		//}
 	//});
 	if (htmlMisCalificaciones != "") {
-		var html = "<div class=' col-md-6'>"
+		var html = "<div class=' col-md-12'>"
 			+htmlMisCalificaciones+
 		"</div>"
 	}else{
@@ -140,7 +138,7 @@ var cargarPostulantes = function(){
 		} else {
 			if (elem.es_listo = elem.estado == 2){
 				htmlNoPendientes += Mustache.render(template, elem);
-			} 
+			}
 		}
 		if (elem.comentario_recibido && elem.valoracion_recibida && elem.participo_recibido) {
 			htmlMisCalificaciones+= cargarMisCalificaciones(elem, htmlMisCalificaciones);
@@ -176,15 +174,10 @@ var calificarPendiente = function(nombre_usuario){
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			loadData();
-			/*
-			$('.loadingScreen').fadeOut();
-			postulantes = jsonData.postulantes;
-			cargarPostulantes();
-			*/
 		} else {
 			modalMessage("error",jsonData.msg,"Calificar");
 		}
-	}	
+	}
 	if (completos(nombre_usuario)){
 		vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 	}
@@ -217,10 +210,10 @@ var colorPanel = function(caracter){
 
 var mostrarEstrellas = function (caracter) {
 	switch(caracter){
-		case 1: return "★"; 
-		case 2: return "★★"; 
-		case 3: return "★★★"; 
-		case 4: return "★★★★"; 
+		case 1: return "★";
+		case 2: return "★★";
+		case 3: return "★★★";
+		case 4: return "★★★★";
 		case 5: return "★★★★★";
 		case null: return "";
 		default: return "";
@@ -229,8 +222,8 @@ var mostrarEstrellas = function (caracter) {
 
 var mostrarParticipacion = function (caracter) {
 	switch(caracter) {
-		case 's': return "Participó en el viaje";
-		case 'n': return "No participó en el viaje";
+		case 'S': return "Participó en el viaje";
+		case 'N': return "No participó en el viaje";
 	}
 }
 
