@@ -21,18 +21,19 @@
 
 
 	<script id="viaje-template" type="text/template">
-
-	  <article class="col-lg-12 col-md-12 col-sm-12 text-center noselect">
+	  <article class="col-sm-12 text-center noselect">
 			<a href="/detalle_viaje.html?id={{id}}">
-				<div class="col-sm-3 conductor" align="center">
-					<p id="reputacion" class="reputacion" ><small>{{reputacion_stars}}</small></p>
+				<div class=" col-sm-3 " align="center">
 					<img alt="foto de usuario" src="{{foto}}" class="img-responsive img-circle" style="max-height: 70px">
-					<p><strong><small>{{conductor}}</small></strong></p>
+					<span class="label label-default">{{conductor}}</span>
+					<span id="reputacion" class="label label-warning" >{{reputacion_stars}}</span>
 				</div>
-				<div class="col-sm-9">
-					<h4 class="bg-primary">{{fecha_inicio}}</h4>
-					<h5 class="bg-success"><span class=" glyphicon glyphicon-usd"></span><span class="precio">{{precio}}</span></br><small>Incluyendo todos los tramos del viaje</small></h5>
-					<p>
+				<div class="col-sm-7">
+					<div class="">
+							<h4  class="bg-primary">{{nombre_amigable}}</h4>
+							<h4 class="bg-success">{{fecha_inicio}}</h4>
+					</div>
+					<p class="">
 						{{#recorrido}}
 							<span class="label label-primary">{{nombre_localidad}}</span>
 							{{^es_destino}}
@@ -40,6 +41,13 @@
 							{{/es_destino}}
 						{{/recorrido}}
 					</p>
+				</div>
+				<div class="col-sm-2">
+					<h5 class="bg-success precio">
+						<span class=" glyphicon glyphicon-usd"></span>
+						<span class="valor-precio">{{precio}}</span>
+						</br><small class="bg-info">Recorrido completo</small>
+					</h5>
 				</div>
 			</a>
 	  </article>
