@@ -188,3 +188,19 @@ vc.customAlertSuccess = function(elemento){
 		$(elemento).closest("tr").removeClass('has-success')
 	});
 }
+
+vc.fechaAMD = function (fecha_dma) {
+	if (fecha_dma.match (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/)) {
+		var anio = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$3"));
+		var mes = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$2"));
+		var dia = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$1"));
+		if (anio < 50) {
+			anio = 2000+Number(anio);
+		} else if (anio < 100){
+			anio = 1900+Number(anio);
+		}
+		if (mes < 10) {mes = "0"+mes;}
+		if (dia < 10) {dia = "0"+dia;}
+		return fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/, anio+"-"+mes+"-"+dia);
+	}
+}
