@@ -9,8 +9,9 @@ var loadData = function() {
 		nombre_usuario: nombre_usuario,
 	}
 	var onsuccess = function(jsonData){
+		console.log("recibo: ",jsonData);
 		if(jsonData.result){
-			$('.loadingScreen').fadeOut();		
+			$('.loadingScreen').fadeOut();
 			viajes = jsonData.viajes;
 			showViajes();
 		} else if (jsonData.redirect != undefined) {
@@ -18,21 +19,21 @@ var loadData = function() {
 		}
 	}
 	//simular();
-	
+
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
-	
+
 }
 
 var initUI = function(){
 	ocultarPaneles();
 	loadData();
-	$('[data-toggle="tooltip"]').tooltip(); 
+	$('[data-toggle="tooltip"]').tooltip();
 	$('#fechadesde, #fechahasta').datetimepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd/mm/yyyy',
     	language: "es",
     	startView: 3,
     	minView: 2,
-    	maxView: 2,    
+    	maxView: 2,
 		autoclose: true,
     	todayBtn: true,
 		clearBtn: true,
@@ -47,6 +48,7 @@ var ocultarPaneles = function(){
 window.onload=initUI;
 
 var simular = function(){
+	//DESACTUALIZADO, VER CONSOLE.LOG PARA SABER LO QUE SE RECIBE
 	viajes =  [{
 			"id" : 3,
 			"origen" : "Luján",
@@ -87,31 +89,36 @@ var simular = function(){
 	showViajes();
 }
 
-var verViaje = function(id){
-	window.location = 'detalle_viaje.html?id='+id;
-}
-
 var filterer = function(item){
-	var rctOrigenDestino = omitirAcentos($('#formFilter input[name=origen-destino]').val().toLowerCase());
+	var rctLocalidad = omitirAcentos($('#formFilter input[name=localidad]').val().toLowerCase());
 	var rctConductor = omitirAcentos($('#formFilter input[name=conductor]').val().toLowerCase());
 	var rctFechaDesde = $('#formFilter input[name=fechadesde]').val();
 	var rctFechaHasta = $('#formFilter input[name=fechahasta]').val();
 	var rctPrecioDesde = Number($('#formFilter input[name=preciodesde]').val());
 	var rctPrecioHasta = Number($('#formFilter input[name=preciohasta]').val());
-	
-	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(rctFechaDesde); 
-	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(rctFechaHasta); 
+
+	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(rctFechaDesde);
+	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(rctFechaHasta);
 
 	var destinoNormalizado = omitirAcentos(item.destino.toLowerCase());
 	var origenNormalizado = omitirAcentos(item.origen.toLowerCase());
 	var conductorNormalizado = omitirAcentos(item.conductor.toLowerCase());
-	
+
+	//busco si localidad se encuentra en recorrido
+	var esLocalidad = false;
+	var i=0;
+	while (!esLocalidad && i<item.recorrido.length){
+		var loc = omitirAcentos(item.recorrido[i].nombre_localidad.toLowerCase());
+		esLocalidad = esLocalidad || loc.contains(rctLocalidad);
+		i++;
+	}
+
 	var fecha = new Date(item.fecha_inicio);
-	return (destinoNormalizado.contains(rctOrigenDestino) || origenNormalizado.contains(rctOrigenDestino))
+	return (esLocalidad)
 			&& (conductorNormalizado.contains(rctConductor))
-			&& (fecha >= rctFechaDesde || rctFechaDesde==="") 
+			&& (fecha >= rctFechaDesde || rctFechaDesde==="")
 			&& (fecha <= rctFechaHasta || rctFechaHasta==="")
-			&& (item.precio >= rctPrecioDesde || rctPrecioDesde==0) 
+			&& (item.precio >= rctPrecioDesde || rctPrecioDesde==0)
 			&& (item.precio <= rctPrecioHasta || rctPrecioHasta==0);
 }
 
@@ -142,20 +149,20 @@ function autogeneratePages(){
 						"<span aria-hidden='true'>&laquo;</span>"+
 					  "</a>"+
 					"</li>";
-	
+
 	//paginas de resultado
 	var html="";
 	for (i=1; i<=numPages();i++){
 		html += "<li><a href='javascript:changePage("+i+")'>"+i+"</a></li>";
 	}
-	
+
 	// Siguiente pagina
 	var nextPage = "<li id='next-page'>"+
 					  "<a href='javascript:nextPage()' aria-label='Next'>"+
 						"<span aria-hidden='true'>&raquo;</span>"+
 					  "</a>"+
 					"</li>";
-									
+
 	$("#busqueda-paginacion").html(prevPage+html+nextPage);
 }
 
@@ -165,7 +172,7 @@ function changePage(page){
     var btn_prev = $("#previous-page");
     var btn_next = $("#next-page");
 
- 
+
     // Validate page
     if (page < 1) page = 1;
     if (page > numPages()) page = numPages();
@@ -173,7 +180,7 @@ function changePage(page){
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
 		generarHtmlViaje(i);
     }
-	
+
 	$( "#busqueda-paginacion").find(".active").removeClass("active");
 	$( "#busqueda-paginacion li:eq("+page+")" ).addClass("active");
 
@@ -215,6 +222,10 @@ var generarHtmlViaje = function(indiceViaje){
 		viaje.foto_revisada = viaje.foto || "/img/perfil/default.png";
 		var template = $("#viaje-template").html();
 		viaje.reputacion_stars = reputacionStars(viaje.reputacion);
+		viaje.fecha_inicio_revisada = vc.toFechaLocal(viaje.fecha_inicio);
+		for (var i=0; i<viaje.recorrido.length; i++){
+			viaje.recorrido[i].es_destino = i==viaje.recorrido.length-1;
+		}
 		$("#mis-viajes").append(Mustache.render(template, viaje));
 	}
 }

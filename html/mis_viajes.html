@@ -8,30 +8,38 @@
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
-	
+
 	<script type="text/javascript" src="/jquery.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-	
+
 	<script type="text/javascript" src="/mis_viajes.js"></script>
-	
+
 	<script type="text/javascript" src="/navegacion.js"></script>
 	<script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="/js/locales/bootstrap-datetimepicker.es.js"></script>
 	<script type="text/javascript" src="/js/mustache.js"></script>
-	
+
 	<script id="viaje-template" type="text/template">
-	  <article class="col-lg-12 col-md-12 col-sm-12 text-center noselect" onclick="verViaje({{id}});">
-		<div class="col-sm-3 conductor" align="center">
-			<p id="reputacion" style="color:orange" ><small>{{reputacion_stars}}</small></p>
-			<img alt="foto de usuario" src="{{foto_revisada}}" class="img-responsive img-circle" style="max-height: 70px"> 
-			<p><strong><small>{{conductor}}</small></strong></p>
-		</div>		
-		<div class="col-sm-9"> 
-			<h4 class="bg-primary">{{fecha_inicio}}</h4>
-			<h5 class="bg-success"><span class=" glyphicon glyphicon-usd"></span><span class="precio">{{precio}}</span></br><small>Incluyendo todos los tramos del viaje</small></h5>
-			<p><span class="glyphicon text-success glyphicon glyphicon-globe"></span> {{origen}}</p>
-			<p><span class="glyphicon text-danger glyphicon glyphicon-globe"></span> {{destino}}</p>		
-		</div>
+	  <article class="col-lg-12 col-md-12 col-sm-12 text-center noselect">
+			<a href="/detalle_viaje.html?id={{id}}">
+				<div class="col-sm-3 conductor" align="center">
+					<p id="reputacion" style="color:orange" ><small>{{reputacion_stars}}</small></p>
+					<img alt="foto de usuario" src="{{foto_revisada}}" class="img-responsive img-circle" style="max-height: 70px">
+					<p><strong><small>{{conductor}}</small></strong></p>
+				</div>
+				<div class="col-sm-9">
+					<h4 class="bg-primary">{{fecha_inicio_revisada}}</h4>
+					<h5 class="bg-success"><span class=" glyphicon glyphicon-usd"></span><span class="precio">{{precio}}</span></br><small>Incluyendo todos los tramos del viaje</small></h5>
+					<p>
+						{{#recorrido}}
+							<span class="label label-primary">{{nombre_localidad}}</span>
+							{{^es_destino}}
+								<span class="glyphicon glyphicon glyphicon-arrow-right"></span>
+							{{/es_destino}}
+						{{/recorrido}}
+					</p>
+				</div>
+			</a>
 	  </article>
 	</script>
 </head>
@@ -54,9 +62,9 @@
 				</header>
 				<form class="form-horizontal col-xs-12" id="formFilter" onsubmit="showViajes(); return false">
 					<div class="form-group">
-						<label for="origen-destino" class="control-label col-xs-12 col-sm-3 col-sm-offset-0">Origen/Destino:</label>
+						<label for="localidad" class="control-label col-xs-12 col-sm-3 col-sm-offset-0">Localidad:</label>
 						<div class="col-xs-12 col-sm-3 col-lg-3">
-							<input type="text" class="form-control" name="origen-destino" placeholder="Origen/Destino">
+							<input type="text" class="form-control" name="localidad" placeholder="Localidad">
 						</div>
 
 						<label for="conductor" class="control-label col-xs-12 col-sm-2 col-lg-2 col-sm-offset-0">Conductor:</label>
@@ -76,7 +84,7 @@
 						<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 							<div class="input-group date form_date">
 								<input type="text" class="form-control" placeholder="Fecha hasta" name="fechahasta" id="fechahasta">
-								<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>					
+								<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 					</div>
@@ -91,11 +99,11 @@
 						<label for="preciohasta" class="control-label col-xs-12 col-sm-2 col-lg-offset-0">Máximo:</label>
 						<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 							<div class="input-group">
-								<span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>	
-								<input type="number" class="form-control" min="0" step="0.01" placeholder="Precio hasta" name="preciohasta" id="preciohasta">				
+								<span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
+								<input type="number" class="form-control" min="0" step="0.01" placeholder="Precio hasta" name="preciohasta" id="preciohasta">
 							</div>
 						</div>
-					</div>					
+					</div>
 					<div class="form-group">
 					<!--
 						<label for="origen-destino" class="control-label col-xs-12 col-sm-3 col-sm-offset-0">Origen/Destino:</label>
@@ -112,14 +120,14 @@
 				<div id="panel-mis-viajes" class="col-xs-12">
 					<div id="mis-viajes">
 						<!-- viajes generados dinamicamente-->
-					</div>	
+					</div>
 					<nav>
 					  <ul class="pagination pull-right" id="busqueda-paginacion">
 						<!-- paginas generadas dinamicamente-->
 					  </ul>
-					</nav>				
-				</div>			
+					</nav>
+				</div>
 		</div>
     </main>
-</body>	
+</body>
 </html>

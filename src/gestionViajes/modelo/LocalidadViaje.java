@@ -13,10 +13,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.json.simple.JSONObject;
+
+import otros.JSONable;
+
 @Entity
 @Table(name="localidad_viaje")
 @IdClass(LocalidadViajeID.class)
-public class LocalidadViaje {
+public class LocalidadViaje implements JSONable{
 
 	@Id
 	@JoinColumn(name="id_viaje")
@@ -103,6 +107,29 @@ public class LocalidadViaje {
 
 	public void setOrdinal(Integer ordinal) {
 		this.ordinal = ordinal;
+	}
+
+	@Override
+	public void SetJSONObject(JSONObject json) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject localidad = new JSONObject();
+		localidad.put("cantidad_pasajeros", this.getCantidad_pasajeros());
+		localidad.put("kms_a_localidad_siguiente", this.getKms_a_localidad_siguiente());
+		localidad.put("id_localidad", this.getLocalidad().getId());
+		localidad.put("nombre_localidad", this.getLocalidad().getNombre());
+		localidad.put("ordinal", this.getOrdinal());
+		return localidad;
+	}
+
+	@Override
+	public Object getPrimaryKey() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

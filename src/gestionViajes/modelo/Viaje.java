@@ -394,7 +394,16 @@ public class Viaje implements JSONable {
 		}
 		return false;
 	}
-
+	
+	public JSONArray getLocalidadesViajeJson(){
+		List<LocalidadViaje> locs = this.getLocalidades();
+		JSONArray recorrido = new JSONArray();
+		for (LocalidadViaje locviaje: locs) {
+			recorrido.add (locviaje.toJSON());
+		}
+		return recorrido;
+	}
+	
 	@Override
 	public void SetJSONObject(JSONObject json) {
 	}

@@ -1104,6 +1104,7 @@ public class ServletViaje extends HttpServlet {
 				jtmp.put("reputacion", viaje.getConductor().getReputacion());
 				jtmp.put("precio", viaje.getPrecio());
 				jtmp.put("foto", viaje.getConductor().getFoto());
+				jtmp.put("recorrido", viaje.getLocalidadesViajeJson());
 
 				json_viajes.add(jtmp);
 			}

@@ -517,6 +517,7 @@ var generarHtmlComentario = function(indiceComentario){
 	var comentario = data.comentarios[indiceComentario];
 	if (comentario){
 		comentario.fecha = vc.toFechaLocal(comentario.fecha);
+		comentario.foto_revisada = comentario.foto || "/img/perfil/default.png";
 		var template = $("#comentario-template").html();
 		$("#panel-comentarios").append(Mustache.render(template, comentario));
 	}
