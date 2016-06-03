@@ -3,7 +3,7 @@
 <head>
 	<title>Detalle de Viaje</title>
 	<meta charset="utf-8" />
-	
+
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
@@ -34,15 +34,15 @@
 					<strong>{{nombre_usuario}}</strong> <span class="text-muted">comentó el {{fecha}}</span>
 				</div>
 				<div class="panel-body">
-					{{comentario}}
+					<p>{{comentario}}</p>
 				</div><!-- /panel-body -->
 			</div><!-- /panel panel-default -->
 		</div><!-- /col-sm-10 -->
 	</script>
-	
+
 </head>
 
-<body>	
+<body>
 	<div class="loadingScreen"></div>
 	<main>
 		<div class="container-fluid">
@@ -78,40 +78,40 @@
 							<div class="col-sm-12 col-md-8 col-lg-8 row subpanel">
 
 								<div class="col-lg-6 text-center  row">
-									<label class="col-xs-6">Origen:</label> 
+									<label class="col-xs-6">Origen:</label>
 									<div class="col-xs-6">
 										<p id="origen">---</p>
 									</div>
 								</div>
 								<div class="col-lg-6  text-center row">
-									<label class="col-xs-6">Destino:</label> 
+									<label class="col-xs-6">Destino:</label>
 									<div class="col-xs-6">
 										<p id="destino">---</p>
 									</div>
 								</div>
 								<div class="col-lg-6  text-center row">
-									<label class="col-xs-6">Estado del viaje:</label> 
+									<label class="col-xs-6">Estado del viaje:</label>
 									<p id="estado" class="col-xs-6">---</p>
 								</div>
 								<div class="col-lg-6  text-center row">
-									<label class="col-xs-6">Fecha:</label> 
+									<label class="col-xs-6">Fecha:</label>
 									<div class="col-xs-6">
 										<p id="fecha">---</p>
 									</div>
 								</div>
 								<div class="col-lg-6 text-center  row">
-									<label class="col-xs-6">Tipo:</label> 
+									<label class="col-xs-6">Tipo:</label>
 									<p id="tipo" class="col-xs-6"></p>
 								</div>
 								<div class="col-lg-6  text-center row">
-									<label class="col-xs-6">Precio estimado total:</label> 
+									<label class="col-xs-6">Precio estimado total:</label>
 									<div class="col-xs-6">
 										<p id="precio">---</p>
 									</div>
 								</div>
 
 								<div class="col-lg-12 text-center row">
-									<label class="col-xs-3 ">Recorrido:</label> 
+									<label class="col-xs-3 ">Recorrido:</label>
 									<div class="col-xs-9 row">
 										<div id="recorrido" class="">
 										</div>
@@ -119,14 +119,14 @@
 								</div>
 							</div>
 							<div class="col-md-4 col-lg-4 subpanel btn-group btn-group-vertical pull-right">
-									
-								<button type="button" class="btn-block btn btn-success" id="btnViajeFinalizado" onclick="viajeFinalizado();"><span class="glyphicon glyphicon-check"></span> Viaje Finalizado</button>							
+
+								<button type="button" class="btn-block btn btn-success" id="btnViajeFinalizado" onclick="viajeFinalizado();"><span class="glyphicon glyphicon-check"></span> Viaje Finalizado</button>
 								<button type="button" class="btn-block btn btn-success" id="btnCalificar" onclick="calificar();"><span class="glyphicon glyphicon-star"></span> Calificar</button>
 
 								<div id="botonera-conductor">
 									<button type="button" class="btn-block btn btn-primary " onclick="modificarViaje();" id="btnModificar"><span class="glyphicon glyphicon-pencil"></span> Modificar</button>
 									<button type="button" class="btn-block btn btn-primary " onclick="verPostulantes();" id="btnPostulantes"><span class="glyphicon glyphicon-eye-open"></span> Ver Postulantes</button>
-									<button type="button" class="btn-block btn btn-danger" id="btnCancelarViaje" onclick="cancelarViaje();"><span class="glyphicon glyphicon-remove"></span> <small>Cancelar viaje</small></button>				
+									<button type="button" class="btn-block btn btn-danger" id="btnCancelarViaje" onclick="cancelarViaje();"><span class="glyphicon glyphicon-remove"></span> <small>Cancelar viaje</small></button>
 								</div>
 								<div id="botonera-cliente">
 									<button type="button" class="btn-block  btn btn-success" id="btnParticipar" onclick="mostrarVentanaParticipar();"><span class="glyphicon glyphicon-ok"></span> Participar</button>
@@ -156,13 +156,13 @@
 								</div>
 							</div>
 							<div class="col-md-6 col-sm-6 row">
-								<label class="col-md-12 col-sm-12 ">Usuario: </label> 
+								<label class="col-md-12 col-sm-12 ">Usuario: </label>
 								<div class="col-md-12 col-sm-12 ">
 									<p><a href="#" id="nombreConductor">---</a></p>
 								</div>
 							</div>
 							<div class="col-md-6 col-sm-6 row">
-								<label class="col-md-12">Reputación: </label> 
+								<label class="col-md-12">Reputación: </label>
 								<div class="col-md-12">
 									<p id="reputacion" class="reputacion">---</p>
 								</div>
@@ -201,12 +201,12 @@
 									<p id="modelo">---</p>
 								</div>
 							</div>
-							<div class="col-md-6  col-sm-6  row">	
+							<div class="col-md-6  col-sm-6  row">
 								<label class="col-md-6 col-sm-6  ">Patente:</label>
 								<div class="col-md-6 col-sm-6  ">
 									<small><p id="patente">---</p></small>
 								</div>
-							</div> 
+							</div>
 							<div class="col-md-6  col-sm-6  row">
 								<label class="col-md-6 col-sm-6  ">Año:</label>
 								<div class="col-md-6 col-sm-6  ">
@@ -246,7 +246,7 @@
 
 								<div class="panel-body">
 									<label for="message-text" class="form-control-label">Mensaje:</label>
-									<textarea rows="3" maxlength="140" class="form-control" id="message-text"></textarea>
+									<textarea rows="4" maxlength="240" class="form-control" id="message-text"></textarea>
 								</div>
 								<div class="panel-footer modal-footer">
 									<button class="btn btn-primary" onclick="enviarComentario()"><span class="glyphicon glyphicon-comment"></span> Comentar</button>
@@ -261,11 +261,11 @@
 						  <ul class="pagination pull-right" id="comentarios-paginacion">
 							<!-- paginas generadas dinamicamente-->
 						  </ul>
-						</nav>	
+						</nav>
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- modal participar-->
 			<div id="modal-participar" class="modal fade" role="dialog">
 				<div class="modal-dialog">
@@ -281,15 +281,15 @@
 							<div class="">
 								<select class="form-control" name="origenPasajero">
 
-								</select>					
-							</div>				
+								</select>
+							</div>
 						</div>
 						<div class="form-group">
 							<label for="destinoPasajero" class="control-label">Se baja en:</label>
 							<div class="">
 								<select class="form-control" name="destinoPasajero">
 
-								</select>					
+								</select>
 							</div>
 						</div>
 						<div class="form-group">
@@ -315,7 +315,7 @@
 						<div class="modal-body">
 							<div id="postulacion-correcta-message" class="text-center">
 								Todo salió bien. <!-- Esto sera modificado desde javascript -->
-							</div>		
+							</div>
 							<table class="table table-user-information tabla-conductor">
 								<tbody>
 									<tr>
@@ -361,7 +361,7 @@
 					</div><!-- .modal-content -->
 				</div><!-- .modal-dialog -->
 			</div><!-- .modal -->
-			
+
 			<div id="modal-warning" class="modal fade">
 				<div class="modal-dialog">
 					<div class="modal-content panel-warning">
@@ -379,7 +379,7 @@
 					</div><!-- .modal-content -->
 				</div><!-- .modal-dialog -->
 			</div><!-- .modal -->
-				
+
 			<div id="modal-error" class="modal fade">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -398,9 +398,9 @@
 						</div><!-- .modal-footer -->
 					</div><!-- .modal-content -->
 				</div><!-- .modal-dialog -->
-			</div><!-- .modal -->	
+			</div><!-- .modal -->
 		</div>
 	</main>
 
-</body>	
+</body>
 </html>

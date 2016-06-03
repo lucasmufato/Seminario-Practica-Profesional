@@ -14,7 +14,7 @@ var navegacionInit = function () {
 
 	var modal = document.createElement('DIV');
 	$(modal).load('/navegacion.html #common-modal');
-	
+
 	//cargo script de permisos
 	$.ajax({
 		url: "/permisos.js",
@@ -29,7 +29,7 @@ var navegacionInit = function () {
 	$('body').prepend (sidebar);
 	$('body').prepend (nav);
 	$('body').append (modal);
-	
+
 
 	// Validacion de campos
 	var campos = document.getElementsByClassName("vc-validar");
@@ -104,14 +104,14 @@ vc.peticionAjax = function (url, datos, method, onsuccess) {
 	}
 
 	$.ajax({
-		'url': url, 
+		'url': url,
 		'dataType': 'json',
 		'method': method,
 		'data': datos,
 		'success': callbacksuccess,
 		error: function (err1, err2, err3) {
 			var htmlBody = err1.responseText.replace(/.*<body[^>]*>/i, "").replace(/<\/body[^>]*>.*/i, "");
-			var modalBody = 
+			var modalBody =
 			'<p>No se pudo realizar la acción solicitada. Ha ocurrido un error en el servidor.</p>'+
 			'<div class="panel panel-danger">' +
 			'	<div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#vc-modal-debug-info">' +
@@ -157,7 +157,7 @@ vc.customAlert = function(elemento,msg){
 	});
 	$(elemento).popover("show");
 	$(elemento).closest("tr").removeClass('has-success').addClass('has-error');
-	
+
 	$(elemento).focus(function(){
 		$(elemento).popover("destroy");
 		$(elemento).closest("tr").removeClass('has-error')
@@ -190,17 +190,22 @@ vc.customAlertSuccess = function(elemento){
 }
 
 vc.fechaAMD = function (fecha_dma) {
-	if (fecha_dma.match (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/)) {
+    if (fecha_dma.match (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/)) {
 		var anio = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$3"));
 		var mes = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$2"));
 		var dia = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$1"));
 		if (anio < 50) {
-			anio = 2000+Number(anio);
+			   anio = 2000+Number(anio);
 		} else if (anio < 100){
-			anio = 1900+Number(anio);
+			   anio = 1900+Number(anio);
 		}
 		if (mes < 10) {mes = "0"+mes;}
 		if (dia < 10) {dia = "0"+dia;}
 		return fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/, anio+"-"+mes+"-"+dia);
-	}
+    }
+}
+
+vc.toFechaLocal = function(fecha_string){
+	var date = new Date(fecha_string)
+	return date.toLocaleString();
 }
