@@ -1184,6 +1184,7 @@ public class ServletViaje extends HttpServlet {
 				json_viaje.put("conductor", viaje.getConductor().getNombre_usuario());
 				json_viaje.put("reputacion", viaje.getConductor().getReputacion());
 				json_viaje.put("foto", viaje.getConductor().getFoto());
+				json_viaje.put("recorrido", viaje.getLocalidadesViajeJson());
 				json_viajes.add (json_viaje);
 			}
 			salida.put("viajes", json_viajes);

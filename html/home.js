@@ -68,9 +68,9 @@ initUI = function() {
 			entity: "localidad"
 		}
 	});
-	
+
 	/*-----------*/
-	$('.loadingScreen').fadeOut(); 
+	$('.loadingScreen').fadeOut();
 };
 
 window.onload = function () {
@@ -108,20 +108,20 @@ function autogeneratePages(){
 						"<span aria-hidden='true'>&laquo;</span>"+
 					  "</a>"+
 					"</li>";
-	
+
 	//paginas de resultado
 	var html="";
 	for (i=1; i<=numPages();i++){
 		html += "<li><a href='javascript:changePage("+i+")'>"+i+"</a></li>";
 	}
-	
+
 	// Siguiente pagina
 	var nextPage = "<li id='next-page'>"+
 					  "<a href='javascript:nextPage()' aria-label='Next'>"+
 						"<span aria-hidden='true'>&raquo;</span>"+
 					  "</a>"+
 					"</li>";
-									
+
 	$("#busqueda-paginacion").html(prevPage+html+nextPage);
 }
 
@@ -131,7 +131,7 @@ function changePage(page){
     var btn_prev = $("#previous-page");
     var btn_next = $("#next-page");
     var listing_table = $("#viajes-busqueda");
- 
+
     // Validate page
     if (page < 1) page = 1;
     if (page > numPages()) page = numPages();
@@ -139,16 +139,18 @@ function changePage(page){
     var html = "";
 	var template = $("#viaje-template").html();
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
-		if (viajes[i]){
-			viajes[i].reputacion_stars = aux.reputacionStars(viajes[i].reputacion);
-						console.log(viajes[i].foto);
-			viajes[i].foto = viajes[i].foto || "/img/perfil/default.png";
-			console.log(viajes[i].foto);
-		    html += Mustache.render(template, viajes[i]);
-		}
+			if (viajes[i]){
+				viajes[i].reputacion_stars = aux.reputacionStars(viajes[i].reputacion);
+				viajes[i].foto = viajes[i].foto || "/img/perfil/default.png";
+				viajes[i].fecha_inicio = vc.toFechaLocal(viajes[i].fecha_inicio);
+				for (var j=0; j<viajes[i].recorrido.length; j++){
+					viajes[i].recorrido[j].es_destino = j==viajes[i].recorrido.length-1;
+				}
+			  html += Mustache.render(template, viajes[i]);
+			}
     }
     listing_table.html(html);
-	
+
 	$( "#busqueda-paginacion").find(".active").removeClass("active");
 	$( "#busqueda-paginacion li:eq("+page+")" ).addClass("active");
 
@@ -185,7 +187,7 @@ function nextPage(){
 
 var buscarViaje = function(){
 	var sendData = {};
-	
+
 	sendData.action="buscar";
 	sendData.entity="viaje";
 	sendData.origen = magic.inputOrigen.getValue()[0];
@@ -194,7 +196,7 @@ var buscarViaje = function(){
 	sendData.fecha_hasta = vc.fechaAMD($('#formBusqueda input[name=fechahasta]').val());
 	sendData.conductor = $('#formBusqueda input[name=conductor]').val().toLowerCase();
 	sendData.estado = $('#formBusqueda select[name=estadoviaje]').val();
-		
+
 	//simular(sendData, showViajes);
 	var onsuccess = function(jsonData) {
 		viajes = jsonData.viajes;
@@ -205,7 +207,7 @@ var buscarViaje = function(){
 }
 
 var simular = function (sendData, onsuccess) {
-	
+
 	//SIMULO DATA RECIBIDA:
 	var jsonData = {
 		"result" : "true",
@@ -253,7 +255,7 @@ var simular = function (sendData, onsuccess) {
 	};
 	viajes = jsonData.viajes;
 	onsuccess();
-	
+
 	/*
 	console.log("Data a enviar: ",sendData);
 	$.ajax({
