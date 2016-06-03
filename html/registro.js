@@ -26,25 +26,25 @@ initUI = function() {
 	$('input, select, textarea').addClass('form-control');
 	$('label').addClass('control-label');
 	/*-----------*/
-	$('[data-toggle="tooltip"]').tooltip(); 
+	$('[data-toggle="tooltip"]').tooltip();
 	$("#img_usuario, #img_registro").hide();
-	
+
 	loadData();
 };
 
 $(document).ready(function(){
-/*
+
 	$('#fecha').datetimepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd/mm/yyyy',
     	language: "es",
     	startView: 3,
     	minView: 2,
-    	maxView: 2,  
+    	maxView: 2,
 		autoclose: true,
     	todayBtn: true,
 		clearBtn: true,
 	});
-	*/
+
 	ui.setNewForm();
 	setearEventos();
 });
@@ -60,18 +60,20 @@ function setearEventos(){
   $('#formPersona select[name=tipo_doc], #formPersona input[name=nro_doc]').focusout(ui.validarDocumento);
 
 }
- 
+
 function labelDelInput(input){
 	return label = $('label[for="'+input.attr('name')+'"]').text().split(" (*)")[0];
 }
-  
+
 ui.validarCampoObligatorio = function(){
 	var input = $(this);
 	if (input.val().length==0){
 		customAlert(input, labelDelInput(input)+": Completar campo obligatorio");
+	}else{
+		//ui.deleteMsgError(input);
 	}
 }
-  
+
 ui.validarNombreUsuario = function(){
 	var inputUsuario = $(this);
 	var valor = inputUsuario.val();
@@ -151,11 +153,14 @@ ui.validarDocumento = function(){
 }
 
 ui.validar = function(form){
-  //Parche fierisimo, para no pase al siguiente formulario habiendo
-  //errores piso todos los inputs y 
-  //pregunto si existe algun elemento en el panel de alarmas
-	$("#form"+form+" input").focus();
-	$("#form"+form+" input").last().blur();
+
+	$("#form"+form+" .panel-error").html('');
+	$("#form"+form+" input[required]").each(ui.validarCampoObligatorio);
+	$("#form"+form+' input[name=nombre_usuario]').each(ui.validarNombreUsuario);
+	$("#form"+form+' input[name=password], '+"#form"+form+' input[name=repetirPassword]').each(ui.validarPass);
+	$("#form"+form+' input[name=email]').each(ui.validarMail);
+	$("#form"+form+' select[name=tipo_doc], '+"#form"+form+' input[name=nro_doc]').each(ui.validarDocumento);
+
 	if ($(".panel-error").has("div").length == 0){
 		if (!ui.setNewForm(form)){ // si no hay mas formularios envio datos;
 			ui.cargarForm();
@@ -168,19 +173,19 @@ ui.validar = function(form){
 }
 
 ui.cargarForm = function () {
-	
+
 	var sendData = {};
 	sendData.action = 'new';
 	sendData.persona={};
 	sendData.usuario={};
 	//sendData.cliente={};
-	
+
 	// cargo persona
 	sendData.persona.apellidos = $('#formPersona input[name=apellidos]').val() || null;
 	sendData.persona.nombres= $('#formPersona input[name=nombres]').val() || null;
 	sendData.persona.tipo_doc= $('#formPersona select[name=tipo_doc]').val() || null;
 	sendData.persona.nro_doc= $('#formPersona input[name=nro_doc]').val() || null;
-	sendData.persona.fecha_nacimiento= $('#formPersona input[name=fecha_nacimiento]').val() || null;
+	sendData.persona.fecha_nacimiento= fechaAMD($('#formPersona input[name=fecha_nacimiento]').val()) || null;
 	sendData.persona.sexo= $('#formPersona select[name=sexo]').val() || null;
 	sendData.persona.domicilio= $('#formPersona input[name=domicilio]').val() || null;
 	sendData.persona.telefono= $('#formPersona input[name=telefono]').val() || null;
@@ -190,15 +195,15 @@ ui.cargarForm = function () {
 	sendData.usuario.nombre_usuario= $('#formUsuario input[name=nombre_usuario]').val() || null;
 	sendData.usuario.password = $('#formUsuario input[name=password]').val() || null;
 	sendData.usuario.email = $('#formUsuario input[name=email]').val() || null;
-	
+
 	/*
 	// cargo Cliente
 	sendData.cliente.foto_registro = $("#img_registro").attr("src");
 	sendData.cliente.foto_usuario = $("#img_usuario").attr("src");
 	*/
-	
+
 	console.log("mando: ",sendData);
-	
+
 	var onSuccess = function(jsonData){
 		if (jsonData.result) {
 			// Si cliente se carga correctamente:
@@ -212,8 +217,24 @@ ui.cargarForm = function () {
 			errorMessage (jsonData.msg);
 		}
 	}
-	
+
 	sendAjax(sendData,onSuccess);
+}
+
+var fechaAMD = function (fecha_dma) {
+    if (fecha_dma.match (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/)) {
+		var anio = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$3"));
+		var mes = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$2"));
+		var dia = Number(fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,}).*/, "$1"));
+		if (anio < 50) {
+			   anio = 2000+Number(anio);
+		} else if (anio < 100){
+			   anio = 1900+Number(anio);
+		}
+		if (mes < 10) {mes = "0"+mes;}
+		if (dia < 10) {dia = "0"+dia;}
+		return fecha_dma.replace (/(\d{1,2})\/(\d{1,2})\/(\d{2,})/, anio+"-"+mes+"-"+dia);
+    }
 }
 
 var subirImagenes = function(){
@@ -221,15 +242,15 @@ var subirImagenes = function(){
 	var sendData = {};
 	sendData.action = "subir_imagen";
 	sendData.usuario = $('#formUsuario input[name=nombre_usuario]').val();
-	
+
 	// si hay foto de registro, se manda.
-	var foto_registro = $("#img_registro").attr("src");	
+	var foto_registro = $("#img_registro").attr("src");
 	if (foto_registro != ""){
 		sendData.campo = "foto_registro";
 		sendData.imagen = foto_registro;
 		sendAjax(sendData,function(){});
 	}
-	
+
 	// si hay foto de usuario, se manda.
 	var foto_usuario = $("#img_usuario").attr("src");
 	if (foto_usuario != ""){
@@ -242,7 +263,7 @@ var subirImagenes = function(){
 ingresarLogin = function(){
 	var parametro = "usuario";
 	var valor = $("#formUsuario input[name='nombre_usuario']").val();
-	
+
 	window.location = "/login.html?"+parametro+"="+valor;
 }
 
@@ -271,7 +292,7 @@ ui.hideForms = function () {
   $('#formCliente').hide();
   $('#formUsuario').hide();
   $('#formPersona').hide();
-} 
+}
 
 function customAlert(input,msg){
    if (msg != undefined){
@@ -281,20 +302,20 @@ function customAlert(input,msg){
    input.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
    input.focus(function(){
      input.unbind('focus');//para el IE
-     input.parent().parent().removeClass("has-error"); 
+     input.parent().parent().removeClass("has-error");
 	 ui.deleteMsgError(input)
    });
 }
 
 ui.sendMsgError = function(msg, input){
-  var id = "error-"+input.attr("name");
-  var html='<div id=\"'+id+'\" class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger\" role=\"alert\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>'+msg+'</div>';
+  var clase = "error-"+input.attr("name");
+  var html='<div class=\"alert alert-danger '+clase+' \" role=\"alert\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><span class=\"sr-only\">Error:</span>'+msg+'</div>';
   input.closest(".panel-body").find(".panel-error").append(html).focus();
 }
 
 ui.deleteMsgError = function(input){
-	var idGenerado = "#"+"error-"+input.attr("name");
-	$(idGenerado).remove();
+	var claseGenerada = "."+"error-"+input.attr("name");
+	$(claseGenerada).remove();
 }
 
 sendAjax = function (sendData,callback) {
@@ -328,9 +349,22 @@ closeModal = function (name) {
 	$('#modal' + name).modal('hide');
 }
 
+var imagenValida = function(file){
+	var maxTam = 1500000; // tamano maximo 1.5MB
+	if (file.size >= maxTam){
+		errorMessage("Archivo es demasiado grande");
+		return false;
+	}
+    if (file.type.indexOf("image") == -1){
+		errorMessage("Debe seleccionar una imagen");
+		return false;
+	}
+	return true;
+}
+
 //img
 function readURL(input) {
-    if (input.files && input.files[0]) {
+    if (input.files && input.files[0] && imagenValida(input.files[0]) ) {
         var reader = new FileReader();
 
         reader.onload = function (e) {

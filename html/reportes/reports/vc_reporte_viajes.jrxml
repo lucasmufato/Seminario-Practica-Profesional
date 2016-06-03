@@ -62,7 +62,7 @@ FROM
 		INNER JOIN USUARIO u  ON u.id_usuario = v.id_cliente
         INNER JOIN
 			(SELECT
-				v.id_viaje, COUNT(pv.id_pasajero_viaje) AS pasajeros
+				v.id_viaje, COALESCE(SUM(pv.nro_asientos),0) AS pasajeros
 			FROM
 				VIAJE v LEFT JOIN PASAJERO_VIAJE pv
 			ON pv.id_viaje=v.id_viaje GROUP BY v.id_viaje) AS pasajeros_por_viaje

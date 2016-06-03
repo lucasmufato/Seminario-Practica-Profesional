@@ -225,6 +225,7 @@ vc.fechaAMD = function (fecha_dma) {
 }
 
 vc.toFechaLocal = function(fecha_string){
-	var date = new Date(fecha_string)
+	var jsValidDateTime = fecha_string.split(" ").join("T");
+	var date = new Date(Date.parse(jsValidDateTime));
 	return date.toLocaleString();
 }

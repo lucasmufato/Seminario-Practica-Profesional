@@ -175,7 +175,7 @@ public class ControladorReportes extends HttpServlet {
 			return respuesta;
 		}
 		respuesta.put("msg", "El reporte ha sido generado correctamente");
-		respuesta.put("redirect", pathToPdf);
+		respuesta.put("link", pathToPdf);
 		respuesta.put("result", true);
 		
 		return respuesta;

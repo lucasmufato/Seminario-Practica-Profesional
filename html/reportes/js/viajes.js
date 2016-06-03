@@ -3,7 +3,7 @@ reporte = {};
 reporte.loadData = function(){
 	var sendData = {
 		action: "cargar_data"
-	};	
+	};
 	var onsuccess = function(jsonData){
 		if (jsonData.redirect != undefined){
 			console.log("hola");
@@ -16,13 +16,13 @@ reporte.loadData = function(){
 
 window.onload= function(){
 	reporte.loadData();
-	$('[data-toggle="tooltip"]').tooltip(); 
+	$('[data-toggle="tooltip"]').tooltip();
 	$('#fechadesde, #fechahasta').datetimepicker({
         format: 'yyyy-mm-dd',
     	language: "es",
     	startView: 3,
     	minView: 2,
-    	maxView: 2,    
+    	maxView: 2,
 		autoclose: true,
     	todayBtn: true,
 		clearBtn: true,
@@ -48,11 +48,11 @@ var generarReporte = function(){
 	var sendData = {
 		action: "reporte_viajes",
 		data: data
-	};	
+	};
 	var onsuccess = function(jsonData){
-		if (jsonData.redirect){
-			window.open(jsonData.redirect,"_blank");
-		}
+		$(".loadingScreen").fadeOut();
+			window.open(jsonData.link,"_blank");
 	}
+	$(".loadingScreen").fadeIn();
 	vc.peticionAjax("/reportes",sendData,"POST",onsuccess);
 }
