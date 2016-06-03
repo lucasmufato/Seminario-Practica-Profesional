@@ -351,7 +351,7 @@ CREATE TABLE MOVIMIENTO_SALDO(
 
 CREATE TABLE COMENTARIO_VIAJE(
 	id_comentario_viaje int(11) NOT NULL AUTO_INCREMENT,
-    fecha date NOT NULL,
+    fecha datetime NOT NULL,
     id_cliente int(11) NOT NULL,
     id_viaje int(11) default null,
     texto TEXT,

@@ -10,7 +10,7 @@ data.usuario_logueado = {};
 var sendAjax = function(sendData,callback){
 	console.log("mando: ",sendData);
 	$.ajax({
-		url: '/viajes', 
+		url: '/viajes',
 		dataType: 'json',
 		method: 'POST',
 		data: sendData,
@@ -42,7 +42,7 @@ data.loadData = function() {
 			data.comentarios = jsonData.comentarios;
 			data.usuario_logueado = jsonData.usuario_logueado;
 			data.comentarios = jsonData.comentarios;
-			
+
 			if(jsonData.recargar_en != undefined) {
 				window.setTimeout(data.loadData, jsonData.recargar_en);
 			}
@@ -54,19 +54,21 @@ data.loadData = function() {
 			cargarRutaEnMapa();
 
 
-			
+
 		} else if (jsonData.redirect != undefined) {
 			window.location = jsonData.redirect;
+		} else if (jsonData.msg) {
+			modalMessage("error",jsonData.msg,"Carga de viaje");
 		}
 	}
-	
+
 	//simular(sendData);
-	
+
 	sendAjax(sendData,onsuccess);
 }
 
 initUI = function() {
-	data.loadData();	
+	data.loadData();
 	loadMap();
 };
 window.onload=initUI;
@@ -104,7 +106,7 @@ var cargarRutaEnMapa = function(){
 	var i=1; //para que label de los marcadores muestre secuencia
 	data.viaje.recorrido.forEach(function(id){
 		var item = localidadPorId(id);
-		
+
 		mapData.marcadores.push(new google.maps.Marker({
 				position: {
 					lat: parseFloat(item.lat),
@@ -186,17 +188,17 @@ var simular = function(json){
 		id: "324",
 		nombre: "Lujan",
 		lat: "-34.5703",
-		lng: "-59.105" 
+		lng: "-59.105"
 	},{
 		id: "112",
 		nombre: "Rodriguez",
 		lat: "-34.6084",
-		lng: "-58.9525" 
+		lng: "-58.9525"
 	},{
 		id: "880",
 		nombre: "Moreno",
 		lat: "-34.634",
-		lng: "-58.7914" 
+		lng: "-58.7914"
 	}];
 	data.usuario_logueado = {
 		es_conductor: false,
@@ -206,7 +208,18 @@ var simular = function(json){
 		es_seguidor: false,
 		es_finalizo: false,
 		ha_calificado: false
-	};		
+	};
+	data.comentarios=[{
+		foto:"/img/perfil/default.png",
+		nombre_usuario:"juan23",
+		fecha:"01/06/2016",
+		comentario:"Excelente viaje pero aceptas pagos con tarjeta?"
+	},{
+		foto:"/img/perfil/default.png",
+		nombre_usuario:"usuario",
+		fecha:"01/06/2016",
+		comentario:"Hola! pasarias por rodríguez luego de Luján? gracias"
+	}];
 	configurarUi();
 	cargarViaje();
 	cargarConductor();
@@ -215,6 +228,8 @@ var simular = function(json){
 }
 
 var configurarUi = function(){
+
+	 $("#message-text").val("");
 
 	var esConductor = data.usuario_logueado.es_conductor;
 	var esAceptado = data.usuario_logueado.es_aceptado;
@@ -239,14 +254,13 @@ var configurarUi = function(){
 	if(esRechazado) {$('#infomsg-pasajero-rechazado').show();}
 	if(esFinalizo) {$('#infomsg-pasajero-finalizo').show();}
 	if(!haCalificado && (esConductor || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
-	
+
 	var estado = estadoString(data.viaje.estado);
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
 		$("#botonera-cliente").hide();
 		if (esConductor){
 			$("#botonera-conductor").show();
 			$("#botonera-pasajero").hide();
-			console.log(data.viaje.cantidad_pasajeros_postulados);
 			if (data.viaje.cantidad_pasajeros_calificables > 0 || data.viaje.cantidad_pasajeros_postulados > 0){
 				$("#btnModificar").hide();
 			}
@@ -282,7 +296,7 @@ var configurarUi = function(){
 			$("#botonera-conductor").hide();
 			$("#botonera-pasajero").hide();
 			$("#btnCalificar").show();
-			$("#btnViajeFinalizado").hide();	
+			$("#btnViajeFinalizado").hide();
 		} else if (esPostulado){
 			$("#botonera-conductor").hide();
 			$("#botonera-pasajero").show();
@@ -301,10 +315,10 @@ var configurarUi = function(){
 			$("#btnSeguir").hide();
 		} else{
 			$("#btnDejarSeguir").hide();
-			$("#btnSegir").show();		
+			$("#btnSegir").show();
 		}
 	}
-	
+
 	if (estado=="Cancelado"){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
@@ -312,8 +326,8 @@ var configurarUi = function(){
 		$("#btnCalificar").hide();
 		$("#btnViajeFinalizado").hide();
 	} else if(estado == "Iniciado"){
-		
-	} else if(estado == "No iniciado"){ 
+
+	} else if(estado == "No iniciado"){
 		$("#btnCalificar").hide();
 		$("#btnViajeFinalizado").hide();
 	} else if(estado == "Finalizado"){
@@ -343,17 +357,17 @@ var cargarViaje = function(){
 	$("#estado").text(estadoString (data.viaje.estado));
 	$("#origen").text(localidadNombre (data.viaje.origen));
 	$("#destino").text(localidadNombre (data.viaje.destino));
-	$("#fecha").text(data.viaje.fecha_inicio);
+	$("#fecha").text(vc.toFechaLocal(data.viaje.fecha_inicio));
 	$("#precio").text("$"+data.viaje.precio);
 	$("#nombre_amigable").text(data.viaje.nombre_amigable);
-	
+
 	$("#recorrido").html("");
 	var ultimo = data.viaje.recorrido.length -1;
 	data.viaje.recorrido.forEach(function(elem, index){
 		if (index>0)$("#recorrido").append(' <span class="glyphicon glyphicon-arrow-right"></span> ');
 
 		var label_class="";
-		var asientos_tramo = data.viaje.disponibilidad_asientos[index]; 
+		var asientos_tramo = data.viaje.disponibilidad_asientos[index];
 		var msg_asientos=localidadNombre(elem);
 
 		// Label colors
@@ -393,19 +407,6 @@ var cargarConductor = function(){
 }
 
 var cargarComentarios = function(){
-	/*
-	data.comentarios=[{
-		foto:"/img/perfil/default.png",
-		nombre_usuario:"juan23",
-		fecha:"01/06/2016",
-		comentario:"Excelente viaje pero aceptas pagos con tarjeta?"
-	},{
-		foto:"/img/perfil/default.png",
-		nombre_usuario:"usuario",
-		fecha:"01/06/2016",
-		comentario:"Hola! pasarias por rodríguez luego de Luján? gracias"
-	}];
-	*/
 	if (!data.comentarios || !data.comentarios.length){
 		$("#busqueda-paginacion").hide();
 		var html = "<div class='jumbotron'>"
@@ -416,11 +417,7 @@ var cargarComentarios = function(){
 		$("#comentarios-paginacion").show();
 		autogeneratePages();
 		changePage(1);
-		/*
-		var template = $("#comentario-template").html();
-		html = Mustache.render(template, data);
-		*/
-	}	
+	}
 }
 
 var enviarComentario = function(){
@@ -448,20 +445,20 @@ function autogeneratePages(){
 						"<span aria-hidden='true'>&laquo;</span>"+
 					  "</a>"+
 					"</li>";
-	
+
 	//paginas de resultado
 	var html="";
 	for (i=1; i<=numPages();i++){
 		html += "<li><a href='javascript:changePage("+i+")'>"+i+"</a></li>";
 	}
-	
+
 	// Siguiente pagina
 	var nextPage = "<li id='next-page'>"+
 					  "<a href='javascript:nextPage()' aria-label='Next'>"+
 						"<span aria-hidden='true'>&raquo;</span>"+
 					  "</a>"+
 					"</li>";
-									
+
 	$("#comentarios-paginacion").html(prevPage+html+nextPage);
 }
 
@@ -471,7 +468,7 @@ function changePage(page){
     var btn_prev = $("#previous-page");
     var btn_next = $("#next-page");
 
- 
+
     // Validate page
     if (page < 1) page = 1;
     if (page > numPages()) page = numPages();
@@ -479,7 +476,7 @@ function changePage(page){
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
 		generarHtmlComentario(i);
     }
-	
+
 	$( "#comentarios-paginacion").find(".active").removeClass("active");
 	$( "#comentarios-paginacion li:eq("+page+")" ).addClass("active");
 
@@ -519,6 +516,7 @@ var generarHtmlComentario = function(indiceComentario){
 	if (indiceComentario % records_per_page == 0) $("#panel-comentarios").html("");
 	var comentario = data.comentarios[indiceComentario];
 	if (comentario){
+		comentario.fecha = vc.toFechaLocal(comentario.fecha);
 		var template = $("#comentario-template").html();
 		$("#panel-comentarios").append(Mustache.render(template, comentario));
 	}
@@ -588,7 +586,7 @@ var participarViaje = function(){
 }
 var postulacionCorrecta = function(mensaje,conductor){
 	var modalName = 'postulacion-correcta';
-	
+
 	// Lleno datos del conductor en el modal
 	var nombre = conductor.persona.apellidos+", "+conductor.persona.nombres;
 	$("#nombre-conductor").html(nombre);
@@ -692,7 +690,7 @@ var cancelarParticipacion = function(){
 		+ " para participar de este viaje."
 		+" Por lo tanto, al confirmar esta acción usted podría ser sancionado"
 		+" y perder su cuenta temporalmente."
-		var btn = document.createElement("BUTTON");       
+		var btn = document.createElement("BUTTON");
 		btn.className="btn btn-danger dinamico";
 		btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
 		btn.name = "confirmarCancelacion";
@@ -727,7 +725,7 @@ var cancelarViaje = function(){
 	}
 	var msg = "Al presionar en 'Confirmar Cancelación' usted podría recibir una sanción"
 		+" en caso de que existieran pasajeros inscriptos al viaje."
-	var btn = document.createElement("BUTTON");       
+	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-danger dinamico";
 	btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
 	btn.name = "confirmarCancelacion";
@@ -757,7 +755,7 @@ var viajeFinalizado = function(){
 			if (jsonData.result){
 				data.loadData();
 				var msg = jsonData.msg;
-				var btn = document.createElement("BUTTON");       
+				var btn = document.createElement("BUTTON");
 				btn.className="btn btn-success dinamico";
 				btn.innerHTML = '<span class="glyphicon glyphicon-ok"></span> Calificar';
 				btn.name = "calificar";
@@ -771,7 +769,7 @@ var viajeFinalizado = function(){
 		sendAjax(sendJson,onsuccess);
 	}
 	var msg = "Al presionar en 'Confirmar finalización' usted da por completada su participación en el viaje y podrá realizar la correspondiente calificación. Esta acción no se puede deshacer."
-	var btn = document.createElement("BUTTON");       
+	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-success dinamico";
 	btn.innerHTML = 'Confirmar finalización';
 	btn.name = "confirmarFinalizacion";
@@ -782,7 +780,7 @@ var viajeFinalizado = function(){
 
 var customAlert = function(panel,elemento,msg){
 	$(panel).append(generateAlert(msg));
-	
+
 	$(elemento).change(function(){
 		$(panel).empty();
 	});
@@ -859,7 +857,7 @@ $(document).on('hide.bs.modal', function (e) {
   $(".dinamico").each(function(){
 	$(this).remove();
   });
-  
+
 });
 
 var errorMessage = function (textMsg) {

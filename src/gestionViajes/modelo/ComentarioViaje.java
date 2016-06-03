@@ -6,7 +6,12 @@
 package gestionViajes.modelo;
 
 import gestionUsuarios.modelo.Cliente;
+
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +24,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 import org.json.simple.JSONObject;
+
 import otros.JSONable;
 
 /**
@@ -30,7 +37,7 @@ import otros.JSONable;
 
 
 @NamedQueries({
-	    @NamedQuery(name="Comentarios.BuscarPorViaje", query="SELECT c FROM ComentarioViaje c WHERE c.viaje= :viaje")
+	    @NamedQuery(name="Comentarios.BuscarPorViaje", query="SELECT c FROM ComentarioViaje c WHERE c.viaje= :viaje ORDER BY c.fecha DESC")
 })
 @Entity
 @Table(name="comentario_viaje")
@@ -42,7 +49,7 @@ public class ComentarioViaje implements JSONable {
 	protected Integer id_comentario_viaje;
         
         @Column(nullable=false,name="fecha")
-	protected Date fecha;
+	protected Timestamp fecha;
         
         @ManyToOne(cascade=CascadeType.PERSIST)
         @JoinColumn(name="id_cliente")
@@ -64,10 +71,10 @@ public class ComentarioViaje implements JSONable {
         public int getId_comentario_viaje(){
             return id_comentario_viaje;
         }
-        public void setFecha(Date fecha){
+        public void setFecha(Timestamp fecha){
             this.fecha=fecha;
         }
-        public Date getFecha(){
+        public Timestamp getFecha(){
             return fecha;
         }
         public void setCliente(Cliente cliente){
@@ -107,7 +114,12 @@ public class ComentarioViaje implements JSONable {
 
     @Override
     public JSONObject toJSON() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		JSONObject comentario = new JSONObject();
+		comentario.put("comentario", this.getTexto());
+		comentario.put("fecha", (this.getFecha() != null)? this.getFecha().toString() : null);
+		comentario.put("nombre_usuario", this.getCliente().getNombre_usuario());
+		comentario.put("foto", this.getCliente().getFoto());
+		return comentario;
     }
 
     @Override

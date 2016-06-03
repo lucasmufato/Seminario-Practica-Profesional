@@ -1702,9 +1702,9 @@ public class DAOViajes extends DataAccesObject {
                 throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE!");
             }
             Cliente conductor = viaje.getConductor();
-            cv.setViaje(viaje);
+            cv.setViaje(viaje);    		
             java.util.Date utilDate = new java.util.Date();
-            java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
+            java.sql.Timestamp fecha = new Timestamp(utilDate.getTime());
             cv.setFecha(fecha);
             this.entitymanager.getTransaction().begin();
 
@@ -1759,7 +1759,7 @@ public class DAOViajes extends DataAccesObject {
         }
         
         public List<ComentarioViaje> getComentariosViaje(int id_viaje) throws ExceptionViajesCompartidos{
-            List<ComentarioViaje> lista = null;
+            List<ComentarioViaje> lista = new ArrayList<ComentarioViaje>();
             Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
             if(viaje==null){
                 throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE!");
@@ -1767,8 +1767,6 @@ public class DAOViajes extends DataAccesObject {
             Query qry = entitymanager.createNamedQuery("Comentarios.BuscarPorViaje");
             qry.setParameter("viaje", viaje);
             lista = qry.getResultList(); 
-            
-            
             return lista;
         }
         

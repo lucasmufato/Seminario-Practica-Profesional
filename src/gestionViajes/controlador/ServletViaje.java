@@ -95,6 +95,10 @@ public class ServletViaje extends HttpServlet {
 			} else if (action != null && action.equals ("desasignar_vehiculo_cliente")){
 				respuesta = this.desasignarVehiculoCliente(request);
 			}
+		} else if (entity != null && entity.equals ("comentario")) {
+			if (action != null && action.equals ("new")) {
+				respuesta = this.nuevo_comentario (request);
+			} 
 		} else if (entity != null && entity.equals ("calificacion")) {
 			if (action != null && action.equals ("new")) {
 				respuesta = this.nueva_calificacion (request);
@@ -112,6 +116,7 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
+
 
 
 	@Override
@@ -139,6 +144,47 @@ public class ServletViaje extends HttpServlet {
 		writer.println (respuesta);
 	}
 	
+	//----------------------------------------------COMENTARIOS---------------------------------------------------------------------//
+
+	private JSONObject nuevo_comentario(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Viaje no válido");
+			return respuesta;
+		}
+		
+		JSONObject comentario = new JSONObject();
+		comentario.put("id_cliente",AccessManager.getIdUsuario(request));
+		comentario.put("id_viaje", idViaje);
+		comentario.put("texto", request.getParameter("comentario"));
+		
+		try {
+			daoViajes.dejarComentarioEnViaje(comentario);
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Comentario se ha enviado correctamente");
+		return respuesta;
+	}
+	//----------------------------------------------FIN-COMENTARIOS---------------------------------------------------------------------//
+
 //----------------------------------------------CALIFICACIONES---------------------------------------------------------------------//
 
 	private JSONObject listar_calificaciones(HttpServletRequest request) {
@@ -669,7 +715,6 @@ public class ServletViaje extends HttpServlet {
 		for (Localidad loc: viaje.getLocalidadesComoListLocalidad()) {
 			localidades.add (loc.toJSON());
 		}
-		
 		salida.put("localidades", localidades);
 		salida.put("vehiculo", viaje.getVehiculo().toJSON());
 		
@@ -681,6 +726,27 @@ public class ServletViaje extends HttpServlet {
 		json_conductor.put("foto", conductor.getFoto());
 		json_conductor.put("foto_registro", conductor.getFoto_registro());
 		salida.put("conductor", json_conductor);
+		
+		// Comentarios
+		List<ComentarioViaje> comentarios = null;
+		try {
+			comentarios = daoViajes.getComentariosViaje(viaje.getId_viaje());
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			return salida;
+		}
+		if (comentarios==null){
+			salida.put("result", false);
+			salida.put("msg", "Error interno en la carga de comentarios");
+			return salida;
+		}
+		JSONArray arregloComentarios = new JSONArray();
+		for (ComentarioViaje cv : comentarios){
+			arregloComentarios.add(cv.toJSON());
+		}
+		salida.put("comentarios", arregloComentarios);
+
 		
 		JSONObject json_logged = new JSONObject();
 		boolean esConductor = (usuario_logueado.getId_usuario() == viaje.getConductor().getId_usuario());
@@ -717,7 +783,7 @@ public class ServletViaje extends HttpServlet {
 				haCalificado = c!=null && c.getCalificacion_para_conductor()!=null;
 			}
 		}
-		json_logged.put("ha_calificado", haCalificado); //IMPLEMENTAR DESPUES
+		json_logged.put("ha_calificado", haCalificado); 
 		salida.put("usuario_logueado", json_logged);
 		salida.put("result", true);
 		
