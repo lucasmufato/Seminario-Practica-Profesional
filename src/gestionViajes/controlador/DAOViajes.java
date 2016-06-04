@@ -322,6 +322,7 @@ public class DAOViajes extends DataAccesObject {
 		try{
     		this.entitymanager.getTransaction( ).commit( );	
 			SchedulerViajes.nuevoViaje(viaje);
+                        this.notificarSeguidores(viaje.getId_viaje(), "modificado");
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -1080,7 +1081,27 @@ public class DAOViajes extends DataAccesObject {
 		  	String error= ManejadorErrores.parsearRollback(e);
 		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
 		}
+                //ahora hago que dejar de seguir seguidor del viaje
+                SeguidorViaje seguidor = new SeguidorViaje();
+                List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+                if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
+                    for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
+                        seguidor = lista_seguidores.get(j);
+                        if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
+                            this.entitymanager.getTransaction().begin();
+                            seguidor.setEstado("I".charAt(0));
+                            this.entitymanager.getTransaction().commit();
+                        }// deja de ser seguidor
+                    }
+                
+                }
+                
+                
 		return true;
+                
+                
+            
+                
 	}
 
 	//by mufa
@@ -1124,6 +1145,20 @@ public class DAOViajes extends DataAccesObject {
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
+                //ahora hago que dejar de seguir seguidor del viaje
+                SeguidorViaje seguidor = new SeguidorViaje();
+                List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+                if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
+                    for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
+                        seguidor = lista_seguidores.get(j);
+                        if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
+                            this.entitymanager.getTransaction().begin();
+                            seguidor.setEstado("I".charAt(0));
+                            this.entitymanager.getTransaction().commit();
+                        }// deja de ser seguidor
+                    }
+                
+                }
 		return true;
 	}
 	
@@ -1223,7 +1258,7 @@ public class DAOViajes extends DataAccesObject {
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
-		
+		this.notificarSeguidores(viaje.getId_viaje(), "finalizado");
 		return true;
 	}
 
@@ -1505,6 +1540,12 @@ public class DAOViajes extends DataAccesObject {
         			if (v.asignarConductor(conductorNuevo)){
             			this.entitymanager.persist(conductorNuevo);
             			this.entitymanager.persist(v);
+                                Notificacion notificacion = new Notificacion();
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: "+ v.getPatente());
+                                notificacion.setCliente(conductorNuevo);
+                                notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                this.entitymanager.persist(notificacion);
         			}
         		}
         	}
@@ -1553,6 +1594,12 @@ public class DAOViajes extends DataAccesObject {
         	for (Cliente conductorNuevo : listaConductores){
         		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
         			conductorNuevo.asignarVehiculo(v);
+                                Notificacion notificacion = new Notificacion();
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: <<"+ v.getPatente()+">>");
+                                notificacion.setCliente(conductorNuevo);
+                                notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                this.entitymanager.persist(notificacion);
         		}
         	}
         	
@@ -1596,6 +1643,12 @@ public class DAOViajes extends DataAccesObject {
 					}
 					m.desactivar();
 					this.entitymanager.persist(m);
+                                        Notificacion notificacion = new Notificacion();
+                                        notificacion.setTexto("Usted fue eliminado como conductor del vehículo con patente: <<"+ v.getPatente()+">> y ya no podrá realizar viajes con el mismo");
+                                        notificacion.setCliente(m.getCliente());
+                                        notificacion.setEstado(EstadoNotificacion.no_leido);
+                                        notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                        this.entitymanager.persist(notificacion);
 				}
 			}
 			
@@ -1679,6 +1732,7 @@ public class DAOViajes extends DataAccesObject {
                         if(aceptados>0){//lo sanciono si tenia pasajeros
                             bandera = daopuntos.sancionarChofer(id_viaje,id_chofer,aceptados);
                         }
+                        this.notificarSeguidores(viaje.getId_viaje(), "cancelado");
                     }catch(RollbackException e){
                         String error= ManejadorErrores.parsearRollback(e);
                         throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -1915,6 +1969,53 @@ public class DAOViajes extends DataAccesObject {
     					&& sv.isActivo();
     		}
     		return esSeguidor;
+        }
+        
+        
+        public boolean notificarSeguidores (int id_viaje, String motivo) throws ExceptionViajesCompartidos{
+            if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+            }
+            
+            String motivo_notificacion = null;
+            if(motivo.equals("cancelado")){
+                motivo_notificacion = "ha sido cancelado";
+            }else{
+                if(motivo.equals("modificado")){
+                    motivo_notificacion = "ha sido modificado";
+                }else{
+                    if(motivo.equals("iniciado")){
+                        motivo_notificacion = "ha iniciado";
+                    }else{
+                        if(motivo.equals("finalizado")){
+                            motivo_notificacion = "ha finalizado";              
+                        }
+                    }
+                }
+            }//fin setear motivo   
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+            String texto_notificacion = "El viaje <<"+viaje.getNombre_amigable()+">> que usted seguía "+motivo_notificacion;
+            List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+            
+            //ahora notifico a los seguidores
+            for(int i=0;i<lista_seguidores.size();i++){
+                this.entitymanager.getTransaction().begin();
+                Notificacion notificacion = new Notificacion();
+                notificacion.setEstado(EstadoNotificacion.no_leido);
+                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                notificacion.setLink("/detalle_viaje.html?id="+viaje.getId_viaje());
+                Cliente cliente_notificarlo = lista_seguidores.get(i).getCliente();
+                notificacion.setTexto(texto_notificacion);
+                notificacion.setCliente(cliente_notificarlo);
+                try{                
+                this.entitymanager.persist(notificacion);
+        	this.entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+            }//fin for
+            return true;
         }
                 
 }
