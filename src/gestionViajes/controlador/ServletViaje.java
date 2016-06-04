@@ -1480,6 +1480,8 @@ public class ServletViaje extends HttpServlet {
 		json_vehiculo.put("asientos", Integer.parseInt(request.getParameter("vehiculo[cantidad_asientos]")));
 		json_vehiculo.put("seguro", request.getParameter("vehiculo[seguro]").toString().charAt(0));
 		//json_vehiculo.put("foto", request.getParameter("vehiculo[foto]"));
+		json_vehiculo.put("conductor_modifica", AccessManager.getIdUsuario(request));
+
 
 		try {
 			daoViajes.modificarVehiculo(json_vehiculo);
@@ -1537,7 +1539,7 @@ public class ServletViaje extends HttpServlet {
 		// Desactivo vehiculo pero tambien todas las relaciones de Maneja.
 		//
 		try {
-			if (!daoViajes.desactivarVehiculo(v)){
+			if (!daoViajes.desactivarVehiculo(v,AccessManager.getIdUsuario(request))){
 				respuesta.put("result", false);
 				respuesta.put("msg", "Error al desactivar vehículo");
 				return respuesta;
@@ -1601,7 +1603,7 @@ public class ServletViaje extends HttpServlet {
 		*/
 		try {
 			//llamo al metodo nuevo 
-			daoViajes.asignarConductoresVehiculo2(idVehiculo,request.getParameterValues("conductores[]"));
+			daoViajes.asignarConductoresVehiculo2(idVehiculo,AccessManager.getIdUsuario(request),request.getParameterValues("conductores[]"));
 			//daoViajes.asignarConductoresVehiculo(idVehiculo,listaConductores);
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
@@ -1643,7 +1645,7 @@ public class ServletViaje extends HttpServlet {
 		}
 		
 		try {
-			daoViajes.desasignarConductor(idVehiculo,idConductor);
+			daoViajes.desasignarConductor(idVehiculo,AccessManager.getIdUsuario(request),idConductor);
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
 			respuesta.put("msg", e.getMessage());
@@ -1696,6 +1698,7 @@ public class ServletViaje extends HttpServlet {
 		JSONObject foto = new JSONObject();
 		foto.put("vehiculo", idVehiculo);
 		foto.put("imagen", pathFotoSubida);
+		foto.put("conductor_modifica", AccessManager.getIdUsuario(request));
 
 		try {
 			// si sube imagen correctamente elimino imagen anterior

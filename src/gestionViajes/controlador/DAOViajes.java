@@ -1379,7 +1379,7 @@ public class DAOViajes extends DataAccesObject {
 
 		//by juan
 		//Funcion que pone el estado del vehiculo en inactivo
-		public boolean desactivarVehiculo(Vehiculo v) throws ExceptionViajesCompartidos {
+		public boolean desactivarVehiculo(Vehiculo v, int conductor_modifica) throws ExceptionViajesCompartidos {
 			
     		if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
@@ -1522,7 +1522,7 @@ public class DAOViajes extends DataAccesObject {
 
         //es el mismo metodo que usa juan pero con unas correcciones
         public boolean asignarConductoresVehiculo2(int idVehiculo,
-				String[] conductores) throws ExceptionViajesCompartidos {
+				int conductor_modifica, String[] conductores) throws ExceptionViajesCompartidos {
 			
 			// verifico que vehiculo existe en sistema
 			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
@@ -1569,7 +1569,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		//by juan
 		// desactiva conductor a vehiculo (agarro el maneja y le mando una fecha al null de fechafin)
-		public boolean desasignarConductor(int idVehiculo, int idConductor) throws ExceptionViajesCompartidos {
+		public boolean desasignarConductor(int idVehiculo, int idConductor, int conductor_modifica) throws ExceptionViajesCompartidos {
 			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
 			if (v==null){
         		throw new ExceptionViajesCompartidos("El vehiculo no se encuentra en el sistema");
