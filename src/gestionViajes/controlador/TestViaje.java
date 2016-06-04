@@ -45,6 +45,7 @@ public class TestViaje extends TestCase {
 		this.daoviajes.vaciarTabla("ComisionCobrada");
 		this.daoviajes.vaciarTabla("LocalidadViaje");
 		this.daoviajes.borrarRelacionesEntreViajes();
+                this.daoviajes.vaciarTabla("SeguidorViaje");
 		this.daoviajes.vaciarTabla("Viaje");
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
@@ -1401,6 +1402,55 @@ public class TestViaje extends TestCase {
                 
                 
         }
+        
+        //by fede
+         @SuppressWarnings({ "unchecked", "rawtypes" })
+		public void testCancelarViajeYNotificarSeguidores() {
+		//test cancelar viaje
+		
+		//datos del vehiculo y cliente, para crear el vehiculo
+		JSONObject json= crearVehiculo();
+		try {
+			//creo los datos en la tabla maneja
+			assertTrue(this.daoviajes.NuevoVehiculo(json) );
+		}catch(ExceptionViajesCompartidos E){
+			fail(E.getMessage());
+		}
+
+		JSONObject json2 = TestViaje.crearViajeQueFaltaMucho();
+		try {
+			assertTrue( this.daoviajes.nuevoViaje(json2) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		List viajes=this.daoviajes.selectAll("Viaje");
+		Viaje viaje=(Viaje) viajes.get(0);
+                Integer id_viaje = viaje.getId_viaje();
+                int id_chofer = viaje.getConductor().getId_usuario();
+		JSONObject json3= this.crearPostulante();
+                json3.remove("cliente");
+		json3.put("cliente",5);
+		JSONObject json4= this.crearPostulante();
+		json4.remove("cliente");
+		json4.put("cliente",4);
+                json4.remove("localidad_subida");
+                json4.remove("localidad_bajada");
+                json4.put("localidad_subida",3427202);
+                json4.put("localidad_bajada",3427203);
+		try { 
+			assertTrue( this.daoviajes.seguirViaje(viaje.getId_viaje(),5) );
+			assertTrue( this.daoviajes.seguirViaje(viaje.getId_viaje(),4) );
+ 
+                      
+                        assertTrue ( this.daoviajes.cancelarViaje(id_viaje, id_chofer) );
+		} catch (ExceptionViajesCompartidos e) {
+			fail(e.getMessage());
+		}
+		Viaje viaje2 = (Viaje) this.daoviajes.buscarPorPrimaryKey(viaje, id_viaje);
+		assertEquals(viaje2.getEstado(),EstadoViaje.cancelado);
+	}
+        
+        
         
          @SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante() {

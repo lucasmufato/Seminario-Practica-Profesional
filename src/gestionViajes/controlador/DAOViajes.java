@@ -322,6 +322,7 @@ public class DAOViajes extends DataAccesObject {
 		try{
     		this.entitymanager.getTransaction( ).commit( );	
 			SchedulerViajes.nuevoViaje(viaje);
+                        this.notificarSeguidores(viaje.getId_viaje(), "modificado");
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -1223,7 +1224,7 @@ public class DAOViajes extends DataAccesObject {
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
-		
+		this.notificarSeguidores(viaje.getId_viaje(), "finalizado");
 		return true;
 	}
 
@@ -1679,6 +1680,7 @@ public class DAOViajes extends DataAccesObject {
                         if(aceptados>0){//lo sanciono si tenia pasajeros
                             bandera = daopuntos.sancionarChofer(id_viaje,id_chofer,aceptados);
                         }
+                        this.notificarSeguidores(viaje.getId_viaje(), "cancelado");
                     }catch(RollbackException e){
                         String error= ManejadorErrores.parsearRollback(e);
                         throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -1915,6 +1917,53 @@ public class DAOViajes extends DataAccesObject {
     					&& sv.isActivo();
     		}
     		return esSeguidor;
+        }
+        
+        
+        public boolean notificarSeguidores (int id_viaje, String motivo) throws ExceptionViajesCompartidos{
+            if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+            }
+            
+            String motivo_notificacion = null;
+            if(motivo.equals("cancelado")){
+                motivo_notificacion = "ha sido cancelado";
+            }else{
+                if(motivo.equals("modificado")){
+                    motivo_notificacion = "ha sido modificado";
+                }else{
+                    if(motivo.equals("iniciado")){
+                        motivo_notificacion = "ha iniciado";
+                    }else{
+                        if(motivo.equals("finalizado")){
+                            motivo_notificacion = "ha finalizado";              
+                        }
+                    }
+                }
+            }//fin setear motivo   
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+            String texto_notificacion = "El viaje <<"+viaje.getNombre_amigable()+">> que usted seguía "+motivo_notificacion;
+            List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+            
+            //ahora notifico a los seguidores
+            for(int i=0;i<lista_seguidores.size();i++){
+                this.entitymanager.getTransaction().begin();
+                Notificacion notificacion = new Notificacion();
+                notificacion.setEstado(EstadoNotificacion.no_leido);
+                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                notificacion.setLink("/detalle_viaje.html?id="+viaje.getId_viaje());
+                Cliente cliente_notificarlo = lista_seguidores.get(i).getCliente();
+                notificacion.setTexto(texto_notificacion);
+                notificacion.setCliente(cliente_notificarlo);
+                try{                
+                this.entitymanager.persist(notificacion);
+        	this.entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+            }//fin for
+            return true;
         }
                 
 }
