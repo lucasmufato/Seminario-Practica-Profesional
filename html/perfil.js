@@ -9,14 +9,14 @@ data.sponsor= {};
 data.super_usuario = {};
 
 var loadData = function() {
-	
+
 	var sendData = {
 		usuario_perfil: usuario_perfil
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
 			console.log("Me traje: ",jsonData);
-			$('.loadingScreen').fadeOut();	
+			$('.loadingScreen').fadeOut();
 			data.usuario_logueado = jsonData.usuario_logueado;
 			data.cliente = jsonData.cliente;
 			data.sponsor = jsonData.sponsor;
@@ -29,7 +29,7 @@ var loadData = function() {
 		}
 	}
 	$.ajax({
-		url: '/perfil', 
+		url: '/perfil',
 		dataType: 'json',
 		method: 'GET',
 		data: sendData,
@@ -46,7 +46,7 @@ var loadData = function() {
 
 var initUI = function(){
 	loadData();
-	$('[data-toggle="tooltip"]').tooltip(); 
+	$('[data-toggle="tooltip"]').tooltip();
 }
 
 window.onload=initUI;
@@ -62,6 +62,8 @@ var cargarPerfil = function(){
 		data.cliente.reputacion_stars =  reputacionStars(data.cliente.reputacion);
 	}
 	data.persona.tipo_doc_string = tipoDocString(data.persona.tipo_doc);
+	data.persona.fecha_revisada = vc.toFechaLocal(data.persona.fecha_nacimiento.replace(/-/g, '\/')).split(" ")[0];
+	console.log(new Date(data.persona.fecha_nacimiento));
 	data.persona.esM = data.persona.sexo == "M";
 	data.persona.esF = data.persona.sexo == "F";
 	data.persona.esO = data.persona.sexo == "O";
@@ -69,11 +71,28 @@ var cargarPerfil = function(){
 	// GENERO HTML DINAMICO
 	var template = $("#perfil-template").html();
 	$("#panel-perfil").append(Mustache.render(template,data));
-	
+	$(".ocultable").hide();
 	setearEventos();
+
+	function convertDate(inputFormat) {
+	  function pad(s) { return (s < 10) ? '0' + s : s; }
+	  var d = new Date(inputFormat);
+	  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
+	}
 }
 
 function setearEventos(){
+	$('#fecha').datetimepicker({
+				format: 'dd/mm/yyyy',
+			language: "es",
+			startView: 3,
+			minView: 2,
+			maxView: 2,
+		autoclose: true,
+			todayBtn: true,
+		clearBtn: true,
+	});
+
 	$("input[type='file']").change(function(){
 		readURL(this);
 	});
@@ -108,13 +127,14 @@ var enviarFoto = function(atributo, src){
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
 			loadData();
-		} 
+		}
 	}
 	vc.peticionAjax ("/perfil", sendData, "POST", onsuccess);
 }
 
 var activarModificar = function(){
 	$("#table-perfil input,#table-perfil select").attr("disabled",false);
+	$(".ocultable").show();
 	generarNuevosBotones();
 }
 
@@ -152,7 +172,7 @@ var desactivarCuenta = function(){
 	}
 	var msg = "¿Esta seguro que desea desactivar su cuenta? Esta acción no puede deshacerse";
 	var title= "Desactivar Cuenta";
-	var btn = document.createElement("BUTTON");       
+	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-danger dinamico";
 	btn.innerHTML = "<span class='glyphicon glyphicon-tint'></span>"+" Confirmar";
 	btn.name = "confirmar";
@@ -176,7 +196,7 @@ var modificarPerfilCliente = function(){
 		sendData.persona.telefono = $("table input[name=telefono-cliente]").val();
 		sendData.persona.apellidos = $("table input[name=apellidos-cliente]").val();
 		sendData.persona.nombres = $("table input[name=nombres-cliente]").val();
-		sendData.persona.fecha_nacimiento = $("#tableCliente input[name=fecha_nacimiento]").val();
+		sendData.persona.fecha_nacimiento = vc.fechaAMD($("#tableCliente input[name=fecha_nacimiento]").val());
 		sendData.persona.sexo = $("#tableCliente select[name=sexo]").val();
 
 		var onsuccess = function(jsonData){
@@ -186,12 +206,12 @@ var modificarPerfilCliente = function(){
 				modalMessage("error", jsonData.msg, "Modificar perfil");
 			}
 		}
-		
+
 		vc.peticionAjax("/perfil", sendData, "POST", onsuccess);
 	}else{
 		$("body").get(0).scrollIntoView();
 	}
-	
+
 }
 
 //validaciones//
@@ -224,7 +244,7 @@ var validarMail = function(){
 		var onsuccess = function(jsonData){
 			if (jsonData.result)
 				if (jsonData.es_valido){
-					customAlertSuccess(inputMail);				
+					customAlertSuccess(inputMail);
 				}else{
 					customAlert(inputMail, "Mail existente");
 				}
@@ -281,7 +301,7 @@ var customAlert = function(elemento,msg){
 	});
 	$(elemento).popover("show");
 	$(elemento).closest("tr").removeClass('has-success').addClass('has-error');
-	
+
 	$(elemento).focus(function(){
 		$(elemento).popover("destroy");
 		$(elemento).closest("tr").removeClass('has-error')
@@ -362,7 +382,7 @@ var imagenValida = function(file){
     if (file.type.indexOf("image") == -1){
 		modalMessage("error", "Debe seleccionar una imagen", "Modificar Imagen");
 		return false;
-	}	
+	}
 	return true;
 }
 
@@ -410,4 +430,3 @@ function getUrlVars() {
 	});
 	return vars;
 }
-
