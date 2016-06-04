@@ -1540,6 +1540,12 @@ public class DAOViajes extends DataAccesObject {
         			if (v.asignarConductor(conductorNuevo)){
             			this.entitymanager.persist(conductorNuevo);
             			this.entitymanager.persist(v);
+                                Notificacion notificacion = new Notificacion();
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: "+ v.getPatente());
+                                notificacion.setCliente(conductorNuevo);
+                                notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                this.entitymanager.persist(notificacion);
         			}
         		}
         	}
@@ -1588,6 +1594,12 @@ public class DAOViajes extends DataAccesObject {
         	for (Cliente conductorNuevo : listaConductores){
         		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
         			conductorNuevo.asignarVehiculo(v);
+                                Notificacion notificacion = new Notificacion();
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: <<"+ v.getPatente()+">>");
+                                notificacion.setCliente(conductorNuevo);
+                                notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                this.entitymanager.persist(notificacion);
         		}
         	}
         	
@@ -1631,6 +1643,12 @@ public class DAOViajes extends DataAccesObject {
 					}
 					m.desactivar();
 					this.entitymanager.persist(m);
+                                        Notificacion notificacion = new Notificacion();
+                                        notificacion.setTexto("Usted fue eliminado como conductor del vehículo con patente: <<"+ v.getPatente()+">> y ya no podrá realizar viajes con el mismo");
+                                        notificacion.setCliente(m.getCliente());
+                                        notificacion.setEstado(EstadoNotificacion.no_leido);
+                                        notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                        this.entitymanager.persist(notificacion);
 				}
 			}
 			
