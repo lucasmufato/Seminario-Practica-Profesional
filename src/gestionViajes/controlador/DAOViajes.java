@@ -1780,5 +1780,141 @@ public class DAOViajes extends DataAccesObject {
             lista = qry.getResultList(); 
             return lista;
         }
-        
+		
+        public boolean seguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
+            if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+            }
+            
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), idUsuario);
+            if(cliente==null){
+                throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE!");
+            }
+            
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), idViaje);
+            if(viaje==null){
+                throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE!");
+            }
+            List<SeguidorViaje> listaSeguidores = this.getSeguidoresViaje(viaje.getId_viaje());
+            SeguidorViaje sv = null;
+            for (SeguidorViaje seguidor : listaSeguidores){
+            	if (seguidor.getCliente().getId_usuario() == idUsuario){
+            		sv = seguidor;
+            	}
+        	}
+            if (sv==null){
+            	sv = new SeguidorViaje();
+            }else if (sv.isActivo()){
+                throw new ExceptionViajesCompartidos("Usted ya es seguidor de este viaje");
+            }
+
+            this.entitymanager.getTransaction().begin();
+            sv.setCliente(cliente);
+            sv.setEstado("A".charAt(0));
+            sv.setViaje(viaje);    		
+            java.util.Date utilDate = new java.util.Date();
+            java.sql.Timestamp fecha = new Timestamp(utilDate.getTime());
+            sv.setFecha(fecha);
+
+            Notificacion notifSeguidor = new Notificacion();
+            Notificacion notifConductor = new Notificacion();
+            Cliente conductor = viaje.getConductor();
+            notifConductor.setCliente(conductor);
+            notifConductor.setEstado(EstadoNotificacion.no_leido);
+            notifConductor.setFecha(new Timestamp((new java.util.Date()).getTime()));
+            notifConductor.setTexto("El usuario "+cliente.getNombre_usuario()+" está siguiendo el viaje "+viaje.getNombre_amigable()+" en el cual usted es conductor");
+            notifConductor.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
+            notifSeguidor.setCliente(cliente);
+            notifSeguidor.setEstado(EstadoNotificacion.no_leido);
+            notifSeguidor.setFecha(new Timestamp((new java.util.Date()).getTime()));
+            notifSeguidor.setTexto("Usted está siguiendo el viaje "+viaje.getNombre_amigable());
+            notifSeguidor.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
+            
+    		try{
+                this.entitymanager.persist(sv);
+                this.entitymanager.persist(notifConductor);
+                this.entitymanager.persist(notifSeguidor);
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+ 
+            return true;
+			
+		}
+		public boolean dejarDeSeguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
+            if(this.entitymanager.getTransaction().isActive()){
+    			this.entitymanager.getTransaction().rollback();
+            }
+            
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), idUsuario);
+            if(cliente==null){
+                throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE!");
+            }
+            
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), idViaje);
+            if(viaje==null){
+                throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE!");
+            }
+            List<SeguidorViaje> listaSeguidores = this.getSeguidoresViaje(viaje.getId_viaje());
+            SeguidorViaje sv = null; 
+            for (SeguidorViaje seguidor : listaSeguidores){
+	            if (seguidor.getCliente().getId_usuario() == idUsuario){
+	            	sv = seguidor;
+	            	break;
+	            }
+        	}
+            
+            if (sv == null || !sv.isActivo()) throw new ExceptionViajesCompartidos("ERROR: Usted no es seguidor de este viaje");
+            
+            this.entitymanager.getTransaction().begin();
+            sv.setEstado("I".charAt(0));
+            java.util.Date utilDate = new java.util.Date();
+            java.sql.Timestamp fecha = new Timestamp(utilDate.getTime());
+            sv.setFecha(fecha);
+
+            Notificacion notifSeguidor = new Notificacion();
+            Notificacion notifConductor = new Notificacion();
+            Cliente conductor = viaje.getConductor();
+            notifConductor.setCliente(conductor);
+            notifConductor.setEstado(EstadoNotificacion.no_leido);
+            notifConductor.setFecha(new Timestamp((new java.util.Date()).getTime()));
+            notifConductor.setTexto("El usuario "+cliente.getNombre_usuario()+" ha dejado de seguir el viaje "+viaje.getNombre_amigable()+" en el cual usted es conductor");
+            notifConductor.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
+            notifSeguidor.setCliente(cliente);
+            notifSeguidor.setEstado(EstadoNotificacion.no_leido);
+            notifSeguidor.setFecha(new Timestamp((new java.util.Date()).getTime()));
+            notifSeguidor.setTexto("Usted ha dejado de seguir el viaje "+viaje.getNombre_amigable());
+            notifSeguidor.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
+            
+    		try{
+                this.entitymanager.persist(notifConductor);
+                this.entitymanager.persist(notifSeguidor);
+        		entitymanager.getTransaction( ).commit( );	
+        	}catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+ 
+            return true;
+		}
+        public List<SeguidorViaje> getSeguidoresViaje(int id_viaje){
+            List<SeguidorViaje> lista = new ArrayList<SeguidorViaje>();
+            Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+            Query qry = entitymanager.createNamedQuery("SeguidorViaje.BuscarPorViaje");
+            qry.setParameter("viaje", viaje);
+            lista = (qry.getResultList() == null)? null : qry.getResultList(); 
+            return lista;
+        }
+        public boolean esSeguidor(int idCliente, int idViaje){
+    		List<SeguidorViaje> listaSeguidores = this.getSeguidoresViaje(idViaje);
+    		boolean esSeguidor = false;
+    		for (SeguidorViaje sv : listaSeguidores){
+    			esSeguidor = sv.getCliente().getId_usuario() == idCliente
+    					&& sv.isActivo();
+    		}
+    		return esSeguidor;
+        }
+                
 }

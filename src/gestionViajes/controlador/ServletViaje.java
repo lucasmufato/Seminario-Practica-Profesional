@@ -53,6 +53,7 @@ public class ServletViaje extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Type", "application/json; charset=UTF-8");
 
+
 		if (entity != null && entity.equals ("viaje")) {
 			if (action != null && action.equals ("new")) {
 				respuesta = this.nuevo_viaje (request);
@@ -76,6 +77,10 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.finalizarViaje(request);
 			} else if (action != null && action.equals("ver_mis_viajes")) {
 				respuesta = this.ver_mis_viajes (request);
+			} else if (action != null && action.equals("seguir")) {
+				respuesta = this.seguir_viaje (request);
+			} else if (action != null && action.equals("dejar_de_seguir")) {
+				respuesta = this.dejar_de_seguir (request);
 			}
 		} else if (entity != null && entity.equals ("vehiculo")) {
 			if (action != null && action.equals ("new")) {
@@ -116,7 +121,6 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
-
 
 
 	@Override
@@ -759,7 +763,7 @@ public class ServletViaje extends HttpServlet {
 		json_logged.put("es_aceptado", esAceptado);
 		json_logged.put("es_rechazado", esRechazado);
 		json_logged.put("es_finalizo", esFinalizo);
-		json_logged.put("es_seguidor", false); //IMPLEMENTAR DESPUES
+		json_logged.put("es_seguidor", daoViajes.esSeguidor(usuario_logueado.getId_usuario(), viaje.getId_viaje())); 
 		
 		// Ha calificado a todos?
 		boolean haCalificado = false;
@@ -1205,6 +1209,72 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 
+
+	private JSONObject dejar_de_seguir(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Id del viaje no es válido");
+			return respuesta;
+		}
+		
+		try {
+			daoViajes.dejarDeSeguirViaje(idViaje,AccessManager.getIdUsuario(request));
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Usted ha dejado de seguir este viaje");
+		return respuesta;
+	}
+
+	private JSONObject seguir_viaje(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("msg", "No se ha iniciado sesion como un cliente válido");
+			return respuesta;
+		}
+		
+		//Chequeo que id del viaje es valido
+		int idViaje;
+		try {
+			idViaje = Integer.parseInt(request.getParameter("id_viaje"));
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Id del viaje no es válido");
+			return respuesta;
+		}
+		
+		try {
+			daoViajes.seguirViaje(idViaje,AccessManager.getIdUsuario(request));
+		} catch (ExceptionViajesCompartidos e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", e.getMessage());
+			return respuesta;
+		}
+		
+		respuesta.put("result", true);
+		respuesta.put("msg", "Usted se ha convertido en seguidor de este viaje");
+		return respuesta;
+	}
 	//----------------------------------------------FIN VIAJES---------------------------------------------------------------------//
 	
 	//----------------------------------------------VEHICULOS----------------------------------------------------------------------//

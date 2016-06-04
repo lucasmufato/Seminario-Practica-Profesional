@@ -315,7 +315,7 @@ var configurarUi = function(){
 			$("#btnSeguir").hide();
 		} else{
 			$("#btnDejarSeguir").hide();
-			$("#btnSegir").show();
+			$("#btnSeguir").show();
 		}
 	}
 
@@ -627,12 +627,13 @@ var esTramoValido = function(){
 
 var seguirViaje = function(){
 	var sendJson = {
-		action: "seguir_viaje",
+		entity:"viaje",
+		action: "seguir",
 		id_viaje: data.viaje.id
 	}
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
-			modalMessage('success',jsonData.msg);//opcional
+			//modalMessage('success',jsonData.msg);//opcional
 			data.loadData();
 		}else{
 			errorMessage(jsonData.msg);
@@ -642,12 +643,13 @@ var seguirViaje = function(){
 }
 var dejarDeSeguirViaje = function(){
 	var sendJson = {
-		action: "dejar_seguir_viaje",
+		entity:"viaje",
+		action: "dejar_de_seguir",
 		id_viaje: data.viaje.id
 	}
 	var onsuccess = function(jsonData){
 		if (jsonData.result){
-			modalMessage('success',jsonData.msg);//opcional
+			//modalMessage('success',jsonData.msg);//opcional
 			data.loadData();
 		}else{
 			errorMessage(jsonData.msg);

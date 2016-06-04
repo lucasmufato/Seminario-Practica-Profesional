@@ -359,5 +359,15 @@ CREATE TABLE COMENTARIO_VIAJE(
     PRIMARY KEY(id_comentario_viaje),
     FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
     FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje)
+);
+CREATE TABLE SEGUIDOR_VIAJE(
+	id_seguidor_viaje int(11) NOT NULL AUTO_INCREMENT,
+    fecha datetime NOT NULL,
+    id_cliente int(11) NOT NULL,
+    id_viaje int(11) default null,
+    estado char(1) NOT NULL,
     
+    PRIMARY KEY(id_seguidor_viaje),
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
+    FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje)
 );
