@@ -70,4 +70,14 @@
         <servlet-name>notificaciones</servlet-name>
         <url-pattern>/notificaciones</url-pattern>
     </servlet-mapping>
+
+	<servlet>
+        <servlet-name>comisiones</servlet-name>
+        <servlet-class>gestionComisiones.controlador.ServletComisiones</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>comisiones</servlet-name>
+        <url-pattern>/comisiones</url-pattern>
+    </servlet-mapping>
+
 </web-app>

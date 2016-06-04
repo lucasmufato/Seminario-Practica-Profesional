@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-class DAONotificaciones extends DataAccesObject {
+public class DAONotificaciones extends DataAccesObject {
 	public DAONotificaciones () {
 		super();
 	}

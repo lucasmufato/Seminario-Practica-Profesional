@@ -141,4 +141,10 @@ public class DAOComisiones extends DataAccesObject {
 		
 		return true;
 	}
+
+	public float consultarSaldo(int id_cliente){
+		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente); 
+		float saldo=cliente.getSaldo();
+	return saldo;
+	}
 }
