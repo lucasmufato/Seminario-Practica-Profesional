@@ -97,9 +97,9 @@ var filterer = function(item){
 	var rctPrecioDesde = Number($('#formFilter input[name=preciodesde]').val());
 	var rctPrecioHasta = Number($('#formFilter input[name=preciohasta]').val());
 
-	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(rctFechaDesde);
-	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(rctFechaHasta);
-
+	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(Date.parse(vc.fechaAMD(rctFechaDesde).split(" ").join("T")));
+	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(Date.parse(vc.fechaAMD(rctFechaHasta).split(" ").join("T")));
+	console.log("hola", rctFechaDesde,rctFechaHasta);
 	var destinoNormalizado = omitirAcentos(item.destino.toLowerCase());
 	var origenNormalizado = omitirAcentos(item.origen.toLowerCase());
 	var conductorNormalizado = omitirAcentos(item.conductor.toLowerCase());
@@ -113,7 +113,9 @@ var filterer = function(item){
 		i++;
 	}
 
-	var fecha = new Date(item.fecha_inicio);
+	var fecha = new Date (Date.parse(item.fecha_inicio.split(" ").join("T")));
+	//console.log(fecha,item.fecha_inicio);
+
 	return (esLocalidad)
 			&& (conductorNormalizado.contains(rctConductor))
 			&& (fecha >= rctFechaDesde || rctFechaDesde==="")
