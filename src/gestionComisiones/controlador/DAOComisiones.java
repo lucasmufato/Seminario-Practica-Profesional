@@ -100,6 +100,8 @@ public class DAOComisiones extends DataAccesObject {
             
                 this.entitymanager.getTransaction( ).begin( );
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente); 
+		// Esto es por las dudas
+		this.refresh(cliente);
 		float saldo=cliente.getSaldo();
 		cliente.setSaldo(saldo+monto);
 		

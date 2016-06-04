@@ -206,4 +206,8 @@ public abstract class DataAccesObject {
 		
 	}
 	
+	// Recarga los datos de un objeto desde la base de datos
+	public void refresh(Object entidad) {
+		entitymanager.refresh(entidad);
+	}
 }

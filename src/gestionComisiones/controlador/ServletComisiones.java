@@ -100,6 +100,8 @@ public class ServletComisiones extends HttpServlet {
 			if (cliente == null) {
 				throw new ExceptionViajesCompartidos("El usuario con el que ha iniciado sesion no es un cliente");
 			}
+			// Si no hacemos refresh no se actualiza hasta que reiniciemos el tomcat
+			daoUsuarios.refresh(cliente);
 			saldo = cliente.getSaldo();
 		} catch (Exception e) {
 			salida.put("result", false);
@@ -115,10 +117,29 @@ public class ServletComisiones extends HttpServlet {
 
 
 	private JSONObject cargarSaldo(HttpServletRequest request) {
+		/* Esto en realidad tendria que crear una factura y ponerle estado pendiente de pago, pero como todavia no implementamos ningun medio de pago vamos a hacer que se cargue directamente */
 		JSONObject salida = new JSONObject();
-		Integer idNotificacion = Integer.parseInt(request.getParameter("idNotificacion"));
-		daoNotificaciones.marcarLeida(idNotificacion);
+		int monto;
+		String username;
+		try {
+			username = AccessManager.nombreUsuario(request);
+			if (username == null) {
+				throw new ExceptionViajesCompartidos("No ha iniciado sesion como usuario valido");
+			}
+			Cliente cliente = daoUsuarios.clientePorNombre(username);
+			if (cliente == null) {
+				throw new ExceptionViajesCompartidos("El usuario con el que ha iniciado sesion no es un cliente");
+			}
+			monto = Integer.parseInt(request.getParameter("monto"));
+			daoComisiones.sumarSaldo (cliente.getId_usuario(), monto);
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			salida.put("redirect", "/login.html");
+			return salida;
+		}
 		salida.put("result", true);
+		salida.put("msg", "La carga de saldo ha sido exitosa");
 		return salida;
 	}
 }

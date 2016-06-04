@@ -347,6 +347,8 @@ public class DAOViajes extends DataAccesObject {
 		if (cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
 		}
+		//Por las dudas, para que refresque el saldo
+		this.refresh(cliente);
 		String id_vehiculo = (String) datos.get("vehiculo");
 		Vehiculo vehiculo = (Vehiculo) this.buscarPorClaveCandidata("Vehiculo", id_vehiculo);
 		if(vehiculo==null){
