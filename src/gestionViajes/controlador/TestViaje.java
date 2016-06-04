@@ -1451,7 +1451,50 @@ public class TestViaje extends TestCase {
 	}
         
         
-        
+        //by fede
+		@Test
+		public void testAceptarPostulanteCorrectoYDejaDeSeguirViaje() {
+			//CANTIDAD DE ASIENTOS DEL AUTO 1
+			//SE POSTULA Y ACEPTA A 1 PASAJERO CORRECTAMENTE
+			
+			//datos del vehiculo y cliente, para crear el vehiculo
+			JSONObject json= crearVehiculo();
+			try {
+				//creo los datos en la tabla maneja
+				assertTrue(this.daoviajes.NuevoVehiculo(json) );
+			}catch(ExceptionViajesCompartidos E){
+				fail(E.getMessage());
+			}
+				JSONObject json2 = TestViaje.crearViaje2();
+			try {
+				assertTrue( this.daoviajes.nuevoViaje(json2) );
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+			
+			JSONObject json3= this.crearPostulante();
+			List viajes=this.daoviajes.selectAll("Viaje");
+			Viaje viaje=(Viaje) viajes.get(0);
+                        
+			try {
+                                assertTrue(this.daoviajes.seguirViaje(viaje.getId_viaje(), 3));
+				assertTrue( this.daoviajes.Cliente_se_postula_en_viaje(json3) );
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+			
+			
+			try {
+				assertTrue( this.daoviajes.aceptarPasajero(3, viaje.getId_viaje()) );
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+			Cliente cliente = (Cliente) this.daoviajes.buscarPorPrimaryKey(new Cliente(), 3);
+			PasajeroViaje pv=viaje.recuperar_pasajeroViaje_por_cliente(cliente);
+			assertEquals(pv.getEstado(),EstadoPasajeroViaje.aceptado);
+			assertEquals(pv.getComision().getEstado(),EstadoComisionCobrada.pendiente);
+		}
+                
          @SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONObject crearPostulante() {
 		/*

@@ -1081,7 +1081,27 @@ public class DAOViajes extends DataAccesObject {
 		  	String error= ManejadorErrores.parsearRollback(e);
 		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
 		}
+                //ahora hago que dejar de seguir seguidor del viaje
+                SeguidorViaje seguidor = new SeguidorViaje();
+                List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+                if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
+                    for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
+                        seguidor = lista_seguidores.get(j);
+                        if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
+                            this.entitymanager.getTransaction().begin();
+                            seguidor.setEstado("I".charAt(0));
+                            this.entitymanager.getTransaction().commit();
+                        }// deja de ser seguidor
+                    }
+                
+                }
+                
+                
 		return true;
+                
+                
+            
+                
 	}
 
 	//by mufa
