@@ -37,7 +37,7 @@ submitFormVehiculo = function () {
 
 	var redirec = new function() {
 		vc.ventana_mensaje ("Vehiculo creado correctamente<br>Redireccionando a mis vehiculos", "Vehiculo creado", "success");
-		window.setTimeout(function(){window.location="/mis_vehiculos.html"}, 1000);
+		window.setTimeout(function(){window.location="/mis_vehiculos.html"}, 3000);
 	}
 
 	vc.peticionAjax('/viajes', sendData, 'POST', redirec);
