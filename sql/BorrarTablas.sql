@@ -30,4 +30,5 @@ drop table tipo_mov_saldo;
 drop table pago;
 drop table precio_comision;
 drop table sequence;
+drop table comentario_viaje;
 SET FOREIGN_KEY_CHECKS = 1; 

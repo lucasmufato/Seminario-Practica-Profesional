@@ -15,4 +15,5 @@ truncate seminario.pasajero_viaje;
 truncate seminario.localidad_viaje;
 truncate seminario.maneja;
 truncate seminario.estado_viaje;
+truncate seminario.comentario_viaje;
 SET FOREIGN_KEY_CHECKS = 1; 
