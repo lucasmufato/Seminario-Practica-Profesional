@@ -85,8 +85,13 @@ public class Probador {
 		persona.remove("fecha_nacimiento");
 		persona.put("fecha_nacimiento", "19920411");	//hago una fecha del tipo String, que es como le debe llegar al contructor de Persona
 		cliente= c.toJSON();
-		boolean b=dao.nuevoCliente(persona,cliente);
-		System.out.println(b);
+		boolean b;
+		try {
+			b = dao.nuevoCliente(persona,cliente);
+		} catch (ExceptionViajesCompartidos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void ConstruirClienteConJSONVacio(){

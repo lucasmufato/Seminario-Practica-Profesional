@@ -701,10 +701,8 @@ public class DAOViajes extends DataAccesObject {
 		
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
 		
-		//	TODO la parte de crear la comision
 		DAOComisiones daocomision= new DAOComisiones();
-		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);	//este metodo falta!! tendria q devolver la comision que se le cobraria
-		
+		ComisionCobrada comisionCobrada =this.entitymanager.merge( daocomision.nuevaComisionCobrada(km) );	
 		daocomision.cerrarConexiones();
 		daocomision=null;
 		
@@ -1218,7 +1216,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{	// TODO sin test
+	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
