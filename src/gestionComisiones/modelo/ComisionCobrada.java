@@ -36,7 +36,7 @@ public class ComisionCobrada implements JSONable {
 	protected EstadoComisionCobrada estado;
 	
 	@JoinColumn(name="ID_COMISION")
-	@ManyToOne(cascade=CascadeType.MERGE)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Comision comision;
 	@JoinColumn(name="ID_MOVIMIENTO_SALDO")
 	@ManyToOne(cascade=CascadeType.PERSIST)

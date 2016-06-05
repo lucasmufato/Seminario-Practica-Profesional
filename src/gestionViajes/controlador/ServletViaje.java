@@ -1645,7 +1645,7 @@ public class ServletViaje extends HttpServlet {
 		}
 		
 		try {
-			daoViajes.desasignarConductor(idVehiculo,AccessManager.getIdUsuario(request),idConductor);
+			daoViajes.desasignarConductor(idVehiculo,idConductor,AccessManager.getIdUsuario(request));
 		} catch (ExceptionViajesCompartidos e) {
 			respuesta.put("result", false);
 			respuesta.put("msg", e.getMessage());
