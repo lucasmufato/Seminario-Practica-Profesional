@@ -1375,7 +1375,32 @@ public class DAOViajes extends DataAccesObject {
         		String error= ManejadorErrores.parsearRollback(e);
         		throw new ExceptionViajesCompartidos("ERROR: "+error);
         	}
-    		
+                
+                //notifico a todos los que manejan el auto que fue modificado por este cliente
+    		int id_conductor_modifica = (int) foto.get("conductor_modifica");
+                Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
+                List <Maneja> lista_conductores = this.getManejaPorVehiculo(v);
+                for(int i=0;i<lista_conductores.size();i++){
+                    Cliente conductor = lista_conductores.get(i).getCliente();
+                    if(conductor.getId_usuario() != id_conductor_modifica){ //si no es quien modifico, notifico
+                        
+                        try{ //lo notifico uno por uno
+                        
+                            this.entitymanager.getTransaction().begin();
+                            Notificacion notificacion = new Notificacion();
+                            notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado la foto del vehículo con patente: <<"+v.getPatente()+">>");
+                            notificacion.setEstado(EstadoNotificacion.no_leido);
+                            notificacion.setCliente(conductor);
+                            notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                            this.entitymanager.persist(notificacion);
+                            this.entitymanager.getTransaction().commit();
+
+                        }catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+                        }
+                    }
+                }
     		return true;
     	}
     	
@@ -1408,7 +1433,33 @@ public class DAOViajes extends DataAccesObject {
         		String error= ManejadorErrores.parsearRollback(e);
         		throw new ExceptionViajesCompartidos("ERROR: "+error);
         	}
-    		
+                //notifico a todos los que manejan el auto que fue modificado por este cliente
+    		int id_conductor_modifica = (int) json.get("conductor_modifica");
+                Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
+                List <Maneja> lista_conductores = this.getManejaPorVehiculo(v);
+                for(int i=0;i<lista_conductores.size();i++){
+                    Cliente conductor = lista_conductores.get(i).getCliente();
+                    if(conductor.getId_usuario() != id_conductor_modifica){ //si no es quien modifico, notifico
+                        
+                        try{ //lo notifico uno por uno
+                        
+                            this.entitymanager.getTransaction().begin();
+                            Notificacion notificacion = new Notificacion();
+                            notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado el vehículo con patente: <<"+v.getPatente()+">>");
+                            notificacion.setEstado(EstadoNotificacion.no_leido);
+                            notificacion.setCliente(conductor);
+                            notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                            this.entitymanager.persist(notificacion);
+                            this.entitymanager.getTransaction().commit();
+
+                        }catch(RollbackException e){
+        		String error= ManejadorErrores.parsearRollback(e);
+        		throw new ExceptionViajesCompartidos("ERROR: "+error);
+        	}
+                    }
+                }
+                
+                
     		return true;
 		}
 
@@ -1563,7 +1614,7 @@ public class DAOViajes extends DataAccesObject {
 
         //es el mismo metodo que usa juan pero con unas correcciones
         public boolean asignarConductoresVehiculo2(int idVehiculo,
-				int conductor_modifica, String[] conductores) throws ExceptionViajesCompartidos {
+				int id_conductor_modifica, String[] conductores) throws ExceptionViajesCompartidos {
 			
 			// verifico que vehiculo existe en sistema
 			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
@@ -1586,7 +1637,8 @@ public class DAOViajes extends DataAccesObject {
 					listaConductores.add(cliente);
 				}
 			}
-    		
+    		Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
+                
         	// Tomo los conductores activos de ese vehiculo
         	List<Cliente> conductoresActivos = v.getConductoresActivos();
         	
@@ -1595,7 +1647,7 @@ public class DAOViajes extends DataAccesObject {
         		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
         			conductorNuevo.asignarVehiculo(v);
                                 Notificacion notificacion = new Notificacion();
-                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: <<"+ v.getPatente()+">>");
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: <<"+ v.getPatente()+">> por el usuario: <<"+conductor_modifica.getNombre_usuario()+">>");
                                 notificacion.setCliente(conductorNuevo);
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
@@ -1616,7 +1668,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		//by juan
 		// desactiva conductor a vehiculo (agarro el maneja y le mando una fecha al null de fechafin)
-		public boolean desasignarConductor(int idVehiculo, int idConductor, int conductor_modifica) throws ExceptionViajesCompartidos {
+		public boolean desasignarConductor(int idVehiculo, int idConductor, int id_conductor_modifica) throws ExceptionViajesCompartidos {
 			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
 			if (v==null){
         		throw new ExceptionViajesCompartidos("El vehiculo no se encuentra en el sistema");
@@ -1633,7 +1685,7 @@ public class DAOViajes extends DataAccesObject {
     			this.entitymanager.getTransaction().rollback();
     		}
     		this.entitymanager.getTransaction().begin();
-			
+			Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
 			List<Maneja> listaManeja = this.getManejaPorVehiculoConductor(v, c);
 			for (Maneja m : listaManeja) {
 				if (m.getFecha_fin() == null){
@@ -1644,7 +1696,7 @@ public class DAOViajes extends DataAccesObject {
 					m.desactivar();
 					this.entitymanager.persist(m);
                                         Notificacion notificacion = new Notificacion();
-                                        notificacion.setTexto("Usted fue eliminado como conductor del vehículo con patente: <<"+ v.getPatente()+">> y ya no podrá realizar viajes con el mismo");
+                                        notificacion.setTexto("Usted fue eliminado como conductor del vehículo con patente: <<"+ v.getPatente()+">> por el usuario <<"+conductor_modifica.getNombre_usuario()+" >> y ya no podrá realizar viajes con el mismo");
                                         notificacion.setCliente(m.getCliente());
                                         notificacion.setEstado(EstadoNotificacion.no_leido);
                                         notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );

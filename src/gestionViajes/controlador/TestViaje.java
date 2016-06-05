@@ -363,7 +363,7 @@ public class TestViaje extends TestCase {
 		String[] conductores= {"3","4"};
 		Vehiculo v=(Vehiculo)this.daoviajes.buscarPorClaveCandidata("Vehiculo", "abd123");
 		try {
-			assertTrue (this.daoviajes.asignarConductoresVehiculo2(v.getId(), conductores) );
+			assertTrue (this.daoviajes.asignarConductoresVehiculo2(v.getId(),2 ,conductores) );
 		} catch (ExceptionViajesCompartidos e) {
 			fail(e.getMessage());
 		}
