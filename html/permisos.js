@@ -10,13 +10,7 @@ $( document ).ready(function(){
  });
 */
 permisosData.iniciarScriptPermisos = function(){
-	permisosData.esconderFuncionalidadesPermisos();
 	permisosData.getPermisosUsuario();
-}
-
-permisosData.esconderFuncionalidadesPermisos = function(){
-  $("#panel-admin").hide();
-  $("#panel-cliente").hide();
 }
 
 permisosData.getPermisosUsuario = function() {
@@ -28,7 +22,6 @@ permisosData.getPermisosUsuario = function() {
 			permisosData.permisosp = jsonData.permisos;
 			permisosData.usuariop = jsonData.usuario;
 			permisosData.rolesp = jsonData.roles;
-			permisosData.cargarBotones();
 			permisosData.mostrarFunciones();
 		}else if (jsonData.redirect != undefined){
 			window.location = jsonData.redirect;
@@ -54,57 +47,85 @@ permisosData.send = function(sendData,callback){
 	});
 }
 
-permisosData.cargarBotones = function(){
-	// Si hacemos que xx.html sin parametros sea la pagina del usuario logueado esto ya no seria necesario
-	//$("#link-mi-perfil").attr("href","/perfil.html?usuario="+permisosData.usuariop.nombre_usuario);
-	//$("#link-mis-viajes").attr("href","/mis_viajes.html?usuario="+permisosData.usuariop.nombre_usuario);
-	//$("#link-mis-vehiculos").attr("href","/mis_vehiculos.html?usuario="+permisosData.usuariop.nombre_usuario);.hide();
-}
 permisosData.mostrarFunciones = function(){
 	//console.log("Permisos que me traje: ",permisosData.permisosp);
 	//console.log("roles que me traje: ",permisosData.rolesp);
 	//console.log("usuario que me traje: ",permisosData.usuariop);
+	permisosData.cargarSidebarPermisos();
 	$("#dropdown-usuario").html(permisosData.usuariop.nombre_usuario+" ");
 	if (permisosData.rolesp){
 		for (var i=0; i<permisosData.rolesp.length;i++){
 			var rol = permisosData.rolesp[i].nombre_rol.toLowerCase();
 			if (rol == "cliente"){
-				  $("#panel-cliente").show();
-				  $("#link-mi-perfil-admin").hide();
 				  permisosData.makeListDropdown(rol);
 			}
 			if (rol == "super_usuario"){
-				  $("#panel-admin").show();
 				  permisosData.makeListDropdown(rol);
 			}
 		}
 	}
-	/*
-	if (permisosData.permisosp){
-		var permiso=0;
-		for (permiso in permisosData.permisosp){
-			var nombrePermiso=permisosData.permisosp[permiso]["nombre_permiso"];
-			var estadoPermiso=permisosData.permisosp[permiso]["estado"];
-			if (nombrePermiso && estadoPermiso=="A"){
-				if (nombrePermiso == "administrar_usuarios"){
-					$("#panel-admin").show();
+
+}
+
+permisosData.cargarSidebarPermisos = function(){
+	$.getScript( "/js/mustache.js", function() {
+		$.ajax({
+			url: '/navegacion.html',
+			type: 'GET',
+			success: function(data) {
+				var dom = $(data);
+				var template;
+				dom.filter('script').each(function(){
+					if (this.id == "botonera-sidebar-template"){
+						template = this.innerHTML;
+					}
+				});
+				var permisosFlags = {};
+				console.log(permisosData.permisosp);
+				if (permisosData.permisosp){
+					var permiso=0;
+					for (permiso in permisosData.permisosp){
+						var nombrePermiso=permisosData.permisosp[permiso]["nombre_permiso"];
+						var estadoPermiso=permisosData.permisosp[permiso]["estado"];
+						if (nombrePermiso && estadoPermiso=="A"){
+							if (nombrePermiso == "administrar_usuarios"){
+								permisosFlags.administrar_usuarios = true;
+							} else if (nombrePermiso == "generar_reportes") {
+								permisosFlags.generar_reportes = true;
+							} else if (nombrePermiso == "acceder_perfil") {
+								permisosFlags.acceder_perfil = true;
+							} else if (nombrePermiso == "crear_viajes") {
+								permisosFlags.crear_viajes = true;
+							} else if (nombrePermiso == "buscar_viajes") {
+								permisosFlags.buscar_viajes = true;
+							} else if (nombrePermiso == "acceder_mis_viajes") {
+								permisosFlags.acceder_mis_viajes = true;
+							} else if (nombrePermiso == "cargar_saldo") {
+								permisosFlags.cargar_saldo = true;
+							} else if (nombrePermiso == "acceder_mis_vehiculos") {
+								permisosFlags.acceder_mis_vehiculos = true;
+							}
+						}
+					}
 				}
+				var html = Mustache.render(template,permisosFlags);
+				$("#botonera-sidebar").html(html);
 			}
-		}
-	}
-	*/
+		});
+	});
 }
 
 permisosData.makeListDropdown = function(rol){
 	var html = 	"<li><a href='/perfil.html'>Mi perfil</a></li>"
-	
+
 	if (rol == "cliente"){
 		html += "<li><a href='/mis_viajes.html'>Mis viajes</a></li>"+
 				"<li><a href='/mis_vehiculos.html'>Mis vehículos</a></li>";
 	} else if (rol == "super_usuario"){
-		html += "<li><a href='/abm.html'>Administrar usuarios</a></li>";
+		html += "<li><a href='/abm.html'>Administrar usuarios</a></li>"
+			+"<li><a href='/reportes/viajes.html'>Reporte de viajes</a></li>";
 	}
-	
+
 	html += "<li role='separator' class='divider'></li>"+
 			"<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>";
 	$("#dropdown-menu").html(html);

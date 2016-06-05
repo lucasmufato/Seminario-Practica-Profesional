@@ -1,4 +1,6 @@
 <!DOCTYPE HTML>
+<html>
+
 <head>
 	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css" />
@@ -9,6 +11,52 @@
 			$('body').toggleClass("sidebar-on");
 		}
 	</script>
+	<script id="botonera-sidebar-template" type="text/template">
+		<hr>
+		<div class="btn-group-vertical col-xs-12">
+			{{#crear_viajes}}
+			<a href="/alta_viaje.html" class="btn btn-success" id="link-alta-viaje">Crear Viaje <span class="glyphicon glyphicon-road"></span></a>
+			{{/crear_viajes}}
+			{{#buscar_viajes}}
+			<a href="/home.html" class="btn btn-primary" id="link-alta-viaje">Buscar Viaje <span class="glyphicon glyphicon-search"></span></a>
+			{{/buscar_viajes}}
+		</div>
+		{{#crear_viajes}}{{#buscar_viajes}}
+		<hr class="col-xs-12">
+		{{/buscar_viajes}}{{/crear_viajes}}
+		<div class="btn-group-vertical col-xs-12">
+			{{#acceder_mis_viajes}}
+			<a href="/mis_viajes.html" class="btn btn-primary" id="link-mis-viajes">Mis viajes <span class="glyphicon glyphicon-globe"></span></a>
+			{{/acceder_mis_viajes}}
+			{{#acceder_mis_vehiculos}}
+			<a href="/mis_vehiculos.html" class="btn btn-primary" id="link-mis-vehiculos">Mis Vehiculos <span class="glyphicon glyphicon-plane"></span></a>
+			{{/acceder_mis_vehiculos}}
+			{{#acceder_perfil}}
+			<a href="/perfil.html" class="btn btn-primary" id="link-mi-perfil">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
+			{{/acceder_perfil}}
+		</div>
+		{{#acceder_mis_viajes}}{{#acceder_mis_vehiculos}}{{#acceder_perfil}}
+		<hr class="col-xs-12">
+		{{/acceder_perfil}}{{/acceder_mis_vehiculos}}{{/acceder_mis_viajes}}
+		<div class="btn-group-vertical col-xs-12">
+			{{#cargar_saldo}}
+			<a href="/cargar_saldo.html" class="btn btn-primary">Cargar saldo <span class="glyphicon glyphicon-usd"></span></a>
+			{{/cargar_saldo}}
+		<!-- Esto todavia no esta implementado(ni lo va a estar nunca)
+			<a href="#" class="btn btn-success">Beneficios <span class="glyphicon glyphicon-gift"></span><a>
+		-->
+		</div>
+		<hr class="col-xs-12">
+		<div class="btn-group-vertical col-xs-12">
+			{{#administrar_usuarios}}
+			<a href="/abm.html" class="btn btn-primary">Administrar Usuarios <span class="glyphicon glyphicon-wrench"></span></a>
+			{{/administrar_usuarios}}
+			{{#generar_reportes}}
+			<a href="/reportes/viajes.html" class="btn btn-primary">Reporte de Viajes <span class="glyphicon glyphicon-list-alt"></span></a>
+			{{/generar_reportes}}
+		</div>
+	</script>
+
 	<title>Ejemplo de sidebar</title>
 </head>
 
@@ -40,40 +88,15 @@
 
 
       </div><!-- /.container -->
-    </nav><!-- /.navbar -->	
+    </nav><!-- /.navbar -->
 
 	<sidebar id="common-sidebar">
 		<nav>
 			<img src="/img/navegacion/vc.svg" alt="Viajes compartidos">
-			<div id="panel-cliente">
-				<hr>
-				<div class="btn-group-vertical col-xs-12">
-					<a href="/alta_viaje.html" class="btn btn-primary" id="link-alta-viaje">Crear Viaje <span class="glyphicon glyphicon-road"></span></a>
-					<a href="/home.html" class="btn btn-primary" id="link-alta-viaje">Buscar Viaje <span class="glyphicon glyphicon-search"></span></a>
-				</div>
-				<hr class="col-xs-12">
-				<div class="btn-group-vertical col-xs-12">
-					<a href="/perfil.html" class="btn btn-primary" id="link-mi-perfil">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
-					<a href="/mis_vehiculos.html" class="btn btn-primary" id="link-mis-vehiculos">Mis Vehiculos <span class="glyphicon glyphicon-plane"></span></a>
-					<a href="/mis_viajes.html" class="btn btn-primary" id="link-mis-viajes">Mis viajes <span class="glyphicon glyphicon-globe"></span></a>
-				</div>
-				<hr class="col-xs-12">
-				<div class="btn-group-vertical col-xs-12">
-					<a href="/cargar_saldo.html" class="btn btn-primary">Cargar saldo <span class="glyphicon glyphicon-usd"></span></a>
-				<!-- Esto todavia no esta implementado
-					<a href="#" class="btn btn-success">Beneficios <span class="glyphicon glyphicon-gift"></span><a>
-				-->
-				</div>
+			<div id="botonera-sidebar">
+				<!-- BOTONERA GENERADA DINAMICAMENTE SEGUN PERMISOS-->
 			</div>
-			<div id="panel-admin">
-				<hr class="col-xs-12">
-				<div class="btn-group-vertical col-xs-12">
-					<a href="/perfil.html" class="btn btn-primary" id="link-mi-perfil-admin">Mi Perfil <span class="glyphicon glyphicon-user"></span></a>
-					<a href="/abm.html" class="btn btn-primary">Administrar Usuarios <span class="glyphicon glyphicon-wrench"></span></a>
-					<a href="/reportes/viajes.html" class="btn btn-primary">Reporte de Viajes <span class="glyphicon glyphicon-list-alt"></span></a>
-				</div>
-			</div>
-			
+
 			<div class="mobile-only" id="panel-mobile">
 				<hr class="col-xs-12">
 				<div class="btn-group-vertical col-xs-12">
@@ -104,5 +127,6 @@
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->
 	</div><!-- .modal -->
-	
+
 </body>
+</html>

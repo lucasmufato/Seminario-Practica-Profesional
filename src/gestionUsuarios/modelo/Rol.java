@@ -153,11 +153,12 @@ public class Rol implements JSONable {
 		json.put("estado", this.estado.toString());
 
 		idpermisos = new JSONArray();
-		for (Object permiso: this.getPermisos()){
-			idpermisos.add(((PermisoRol)permiso).getPermiso().getId_permiso());
+		List<PermisoRol> lista = this.getPermisos();
+		for (PermisoRol permiso: lista){
+			idpermisos.add(permiso.getPermiso().getId_permiso());
 		}
 		json.put("permisos", idpermisos);
-		
+
 		return json;
 	}
 
