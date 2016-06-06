@@ -176,3 +176,6 @@ INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO_COMISIO
 
 INSERT INTO TIPO_MOV_SALDO(id_tipo_mov_saldo,descripcion) VALUES (1,"Cobro de comisión por viaje");
 INSERT INTO TIPO_MOV_SALDO(id_tipo_mov_saldo,descripcion) VALUES (2,"Acreditación de saldo por pago");
+
+INSERT INTO TIPO_MOV_PUNTOS(id_tipo_mov_puntos,descripcion) VALUES (1,"Puntos como consecuencia de calificación");
+INSERT INTO TIPO_MOV_PUNTOS(id_tipo_mov_puntos,descripcion) VALUES (2,"Deducción de puntos por canje de beneficio");
