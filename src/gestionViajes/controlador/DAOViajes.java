@@ -1459,7 +1459,7 @@ public class DAOViajes extends DataAccesObject {
 
 		//by juan
 		//Funcion que pone el estado del vehiculo en inactivo
-		public boolean desactivarVehiculo(Vehiculo v, int conductor_modifica) throws ExceptionViajesCompartidos {
+		public boolean desactivarVehiculo(Vehiculo v, int id_conductor_modifica) throws ExceptionViajesCompartidos {
 			
     		if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
@@ -1474,7 +1474,27 @@ public class DAOViajes extends DataAccesObject {
         		String error= ManejadorErrores.parsearRollback(e);
         		throw new ExceptionViajesCompartidos("ERROR: "+error);
         	}
-    		
+                
+    		// Tomo los conductores activos de ese vehiculo
+        	List<Cliente> conductoresActivos = v.getConductoresActivos();
+                // traigo a quien lo modifico
+                Cliente cliente_modifico = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
+                
+                
+        	this.entitymanager.getTransaction().begin();
+        	// notifico uno por uno (si esta activo) 
+        	for (int i=0;i< conductoresActivos.size();i++){
+        		if ( conductoresActivos.get(i).isActivo() ){
+        			            			
+                                Notificacion notificacion = new Notificacion();
+                                notificacion.setTexto("El vehículo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
+                                notificacion.setCliente(conductoresActivos.get(i));
+                                notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                this.entitymanager.persist(notificacion);
+        			
+        		}
+        	}//fin de notificarlos
     		return true;
 		}
 
