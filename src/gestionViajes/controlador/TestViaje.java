@@ -38,18 +38,19 @@ public class TestViaje extends TestCase {
 		
 		//esto q sigue es codigo para vaciar la BD y que todas las pruebas corran en el mismo entorno
 		this.daoviajes.vaciarTabla("ComentarioViaje");
-                this.daoviajes.vaciarTabla("Calificacion");
+		this.daoviajes.vaciarTabla("MovimientoSaldo");
 		this.daoviajes.vaciarTabla("Sancion");
-                this.daoviajes.vaciarTabla("MovimientoPuntos");
-                this.daoviajes.vaciarTabla("PasajeroViaje");
+        this.daoviajes.vaciarTabla("MovimientoPuntos");
+        this.daoviajes.vaciarTabla("PasajeroViaje");
+        this.daoviajes.vaciarTabla("Calificacion");
 		this.daoviajes.vaciarTabla("ComisionCobrada");
 		this.daoviajes.vaciarTabla("LocalidadViaje");
 		this.daoviajes.borrarRelacionesEntreViajes();
-                this.daoviajes.vaciarTabla("SeguidorViaje");
+        this.daoviajes.vaciarTabla("SeguidorViaje");
 		this.daoviajes.vaciarTabla("Viaje");
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
-                this.daoviajes.vaciarTabla("Notificacion");
+        this.daoviajes.vaciarTabla("Notificacion");
 	}
 
 	@Test

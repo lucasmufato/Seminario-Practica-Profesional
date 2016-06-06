@@ -1,6 +1,7 @@
 package gestionPuntos.modelo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,9 +34,13 @@ public class MovimientoPuntos {
 	@JoinColumn(name="ID_CLIENTE")
 	protected Cliente cliente;
 	@Column(nullable=false,name="FECHA")
-	protected Date fecha;
+	protected Timestamp fecha;
 	@Column(nullable=false,name="MONTO")
 	protected Integer monto;
+	
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name="TIPO")
+	protected TipoMovimientoPuntos tipo_mov_puntos;
 	
 	public MovimientoPuntos(){
 		
@@ -57,11 +62,11 @@ public class MovimientoPuntos {
 		this.cliente = cliente;
 	}
 
-	public Date getFecha() {
+	public Timestamp getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
 	}
 
@@ -71,6 +76,22 @@ public class MovimientoPuntos {
 
 	public void setMonto(Integer monto) {
 		this.monto = monto;
+	}
+
+	public Integer getId_movimiento_puntos() {
+		return id_movimiento_puntos;
+	}
+
+	public void setId_movimiento_puntos(Integer id_movimiento_puntos) {
+		this.id_movimiento_puntos = id_movimiento_puntos;
+	}
+
+	public TipoMovimientoPuntos getTipo_mov_puntos() {
+		return tipo_mov_puntos;
+	}
+
+	public void setTipo_mov_puntos(TipoMovimientoPuntos tipo_mov_puntos) {
+		this.tipo_mov_puntos = tipo_mov_puntos;
 	}
 	
 }

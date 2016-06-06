@@ -237,5 +237,9 @@ public class Cliente extends Usuario implements JSONable {
 
         return igual;
     }
+
+	public void sumarPuntos(Integer puntos) {
+		this.puntos+=puntos;
+	}
 	
 }

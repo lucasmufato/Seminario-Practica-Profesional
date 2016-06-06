@@ -12,6 +12,7 @@
 		<class>gestionPuntos.modelo.Cupon</class>
 		<class>gestionPuntos.modelo.MovimientoPuntos</class>
 		<class>gestionPuntos.modelo.Sancion</class>
+		<class>gestionPuntos.modelo.TipoMovimientoPuntos</class>
 		<class>gestionPuntos.modelo.TipoSancion</class>
 		<class>gestionUsuarios.modelo.Cliente</class>
 		<class>gestionUsuarios.modelo.Notificacion</class>

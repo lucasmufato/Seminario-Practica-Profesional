@@ -1,7 +1,6 @@
 package gestionPuntos.controlador;
 
 import gestionPuntos.modelo.*;
-import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
 import gestionViajes.controlador.DAOViajes;
 import gestionViajes.modelo.*;
@@ -36,7 +35,6 @@ public class DAOPuntos extends DataAccesObject {
       
 	public DAOPuntos(){
 		super();
-        
 	}
         
 	public Calificacion getCalificacionPorPasajeroConductor(PasajeroViaje pv, Cliente c){
@@ -61,7 +59,8 @@ public class DAOPuntos extends DataAccesObject {
             mov.setCliente(cliente);
             java.util.Date utilDate = new java.util.Date();
             java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
-            mov.setFecha((Date) fecha);
+            mov.setFecha( new Timestamp((new java.util.Date()).getTime()) );		//modificado por lucas al cambiar la fecha en movimientoPuntos
+            mov.setTipo_mov_puntos(this.getTipoMovimientoPuntos("sancion"));
             descuento = descuento - 2*(descuento);
             Integer descuento_int = (int)descuento;
             mov.setMonto(descuento_int);
@@ -263,7 +262,8 @@ public class DAOPuntos extends DataAccesObject {
         mov.setCliente(cliente);
         java.util.Date utilDate = new java.util.Date();
         java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
-        mov.setFecha((Date) fecha);
+        mov.setFecha( new Timestamp((new java.util.Date()).getTime()) ); 	//modificado por lucas al cambiar el tipo de fecha en movimientoPuntos
+        mov.setTipo_mov_puntos(this.getTipoMovimientoPuntos("sancion"));
         resultado = resultado - 2*(resultado);
         Integer resultado_int = (int)resultado;
         mov.setMonto(resultado_int);
@@ -343,6 +343,7 @@ public class DAOPuntos extends DataAccesObject {
         return true;
     }
  	
+ 	//by mufa
  	public boolean calificar(JSONObject datos) throws ExceptionViajesCompartidos{
  		/*
  		 * Cuando el participante califica a otro usuario, te mando esta data:	
@@ -436,9 +437,37 @@ public class DAOPuntos extends DataAccesObject {
  	 		calificacion.setParticipo_conductor(confirmacion);				//lo que dice el pasajero de "si lo pasaron a buscar"
  		}
  		
- 		//TODO modificar puntos en base a calificacion!
+ 		MovimientoPuntos movimientopuntos;
+ 		Cliente cliente_a_modificar;
  		
- 		try{    
+ 		if(cliente.equals(viaje.getConductor())){ //si soy conductor
+ 			cliente_a_modificar=pasajeroviaje.getCliente();
+ 		}else{
+ 			//si soy un pasajero y puntue al conductor
+ 			cliente_a_modificar=viaje.getConductor();
+ 		}
+ 		//modifico la reputacion
+ 		Integer nueva_reputacion=this.actualizarReputacionPorCalificacion(valoracion, cliente_a_modificar);
+		cliente_a_modificar.setReputacion(nueva_reputacion);
+		//modifico los puntos creando un movimientoPuntos, y por ultimo sumo los puntos al cliente.
+		Integer puntos = this.puntosPorCalificacion(valoracion);
+		movimientopuntos = new MovimientoPuntos();
+		movimientopuntos.setCliente(cliente_a_modificar);
+		movimientopuntos.setMonto(puntos);
+		movimientopuntos.setFecha( new Timestamp((new java.util.Date()).getTime()) );
+		movimientopuntos.setTipo_mov_puntos( this.getTipoMovimientoPuntos("Puntos como consecuencia de calificación") );	//busco ese TipoMovPuntos
+		cliente_a_modificar.sumarPuntos(puntos);
+ 		
+		if(cliente.equals(viaje.getConductor())){ //si soy conductor
+ 			calificacion.setMovimiento_puntos_pasajero(movimientopuntos);
+ 		}else{
+ 			//si soy un pasajero y puntue al conductor
+ 			calificacion.setMovimiento_puntos_chofer(movimientopuntos);
+ 		}
+		
+		//guardo las cosas nuevas
+		try{    
+ 			this.entitymanager.persist(movimientopuntos);
             this.entitymanager.getTransaction().commit();
 	    }catch(RollbackException e){
 	    	String error= ManejadorErrores.parsearRollback(e);
@@ -448,31 +477,57 @@ public class DAOPuntos extends DataAccesObject {
  		return true;
  	}
         
-        
-        public boolean nuevoBeneficio(JSONObject json) throws ExceptionViajesCompartidos{
-            Beneficio beneficio = new Beneficio();
-            beneficio.setId_beneficio(Integer.MIN_VALUE);
-            String nombre_usuario = (String) json.get("nombre_usuario");
-            Query qry = entitymanager.createNamedQuery("Sponsor.buscarPorClaveCandidata");
-            qry.setParameter("clave_candidata", nombre_usuario);
-            Sponsor sponsor =(Sponsor)qry.getSingleResult();
-            beneficio.setSponsor(sponsor);
-            beneficio.setPuntos_necesarios((Integer) json.get("puntos_necesarios"));
-            beneficio.setProducto((String) json.get("producto"));
-            beneficio.setFecha_caduca((Date) json.get("fecha_caduca"));
-           try{
-                this.entitymanager.getTransaction().begin(); 
-                this.entitymanager.persist(beneficio);
-                this.entitymanager.getTransaction().commit();
+ 	public boolean nuevoBeneficio(JSONObject json) throws ExceptionViajesCompartidos{
+ 		Beneficio beneficio = new Beneficio();
+ 		beneficio.setId_beneficio(Integer.MIN_VALUE);
+ 		String nombre_usuario = (String) json.get("nombre_usuario");
+ 		Query qry = entitymanager.createNamedQuery("Sponsor.buscarPorClaveCandidata");
+ 		qry.setParameter("clave_candidata", nombre_usuario);
+ 		Sponsor sponsor =(Sponsor)qry.getSingleResult();
+ 		beneficio.setSponsor(sponsor);
+ 		beneficio.setPuntos_necesarios((Integer) json.get("puntos_necesarios"));
+ 		beneficio.setProducto((String) json.get("producto"));
+ 		beneficio.setFecha_caduca((Date) json.get("fecha_caduca"));
+ 		try{
+ 			this.entitymanager.getTransaction().begin(); 
+ 			this.entitymanager.persist(beneficio);
+ 			this.entitymanager.getTransaction().commit();
                 
 	    }catch(RollbackException e){
                 
 	    	String error= ManejadorErrores.parsearRollback(e);
-	        throw new ExceptionViajesCompartidos("ERROR: "+error);
-                
+	        throw new ExceptionViajesCompartidos("ERROR: "+error);        
 	    } 
-            return true;
-        }
-        
-       
+ 		
+ 		return true;
+ 	}
+ 	
+ 	//by mufa
+ 	protected Integer puntosPorCalificacion(Integer calificacion){
+ 		//formula para asignar puntos en base a la calificacion, va en un metodo aparte asi es mas facil de mantener
+ 		Integer i;
+ 		if(calificacion<2){
+ 			i=calificacion*5;
+ 		}else{
+ 			i = calificacion*10;
+ 		}
+ 		return i;
+ 	}
+ 	
+ 	//by mufa
+ 	protected Integer actualizarReputacionPorCalificacion(Integer calificacion, Cliente cliente){
+ 		//formula para recalcular la nueva reputacion
+ 		Integer reputacion_nueva;
+ 		Integer reputacion = cliente.getReputacion();
+ 		reputacion_nueva =(Integer) (reputacion + calificacion)/2;	//no es un promedio, es peor
+ 		return reputacion_nueva;
+ 	}
+ 	
+ 	public TipoMovimientoPuntos getTipoMovimientoPuntos(String descripcion){
+ 		TipoMovimientoPuntos tipo;
+ 		Query q2 = entitymanager.createNamedQuery("TipoMovimientoPuntos.PorDescripcion");
+	    q2.setParameter("descripcion", descripcion);
+	    tipo = (TipoMovimientoPuntos) q2.getSingleResult();
+ 		return tipo;
+ 	}
 }

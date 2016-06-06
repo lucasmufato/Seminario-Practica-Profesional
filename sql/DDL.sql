@@ -159,8 +159,8 @@ CREATE TABLE MANEJA (
 	
 
 	PRIMARY KEY (id_cliente,id_vehiculo,fecha_inicio),
-	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario),
-	FOREIGN KEY (id_vehiculo) REFERENCES VEHICULO (id_vehiculo)
+	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario) ON DELETE CASCADE,
+	FOREIGN KEY (id_vehiculo) REFERENCES VEHICULO (id_vehiculo) ON DELETE CASCADE
 );
 
 CREATE TABLE ESTADO_VIAJE(
@@ -186,9 +186,9 @@ CREATE TABLE VIAJE (
 	precio FLOAT,
 	
 	PRIMARY KEY (id_viaje),
-	FOREIGN KEY (id_cliente, id_vehiculo, fecha_inicio_maneja) REFERENCES MANEJA (id_cliente, id_vehiculo, fecha_inicio),
-    FOREIGN KEY (viaje_complementario) REFERENCES VIAJE (id_viaje),
-	FOREIGN KEY (estado) REFERENCES ESTADO_VIAJE(id_estado_viaje)
+	FOREIGN KEY (id_cliente, id_vehiculo, fecha_inicio_maneja) REFERENCES MANEJA (id_cliente, id_vehiculo, fecha_inicio) ON DELETE CASCADE,
+    FOREIGN KEY (viaje_complementario) REFERENCES VIAJE (id_viaje) ON DELETE CASCADE,
+	FOREIGN KEY (estado) REFERENCES ESTADO_VIAJE(id_estado_viaje) ON DELETE CASCADE
 );
 
 
@@ -201,8 +201,8 @@ CREATE TABLE LOCALIDAD_VIAJE (
 
 	unique(id_viaje,id_localidad),
 	PRIMARY KEY (id_viaje, id_localidad),
-	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje),
-	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad)
+	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje) ON DELETE CASCADE,
+	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad) ON DELETE CASCADE
 );
 
 CREATE TABLE PASAJERO_VIAJE (
@@ -219,11 +219,11 @@ CREATE TABLE PASAJERO_VIAJE (
     
 	PRIMARY KEY (id_pasajero_viaje),
     UNIQUE(id_viaje,id_cliente),
-	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje),
-	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario),
-	FOREIGN KEY (id_comision_cobrada) REFERENCES COMISION_COBRADA (id_comision_cobrada),
-	FOREIGN KEY (id_viaje, id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad),
-	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)
+	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje) ON DELETE CASCADE,
+	FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_usuario) ON DELETE CASCADE,
+	FOREIGN KEY (id_comision_cobrada) REFERENCES COMISION_COBRADA (id_comision_cobrada) ON DELETE CASCADE,
+	FOREIGN KEY (id_viaje, id_localidad_subida) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad)ON DELETE CASCADE,
+	FOREIGN KEY (id_viaje, id_localidad_bajada) REFERENCES LOCALIDAD_VIAJE (id_viaje, id_localidad) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_MOV_PUNTOS(
@@ -237,12 +237,12 @@ CREATE TABLE MOVIMIENTO_PUNTOS (
   FECHA date NOT NULL,
   MONTO int(11) NOT NULL,
   ID_CLIENTE int(11) DEFAULT NULL,
-  tipo int(11) NOT NULL,
+  TIPO int(11) NOT NULL,
   
   PRIMARY KEY (ID_MOVIMIENTOS_PUNTOS),
  
-  FOREIGN KEY (ID_CLIENTE) REFERENCES USUARIO (ID_USUARIO),
-  FOREIGN KEY (tipo) REFERENCES tipo_mov_puntos (id_tipo_mov_puntos)
+  FOREIGN KEY (ID_CLIENTE) REFERENCES USUARIO (ID_USUARIO) ON DELETE CASCADE,
+  FOREIGN KEY (tipo) REFERENCES tipo_mov_puntos (id_tipo_mov_puntos) ON DELETE CASCADE
 );
 
 CREATE TABLE CALIFICACION (
@@ -260,10 +260,10 @@ CREATE TABLE CALIFICACION (
 
 	UNIQUE(id_pasajero_viaje,id_conductor),
 	PRIMARY KEY (id_calificacion),
-    FOREIGN KEY (id_pasajero_viaje) REFERENCES pasajero_viaje (id_pasajero_viaje),
-    FOREIGN KEY (id_conductor) REFERENCES CLIENTE (id_usuario),
-	FOREIGN KEY (id_movimiento_puntos_chofer) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS),
-	FOREIGN KEY (id_movimiento_puntos_pasajero) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS)
+    FOREIGN KEY (id_pasajero_viaje) REFERENCES pasajero_viaje (id_pasajero_viaje)  ON DELETE CASCADE,
+    FOREIGN KEY (id_conductor) REFERENCES CLIENTE (id_usuario)  ON DELETE CASCADE,
+	FOREIGN KEY (id_movimiento_puntos_chofer) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS) ON DELETE SET NULL,
+	FOREIGN KEY (id_movimiento_puntos_pasajero) REFERENCES movimiento_puntos (ID_MOVIMIENTOS_PUNTOS)  ON DELETE SET NULL
 );
 
 CREATE TABLE NOTIFICACION(
@@ -275,10 +275,8 @@ CREATE TABLE NOTIFICACION(
 	ID_CLIENTE INTEGER NOT NULL,
 
 	primary key(ID_NOTIFICACION),
-	FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE(ID_USUARIO)
+	FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE(ID_USUARIO) ON DELETE CASCADE
 );
-
--- agregado fede (sanciones,Tipo_sancion, mov_puntos)
   
   CREATE TABLE TIPO_SANCION (
   ID_TIPO_SANCION int(11) NOT NULL AUTO_INCREMENT,
@@ -299,9 +297,9 @@ CREATE TABLE SANCION (
   
   PRIMARY KEY (ID_SANCION),
   
-  FOREIGN KEY (ID_CLIENTE) REFERENCES USUARIO (ID_USUARIO),
-  FOREIGN KEY (ID_MOVIMIENTO_PUNTOS) REFERENCES MOVIMIENTO_PUNTOS (ID_MOVIMIENTOS_PUNTOS),
-  FOREIGN KEY (ID_TIPO_SANCION) REFERENCES TIPO_SANCION (ID_TIPO_SANCION)
+  FOREIGN KEY (ID_CLIENTE) REFERENCES USUARIO (ID_USUARIO) ON DELETE CASCADE,
+  FOREIGN KEY (ID_MOVIMIENTO_PUNTOS) REFERENCES MOVIMIENTO_PUNTOS (ID_MOVIMIENTOS_PUNTOS) ON DELETE CASCADE,
+  FOREIGN KEY (ID_TIPO_SANCION) REFERENCES TIPO_SANCION (ID_TIPO_SANCION) ON DELETE CASCADE
  );
  
 CREATE TABLE PRECIO_COMISION(
@@ -319,7 +317,7 @@ CREATE TABLE COMISION (
     precio_comision int(11) NOT NULL,
     
     PRIMARY KEY (id_comision),
-    FOREIGN KEY (precio_comision) REFERENCES precio_comision (id_comision)
+    FOREIGN KEY (precio_comision) REFERENCES precio_comision (id_comision) ON DELETE CASCADE
 );
 
 CREATE TABLE PAGO(
@@ -330,11 +328,9 @@ CREATE TABLE PAGO(
     
     
     PRIMARY KEY (id_pago),
-    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario)
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario) ON DELETE CASCADE
    
 );
-
-
 
 CREATE TABLE TIPO_MOV_SALDO(
 	id_tipo_mov_saldo int(11) NOT NULL AUTO_INCREMENT,
@@ -352,9 +348,9 @@ CREATE TABLE MOVIMIENTO_SALDO(
     tipo int(11) NOT NULL,
     
     PRIMARY KEY(id_movimiento_saldo),
-    FOREIGN KEY (id_comision_cobrada) REFERENCES comision_cobrada (id_comision_cobrada),
-    FOREIGN KEY (id_pago) REFERENCES pago (id_pago),
-    FOREIGN KEY (tipo) REFERENCES tipo_mov_saldo (id_tipo_mov_saldo)
+    FOREIGN KEY (id_comision_cobrada) REFERENCES comision_cobrada (id_comision_cobrada) ON DELETE CASCADE,
+    FOREIGN KEY (id_pago) REFERENCES pago (id_pago) ON DELETE CASCADE,
+    FOREIGN KEY (tipo) REFERENCES tipo_mov_saldo (id_tipo_mov_saldo) ON DELETE CASCADE
 );
 
 CREATE TABLE COMENTARIO_VIAJE(
@@ -365,9 +361,10 @@ CREATE TABLE COMENTARIO_VIAJE(
     texto TEXT,
     
     PRIMARY KEY(id_comentario_viaje),
-    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
-    FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje)
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje) ON DELETE CASCADE
 );
+
 CREATE TABLE SEGUIDOR_VIAJE(
 	id_seguidor_viaje int(11) NOT NULL AUTO_INCREMENT,
     fecha datetime NOT NULL,
@@ -376,7 +373,7 @@ CREATE TABLE SEGUIDOR_VIAJE(
     estado char(1) NOT NULL,
     
     PRIMARY KEY(id_seguidor_viaje),
-    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario),
-    FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje)
+    FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje) ON DELETE CASCADE
 );
 
