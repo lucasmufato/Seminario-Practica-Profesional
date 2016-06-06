@@ -315,9 +315,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 			this.entitymanager.getTransaction().begin();
 
 			 c.setFoto_registro(foto.get("imagen").toString());
-			
+
 			try{
 			 	entitymanager.getTransaction( ).commit( );	
+			 	//this.entitymanager.refresh(c);
 			}catch(RollbackException e){
 			  	String error= ManejadorErrores.parsearRollback(e);
 			 	throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -338,7 +339,7 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 			 c.setFoto(foto.get("imagen").toString());
 			
 			try{
-			 	entitymanager.getTransaction( ).commit( );	
+			 	this.entitymanager.getTransaction( ).commit( );	
 			}catch(RollbackException e){
 			  	String error= ManejadorErrores.parsearRollback(e);
 			 	throw new ExceptionViajesCompartidos("ERROR: "+error);
