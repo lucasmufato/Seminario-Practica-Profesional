@@ -1681,6 +1681,7 @@ public class DAOViajes extends DataAccesObject {
     		this.entitymanager.getTransaction().begin();
 			Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
 			List<Maneja> listaManeja = this.getManejaPorVehiculoConductor(v, c);
+
 			for (Maneja m : listaManeja) {
 				if (m.getFecha_fin() == null){
 					// chequeo que vehiculo no tenga viaje pendiente

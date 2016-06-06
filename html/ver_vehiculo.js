@@ -5,10 +5,10 @@ dataVehiculo.vehiculo = {};
 
 var simular = function(){
 	dataVehiculo.conductores = [{
-		id: "48", 
+		id: "48",
 		nombre_usuario: "Lucho85"
 	},{
-		id: "34", 
+		id: "34",
 		nombre_usuario: "Lore92"
 	}, {
 		id: "15",
@@ -35,7 +35,7 @@ var simular = function(){
 };
 
 var loadData = function() {
-	
+
 	var sendData = {
 		entity: "vehiculo",
 		action: "ver_un_vehiculo",
@@ -43,7 +43,7 @@ var loadData = function() {
 	}
 	var onsuccess = function(jsonData){
 		if(jsonData.result){
-			$('.loadingScreen').fadeOut();	
+			$('.loadingScreen').fadeOut();
 			dataVehiculo.vehiculo = jsonData.vehiculo;
 			dataVehiculo.conductores = jsonData.conductores;
 			cargarDataVehiculo();
@@ -57,30 +57,9 @@ var loadData = function() {
 	//simular();
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
-
+var magic = {};
 var initUI = function(){
-	loadData();
-}
-
-window.onload=initUI;
-
-var cargarDataVehiculo = function(){
-	//Limpio UI
-	$("#panel-vehiculo").empty();
-
-	if (dataVehiculo.vehiculo){
-		dataVehiculo.vehiculo.foto_revisada = dataVehiculo.vehiculo.foto || "img/vehiculo/vehiculo.png";
-	}
-	dataVehiculo.vehiculo.tieneSeguro = dataVehiculo.vehiculo.seguro == "S";
-	dataVehiculo.vehiculo.tieneAire = dataVehiculo.vehiculo.aire == "S";
-	dataVehiculo.vehiculo.color_hex = "#"+dataVehiculo.vehiculo.color;
-	var template = $("#vehiculo-template").html();
-	$("#panel-vehiculo").append(Mustache.render(template,dataVehiculo));
-	setearEventos();
-}
-
-function setearEventos(){
-	inputConductores = $('form input[name=conductores]').magicSuggest({
+	magic.inputConductores = $('form input[name=conductores]').magicSuggest({
 		method: 'GET',
 		data: '/autocompletado',
 		mode: 'remote',
@@ -97,7 +76,30 @@ function setearEventos(){
 		}
 	});
 
-	$('[data-toggle="tooltip"]').tooltip(); 
+	loadData();
+}
+
+window.onload=initUI;
+
+var cargarDataVehiculo = function(){
+	//Limpio UI
+	$("#panel-vehiculo").empty();
+
+	if (dataVehiculo.vehiculo){
+		dataVehiculo.vehiculo.foto_revisada = dataVehiculo.vehiculo.foto || "img/vehiculo/vehiculo.png";
+	}
+	dataVehiculo.vehiculo.tieneSeguro = dataVehiculo.vehiculo.seguro == "S";
+	dataVehiculo.vehiculo.tieneAire = dataVehiculo.vehiculo.aire == "S";
+	dataVehiculo.vehiculo.color_hex = "#"+dataVehiculo.vehiculo.color;
+	var template = $("#vehiculo-template").html();
+	var html = Mustache.render(template,dataVehiculo);
+	$("#panel-vehiculo").html(html);
+	setearEventos();
+}
+
+function setearEventos(){
+
+	$('[data-toggle="tooltip"]').tooltip();
 
 	new jscolor($('.jscolor')[0]);
 	$("input[type='file']").change(function(){
@@ -109,7 +111,7 @@ function setearEventos(){
 			enviarFoto(imageSrc);
 		}
 	});
-	
+
 	$("#tablaVehiculo input[name=anio]").attr("max",new Date().getFullYear());
 	$("#tablaVehiculo input[name=anio]").blur(validarAnio);
 	$("#tablaVehiculo input[name=color]").blur(validarCampoObligatorio);
@@ -136,15 +138,14 @@ var enviarFoto = function(src){
 }
 //-----------------------------Asignar/Desasignar Conductor------------------------------------------------------------//
 var activarAsignarConductor = function(){
-
-	// tengo que borrar el input magico aca, no se como todavia
+	magic.inputConductores.clear();
 	$('#modal-asignar-conductor').modal('show');
 }
 var eliminarVehiculo = function(){
 
 	var msg = "¿Esta seguro que desea eliminar el vehículo? Esta acción no puede deshacerse";
 	var title= "Eliminar Vehículo";
-	var btn = document.createElement("BUTTON");       
+	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-danger dinamico";
 	btn.innerHTML = "<span class='glyphicon glyphicon-tint'></span>"+" Confirmar";
 	btn.name = "confirmar";
@@ -173,7 +174,7 @@ var desasignarConductor = function(id){
 	}
 	var msg = "¿Esta seguro que desea desasignar a este conductor del vehículo? Esta acción no puede deshacerse";
 	var title= "Desasignar conductor";
-	var btn = document.createElement("BUTTON");       
+	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-danger dinamico";
 	btn.innerHTML = "<span class='glyphicon glyphicon-warning-sign'></span>"+" Confirmar";
 	btn.name = "confirmar";
@@ -184,9 +185,9 @@ var desasignarConductor = function(id){
 
 var asignarConductores = function(){
 	closeModal("asignar-conductor");
-	
-	var conductores = inputConductores.getValue();
-	
+
+	var conductores = magic.inputConductores.getValue();
+	console.log(conductores);
 	if (conductores.length > 0){
 		var sendJson = {
 			entity: "vehiculo",
@@ -245,7 +246,7 @@ var modificarVehiculo = function(){
 			modalMessage("error", jsonData.msg, "Modificar Vehículo");
 		}
 	}
-	
+
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
@@ -273,7 +274,7 @@ var eliminarVehiculo = function(){
 	}
 	var msg = "¿Esta seguro que desea eliminar el vehículo? Esta acción no puede deshacerse";
 	var title= "Eliminar Vehículo";
-	var btn = document.createElement("BUTTON");       
+	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-danger dinamico";
 	btn.innerHTML = "<span class='glyphicon glyphicon-tint'></span>"+" Confirmar";
 	btn.name = "confirmar";
@@ -361,7 +362,7 @@ var customAlert = function(elemento,msg){
 	});
 	$(elemento).popover("show");
 	$(elemento).closest("tr").removeClass('has-success').addClass('has-error');
-	
+
 	$(elemento).focus(function(){
 		$(elemento).popover("destroy");
 		$(elemento).closest("tr").removeClass('has-error')
@@ -413,7 +414,7 @@ var imagenValida = function(file){
     if (file.type.indexOf("image") == -1){
 		modalMessage("error", "Debe seleccionar una imagen", "Modificar Imagen");
 		return false;
-	}	
+	}
 	return true;
 }
 

@@ -33,6 +33,8 @@ public class ServletNotificaciones extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Type", "application/json; charset=UTF-8");
 		if (entity != null && entity.equals ("notificaciones")) {
 			if (action != null && action.equals("ver_no_leidas")) {
 				respuesta = this.verNoLeidas(request);

@@ -1,6 +1,6 @@
 notificaciones = [];
 
-	
+
 var cargarNotificaciones = function() {
 	var onsuccess = function (jsonData) {
 		notificaciones = jsonData.notificaciones;
@@ -11,11 +11,11 @@ var cargarNotificaciones = function() {
 		entity: 'notificaciones',
 		action: 'ver_no_leidas'
 	};
-	
+
 	vc.peticionAjax("/notificaciones", sendData, "GET", onsuccess);
 	//simular();
 }
- 
+
 var simular = function () {
 	notificaciones = [
 		{
@@ -53,14 +53,14 @@ var simular = function () {
 			link: "/calificar_usuarios.html",
 			estado: "no_leido"
 		},
-		
+
 	];
 	mostrarNotificaciones();
 }
 
 var mostrarNotificaciones = function () {
 	notificaciones.forEach(function(notificacion) {
-		
+		notificacion.fecha=vc.toFechaLocal(notificacion.fecha);
 		$("#contenedor-notificaciones").append(Mustache.render(notificacionTemplate, notificacion));
 	});
 
@@ -98,4 +98,3 @@ window.onload = function () {
 	notificacionTemplate = $("#notificacion-template").html();
 	cargarNotificaciones();
 }
-

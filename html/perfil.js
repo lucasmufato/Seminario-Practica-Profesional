@@ -63,7 +63,6 @@ var cargarPerfil = function(){
 	}
 	data.persona.tipo_doc_string = tipoDocString(data.persona.tipo_doc);
 	data.persona.fecha_revisada = vc.toFechaLocal(data.persona.fecha_nacimiento.replace(/-/g, '\/')).split(" ")[0];
-	console.log(new Date(data.persona.fecha_nacimiento));
 	data.persona.esM = data.persona.sexo == "M";
 	data.persona.esF = data.persona.sexo == "F";
 	data.persona.esO = data.persona.sexo == "O";

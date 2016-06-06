@@ -18,7 +18,7 @@ window.onload= function(){
 	reporte.loadData();
 	$('[data-toggle="tooltip"]').tooltip();
 	$('#fechadesde, #fechahasta').datetimepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd/mm/yyyy',
     	language: "es",
     	startView: 3,
     	minView: 2,
@@ -34,8 +34,10 @@ var generarReporte = function(){
 	var data = {};
 	data.id_desde = $("#reportForm input[name=iddesde]").val();
 	data.id_hasta = $("#reportForm input[name=idhasta]").val();
-	data.fecha_desde = $("#reportForm input[name=fechadesde]").val();
-	data.fecha_hasta = $("#reportForm input[name=fechahasta]").val();
+	var fecha_desde = $("#reportForm input[name=fechadesde]").val();
+	data.fecha_desde = (fecha_desde)? vc.fechaAMD(fecha_desde) : fecha_desde;
+	var fecha_hasta = $("#reportForm input[name=fechahasta]").val();
+	data.fecha_hasta  = (fecha_hasta)? vc.fechaAMD(fecha_hasta) : fecha_hasta;
 	data.precio_desde = $("#reportForm input[name=preciodesde]").val();
 	data.precio_hasta = $("#reportForm input[name=preciohasta]").val();
 	data.km_desde = $("#reportForm input[name=kmdesde]").val();
