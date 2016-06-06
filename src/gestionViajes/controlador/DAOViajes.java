@@ -1484,11 +1484,11 @@ public class DAOViajes extends DataAccesObject {
                 Cliente cliente_modifico = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
                 
                 
-        	this.entitymanager.getTransaction().begin();
+        	
         	// notifico uno por uno (si esta activo) 
         	for (int i=0;i< conductoresActivos.size();i++){
         		if ( conductoresActivos.get(i).isActivo() ){
-        			            			
+        			this.entitymanager.getTransaction().begin();            			
                                 Notificacion notificacion = new Notificacion();
                                 notificacion.setTexto("El vehículo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
                                 notificacion.setCliente(conductoresActivos.get(i));
@@ -1709,7 +1709,6 @@ public class DAOViajes extends DataAccesObject {
     		this.entitymanager.getTransaction().begin();
 			Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
 			List<Maneja> listaManeja = this.getManejaPorVehiculoConductor(v, c);
-
 			for (Maneja m : listaManeja) {
 				if (m.getFecha_fin() == null){
 					// chequeo que vehiculo no tenga viaje pendiente
