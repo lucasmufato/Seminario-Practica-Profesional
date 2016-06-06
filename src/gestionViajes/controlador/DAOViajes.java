@@ -394,6 +394,10 @@ public class DAOViajes extends DataAccesObject {
 		String nombre_amigable = (String) d_viaje.get("nombre_amigable");
 		if(nombre_amigable==null){
 			nombre_amigable="Viaje sin nombre "+fecha_inicio.toString();
+		}else{
+			if(nombre_amigable.length()>30){
+				throw new ExceptionViajesCompartidos("ERROR: EL NOMBRE DEL VIAJE NO PUEDE TENER MAS DE 30 CARACTERES");
+			}
 		}
 		viaje.setNombre_amigable(nombre_amigable);
 		
@@ -474,30 +478,25 @@ public class DAOViajes extends DataAccesObject {
 		
 		List<LocalidadViaje> lista_localidad_viaje=viaje.getLocalidades();
 		for(int i=0;i<(lista_localidad_viaje.size()-1);i++){
-			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad());
-			
-                        
-                        
-                        lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
+			Double distancia = this.distanciaEntreLocalidades(lista_localidad_viaje.get(i).getLocalidad(),lista_localidad_viaje.get(i+1).getLocalidad()); 
+            lista_localidad_viaje.get(i).setKms_a_localidad_siguiente(distancia);
 		}
 		Integer ultimo=lista_localidad_viaje.size();
 		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
-		
 
-
-                //calculo saldo necesario (by fede)
-                Double distancia_origen_primerpunto = lista_localidad_viaje.get(0).getKms_a_localidad_siguiente() ;
-                DAOComisiones daocomisiones = new DAOComisiones();
-                ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
-                float saldo_necesario = cc.getMonto();
-                float saldo_cliente = cliente.getSaldo();
+		//calculo saldo necesario (by fede)
+		Double distancia_origen_primerpunto = lista_localidad_viaje.get(0).getKms_a_localidad_siguiente() ;
+		DAOComisiones daocomisiones = new DAOComisiones();
+		ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
+		float saldo_necesario = cc.getMonto();
+		float saldo_cliente = cliente.getSaldo();
                 
-                if(saldo_necesario>saldo_cliente){
-                	throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
-                }
-                                
+		if(saldo_necesario>saldo_cliente){
+			throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
+		}
+		   //fin saldo                       
                 
-                //fin saldo
+             
 		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
 		vuelta=(JSONObject) datos.get("vuelta");
 		if(vuelta!=null){ 
@@ -719,7 +718,12 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.persist(comisionCobrada);
 		
 		this.entitymanager.persist(pasajero);
-		this.entitymanager.getTransaction().commit();
+		try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
 		//hago un guardado anterior por que no puedo vincular doblemente al pasajero con la calificacion y a la calificacion con el pasajero
 		this.entitymanager.getTransaction().begin();
 		
@@ -970,12 +974,6 @@ public class DAOViajes extends DataAccesObject {
 
 	//by jasmin y luz
 	public boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
-		/*
-		 * recupero viaje
-		 * recupero pasajero viaje
-		 * pasajero viaje estado=aceptado/rechazado
-		 * notificar al pasajero
-		 */
 		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if (viaje == null) {
 			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
@@ -1031,7 +1029,6 @@ public class DAOViajes extends DataAccesObject {
 			i++;
 		} 
 		
-		//TODO crear la calificacion (creo q esta todo lo necesario)
 		Calificacion calificacion = (Calificacion) this.buscarPorClaveCandidataCompuesta("Calificacion",pasajero,viaje.getConductor());
 		if(calificacion==null){
 			calificacion= new Calificacion();
@@ -1044,12 +1041,6 @@ public class DAOViajes extends DataAccesObject {
 		calificacion.setParticipo_conductor(null);
 		calificacion.setPasajero_viaje(pasajero);
 		calificacion.setConductor(viaje.getConductor());
-		/*
-		 * NOTA JUAN:
-		 * NO me toma la calificacion con pasajeroviaje.getCalificacion
-		 * Pero si llamando a la query (buscarporclavecompuesta)
-		 *  borrar esto luego de leer
-		 */
 		
 		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
@@ -1072,6 +1063,7 @@ public class DAOViajes extends DataAccesObject {
 			this.entitymanager.getTransaction().rollback();
 		}
 		this.entitymanager.getTransaction().begin();
+		pasajero.setCalificacion(calificacion);
 		this.entitymanager.persist(calificacion);
 		try{
 		 	entitymanager.getTransaction( ).commit( );	
@@ -1079,27 +1071,22 @@ public class DAOViajes extends DataAccesObject {
 		  	String error= ManejadorErrores.parsearRollback(e);
 		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
 		}
-                //ahora hago que dejar de seguir seguidor del viaje
-                SeguidorViaje seguidor = new SeguidorViaje();
-                List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
-                if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
-                    for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
-                        seguidor = lista_seguidores.get(j);
-                        if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
-                            this.entitymanager.getTransaction().begin();
-                            seguidor.setEstado("I".charAt(0));
-                            this.entitymanager.getTransaction().commit();
-                        }// deja de ser seguidor
-                    }
-                
-                }
-                
-                
-		return true;
-                
-                
-            
-                
+        
+		//ahora hago que dejar de seguir seguidor del viaje
+		SeguidorViaje seguidor = new SeguidorViaje();
+		List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+		if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
+			for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
+				seguidor = lista_seguidores.get(j);
+				if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
+					this.entitymanager.getTransaction().begin();
+					seguidor.setEstado("I".charAt(0));
+					this.entitymanager.getTransaction().commit();
+				}// deja de ser seguidor
+			}
+		}
+        
+		return true;         
 	}
 
 	//by mufa
@@ -1143,20 +1130,20 @@ public class DAOViajes extends DataAccesObject {
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
-                //ahora hago que dejar de seguir seguidor del viaje
-                SeguidorViaje seguidor = new SeguidorViaje();
-                List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
-                if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
-                    for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
-                        seguidor = lista_seguidores.get(j);
-                        if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
-                            this.entitymanager.getTransaction().begin();
-                            seguidor.setEstado("I".charAt(0));
-                            this.entitymanager.getTransaction().commit();
-                        }// deja de ser seguidor
-                    }
-                
-                }
+        
+		//ahora hago que dejar de seguir seguidor del viaje
+		SeguidorViaje seguidor = new SeguidorViaje();
+		List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
+		if(lista_seguidores.size()!=0){ // si el viaje tiene seguidores
+			for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
+				seguidor = lista_seguidores.get(j);
+				if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
+					this.entitymanager.getTransaction().begin();
+					seguidor.setEstado("I".charAt(0));
+					this.entitymanager.getTransaction().commit();
+				}// deja de ser seguidor
+			}    
+		}
 		return true;
 	}
 	
@@ -1202,7 +1189,6 @@ public class DAOViajes extends DataAccesObject {
 				+ " JOIN maneja.cliente cliente WHERE maneja.fecha_fin = null AND cliente=:cliente ");
 		q.setParameter("cliente", cliente);
 		return q.getResultList();
-	//	return cliente.getVehiculosQueManeja();
 	}
 	
 	//by mufa
@@ -1270,6 +1256,13 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.getTransaction().begin();
 		viaje.setEstado(EstadoViaje.finalizado);
 		viaje.setFecha_finalizacion(new Timestamp((new java.util.Date()).getTime()) );
+		
+		//a todos los pasajeros que no esten aceptados los rechazo
+		for(PasajeroViaje pv: viaje.getPasajeros()){
+			if(pv.getEstado()==EstadoPasajeroViaje.postulado){
+				pv.setEstado(EstadoPasajeroViaje.rechazado);
+			}
+		}
 		try{
     		entitymanager.getTransaction( ).commit( );	
     	}catch(RollbackException e){
