@@ -879,6 +879,9 @@ public class DAOViajes extends DataAccesObject {
 		
 		if (actualizado) {
 			// Notificar al conductor 
+                        System.out.println(viaje.getNombre_amigable());
+                        String nombre_destino = viaje.getDestino().getNombre();
+                        System.out.println(viaje.getDestino().getNombre());
 			Notificacion notificacion = new Notificacion();
 			notificacion.setCliente(viaje.getConductor());
 			notificacion.setEstado(EstadoNotificacion.no_leido);
@@ -1481,18 +1484,23 @@ public class DAOViajes extends DataAccesObject {
                 Cliente cliente_modifico = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
                 
                 
-        	this.entitymanager.getTransaction().begin();
+        	
         	// notifico uno por uno (si esta activo) 
         	for (int i=0;i< conductoresActivos.size();i++){
         		if ( conductoresActivos.get(i).isActivo() ){
-        			            			
+        			this.entitymanager.getTransaction().begin();            			
                                 Notificacion notificacion = new Notificacion();
                                 notificacion.setTexto("El vehículo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
                                 notificacion.setCliente(conductoresActivos.get(i));
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
-                                this.entitymanager.persist(notificacion);
-        			
+                                try{
+                                    this.entitymanager.persist(notificacion);
+                                    this.entitymanager.getTransaction().commit();
+                                }catch(RollbackException e){
+                                    String error= ManejadorErrores.parsearRollback(e);
+                                    throw new ExceptionViajesCompartidos("ERROR: "+error);
+                                }
         		}
         	}//fin de notificarlos
     		return true;
@@ -1701,7 +1709,6 @@ public class DAOViajes extends DataAccesObject {
     		this.entitymanager.getTransaction().begin();
 			Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
 			List<Maneja> listaManeja = this.getManejaPorVehiculoConductor(v, c);
-
 			for (Maneja m : listaManeja) {
 				if (m.getFecha_fin() == null){
 					// chequeo que vehiculo no tenga viaje pendiente
