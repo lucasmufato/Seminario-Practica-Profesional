@@ -879,6 +879,9 @@ public class DAOViajes extends DataAccesObject {
 		
 		if (actualizado) {
 			// Notificar al conductor 
+                        System.out.println(viaje.getNombre_amigable());
+                        String nombre_destino = viaje.getDestino().getNombre();
+                        System.out.println(viaje.getDestino().getNombre());
 			Notificacion notificacion = new Notificacion();
 			notificacion.setCliente(viaje.getConductor());
 			notificacion.setEstado(EstadoNotificacion.no_leido);
@@ -1491,8 +1494,13 @@ public class DAOViajes extends DataAccesObject {
                                 notificacion.setCliente(conductoresActivos.get(i));
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
-                                this.entitymanager.persist(notificacion);
-        			
+                                try{
+                                    this.entitymanager.persist(notificacion);
+                                    this.entitymanager.getTransaction().commit();
+                                }catch(RollbackException e){
+                                    String error= ManejadorErrores.parsearRollback(e);
+                                    throw new ExceptionViajesCompartidos("ERROR: "+error);
+                                }
         		}
         	}//fin de notificarlos
     		return true;
