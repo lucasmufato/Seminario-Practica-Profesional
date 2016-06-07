@@ -391,7 +391,7 @@ public class DAOPuntos extends DataAccesObject {
             this.entitymanager.getTransaction().rollback();
         }
  		this.entitymanager.getTransaction().begin();
- 		
+ 		Notificacion notificacion = new Notificacion();
  		if(cliente.equals(viaje.getConductor())){ 
  			//si soy el conductor, necesito saber a q pasajero puntuo
  			nomb_user=(String) datos.get("nombre_calificado");
@@ -419,6 +419,27 @@ public class DAOPuntos extends DataAccesObject {
  	 		calificacion.setComentario_conductor(comentario);			//comentarios que da el chofer
  	 		calificacion.setParticipo_pasajero(confirmacion);			//lo que dice el chofer de si el pasajero participo
  	 		
+                        
+                        //notificacion by fede
+                       
+                        String participo = null;
+                        if(calificacion.getParticipo_pasajero().equals("S".charAt(0))){
+                            participo= " participó del viaje";
+                        }else{
+                            if(calificacion.getParticipo_pasajero().equals("N".charAt(0))){
+                             participo= " no participó del viaje";
+                            }
+                        
+                        }                       
+                        
+                        notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                        notificacion.setEstado(EstadoNotificacion.no_leido);
+                        notificacion.setCliente(pasajeroviaje.getCliente());
+                        notificacion.setTexto("Usted ha sido calificado por: <<"+cliente.getNombre_usuario()+" >>");
+                        notificacion.setLink("/calificar_usuarios.html?id="+viaje.getId_viaje());
+                        //fin notificacion
+                        
+                        
  		}else{
  			//si soy el pasajero puntuando al conductor
  			pasajeroviaje = viaje.recuperar_pasajeroViaje_por_cliente(cliente);
@@ -435,7 +456,25 @@ public class DAOPuntos extends DataAccesObject {
  	 		calificacion.setCalificacion_para_conductor(valoracion);		//puntuacion que el pasajero le da al chofer
  	 		calificacion.setComentario_pasajero(comentario);				//comentarios que deja el pasajero
  	 		calificacion.setParticipo_conductor(confirmacion);				//lo que dice el pasajero de "si lo pasaron a buscar"
- 		}
+ 		
+                        //notificacion by fede
+                        String participo = null;
+                        if(calificacion.getParticipo_conductor().equals("S".charAt(0))){
+                            participo= "participó del viaje";
+                        }else{
+                            if(calificacion.getParticipo_conductor().equals("N".charAt(0))){
+                             participo= " no participó del viaje";
+                            }
+                        
+                        }       
+                        notificacion.setCliente(viaje.getConductor());
+                        notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                        notificacion.setEstado(EstadoNotificacion.no_leido);
+                        notificacion.setTexto("Usted ha sido calificado por: <<"+cliente.getNombre_usuario()+" >>");
+                        notificacion.setLink("/calificar_usuarios.html?id="+viaje.getId_viaje());
+                        //fin notif
+                
+                }
  		
  		MovimientoPuntos movimientopuntos;
  		Cliente cliente_a_modificar;
@@ -468,7 +507,8 @@ public class DAOPuntos extends DataAccesObject {
 		//guardo las cosas nuevas
 		try{    
  			this.entitymanager.persist(movimientopuntos);
-            this.entitymanager.getTransaction().commit();
+                        this.entitymanager.persist(notificacion);
+                        this.entitymanager.getTransaction().commit();
 	    }catch(RollbackException e){
 	    	String error= ManejadorErrores.parsearRollback(e);
 	        throw new ExceptionViajesCompartidos("ERROR: "+error);
