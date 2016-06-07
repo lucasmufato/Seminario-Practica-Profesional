@@ -968,6 +968,7 @@ public class ServletViaje extends HttpServlet {
 		postulante.put("estado_postulacion", pv.getEstado().toString());
 		postulante.put("origen", pv.getLocalidad_subida().getLocalidad().getNombre());
 		postulante.put("destino", pv.getLocalidad_bajada().getLocalidad().getNombre());
+		postulante.put("asientos_solicitados", pv.getNro_asientos().toString());
 		postulante.put("nombre_usuario", c.getNombre_usuario());
 		postulante.put("foto", c.getFoto());
 		postulante.put("reputacion", c.getReputacion());

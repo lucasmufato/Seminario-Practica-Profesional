@@ -12,12 +12,12 @@
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="navegacion.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
-	
+
 	<!--
-		El siguiente script no corre (le asigno un type que no existe). 
-		Aqui escribo el codigo dinamico utilizado para crear un postulante. 
-		Luego lo llamo con 
-		$("#postulante-template").html() 
+		El siguiente script no corre (le asigno un type que no existe).
+		Aqui escribo el codigo dinamico utilizado para crear un postulante.
+		Luego lo llamo con
+		$("#postulante-template").html()
 		y le agrego los parametros que definí mediante Mustache.
 	-->
 	<script id="postulante-template" type="text/template">
@@ -29,15 +29,15 @@
 				</div>
 				<div class="panel-body panel-collapse collapse {{#es_pendiente}}in{{/es_pendiente}}" id="postulante-{{nombre_usuario}}">
 					<div class="row">
-					
-						<div class="col-md-3 col-lg-3 " align="center"> 
+
+						<div class="col-md-3 col-lg-3 " align="center">
 							<p id="reputacion" class="reputacion">{{reputacion_stars}}</p>
 							<a href="perfil.html?usuario={{nombre_usuario}}" data-original-title="Ver perfil" data-placement="bottom" data-toggle="tooltip"  class="thumbnail">
-								<img alt="foto de usuario" src="{{foto_revisada}}" class="img-responsive" style="max-height: 200px"> 
+								<img alt="foto de usuario" src="{{foto_revisada}}" class="img-responsive" style="max-height: 200px">
 							</a>
 						</div>
-						
-						<div class=" col-md-9 col-lg-9 "> 
+
+						<div class=" col-md-9 col-lg-9 ">
 							<table class="table table-user-information">
 								<tbody>
 									<tr>
@@ -61,18 +61,22 @@
 										<td>{{destino}}</td>
 									</tr>
 									<tr>
+										<td>N° de asientos</br>solicitados:</td>
+										<td>{{asientos_solicitados}}</td>
+									</tr>
+									<tr>
 										<td>Email</td>
 										<td><a href="mailto:{{mail}}">{{mail}}</a></td>
 									</tr>
 										<td>Telefono:</td>
-										<td>{{telefono}}</td>  
+										<td>{{telefono}}</td>
 									</tr>
 								</tbody>
 							</table>
 							{{#es_pendiente}}
 							<div class="btn-group col-xs-12" id="botonera-postulante-{{nombre_usuario}}">
 								<button class="btn btn-danger col-xs-6" onclick="rechazarPostulante('{{nombre_usuario}}')"><span class="glyphicon glyphicon-remove"></span> Rechazar</button>
-								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante('{{nombre_usuario}}')"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>  
+								<button class="btn btn-success col-xs-6" onclick="aceptarPostulante('{{nombre_usuario}}')"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>
 							</div>
 							{{/es_pendiente}}
 						</div>
@@ -95,7 +99,7 @@
 <body>
 	<div class="loadingScreen"></div>
     <main>
-		<div class="container-fluid">		
+		<div class="container-fluid">
 			<ol class="breadcrumb">
 			  <li><a href="/home.html">Home</a></li>
 			  <li><a href="javascript:verViaje()">Detalle del Viaje</a></li>
@@ -136,5 +140,5 @@
 
 </div>
 
-</body>	
+</body>
 </html>

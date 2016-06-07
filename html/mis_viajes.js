@@ -244,6 +244,7 @@ var toggleFilter = function(){
 
 
 reputacionStars = function(caracter){
+	caracter = Math.round(caracter);
 	var stars = "";
 	while (caracter > 0){
 		stars += "★";

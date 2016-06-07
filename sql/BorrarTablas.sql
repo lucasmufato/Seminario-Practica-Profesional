@@ -31,6 +31,7 @@ drop table estado_viaje;
 drop table tipo_mov_saldo;
 drop table comentario_viaje;
 drop table tipo_mov_puntos;
+drop table seguidor_viaje;
 drop table sequence;
 drop table comentario_viaje;
 SET FOREIGN_KEY_CHECKS = 1; 

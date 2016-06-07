@@ -225,7 +225,22 @@ vc.fechaAMD = function (fecha_dma) {
 }
 
 vc.toFechaLocal = function(fecha_string){
-	var jsValidDateTime = fecha_string.split(" ").join("T");
-	var date = new Date(Date.parse(jsValidDateTime));
+	/*
+	Transformar fecha de formato base de datos a fecha formato local
+
+	Solo sirve para fechas con este formato
+	yyyy-MM-dd hh:mm:ss (decimas de segundo creo que tambien las toma)
+	*/
+
+	//transformo string a fecha que sea comun a todos los putos navegadores
+	var jsValidDateTime = fecha_string.split(" ").join("T") + "Z";
+	// fecha de zona horaria standard (GMT+0)
+	var fechaStandard = new Date(Date.parse(jsValidDateTime));
+	// Toma mi zona horaria (argentina es GMT+3)
+	//y me dice a cuantos minutos estoy desfasado de la hora internacional
+	//para argentina devuelve 180 (o sea tres horas atrasado)
+	var desfase = new Date().getTimezoneOffset();
+	// Le sumo esos minutos (en milisegundos) a la hora dada
+	var date = new Date(fechaStandard.getTime() + desfase*60000);
 	return date.toLocaleString();
 }

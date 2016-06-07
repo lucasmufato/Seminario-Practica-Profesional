@@ -18,14 +18,14 @@ var loadData = function() {
 		}
 	}
 	//simular();
-	
+
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
 var initUI = function(){
 	loadData();
-	$('[data-toggle="tooltip"]').tooltip(); 
-	
+	$('[data-toggle="tooltip"]').tooltip();
+
 }
 
 window.onload=initUI;
@@ -100,13 +100,13 @@ var cargarPostulantes = function(){
 			"</div>";
 	}
 	$("#panel-postulantes").html(html);
-	
+
 	// Lo que solo anda una vez que se cargo toda la data.
 	setearEventos();
 }
 
 var setearEventos = function(){
-	$('[data-toggle="tooltip"]').tooltip(); 
+	$('[data-toggle="tooltip"]').tooltip();
 }
 
 var aceptarPostulante = function(nombre_usuario){
@@ -124,7 +124,7 @@ var aceptarPostulante = function(nombre_usuario){
 		} else {
 			modalMessage("error",jsonData.msg,"Aceptar postulante");
 		}
-	}	
+	}
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
@@ -142,7 +142,7 @@ var rechazarPostulante = function(nombre_usuario){
 		} else {
 			modalMessage("error",jsonData.msg,"Rechazar postulante");
 		}
-	}	
+	}
 	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
 }
 
@@ -173,6 +173,7 @@ var colorPanel = function(caracter){
 	}
 }
 var reputacionStars = function(caracter){
+	caracter = Math.round(caracter);
 	var stars = "";
 	while (caracter > 0){
 		stars += "★";

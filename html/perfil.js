@@ -363,6 +363,7 @@ var sexoCaracter = function(sexo){
 	}
 }
 var reputacionStars = function(caracter){
+	caracter = Math.round(caracter);
 	var stars = "";
 	while (caracter > 0){
 		stars += "★";

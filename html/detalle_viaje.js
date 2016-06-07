@@ -391,8 +391,9 @@ var cargarViaje = function(){
 				msg_asientos = asientos_tramo + " asientos libres";
 			}
 		}
-		$("#recorrido").append('<span class="label '+label_class+'" title="'+msg_asientos+'">'+localidadNombre(elem)+'</span>');
+		$("#recorrido").append('<span class="label '+label_class+'" data-toggle="tooltip" title="'+msg_asientos+'">'+localidadNombre(elem)+'</span>');
 	});
+	$('[data-toggle="tooltip"]').tooltip();
 
 }
 
@@ -828,6 +829,7 @@ var estadoString = function (caracter) {
 }
 
 var reputacionStars = function(caracter){
+	caracter = Math.round(caracter);
 	var stars = "";
 	while (caracter > 0){
 		stars += "★";
