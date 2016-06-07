@@ -24,6 +24,13 @@ import otros.JSONable;
 @Table(name="PRECIO_COMISION")
 public class PrecioComision implements JSONable {
 
+	/*
+	 * 		ESTA CLASE DESAPARECE
+	 * 		ESTA CLASE DESAPARECE
+	 * 		ESTA CLASE DESAPARECE
+	 * 		ESTA CLASE DESAPARECE
+	 */
+	
 	@Id
 	@Column(nullable=false,name="ID_COMISION")
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="MySequenceGeneratorPrecioComision")
@@ -35,8 +42,8 @@ public class PrecioComision implements JSONable {
 	protected Date fecha_hasta;
 	@Column(nullable=false,name="MONTO")
 	protected float Monto;
-	@OneToMany(mappedBy="precio_comision", cascade=CascadeType.PERSIST)
-	protected List<Comision> comision;
+	//@OneToMany(mappedBy="precio_comision", cascade=CascadeType.PERSIST)
+	//protected List<Comision> comision;
 	
 	public PrecioComision(){
 		
@@ -44,19 +51,16 @@ public class PrecioComision implements JSONable {
 	
 	@Override
 	public void SetJSONObject(JSONObject json) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object getPrimaryKey() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

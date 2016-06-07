@@ -25,28 +25,22 @@ public class DAOComisiones extends DataAccesObject {
 		super();
 	}
 	
-	public ComisionCobrada nuevaComisionCobrada(Double km){
+	//retocado por mufa
+	public ComisionCobrada nuevaComisionCobrada(Double km) throws ExceptionViajesCompartidos{
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
             
             ComisionCobrada cc = new ComisionCobrada();
-		try {
-			Query qry = entitymanager.createNamedQuery("Comision.porKm");
+			Query qry = entitymanager.createNamedQuery("Comision.PrecioPorKM");
 			qry.setParameter("km", km);
 			Comision comision = (Comision) qry.getSingleResult();
-			PrecioComision pc = comision.getPrecio_comision();
+			if(comision==null){
+				throw new ExceptionViajesCompartidos("ERROR: NO SE PUDO RECUPERAR LA COMISION PARA: "+km+" Kms");
+			}
 			cc.setComision(comision);
-			float monto = pc.getMonto();
-			cc.setMonto(monto);
-		}catch(Exception e){
-			cc.setComision(null);
-			cc.setMonto(0);
+			cc.setMonto( comision.getPrecio() );
 			return cc;
-		}
-		
-			// TODO este metodo tendria que buscar la comision actual para esos KM, y asignarle el monto a la ComisionCobrada
-		return 	cc;
 	}
 	
 	public boolean cobrarComision(PasajeroViaje pv){
@@ -78,11 +72,8 @@ public class DAOComisiones extends DataAccesObject {
                  
                 //le cambio el estado al PV por comision cobrada
                  pv.getComision().setEstado(EstadoComisionCobrada.pagado);
-                 
-                
-                 
+
                  try{
-                     
                      this.entitymanager.persist(ms);
                      this.entitymanager.getTransaction().commit();
                  }catch(Exception e){

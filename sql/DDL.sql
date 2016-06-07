@@ -121,17 +121,6 @@ CREATE TABLE LOCALIDAD_CLASIFICACION (
 	PRIMARY KEY (codigo)
 );
 
-CREATE TABLE COMISION_COBRADA (
-	id_comision_cobrada INTEGER AUTO_INCREMENT,
-	monto DECIMAL (10, 2) NOT NULL,
-    estado CHAR(1),
-	id_comision INTEGER,
-	id_movimiento_saldo INTEGER,
-	id_pasajero_viaje INTEGER,
-
-	PRIMARY KEY (id_comision_cobrada)
-);
-
 CREATE TABLE VEHICULO (
 	id_vehiculo INTEGER NOT NULL AUTO_INCREMENT,
 	anio INTEGER NOT NULL,
@@ -203,6 +192,40 @@ CREATE TABLE LOCALIDAD_VIAJE (
 	PRIMARY KEY (id_viaje, id_localidad),
 	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje) ON DELETE CASCADE,
 	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad) ON DELETE CASCADE
+);
+
+/*	esta tabla desaparece, no descomentar
+CREATE TABLE PRECIO_COMISION(
+	id_comision int(11) NOT NULL AUTO_INCREMENT,
+	MONTO float NOT NULL,
+	FECHA_DESDE date NOT NULL,
+    FECHA_HASTA date,
+	PRIMARY KEY (id_comision, fecha_desde)
+);
+*/
+
+CREATE TABLE COMISION (
+	id_comision Int(11) NOT NULL AUTO_INCREMENT,
+    limite_inferior INTEGER NOT NULL,
+    limite_superior INTEGER NOT NULL,
+    precio FLOAT NOT NULL,
+    fecha_inicio DATE NOT NULL ,
+    fecha_fin DATE default NULL,
+    -- precio_comision int(11) NOT NULL,
+    
+    PRIMARY KEY (id_comision)
+    -- FOREIGN KEY (precio_comision) REFERENCES precio_comision (id_comision) ON DELETE CASCADE
+);
+
+CREATE TABLE COMISION_COBRADA (
+	id_comision_cobrada INTEGER AUTO_INCREMENT,
+	monto DECIMAL (10, 2) NOT NULL,
+    estado CHAR(1),
+	id_comision INTEGER,
+	id_movimiento_saldo INTEGER,
+	id_pasajero_viaje INTEGER,
+
+	PRIMARY KEY (id_comision_cobrada)
 );
 
 CREATE TABLE PASAJERO_VIAJE (
@@ -301,24 +324,6 @@ CREATE TABLE SANCION (
   FOREIGN KEY (ID_MOVIMIENTO_PUNTOS) REFERENCES MOVIMIENTO_PUNTOS (ID_MOVIMIENTOS_PUNTOS) ON DELETE CASCADE,
   FOREIGN KEY (ID_TIPO_SANCION) REFERENCES TIPO_SANCION (ID_TIPO_SANCION) ON DELETE CASCADE
  );
- 
-CREATE TABLE PRECIO_COMISION(
-	id_comision int(11) NOT NULL AUTO_INCREMENT,
-	MONTO float NOT NULL,
-	FECHA_DESDE date NOT NULL,
-    FECHA_HASTA date,
-	PRIMARY KEY (id_comision, fecha_desde)
-);
-
-CREATE TABLE COMISION (
-	id_comision Int(11) NOT NULL AUTO_INCREMENT,
-    limite_inferior FLOAT NOT NULL,
-    limite_superior FLOAT NOT NULL,
-    precio_comision int(11) NOT NULL,
-    
-    PRIMARY KEY (id_comision),
-    FOREIGN KEY (precio_comision) REFERENCES precio_comision (id_comision) ON DELETE CASCADE
-);
 
 CREATE TABLE PAGO(
 	id_pago int(11) not null auto_increment,

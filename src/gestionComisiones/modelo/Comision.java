@@ -1,5 +1,6 @@
 package gestionComisiones.modelo;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -22,7 +23,8 @@ import otros.JSONable;
 
 @NamedQueries({
 	@NamedQuery(name="Comision.todos",query="SELECT n FROM Comision n"),
-	@NamedQuery(name="Comision.porKm",query="SELECT n FROM Comision n where (n.limite_inferior <= :km) and (n.limite_superior > :km)"),
+	@NamedQuery(name="Comision.porKm",query="SELECT n FROM Comision n WHERE n.limite_inferior <= :km AND n.limite_superior > :km"),
+	@NamedQuery(name="Comision.PrecioPorKM",query="SELECT n FROM Comision n WHERE n.limite_inferior <= :km AND n.limite_superior > :km AND n.fecha_fin is NULL"),
 	@NamedQuery(name="Comision.SearchById",query="SELECT c FROM Comision c WHERE c.id_comision = :id"),
 })
 @Entity
@@ -35,13 +37,21 @@ public class Comision implements JSONable {
 	@SequenceGenerator(allocationSize=1, schema="seminario",  name="MySequenceGeneratorComision", sequenceName = "sequence")
 	protected Integer id_comision;
 	@Column(nullable=false,name="LIMITE_SUPERIOR")
-	protected float limite_superior;
+	protected Integer limite_superior;
 	@Column(nullable=false,name="LIMITE_INFERIOR")
-	protected float limite_inferior;
+	protected Integer limite_inferior;
+	@Column(nullable=false,name="PRECIO")
+	protected Float precio;
+	@Column(nullable=false,name="FECHA_INICIO")
+	protected Date fecha_inicio;
+	@Column(nullable=false,name="FECHA_FIN")
+	protected Date fecha_fin;
 	
+	/*
 	@JoinColumn(name="PRECIO_COMISION")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected PrecioComision precio_comision;
+	*/
 	@OneToMany(mappedBy="comision", cascade=CascadeType.PERSIST)
 	protected List<ComisionCobrada> comisiones_cobradas;
 	
@@ -57,28 +67,44 @@ public class Comision implements JSONable {
 		this.id_comision = id_comision;
 	}
 
-	public float getLimite_superior() {
+	public Integer getLimite_superior() {
 		return limite_superior;
 	}
 
-	public void setLimite_superior(float limite_superior) {
+	public void setLimite_superior(Integer limite_superior) {
 		this.limite_superior = limite_superior;
 	}
 
-	public float getLimite_inferior() {
+	public Integer getLimite_inferior() {
 		return limite_inferior;
 	}
 
-	public void setLimite_inferior(float limite_inferior) {
+	public void setLimite_inferior(Integer limite_inferior) {
 		this.limite_inferior = limite_inferior;
 	}
 
-	public PrecioComision getPrecio_comision() {
-		return precio_comision;
+	public Float getPrecio() {
+		return precio;
 	}
 
-	public void setPrecio_comision(PrecioComision precio_comision) {
-		this.precio_comision = precio_comision;
+	public void setPrecio(Float precio) {
+		this.precio = precio;
+	}
+
+	public Date getFecha_inicio() {
+		return fecha_inicio;
+	}
+
+	public void setFecha_inicio(Date fecha_inicio) {
+		this.fecha_inicio = fecha_inicio;
+	}
+
+	public Date getFecha_fin() {
+		return fecha_fin;
+	}
+
+	public void setFecha_fin(Date fecha_fin) {
+		this.fecha_fin = fecha_fin;
 	}
 
 	public Integer getId_comision() {
@@ -103,7 +129,6 @@ public class Comision implements JSONable {
 
 	@Override
 	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
