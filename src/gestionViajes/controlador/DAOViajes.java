@@ -1385,6 +1385,7 @@ public class DAOViajes extends DataAccesObject {
                             notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado la foto del vehículo con patente: <<"+v.getPatente()+">>");
                             notificacion.setEstado(EstadoNotificacion.no_leido);
                             notificacion.setCliente(conductor);
+                            notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo());
                             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
                             this.entitymanager.persist(notificacion);
                             this.entitymanager.getTransaction().commit();
@@ -1445,6 +1446,7 @@ public class DAOViajes extends DataAccesObject {
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setCliente(conductor);
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
+                                notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo()); 
                                 this.entitymanager.persist(notificacion);
                                 this.entitymanager.getTransaction().commit();
 
@@ -1617,6 +1619,7 @@ public class DAOViajes extends DataAccesObject {
                                 notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: "+ v.getPatente());
                                 notificacion.setCliente(conductorNuevo);
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
+                                 notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo());
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
                                 this.entitymanager.persist(notificacion);
         			}
@@ -1672,6 +1675,7 @@ public class DAOViajes extends DataAccesObject {
                                 notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: <<"+ v.getPatente()+">> por el usuario: <<"+conductor_modifica.getNombre_usuario()+">>");
                                 notificacion.setCliente(conductorNuevo);
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo());
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
                                 this.entitymanager.persist(notificacion);
         		}
@@ -1722,6 +1726,7 @@ public class DAOViajes extends DataAccesObject {
                                         notificacion.setCliente(m.getCliente());
                                         notificacion.setEstado(EstadoNotificacion.no_leido);
                                         notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
+                                         notificacion.setLink("/mis_vehiculos.html");
                                         this.entitymanager.persist(notificacion);
 				}
 			}
