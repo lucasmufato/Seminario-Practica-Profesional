@@ -306,8 +306,8 @@ CREATE TABLE PRECIO_COMISION(
 	id_comision int(11) NOT NULL AUTO_INCREMENT,
 	MONTO float NOT NULL,
 	FECHA_DESDE date NOT NULL,
-    FECHA_HASTA date not null,
-	PRIMARY KEY (id_comision)
+    FECHA_HASTA date,
+	PRIMARY KEY (id_comision, fecha_desde)
 );
 
 CREATE TABLE COMISION (
