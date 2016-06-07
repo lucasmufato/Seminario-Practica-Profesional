@@ -1495,6 +1495,7 @@ public class DAOViajes extends DataAccesObject {
                                 notificacion.setTexto("El vehículo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
                                 notificacion.setCliente(conductoresActivos.get(i));
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
+                                notificacion.setLink("/mis_vehiculos.html");
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
                                 try{
                                     this.entitymanager.persist(notificacion);
