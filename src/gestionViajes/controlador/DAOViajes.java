@@ -1260,6 +1260,8 @@ public class DAOViajes extends DataAccesObject {
 		for(PasajeroViaje pv: viaje.getPasajeros()){
 			if(pv.getEstado()==EstadoPasajeroViaje.postulado){
 				pv.setEstado(EstadoPasajeroViaje.rechazado);
+                                pv.getComision().setEstado(EstadoComisionCobrada.desestimada);
+                                pv.getComision().setfecha(new Timestamp((new java.util.Date()).getTime()));
 			}
 		}
 		try{
