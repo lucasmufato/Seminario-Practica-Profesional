@@ -76,7 +76,7 @@ public class DAOPuntos extends DataAccesObject {
             //Query qry = entitymanager.createNamedQuery("TipoSancion.buscarPorClaveCandidata");
             //qry.setParameter("clave_candidata", "Descuento de Puntos por Cancelación de viaje con Pasajeros");
             tipo_sancion= (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(),2);
-            
+            Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
             //FIN
             //notificacion
             sancion.setTipo_sancion(tipo_sancion);
@@ -84,7 +84,7 @@ public class DAOPuntos extends DataAccesObject {
             notificacion.setCliente(cliente); 
             notificacion.setEstado(EstadoNotificacion.no_leido);
             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
-            notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
+            notificacion.setTexto("Usted ha sido sancionado a causa de: "+tipo_sancion.getDescripcion()+".Correspondiente al viaje: "+viaje.getNombre_amigable());
             //fin notif
             
             //sancion de dias
@@ -96,7 +96,7 @@ public class DAOPuntos extends DataAccesObject {
             sancion_dias.setTipo_sancion(tipo_sancion_dias);
                 //calculo los dias que lo voy a sancionar
                 Timestamp actual= new Timestamp((new java.util.Date()).getTime());
-                Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+                
                 Timestamp salida_viaje = viaje.getFecha_inicio();
                 double diferencia = diferenciaTimestamps(salida_viaje, fechaYHoraCancelacion);
                 List<Sancion> sanciones_anteriores = buscarSanciones(cliente);
@@ -288,7 +288,7 @@ public class DAOPuntos extends DataAccesObject {
             notificacion.setCliente(cliente); 
             notificacion.setEstado(EstadoNotificacion.no_leido);
             notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) ); 
-            notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion());
+            notificacion.setTexto("Usted ha sido sancionado a causa de:"+tipo_sancion.getDescripcion()+". Correspondiente al viaje: "+viaje.getNombre_amigable());
             
             //sancion de dias
             TipoSancion tipo_sancion_dias = (TipoSancion) this.buscarPorPrimaryKey(new TipoSancion(), 4);            
