@@ -26,6 +26,8 @@ import otros.JSONable;
 	@NamedQuery(name="Comision.porKm",query="SELECT n FROM Comision n WHERE n.limite_inferior <= :km AND n.limite_superior > :km"),
 	@NamedQuery(name="Comision.PrecioPorKM",query="SELECT n FROM Comision n WHERE n.limite_inferior <= :km AND n.limite_superior > :km AND n.fecha_fin is NULL"),
 	@NamedQuery(name="Comision.SearchById",query="SELECT c FROM Comision c WHERE c.id_comision = :id"),
+	@NamedQuery(name="Comision.vigentes",query="SELECT c FROM Comision c WHERE c.fecha_fin is NULL ORDER BY c.id_comision"),
+	@NamedQuery(name="Comision.NOvigentes",query="SELECT c FROM Comision c WHERE c.fecha_fin is NOT NULL ORDER BY c.id_comision"),
 })
 @Entity
 @Table(name="COMISION")
