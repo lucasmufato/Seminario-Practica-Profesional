@@ -185,6 +185,36 @@ public class Viaje implements JSONable {
 		this.fecha_inicio = fecha_inicio;
 	}
 
+	// Despues de esta fecha se considera el viaje como finalizado, aunque el conductor no lo indique asi
+	public Timestamp getFecha_autofinalizar() {
+		long t_inicio = this.fecha_inicio.getTime();
+		double distancia_km;
+		double velocidad_kmh = 60d; // suponemos que no viaja muy rapido
+		
+		try {
+			distancia_km = calcularKM (this.getOrigen(), this.getDestino());
+		} catch (ExceptionViajesCompartidos e) {
+			distancia_km = 0d;
+		}
+
+		double t_recorrido_h = ((distancia_km/velocidad_kmh));
+
+		if(t_recorrido_h > 8) {
+			// Si el viaje es mas largo que 8 horas, suponemos que viajan solo 12 horas por dia
+			t_recorrido_h = t_recorrido_h*2;
+		} else if(t_recorrido_h > 3.2) {
+			// Si el viaje es mas largo que 3.2 horas, suponemos que ocasionalmente paran a descansar
+			t_recorrido_h = t_recorrido_h*1.25d;
+		} else {
+			// Dejamos 4 horas para viajes cortos 
+			t_recorrido_h = 4;
+		}
+
+		long t_recorrido = (long)(t_recorrido_h * 3600000d);
+
+		return new Timestamp(t_inicio + t_recorrido);
+	}
+
 	public List<PasajeroViaje> getPasajeros() {
 		return pasajeros;
 	}
