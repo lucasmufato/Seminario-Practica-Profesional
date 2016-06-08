@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_comisiones" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd66dfab-c34f-4963-b1db-d95541e77117">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_comisiones" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd66dfab-c34f-4963-b1db-d95541e77117">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="id_viaje_desde" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_viaje_hasta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_desde" class="java.sql.Date">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_hasta" class="java.sql.Date">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_comision_desde" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_comision_hasta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="conductor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="estado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="monto_desde" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="monto_hasta" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="km_desde" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="km_hasta" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT * FROM
     (SELECT
@@ -11,7 +47,7 @@
 		cc.fecha AS Fecha,
 		u.nombre_usuario AS Conductor,
         pv.kilometros AS Km,
-		cc.monto AS "Monto total",
+		cc.monto AS monto,
 		ec.nombre_estado AS Estado
 	FROM
 		VIAJE v
@@ -21,6 +57,18 @@
 		INNER JOIN USUARIO u ON v.id_cliente = u.id_usuario
 		INNER JOIN ESTADO_COMISION ec ON ec.id_estado_comision=cc.estado
 	) AS reporte
+    WHERE (Viaje >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null)
+            and (Viaje <= $P!{id_viaje_hasta} or $P!{id_viaje_hasta} is null)
+            and (Comision >= $P!{id_comision_desde} or $P!{id_comision_desde} is null)
+            and (Comision <= $P!{id_comision_hasta} or $P!{id_comision_hasta} is null)
+            and (Fecha >= "$P!{fecha_desde}"  or "$P!{fecha_desde}" = "null")
+            and (Fecha <= "$P!{fecha_hasta}" or "$P!{fecha_hasta}" = "null")
+            and (LOWER(Conductor) LIKE LOWER("%$P!{conductor}%"))
+            and (Estado LIKE "$P!{estado}%")
+            and (Km >= $P!{km_desde} or $P!{km_desde} is null)
+            and (Km <= $P!{km_hasta} or $P!{km_hasta} is null)
+            and (monto >= $P!{monto_desde} or $P!{monto_desde} is null)
+            and (monto <= $P!{monto_hasta} or $P!{monto_hasta} is null)
     ORDER BY reporte.Comision, reporte.Viaje
 ;]]>
 	</queryString>
@@ -34,10 +82,10 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="Conductor" class="java.lang.String"/>
-	<field name="Km" class="java.lang.Float">
+	<field name="Km" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="Monto total" class="java.math.BigDecimal">
+	<field name="monto" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="Estado" class="java.lang.String">
@@ -175,7 +223,7 @@
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{Monto total}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="477" y="0" width="79" height="20" uuid="07a95b1d-52b3-40ae-b080-1f0c6abb6bc7"/>

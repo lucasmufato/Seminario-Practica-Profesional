@@ -68,7 +68,7 @@ FROM
 			ON pv.id_viaje=v.id_viaje GROUP BY v.id_viaje) AS pasajeros_por_viaje
 		ON v.id_viaje = pasajeros_por_viaje.id_viaje) AS reporte
 INNER JOIN ESTADO_VIAJE e ON reporte.estado = e.id_estado_viaje
-WHERE Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null
+WHERE (Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null)
             and (Id <= $P!{id_viaje_hasta} or $P!{id_viaje_hasta} is null)
             and (Inicio >= "$P!{fecha_desde}"  or "$P!{fecha_desde}" = "null")
             and (Inicio <= "$P!{fecha_hasta}" or "$P!{fecha_hasta}" = "null")
