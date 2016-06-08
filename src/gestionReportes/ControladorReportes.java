@@ -3,6 +3,7 @@ package gestionReportes;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -80,7 +81,9 @@ public class ControladorReportes extends HttpServlet {
 			out = cargarData(request,response);
 		} else if (accion != null && accion.equals("reporte_viajes")){
 			out = reporteViajes(request,response);
-		}
+		} else if (accion != null && accion.equals("reporte_comisiones")){
+			out = reporteComisiones(request,response);
+		} 
 		
 		if (out == null) {
 			out = new JSONObject();
@@ -90,6 +93,83 @@ public class ControladorReportes extends HttpServlet {
 		out.put("action", accion);
 		System.out.println("Lo que mando al js: "+out);
 		writer.println (out);
+	}
+
+	private JSONObject reporteComisiones(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		JSONObject respuesta = new JSONObject();
+		
+		if (!AccessManager.hasRol(request, "super_usuario")){
+			respuesta.put("result", true); // le tengo que poner true para que no vaya al cartel de error de vc.peticionajax();
+			respuesta.put("redirect", "/acceso_denegado.html");
+			return respuesta;
+		}
+		
+		ServletContext context = this.getServletConfig().getServletContext();
+		String path = context.getRealPath("/reportes/reports/vc_reporte_comisiones.jrxml");
+
+		//compilo reporte
+		if (!this.compilarReporte(path)){
+			respuesta.put("msg", "Error en compilacion de reporte de viajes");
+			respuesta.put("result", false);
+			return respuesta;
+		}
+		//creo archivo de reporte
+		String reportFileName = context.getRealPath("/reportes/reports/vc_reporte_comisiones.jasper");
+		if (!this.existeReporteCompilado(reportFileName)){
+			respuesta.put("msg", "El reporte no se encuentra compilado");
+			respuesta.put("result", false);
+			return respuesta;
+		}
+		// tomo parametros de la web y relleno reporte con datos
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		
+		String conductor = request.getParameter("data[conductor]");
+		String estado = request.getParameter("data[estado]");
+		Integer id_viaje_desde = parsearInteger(request.getParameter("data[id_viaje_desde]"));
+		Integer id_viaje_hasta = parsearInteger(request.getParameter("data[id_viaje_hasta]"));
+		Integer id_comision_desde = parsearInteger(request.getParameter("data[id_comision_desde]"));
+		Integer id_comision_hasta = parsearInteger(request.getParameter("data[id_comision_hasta]"));
+		java.sql.Date fecha_desde = parsearFecha(request.getParameter("data[fecha_desde]"));
+		java.sql.Date fecha_hasta = parsearFecha(request.getParameter("data[fecha_hasta]"));
+		Double km_desde = parsearDouble(request.getParameter("data[km_desde]"));
+		Double km_hasta = parsearDouble(request.getParameter("data[km_hasta]"));
+		java.math.BigDecimal monto_desde = parsearBigDecimal(request.getParameter("data[monto_desde]"));
+		java.math.BigDecimal monto_hasta = parsearBigDecimal(request.getParameter("data[monto_hasta]"));
+
+		parameters.put("id_viaje_desde", id_viaje_desde);
+		parameters.put("id_viaje_hasta", id_viaje_hasta);
+		parameters.put("id_comision_desde", id_comision_desde);
+		parameters.put("id_comision_hasta", id_comision_hasta);
+		parameters.put("fecha_desde", fecha_desde);
+		parameters.put("fecha_hasta", fecha_hasta);
+		parameters.put("conductor", conductor);
+		parameters.put("estado", estado);
+		parameters.put("monto_desde", monto_desde);
+		parameters.put("monto_hasta", monto_hasta);
+		parameters.put("km_desde", km_desde);
+		parameters.put("km_hasta", km_hasta);
+
+		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
+		if (jasperPrint == null){
+			respuesta.put("msg", "No se pudo rellenar el reporte con datos");
+			respuesta.put("result", false);
+			return respuesta;
+		}
+
+		String pathReal = context.getRealPath("/");
+		String pathToPdf = FileManager.uploadPdf(pathReal, jasperPrint);
+		if (pathToPdf == "" || pathToPdf == null){
+			respuesta.put("msg", "Error al guardar pdf generado");
+			respuesta.put("result", false);
+			return respuesta;
+		}
+		respuesta.put("msg", "El reporte ha sido generado correctamente");
+		respuesta.put("link", pathToPdf);
+		respuesta.put("result", true);
+		
+		return respuesta;
 	}
 
 	private JSONObject cargarData(HttpServletRequest request,
@@ -184,6 +264,14 @@ public class ControladorReportes extends HttpServlet {
 	private Integer parsearInteger(String valor) {
 		try{
 			return Integer.parseInt(valor);
+		}catch(NumberFormatException e){
+			return null;
+		}
+	}
+	private BigDecimal parsearBigDecimal(String valor) {
+		try{
+			BigDecimal a = new BigDecimal(valor);
+			return a;
 		}catch(NumberFormatException e){
 			return null;
 		}
