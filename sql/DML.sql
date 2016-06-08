@@ -246,4 +246,24 @@ INSERT INTO pasajero_viaje (id_pasajero_viaje,id_viaje,id_cliente, kilometros,es
 VALUES('5','7','11', '150','1',null,'5','3430987','3433780',2);
 INSERT INTO pasajero_viaje (id_pasajero_viaje,id_viaje,id_cliente, kilometros,estado,id_calificacion, id_comision_cobrada,id_localidad_subida,id_localidad_bajada,nro_asientos)
 VALUES('6','8','13', '250','0',null,'6','3430977','3430979',1);
+
+-- segunda parte dml juan
+
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('9', '0', '20', '5', '2016-06-08');
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='1';
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('10', '20', '50', '7', '2016-06-08');
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='2';
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('11', '50', '100', '9', '2016-06-08');
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='3';
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('12', '100', '250', '16', '2016-06-08');
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('13', '250', '500', '26', '2016-06-08');
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('14', '500', '1000', '41', '2016-06-08');
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('15', '1000', '2000', '81', '2016-06-08');
+INSERT INTO `seminario`.`comision` (`id_comision`, `limite_inferior`, `limite_superior`, `precio`, `fecha_inicio`) VALUES ('16', '2000', '10000', '151', '2016-06-08');
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='4';
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='5';
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='6';
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='8';
+UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='7';
+
 */
