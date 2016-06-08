@@ -1,10 +1,6 @@
 package gestionViajes.controlador;
 
 import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
@@ -16,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import gestionComisiones.modelo.EstadoComisionCobrada;
-import gestionPuntos.controlador.DAOPuntos;
 import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.*;
 import junit.framework.TestCase;
