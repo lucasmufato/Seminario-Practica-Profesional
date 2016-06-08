@@ -224,7 +224,7 @@ CREATE TABLE COMISION_COBRADA (
 	id_comision INTEGER,
 	id_movimiento_saldo INTEGER,
 	id_pasajero_viaje INTEGER,
-
+	fecha DATETIME,
 	PRIMARY KEY (id_comision_cobrada)
 );
 
