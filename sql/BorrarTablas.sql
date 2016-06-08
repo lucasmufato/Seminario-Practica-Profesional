@@ -28,6 +28,7 @@ drop table sponsor;
 drop table tipo_sancion;
 drop table notificacion;
 drop table estado_viaje;
+drop table estado_comision;
 drop table tipo_mov_saldo;
 drop table comentario_viaje;
 drop table tipo_mov_puntos;

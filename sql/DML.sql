@@ -98,8 +98,10 @@ INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
 	
 INSERT INTO ESTADO_COMISION(id_estado_comision, nombre_estado) VALUES
 	("0", "Pendiente"),
-	("1", "Cobrado"),
-	("2", "Cancelado");
+	("1", "Pagado"),
+	("2", "Vencido"),
+	("3", "Informativa"),
+	("4", "Desestimada");
 
 -- Para crear viajes:
 INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado)
@@ -193,7 +195,7 @@ VALUES (5, 'pruebaReporte1', '3', '1', '2016-06-07 23:00:00', '2016-06-07 22:00:
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
 VALUES (6, 'pruebaReporte2', '6', '1', '2016-06-07 23:10:00', '2016-06-07 22:00:00', NULL, NULL, '3', '6', '2015-12-16', NULL, '40');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (7, 'pruebaReporte3', '1', '1', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '2', '5', '2016-05-16', NULL, '40000');
+VALUES (7, 'pruebaReporte3', '1', '1', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '2', '5', '2016-05-01', NULL, '40000');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
 VALUES (8, 'pruebaReporte4', '3', '1', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '4', '6', '2016-05-01', NULL, '5');
 
@@ -212,13 +214,13 @@ INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo)
 VALUES (13,default,default,null,null,100000);
 
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal)
-VALUES ('5', '3430988', '0', '10','1'), ('5', '3433781', '0', '10','2'), ('5', '3429980', '0', '0','3');
+VALUES ('5', '3430988', '0', '10','1'), ('5', '3433781', '2', '10','2'), ('5', '3429980', '0', '0','3');
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal)
-VALUES ('6', '3430988', '0', '10','1'), ('6', '3433781', '0', '0','2');
+VALUES ('6', '3430988', '0', '10','1'), ('6', '3433781', '2', '0','2');
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal)
-VALUES ('7', '3430987', '0', '10','1'), ('7', '3433780', '0', '10','2'), ('7', '3429979', '0', '0','3');
+VALUES ('7', '3430987', '0', '10','1'), ('7', '3433780', '1', '10','2'), ('7', '3429979', '0', '0','3');
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal)
-VALUES ('8', '3430977', '0', '5','1'), ('8', '3430978', '0', '5','2'), ('8', '3430979', '0', '0','3');
+VALUES ('8', '3430977', '0', '5','1'), ('8', '3430978', '1', '5','2'), ('8', '3430979', '0', '0','3');
 
 
 INSERT INTO comision_cobrada (id_comision_cobrada,monto,estado,id_comision,id_movimiento_saldo,id_pasajero_viaje,fecha)
@@ -228,7 +230,7 @@ VALUES(2,8,'1',3,null,2,'2016-06-08 05:05:26');
 INSERT INTO comision_cobrada (id_comision_cobrada,monto,estado,id_comision,id_movimiento_saldo,id_pasajero_viaje,fecha)
 VALUES(3,6,'1',2,null,3,'2016-06-06 10:05:26');
 INSERT INTO comision_cobrada (id_comision_cobrada,monto,estado,id_comision,id_movimiento_saldo,id_pasajero_viaje,fecha)
-VALUES(4,4,'1',3,null,4,'2016-06-07 13:55:26');
+VALUES(4,4,'1',1,null,4,'2016-06-07 13:55:26');
 INSERT INTO comision_cobrada (id_comision_cobrada,monto,estado,id_comision,id_movimiento_saldo,id_pasajero_viaje,fecha)
 VALUES(5,15,'4',4,null,5,'2016-06-07 17:05:26');
 INSERT INTO comision_cobrada (id_comision_cobrada,monto,estado,id_comision,id_movimiento_saldo,id_pasajero_viaje,fecha)
