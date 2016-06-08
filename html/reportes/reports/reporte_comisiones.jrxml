@@ -20,8 +20,8 @@
 		INNER JOIN COMISION c ON c.id_comision = cc.id_comision
 		INNER JOIN USUARIO u ON v.id_cliente = u.id_usuario
 		INNER JOIN ESTADO_COMISION ec ON ec.id_estado_comision=cc.estado
-	ORDER BY v.id_viaje, cc.id_comision_cobrada) AS reporte
-
+	) AS reporte
+    ORDER BY reporte.Comision, reporte.Viaje
 ;]]>
 	</queryString>
 	<field name="Comision" class="java.lang.Integer">
@@ -66,7 +66,7 @@
 					<textElement textAlignment="Right">
 						<font size="14" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Reporte de Viajes]]></text>
+					<text><![CDATA[Reporte de Comisiones]]></text>
 				</staticText>
 			</frame>
 		</band>
