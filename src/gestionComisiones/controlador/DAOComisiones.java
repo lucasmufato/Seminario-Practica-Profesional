@@ -205,13 +205,14 @@ public class DAOComisiones extends DataAccesObject {
 			return cc;
 	}
 	
+	//by jasmin?
 	public boolean cobrarComision(PasajeroViaje pv){
 		if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-                }
+			this.entitymanager.getTransaction().rollback();
+            }
                 
-                this.entitymanager.getTransaction( ).begin( );
-                ComisionCobrada cc=pv.getComision();
+		this.entitymanager.getTransaction( ).begin( );
+		ComisionCobrada cc=pv.getComision();
 		 //CREO EL MOVIMIENTO SALDO
 		 MovimientoSaldo ms=new MovimientoSaldo();
 		 java.util.Date utilDate = new java.util.Date();
@@ -226,32 +227,32 @@ public class DAOComisiones extends DataAccesObject {
 		 ms.setTipo_mov_saldo(tms);
                  
 		 //BUSCO CONDUCTOR
-		 Viaje v=(Viaje) this.buscarPorPrimaryKey(new Viaje(),pv.getViaje().getId_viaje());
+		 Viaje v=pv.getViaje();
 		 Cliente conductor=v.getConductor();
 		 //LE DESCUENCTO LA COMISION POR ESE PASAJERO Q RECIBIO
 		 float saldo=conductor.getSaldo();
 		 conductor.setSaldo(saldo-cc.getMonto());
                  
-                //le cambio el estado al PV por comision cobrada
-                 pv.getComision().setEstado(EstadoComisionCobrada.pagado);
+		 //le cambio el estado al PV por comision cobrada
+         pv.getComision().setEstado(EstadoComisionCobrada.pagado);
 
-                 try{
-                     this.entitymanager.persist(ms);
-                     this.entitymanager.getTransaction().commit();
-                 }catch(Exception e){
-                    e.printStackTrace();
-                 }
+        try{
+        	this.entitymanager.persist(ms);
+        	this.entitymanager.getTransaction().commit();
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
 		return true;
 	}
 	
 	
 	public boolean sumarSaldo(int id_cliente,float monto){
             
-            if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-            }
+        if(this.entitymanager.getTransaction().isActive()){
+        	this.entitymanager.getTransaction().rollback();
+        }
             
-                this.entitymanager.getTransaction( ).begin( );
+        this.entitymanager.getTransaction( ).begin( );
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente); 
 		// Esto es por las dudas
 		this.refresh(cliente);

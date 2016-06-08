@@ -353,7 +353,6 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
 		}
 		
-		//TODO verificar que el cliente tenga salgo para hacer crear el viaje
 		if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
 		}
@@ -477,13 +476,15 @@ public class DAOViajes extends DataAccesObject {
 		Integer ultimo=lista_localidad_viaje.size();
 		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
 
+		//TODO verificar que el cliente tenga salgo para hacer crear el viaje
 		//calculo saldo necesario (by fede)
 		Double distancia_origen_primerpunto = lista_localidad_viaje.get(0).getKms_a_localidad_siguiente() ;
 		DAOComisiones daocomisiones = new DAOComisiones();
 		ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
 		float saldo_necesario = cc.getMonto();
 		float saldo_cliente = cliente.getSaldo();
-                
+        daocomisiones.cerrarConexiones();		//hay que cerrar el dao
+        daocomisiones=null;
 		if(saldo_necesario>saldo_cliente){
 			throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
 		}
@@ -1265,6 +1266,15 @@ public class DAOViajes extends DataAccesObject {
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
+		//cobro la comision de cada pasajero
+		DAOComisiones daocomisiones = new DAOComisiones();
+		for(PasajeroViaje pv: viaje.getPasajeros()){
+			if(pv.getEstado()!=EstadoPasajeroViaje.rechazado){
+				daocomisiones.cobrarComision(pv);
+			}
+		}
+		daocomisiones.cerrarConexiones();
+		daocomisiones=null;
 		return true;
 	}       
         
