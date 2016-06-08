@@ -1270,8 +1270,8 @@ public class DAOViajes extends DataAccesObject {
 		for(PasajeroViaje pv: viaje.getPasajeros()){
 			if(pv.getEstado()==EstadoPasajeroViaje.postulado){
 				pv.setEstado(EstadoPasajeroViaje.rechazado);
-                                pv.getComision().setEstado(EstadoComisionCobrada.desestimada);
-                                pv.getComision().setfecha(new Timestamp((new java.util.Date()).getTime()));
+                pv.getComision().setEstado(EstadoComisionCobrada.desestimada);
+                pv.getComision().setfecha(new Timestamp((new java.util.Date()).getTime()));
 			}
 		}
 		try{
@@ -1283,7 +1283,7 @@ public class DAOViajes extends DataAccesObject {
 		//cobro la comision de cada pasajero
 		DAOComisiones daocomisiones = new DAOComisiones();
 		for(PasajeroViaje pv: viaje.getPasajeros()){
-			if(pv.getEstado()!=EstadoPasajeroViaje.rechazado){
+			if(pv.getEstado()==EstadoPasajeroViaje.aceptado || pv.getEstado()==EstadoPasajeroViaje.finalizo_viaje){
 				daocomisiones.cobrarComision(pv);
 			}
 		}
@@ -1295,7 +1295,7 @@ public class DAOViajes extends DataAccesObject {
         //by fede
         public boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
             //Verificaciones varias
-            Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+        Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
 		}
@@ -1313,7 +1313,7 @@ public class DAOViajes extends DataAccesObject {
 		if(pasajero.getEstado()==EstadoPasajeroViaje.cancelado){	//no podria rechazar a un cliente que ya acepte
 			throw new ExceptionViajesCompartidos("ERROR: USTED YA CANCELO SU PARTICIPACION EN ESTE VIAJE");
 		}
-                if(pasajero.getEstado()==EstadoPasajeroViaje.rechazado){	//no podria rechazar a un cliente que ya acepte
+		if(pasajero.getEstado()==EstadoPasajeroViaje.rechazado){	//no podria rechazar a un cliente que ya acepte
 			throw new ExceptionViajesCompartidos("ERROR: USTED FUE RECHAZADO POR EL CHOFER");
 		}
                 //Fin verificaciones. Ahora busco el tramo.

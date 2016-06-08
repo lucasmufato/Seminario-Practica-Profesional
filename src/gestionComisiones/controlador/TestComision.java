@@ -1,5 +1,6 @@
 package gestionComisiones.controlador;
 
+import gestionComisiones.modelo.Comision;
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionComisiones.modelo.Pago;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
@@ -32,7 +33,7 @@ public class TestComision extends TestCase{
 	
 		
             
-            @Before
+	@Before
 	public void setUp() throws Exception {
 		//este metodo se ejecuta antes de cada "parte" del test, osea antes de cada metodo
 		//sirve para inicializar variables asi todos los test arrancan en el mismo entorno 
@@ -48,9 +49,100 @@ public class TestComision extends TestCase{
 		this.daoviajes.vaciarTabla("Viaje");
 		this.daoviajes.vaciarTabla("Maneja");
 		this.daoviajes.vaciarTabla("Vehiculo");
-        }
-        
-  @Test
+    }
+	
+		@Test
+		public void test1NuevaComision() {
+			
+			JSONObject datos_comision = new JSONObject();
+			datos_comision.put("limite_inferior", 10000);
+			datos_comision.put("limite_superior", 20000);
+			datos_comision.put("precio", 200);
+			try {
+				this.daocomisiones.nuevaComision(datos_comision);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+			List<Comision> lista=this.daocomisiones.getComisionesVigentes();
+			//busco la q acabo de agregar
+			boolean encontrado=false;
+			for(Comision c: lista){
+				if(c.getLimite_inferior()==10000 && c.getLimite_superior()==20000 && c.getPrecio()==200){
+					encontrado=true;
+				}
+			}
+			assertTrue(encontrado);
+		}
+		
+		@Test
+		public void test2ModificarComision() {
+			this.test1NuevaComision();
+			List<Comision> lista=this.daocomisiones.getComisionesVigentes();
+			Integer index=null;
+			//busco la q acabo de agregar
+			for(Comision c: lista){
+				if(c.getLimite_inferior()==10000 && c.getLimite_superior()==20000 && c.getPrecio()==200){
+					index=c.getId();
+				}
+			}
+			if(index==null){
+				fail("no se encontro la comision a modificar");
+			}
+			
+			JSONObject datos_comision = new JSONObject();
+			datos_comision.put("comision", index);
+			datos_comision.put("limite_inferior", 15000);
+			datos_comision.put("limite_superior", 25000);
+			datos_comision.put("precio", 250);
+			try {
+				this.daocomisiones.modificarComision(datos_comision);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+			Comision comision = (Comision) this.daocomisiones.buscarPorPrimaryKey(new Comision(), index);
+			if(comision==null){
+				fail("no se encontro la comision modificada");
+			}
+			assertEquals((Integer)15000,comision.getLimite_inferior());
+			assertEquals((Integer)25000,comision.getLimite_superior());
+			//assertEquals(250.0,comision.getPrecio());
+			try {
+				this.daocomisiones.deletePorPrimaryKey(new Comision(), index);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+		}
+		
+		@Test
+		public void test3FinalizarComision() {
+			List<Comision> lista=this.daocomisiones.getComisionesVigentes();
+			Integer index=null;
+			//busco la q acabo de agregar
+			for(Comision c: lista){
+				if(c.getLimite_inferior()==10000 && c.getLimite_superior()==20000 && c.getPrecio()==200){
+					index=c.getId();
+				}
+			}
+			if(index==null){
+				fail("no se encontro la comision a modificar");
+			}
+			
+			try {
+				this.daocomisiones.FinalizarComision(index);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+			
+			Comision comision=(Comision)this.daocomisiones.buscarPorPrimaryKey(new Comision(), index);
+			assertNotNull(comision.getFecha_fin());
+			try {
+				this.daocomisiones.deletePorPrimaryKey(new Comision(), index);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
+		}
+	
+        @Test
 		public void testCobrarComisionCorrecto() throws ExceptionViajesCompartidos{
 			//datos del vehiculo y cliente, para crear el vehiculo
 			JSONObject json= crearVehiculo();

@@ -14,7 +14,6 @@ import gestionComisiones.modelo.ComisionCobrada;
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionComisiones.modelo.MovimientoSaldo;
 import gestionComisiones.modelo.Pago;
-import gestionComisiones.modelo.PrecioComision;
 import gestionComisiones.modelo.TipoMovSaldo;
 import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.PasajeroViaje;
@@ -54,7 +53,12 @@ public class DAOComisiones extends DataAccesObject {
 		if(limite_superior<=0 || limite_inferior<0){
 			throw new ExceptionViajesCompartidos("ERROR: LOS LIMITES NO PUEDEN SER MENORES QUE CERO");
 		}
-		Float precio = (Float) datos.get("precio");
+		Float precio=null;
+		try{
+			precio = (Float) datos.get("precio");
+		}catch(Exception e){
+			precio = ((Integer) datos.get("precio")).floatValue();
+		}
 		if(precio==null){
 			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DATO PRECIO");
 		}
@@ -152,7 +156,12 @@ public class DAOComisiones extends DataAccesObject {
 		if(limite_superior<=0 || limite_inferior<0){
 			throw new ExceptionViajesCompartidos("ERROR: LOS LIMITES NO PUEDEN SER MENORES QUE CERO");
 		}
-		Float precio = (Float) datos.get("precio");
+		Float precio=null;
+		try{
+			precio = (Float) datos.get("precio");
+		}catch(Exception e){
+			precio = ((Integer) datos.get("precio")).floatValue();
+		}
 		if(precio==null){
 			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DATO PRECIO");
 		}
@@ -209,7 +218,7 @@ public class DAOComisiones extends DataAccesObject {
 	public boolean cobrarComision(PasajeroViaje pv) throws ExceptionViajesCompartidos{
 		if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
-            }
+        }
                 
 		this.entitymanager.getTransaction( ).begin( );
 		ComisionCobrada cc=pv.getComision();
