@@ -1,9 +1,13 @@
 package gestionComisiones.controlador;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
+
+import org.json.simple.JSONObject;
 
 import gestionComisiones.modelo.Comision;
 import gestionComisiones.modelo.ComisionCobrada;
@@ -23,6 +27,164 @@ public class DAOComisiones extends DataAccesObject {
 
 	public DAOComisiones() {
 		super();
+	}
+	
+	//by mufa
+	public boolean nuevaComision(JSONObject datos) throws ExceptionViajesCompartidos{
+		/*
+		 * datos que recibo:
+		 * {
+		 * limite inferior: integer,
+		 * limite superior: integer,
+		 * precio: float
+		 * }
+		 */
+		
+		Integer limite_inferior = (Integer) datos.get("limite_inferior");
+		if(limite_inferior==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL LIMITE INFERIOR");
+		}
+		Integer limite_superior = (Integer) datos.get("limite_superior");
+		if(limite_superior==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL LIMITE SUPERIOR");
+		}
+		if(limite_superior<limite_inferior){
+			throw new ExceptionViajesCompartidos("ERROR: EL LIMITE SUPERIOR NO PUEDE SER MENOR QUE EL LIMITE INFERIOR");
+		}
+		if(limite_superior<=0 || limite_inferior<0){
+			throw new ExceptionViajesCompartidos("ERROR: LOS LIMITES NO PUEDEN SER MENORES QUE CERO");
+		}
+		Float precio = (Float) datos.get("precio");
+		if(precio==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DATO PRECIO");
+		}
+		if(precio<=0){
+			throw new ExceptionViajesCompartidos("ERROR: EL PRECIO NO PUEDE SER NEGATIVO");
+		}
+		
+		if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+		this.entitymanager.getTransaction().begin();
+		
+		Comision comision = new Comision();
+		comision.setLimite_inferior(limite_inferior);
+		comision.setLimite_superior(limite_superior);
+		comision.setPrecio(precio);
+		comision.setFecha_inicio( new Date((new java.util.Date()).getTime()) );
+		comision.setFecha_fin(null);
+		
+		try{
+			this.entitymanager.persist(comision);
+    		this.entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		return true;
+	}
+	
+	//by mufa
+	public boolean FinalizarComision(Integer id_comision) throws ExceptionViajesCompartidos{
+		Comision comision = (Comision) this.buscarPorPrimaryKey(new Comision(), id_comision);
+		if(comision==null){
+			throw new ExceptionViajesCompartidos("ERROR: LA COMISION NO EXISTE");
+		}
+		
+		if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+		this.entitymanager.getTransaction().begin();
+		
+		comision.setFecha_fin( new Date((new java.util.Date()).getTime()) );
+		
+		try{
+    		this.entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		return true;
+	}
+	
+	//by mufa
+	@SuppressWarnings("unchecked")
+	public List<Comision> getComisionesVigentes(){
+		Query qry = entitymanager.createNamedQuery("Comision.vigentes");
+		return qry.getResultList();
+	}
+	
+	//by mufa
+	@SuppressWarnings("unchecked")
+	public List<Comision> getComisionesNOVigentes(){
+		Query qry = entitymanager.createNamedQuery("Comision.NOvigentes");
+		return qry.getResultList();
+	}
+	
+	//by mufa
+	@SuppressWarnings("unchecked")
+	public List<Comision> getTodasLasComisiones(){
+		return this.selectAll("Comision");
+	}
+	
+	public boolean modificarComision(JSONObject datos) throws ExceptionViajesCompartidos{
+		/*
+		 * datos que recibo:
+		 * {
+		 * comision: id_comision,
+		 * limite inferior: integer,
+		 * limite superior: integer,
+		 * precio: float
+		 * }
+		 */
+		
+		Integer limite_inferior = (Integer) datos.get("limite_inferior");
+		if(limite_inferior==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL LIMITE INFERIOR");
+		}
+		Integer limite_superior = (Integer) datos.get("limite_superior");
+		if(limite_superior==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL LIMITE SUPERIOR");
+		}
+		if(limite_superior<limite_inferior){
+			throw new ExceptionViajesCompartidos("ERROR: EL LIMITE SUPERIOR NO PUEDE SER MENOR QUE EL LIMITE INFERIOR");
+		}
+		if(limite_superior<=0 || limite_inferior<0){
+			throw new ExceptionViajesCompartidos("ERROR: LOS LIMITES NO PUEDEN SER MENORES QUE CERO");
+		}
+		Float precio = (Float) datos.get("precio");
+		if(precio==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA EL DATO PRECIO");
+		}
+		if(precio<=0){
+			throw new ExceptionViajesCompartidos("ERROR: EL PRECIO NO PUEDE SER NEGATIVO");
+		}
+		Integer id_comision = (Integer) datos.get("comision");
+		if(id_comision==null){
+			throw new ExceptionViajesCompartidos("ERROR: FALTA LA COMISION A MODIFICAR");
+		}
+		Comision comision=(Comision) this.buscarPorPrimaryKey(new Comision(), id_comision);
+		if(comision==null){
+			throw new ExceptionViajesCompartidos("ERROR: LA COMISION NO EXISTE EN EL SISTEMA");
+		}
+		
+		if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+		this.entitymanager.getTransaction().begin();
+		
+		comision.setLimite_inferior(limite_inferior);
+		comision.setLimite_superior(limite_superior);
+		comision.setPrecio(precio);		
+		
+		try{
+    		this.entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+		
+		return true;
 	}
 	
 	//retocado por mufa

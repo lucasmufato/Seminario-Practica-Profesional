@@ -63,13 +63,6 @@ public class DAOViajes extends DataAccesObject {
     	 * { "CONDUCTOR": ID_USUARIO,
     	 * "VEHICULO":{FOTO,MARCA,MODELO, PATENTE,ANIO,AIRE_ACOND,SEGURO,foto,seguro, aire, asientos}
     	 * }
-    	 * pasos a seguir:
-    	 * recupero el cliente, si no existe tiro error
-    	 * verifico si existe el auto (verifico por patente que es unique)
-    	 * 			si existe, segun los casos de uso no pasa nada :P jjajajaja, asi q tiro error y listo, 
-    	 * 						hay un caso de uso que dice "mantener conductores asociados", asi q ese tema se resuelve en otro metodo
-    	 * 		no existe el auto, lo creo
-    	 * 		creo la relacion Maneja
     	 */
     	
     	Integer id_cliente=(Integer) datos.get("conductor");
