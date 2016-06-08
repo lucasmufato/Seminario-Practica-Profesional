@@ -95,6 +95,11 @@ INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
 	("0", "No iniciado"),
 	("1", "Iniciado"),
 	("3", "Cancelado");
+	
+INSERT INTO ESTADO_COMISION(id_estado_comision, nombre_estado) VALUES
+	("0", "Pendiente"),
+	("1", "Cobrado"),
+	("2", "Cancelado");
 
 -- Para crear viajes:
 INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado)

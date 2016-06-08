@@ -228,6 +228,13 @@ CREATE TABLE COMISION_COBRADA (
 	PRIMARY KEY (id_comision_cobrada)
 );
 
+CREATE TABLE ESTADO_COMISION(
+	id_estado_comision CHAR(1) NOT NULL,
+	nombre_estado VARCHAR(30) NOT NULL,
+	
+	PRIMARY KEY (id_estado_comision)
+);
+
 CREATE TABLE PASAJERO_VIAJE (
 	id_pasajero_viaje INTEGER AUTO_INCREMENT,
 	id_viaje INTEGER NOT NULL,
