@@ -48,7 +48,11 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     
     //metodod que comprueba que el dado nombre de usuario y su password existan y sean el correcto.
     public boolean isUsuarioPass(String user, String pass) {
-    	try{
+    	if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
+        try{
     		Query q = this.entitymanager.createNamedQuery("Usuario.porNombrePass");
     		q.setParameter("nombre", user);
     		q.setParameter("pass", pass);
@@ -69,6 +73,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     
     //metodo que verficia que un usuario este activo
     public boolean isUsuarioActivo(String nombreUsuario){
+        if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
     	Usuario u = this.buscarUsuarioPorNombre(nombreUsuario);
     	if (u!=null){
     		return u.getEstado().toString().equals("A");
@@ -80,8 +88,12 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     // 	rol1, rol2, rol3..
     @SuppressWarnings("unchecked")
 	public JSONArray NombreRolUsuario(String nombre_usuario) {
-    	JSONArray jarray= new JSONArray();
-    	Usuario lu= this.buscarUsuarioPorNombre(nombre_usuario);
+            if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+            JSONArray jarray= new JSONArray();
+            Usuario lu= this.buscarUsuarioPorNombre(nombre_usuario);
 		List<UsuarioRol>roles=lu.getRoles();
 		for(UsuarioRol ur: roles){
 			//ur.getRol().toJSON();
@@ -92,6 +104,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	}
     
     public boolean usuarioHasRol(String nombreUsuario, String nombreRol){
+        if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
     	Usuario lu= this.buscarUsuarioPorNombre(nombreUsuario);
 		List<UsuarioRol>roles=lu.getRoles();
 		for(UsuarioRol ur: roles){
@@ -103,6 +119,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     }
 
 	public Usuario buscarUsuarioPorNombre(String nombre_usuario) {
+            if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
     	try{
     		Query qry = entitymanager.createNamedQuery("Usuario.porNombreExacto");
     		qry.setParameter("nombre", nombre_usuario);
@@ -114,6 +134,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	}
 
 	public boolean desasignarPermisoARol(int id_permiso, int id_rol) {
+            if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
     	try{
 			 this.deletePorPrimaryKey(new PermisoRol(), new PermisoRolID(id_permiso, id_rol));
     	}catch(Exception e){
@@ -124,6 +148,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	}
     
 	public boolean desasignarRolAUsuario(int id_rol, int id_usuario) {
+            if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
 		try{
 			this.deletePorPrimaryKey(new UsuarioRol(), new UsuarioRolID(id_usuario, id_rol));
 		}catch(Exception e){
@@ -133,8 +161,12 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		return true;
 	}
     
-    public boolean asignarPermisoARol(Integer id_rol,Integer id_permiso){
-	    try{
+    public boolean asignarPermisoARol(Integer id_rol,Integer id_permiso) throws ExceptionViajesCompartidos{
+        if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		
+	   // try{
 		    //busco el rol y el permiso
 		   Rol r =(Rol) this.buscarPorPrimaryKey(new Rol(), id_rol);
 		   Permiso p= (Permiso) this.buscarPorPrimaryKey(new Permiso(), id_permiso);
@@ -150,16 +182,24 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		    entitymanager.getTransaction( ).begin( );
 		    r.AsignarPermiso(p);
 		    //guardo la nueva info
-		    entitymanager.getTransaction( ).commit( );	
-	    }catch(Exception e){
-    		e.printStackTrace();
-    		return false;
-    	}
+                    try{
+                        entitymanager.getTransaction( ).commit( );
+                    }catch(RollbackException e){
+                        String error= ManejadorErrores.parsearRollback(e);
+                        throw new ExceptionViajesCompartidos("ERROR: "+error);
+                    }     
+	//    }catch(Exception e){
+    	//	e.printStackTrace();
+    	//	return false;
+    	//}
 	    return true;
 	}
     
-    public boolean asignarRolAUsuario(Integer id_rol,Integer id_usuario){
-    	try{
+    public boolean asignarRolAUsuario(Integer id_rol,Integer id_usuario) throws ExceptionViajesCompartidos{
+    	if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+	}
+       // try{
 	    	//busca el usuario y el rol
 		    Rol r =(Rol) this.buscarPorPrimaryKey(new Rol(), id_rol);
 		   // Usuario u= (Usuario) this.buscarPorPrimaryKey(new Usuario(), id_usuario);
@@ -177,19 +217,28 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		    //el usuario le asigna el rol
 	    	u.asignarRol(r);
 	    	//guardo la nueva info
-	       	entitymanager.getTransaction( ).commit( );
-    	}catch(Exception e){
-    		e.printStackTrace();
-    		return false;
-    	}
+	       	try{
+                    entitymanager.getTransaction( ).commit( );
+                }catch(RollbackException e){
+                    String error= ManejadorErrores.parsearRollback(e);
+                    throw new ExceptionViajesCompartidos("ERROR: "+error);
+                }     
+    //	}catch(Exception e){
+    //		e.printStackTrace();
+    //		return false;
+    //	}
     	return true;
     }
     
     //el metodo devuelve true aunque el estado ya estubiera dado de baja
     @SuppressWarnings("unchecked")
-	public boolean darDeBaja(Integer id,String clase) {
+	public boolean darDeBaja(Integer id,String clase) throws ExceptionViajesCompartidos {
+            
+            if(this.entitymanager.getTransaction().isActive()){
+                this.entitymanager.getTransaction().rollback();
+            }
 		entitymanager.getTransaction( ).begin( );
-		try{
+		//try{
 			//busco la clase a dar de baja usando la namedquery que tendria q tener
 		    Query q2 = entitymanager.createNamedQuery(clase+".SearchById");
 		    //la busco por su ID
@@ -204,26 +253,39 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		    //y ahora al original le pongo el json cambiado, lo unico distinto que tiene es q ahora tiene un estado dado de baja
 		    original.SetJSONObject(j);
 		    //hago el commit del cambio
-		    entitymanager.getTransaction( ).commit( );
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
+                    try{
+                        entitymanager.getTransaction( ).commit( );
+                    }catch(RollbackException e){
+                        String error= ManejadorErrores.parsearRollback(e);
+                        throw new ExceptionViajesCompartidos("ERROR: "+error);
+                    }     
+
+		//}catch(Exception e){
+		//	e.printStackTrace();
+		//	return false;
+		//}
 		return true;
 	}
     
     //la persona ya debe estar persistida, sino explota
-    public boolean persistirUsuarioConPersona(Usuario u, Integer id_persona){
-    	try{
+    public boolean persistirUsuarioConPersona(Usuario u, Integer id_persona) throws ExceptionViajesCompartidos{
+    	if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+        //try{
     		entitymanager.getTransaction( ).begin( );
     		Persona p=(Persona) this.buscarPorPrimaryKey(new Persona(), id_persona);	//obtengo la persona	
-    		u.setPersona(p);															//se la asigno al usuario
-			entitymanager.persist(u);													//guardo el usuario
-			entitymanager.getTransaction( ).commit( );	
-    		
-    	}catch(Exception e){
-    		return false;
-    	}
+    		u.setPersona(p);//se la asigno al usuario
+                entitymanager.persist(u);	//guardo el usuario
+                try{
+                    entitymanager.getTransaction( ).commit( );	
+                }catch(RollbackException e){
+                        String error= ManejadorErrores.parsearRollback(e);
+                        throw new ExceptionViajesCompartidos("ERROR: "+error);
+                }
+    	//}catch(Exception e){
+    	//	return false;
+    	//}
     	return true;
     }
     
@@ -252,7 +314,12 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	//-------------------------------------------Registro Clientes-------------------------------------------------------------------------
 	
     public Boolean nuevoCliente(JSONObject persona,JSONObject cliente) throws ExceptionViajesCompartidos {
-    	//creo los objectos a partir de los JSON recibidos
+    	if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+
+
+        //creo los objectos a partir de los JSON recibidos
     	Persona p= new Persona(persona);
     	Cliente c= new Cliente(cliente);
     	/*
@@ -295,19 +362,23 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
 		 qry.setParameter("nombre", "cliente");
 		 Rol r= (Rol) qry.getSingleResult();
-		 c.asignarRol(r);
-        try{
-            this.entitymanager.getTransaction().commit();
-            return true;
-        
-        }catch(RollbackException e){
-            String error= ManejadorErrores.parsearRollback(e);
-            throw new ExceptionViajesCompartidos("ERROR: "+error);
-        }
+                    c.asignarRol(r);
+           try{
+               this.entitymanager.getTransaction().commit();
+               return true;
+
+           }catch(RollbackException e){
+               String error= ManejadorErrores.parsearRollback(e);
+               throw new ExceptionViajesCompartidos("ERROR: "+error);
+           }
 	}
     
 	public boolean subirFotoRegistro(JSONObject foto) throws ExceptionViajesCompartidos {
-		Cliente c = this.clientePorNombre(foto.get("usuario").toString());
+		if(this.entitymanager.getTransaction().isActive()){
+                    this.entitymanager.getTransaction().rollback();
+                }
+            
+                Cliente c = this.clientePorNombre(foto.get("usuario").toString());
 		if (c!=null){
 			if(this.entitymanager.getTransaction().isActive()){
 				this.entitymanager.getTransaction().rollback();
@@ -350,7 +421,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	}	
 	
 	public Cliente clientePorNombre(String nombre){
-    	try{
+            if(this.entitymanager.getTransaction().isActive()){
+                this.entitymanager.getTransaction().rollback();
+            }
+            try{
     		Query qry = entitymanager.createNamedQuery("Cliente.buscarPorClaveCandidata");
     		qry.setParameter("clave_candidata", nombre);
     		return (Cliente) qry.getSingleResult();
@@ -361,6 +435,9 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	}
 	
     public boolean mailExiste(String mail){
+        if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
     	try{
     		Query qry = entitymanager.createNamedQuery("Usuario.porEmail");
     		qry.setParameter("email", mail);
@@ -372,7 +449,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     }
     
     public boolean documentoExiste(Integer tipo, BigInteger numero){
-    	try{
+    	if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+        try{
     		Query qry = entitymanager.createNamedQuery("Persona.porNroYTipoDeDocumento");
     		qry.setParameter("nro_doc", numero);
     		qry.setParameter("tipo_doc", tipo);
@@ -388,7 +468,10 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 	//-------------------------------------------PERFIL-------------------------------------------------------------------------------
 
     public boolean desactivarPerfil(String nombreUsuario) throws ExceptionViajesCompartidos{
-		Usuario u = this.buscarUsuarioPorNombre(nombreUsuario);
+		if(this.entitymanager.getTransaction().isActive()){
+                    this.entitymanager.getTransaction().rollback();
+                }
+                Usuario u = this.buscarUsuarioPorNombre(nombreUsuario);
 		if (u == null){
 			throw new ExceptionViajesCompartidos("El usuario ha desactivar no se encuentra registrado en el sistema");
 		}
@@ -413,7 +496,11 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
     }
     
     public boolean modificarPerfil(JSONObject perfil) throws ExceptionViajesCompartidos{
-    	String nombre_usuario = perfil.get("nombre_usuario").toString();
+    	if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+        
+        String nombre_usuario = perfil.get("nombre_usuario").toString();
     	if (nombre_usuario == null || nombre_usuario.isEmpty()){
     		throw new ExceptionViajesCompartidos("El nombre de usuario no es un valor válido");
     	}
@@ -511,10 +598,12 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
         //--------------------- SPONSORS ------------
     
     //by fede
-    public Boolean nuevoSponsor(JSONObject json) {
+    public Boolean nuevoSponsor(JSONObject json) throws ExceptionViajesCompartidos {
     	//creo los objectos a partir de los JSON recibidos
-    	
-    	try{            
+    	if(this.entitymanager.getTransaction().isActive()){
+            this.entitymanager.getTransaction().rollback();
+        }
+    	//try{            
                         JSONObject json_persona = (JSONObject) json.get("persona");
                         JSONObject json_sponsor= (JSONObject) json.get("sponsor");
             
@@ -533,18 +622,22 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
                          //qry.setParameter("nombre", "sponsor");
 			 //Rol r= (Rol) qry.getSingleResult();
 			 //sp.asignarRol(r);
-			 entitymanager.getTransaction( ).commit( );	
-			 
+			 try{
+                            entitymanager.getTransaction( ).commit( );	
+			 }catch(RollbackException e){
+                                String error= ManejadorErrores.parsearRollback(e);
+                                throw new ExceptionViajesCompartidos("ERROR: "+error);
+                        }
 			 //System.out.println("id persona despues de commit: "+p.getId_persona());
 			 //System.out.println("id cliente despues de commit: "+sp.getId_usuario());
 			 //Rol rol_recien_asignado= sp.getRoles().get(0).getRol();
 			 //System.out.println("nombre del rol recien asignado: "+rol_recien_asignado.getNombre_rol());
 			 
 			 return true;
-		}catch(Exception e){
+		//}catch(Exception e){
 
-			e.printStackTrace();
-			return false;
-		}    	
+		//	e.printStackTrace();
+		//	return false;
+		//}    	
 	}
 }
