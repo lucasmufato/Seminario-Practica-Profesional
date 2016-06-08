@@ -869,8 +869,9 @@ public class DAOViajes extends DataAccesObject {
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		this.entitymanager.getTransaction().begin();
 		actualizado = viaje.actualizarEstado();
+		EstadoViaje estadoActual = viaje.getEstado();
 		
-		if (actualizado) {
+		if (actualizado && estadoActual == EstadoViaje.iniciado) {
 			// Notificar al conductor 
                         System.out.println(viaje.getNombre_amigable());
                         String nombre_destino = viaje.getDestino().getNombre();
@@ -895,6 +896,14 @@ public class DAOViajes extends DataAccesObject {
 				}
 			}
 	
+		} else if (actualizado && estadoActual == EstadoViaje.finalizado) {
+			Notificacion notificacion = new Notificacion();
+			notificacion.setCliente(viaje.getConductor());
+			notificacion.setEstado(EstadoNotificacion.no_leido);
+			notificacion.setFecha(viaje.getFecha_inicio()); 
+			notificacion.setTexto ("Su viaje <<" + viaje.getNombre_amigable() + ">> con destino a " + viaje.getDestino().getNombre()+" se ha marcado como finalizado.");
+			notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
+			this.entitymanager.persist(notificacion);		
 		}
 		
 		this.entitymanager.getTransaction().commit();

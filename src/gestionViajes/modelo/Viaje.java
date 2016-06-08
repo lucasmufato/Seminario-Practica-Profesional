@@ -421,7 +421,14 @@ public class Viaje implements JSONable {
 		) {
 			this.setEstado(EstadoViaje.iniciado);
 			return true;
-		}
+		} else if (
+			(this.estado == EstadoViaje.iniciado) 
+			&& (this.fecha_finalizacion == null)
+			&& (this.getFecha_autofinalizar().compareTo(now) <= 0)
+		) {
+			this.setEstado(EstadoViaje.finalizado);
+			return true;
+		} 
 		return false;
 	}
 	
