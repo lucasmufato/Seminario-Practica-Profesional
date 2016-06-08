@@ -291,7 +291,7 @@ public class DAOViajes extends DataAccesObject {
 			
 			try{
 	    		this.entitymanager.getTransaction( ).commit( );	
-	    		this.planifEstadoViaje.nuevaTarea (new TareaEstadoViaje (this, viaje));
+	    		this.planifEstadoViaje.nuevaTarea (new TareaIniciarViaje (this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -313,7 +313,7 @@ public class DAOViajes extends DataAccesObject {
 
 		try{
 		this.entitymanager.getTransaction( ).commit( );
-		this.planifEstadoViaje.nuevaTarea (new TareaEstadoViaje (this, viaje));
+		this.planifEstadoViaje.nuevaTarea (new TareaIniciarViaje (this, viaje));
 		this.notificarSeguidores(viaje.getId_viaje(), "modificado");
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
@@ -497,7 +497,7 @@ public class DAOViajes extends DataAccesObject {
 			try{	//SI EL VIAJE TIENE VUELTA, GUARDO EL PRIMER VIAJE EN LA BD
 				this.entitymanager.persist(viaje);
 	    		entitymanager.getTransaction( ).commit( );	
-				this.planifEstadoViaje.nuevaTarea(new TareaEstadoViaje(this, viaje));
+				this.planifEstadoViaje.nuevaTarea(new TareaIniciarViaje(this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -509,7 +509,7 @@ public class DAOViajes extends DataAccesObject {
 			viaje_vuelta.setAsientos_disponibles(cantidad_asientos_vuelta);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
-				this.planifEstadoViaje.nuevaTarea(new TareaEstadoViaje(this,viaje_vuelta));
+				this.planifEstadoViaje.nuevaTarea(new TareaIniciarViaje(this,viaje_vuelta));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -519,7 +519,7 @@ public class DAOViajes extends DataAccesObject {
 			this.entitymanager.persist(viaje);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
-				this.planifEstadoViaje.nuevaTarea(new TareaEstadoViaje(this, viaje));
+				this.planifEstadoViaje.nuevaTarea(new TareaIniciarViaje(this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);

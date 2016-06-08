@@ -20,7 +20,7 @@ class PlanificadorEstadoViaje extends Planificador {
 		ArrayList<TareaProgramable> tareas = new ArrayList<TareaProgramable>();
 
 		for (Viaje viaje: dao.listarViajesNoIniciadosAtrasados()) {
-			tareas.add(new TareaEstadoViaje (this.dao, viaje));
+			tareas.add(new TareaIniciarViaje (this.dao, viaje));
 		}
 
 		if (tareas.size() > 0) {
@@ -37,8 +37,7 @@ class PlanificadorEstadoViaje extends Planificador {
 		TareaProgramable tarea;
 
 		for (Viaje viaje: dao.listarViajesProximosAIniciar(milisecs)) {
-			tarea = new TareaEstadoViaje(this.dao, viaje);
-			tarea.setTiempo(viaje.getFecha_inicio());
+			tarea = new TareaIniciarViaje(this.dao, viaje);
 			tareas.add (tarea);
 		}
 

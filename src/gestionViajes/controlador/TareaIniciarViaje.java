@@ -6,13 +6,14 @@ import gestionViajes.controlador.DAOViajes;
 
 import java.util.TimerTask;
 
-class TareaEstadoViaje extends TareaProgramable {
+class TareaIniciarViaje extends TareaProgramable {
 	private Viaje viaje;
 	private DAOViajes dao;
 
-	public TareaEstadoViaje (DAOViajes dao, Viaje viaje) {
+	public TareaIniciarViaje (DAOViajes dao, Viaje viaje) {
 		this.viaje = viaje;
 		this.dao = dao;
+		this.setTiempo(viaje.getFecha_inicio());
 	}
 	
 	@Override
