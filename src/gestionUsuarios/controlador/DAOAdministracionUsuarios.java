@@ -161,12 +161,12 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		return true;
 	}
     
-    public boolean asignarPermisoARol(Integer id_rol,Integer id_permiso){
+    public boolean asignarPermisoARol(Integer id_rol,Integer id_permiso) throws ExceptionViajesCompartidos{
         if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
 		}
 		
-	    try{
+	   // try{
 		    //busco el rol y el permiso
 		   Rol r =(Rol) this.buscarPorPrimaryKey(new Rol(), id_rol);
 		   Permiso p= (Permiso) this.buscarPorPrimaryKey(new Permiso(), id_permiso);
@@ -188,18 +188,18 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
                         String error= ManejadorErrores.parsearRollback(e);
                         throw new ExceptionViajesCompartidos("ERROR: "+error);
                     }     
-	    }catch(Exception e){
-    		e.printStackTrace();
-    		return false;
-    	}
+	//    }catch(Exception e){
+    	//	e.printStackTrace();
+    	//	return false;
+    	//}
 	    return true;
 	}
     
-    public boolean asignarRolAUsuario(Integer id_rol,Integer id_usuario){
+    public boolean asignarRolAUsuario(Integer id_rol,Integer id_usuario) throws ExceptionViajesCompartidos{
     	if(this.entitymanager.getTransaction().isActive()){
             this.entitymanager.getTransaction().rollback();
 	}
-        try{
+       // try{
 	    	//busca el usuario y el rol
 		    Rol r =(Rol) this.buscarPorPrimaryKey(new Rol(), id_rol);
 		   // Usuario u= (Usuario) this.buscarPorPrimaryKey(new Usuario(), id_usuario);
@@ -223,22 +223,22 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);
                 }     
-    	}catch(Exception e){
-    		e.printStackTrace();
-    		return false;
-    	}
+    //	}catch(Exception e){
+    //		e.printStackTrace();
+    //		return false;
+    //	}
     	return true;
     }
     
     //el metodo devuelve true aunque el estado ya estubiera dado de baja
     @SuppressWarnings("unchecked")
-	public boolean darDeBaja(Integer id,String clase) {
+	public boolean darDeBaja(Integer id,String clase) throws ExceptionViajesCompartidos {
             
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
 		entitymanager.getTransaction( ).begin( );
-		try{
+		//try{
 			//busco la clase a dar de baja usando la namedquery que tendria q tener
 		    Query q2 = entitymanager.createNamedQuery(clase+".SearchById");
 		    //la busco por su ID
@@ -260,19 +260,19 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
                         throw new ExceptionViajesCompartidos("ERROR: "+error);
                     }     
 
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
+		//}catch(Exception e){
+		//	e.printStackTrace();
+		//	return false;
+		//}
 		return true;
 	}
     
     //la persona ya debe estar persistida, sino explota
-    public boolean persistirUsuarioConPersona(Usuario u, Integer id_persona){
+    public boolean persistirUsuarioConPersona(Usuario u, Integer id_persona) throws ExceptionViajesCompartidos{
     	if(this.entitymanager.getTransaction().isActive()){
             this.entitymanager.getTransaction().rollback();
         }
-        try{
+        //try{
     		entitymanager.getTransaction( ).begin( );
     		Persona p=(Persona) this.buscarPorPrimaryKey(new Persona(), id_persona);	//obtengo la persona	
     		u.setPersona(p);//se la asigno al usuario
@@ -283,9 +283,9 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
                         String error= ManejadorErrores.parsearRollback(e);
                         throw new ExceptionViajesCompartidos("ERROR: "+error);
                 }
-    	}catch(Exception e){
-    		return false;
-    	}
+    	//}catch(Exception e){
+    	//	return false;
+    	//}
     	return true;
     }
     
@@ -362,15 +362,15 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
 		 Query qry = entitymanager.createNamedQuery("Rol.porNombre");
 		 qry.setParameter("nombre", "cliente");
 		 Rol r= (Rol) qry.getSingleResult();
-		 c.asignarRol(r);
-        try{
-            this.entitymanager.getTransaction().commit();
-            return true;
-        
-        }catch(RollbackException e){
-            String error= ManejadorErrores.parsearRollback(e);
-            throw new ExceptionViajesCompartidos("ERROR: "+error);
-        }
+                    c.asignarRol(r);
+           try{
+               this.entitymanager.getTransaction().commit();
+               return true;
+
+           }catch(RollbackException e){
+               String error= ManejadorErrores.parsearRollback(e);
+               throw new ExceptionViajesCompartidos("ERROR: "+error);
+           }
 	}
     
 	public boolean subirFotoRegistro(JSONObject foto) throws ExceptionViajesCompartidos {
@@ -598,12 +598,12 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
         //--------------------- SPONSORS ------------
     
     //by fede
-    public Boolean nuevoSponsor(JSONObject json) {
+    public Boolean nuevoSponsor(JSONObject json) throws ExceptionViajesCompartidos {
     	//creo los objectos a partir de los JSON recibidos
     	if(this.entitymanager.getTransaction().isActive()){
             this.entitymanager.getTransaction().rollback();
         }
-    	try{            
+    	//try{            
                         JSONObject json_persona = (JSONObject) json.get("persona");
                         JSONObject json_sponsor= (JSONObject) json.get("sponsor");
             
@@ -622,18 +622,22 @@ public class DAOAdministracionUsuarios extends DataAccesObject {
                          //qry.setParameter("nombre", "sponsor");
 			 //Rol r= (Rol) qry.getSingleResult();
 			 //sp.asignarRol(r);
-			 entitymanager.getTransaction( ).commit( );	
-			 
+			 try{
+                            entitymanager.getTransaction( ).commit( );	
+			 }catch(RollbackException e){
+                                String error= ManejadorErrores.parsearRollback(e);
+                                throw new ExceptionViajesCompartidos("ERROR: "+error);
+                        }
 			 //System.out.println("id persona despues de commit: "+p.getId_persona());
 			 //System.out.println("id cliente despues de commit: "+sp.getId_usuario());
 			 //Rol rol_recien_asignado= sp.getRoles().get(0).getRol();
 			 //System.out.println("nombre del rol recien asignado: "+rol_recien_asignado.getNombre_rol());
 			 
 			 return true;
-		}catch(Exception e){
+		//}catch(Exception e){
 
-			e.printStackTrace();
-			return false;
-		}    	
+		//	e.printStackTrace();
+		//	return false;
+		//}    	
 	}
 }
