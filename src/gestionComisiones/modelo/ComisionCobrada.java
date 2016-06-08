@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.json.simple.JSONObject;
 
 import gestionViajes.modelo.PasajeroViaje;
+import java.sql.Timestamp;
 import otros.JSONable;
 
 @NamedQueries({
@@ -34,7 +35,8 @@ public class ComisionCobrada implements JSONable {
 	protected float monto;
 	@Column(name="ESTADO",nullable=false)
 	protected EstadoComisionCobrada estado;
-	
+	@Column(name="FECHA",nullable=false)
+	protected Timestamp fecha;
 	@JoinColumn(name="ID_COMISION")
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	protected Comision comision;
@@ -105,6 +107,15 @@ public class ComisionCobrada implements JSONable {
 		this.pasajero_viaje = pasajero_viaje;
 	}
 
+        
+        public Timestamp getFecha() {
+		return fecha;
+	}
+
+	public void setfecha(Timestamp fecha) {
+		this.fecha = fecha;
+	}
+        
 	@Override
 	public void SetJSONObject(JSONObject json) {
 		// TODO Auto-generated method stub

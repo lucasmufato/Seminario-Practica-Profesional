@@ -206,42 +206,57 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by jasmin?
-	public boolean cobrarComision(PasajeroViaje pv){
+	public boolean cobrarComision(PasajeroViaje pv) throws ExceptionViajesCompartidos{
 		if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
             }
                 
 		this.entitymanager.getTransaction( ).begin( );
 		ComisionCobrada cc=pv.getComision();
-		 //CREO EL MOVIMIENTO SALDO
-		 MovimientoSaldo ms=new MovimientoSaldo();
-		 java.util.Date utilDate = new java.util.Date();
-                 java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
-		 ms.setFecha(fecha);
-		 ms.setComision_cobrada(cc);
-		 ms.setMonto(cc.getMonto());
-		 ms.setPago(null);
-		 Query qry = entitymanager.createNamedQuery("TipoMovSaldo.SearchById");
-		 qry.setParameter("id",1);
-		 TipoMovSaldo tms= (TipoMovSaldo) qry.getSingleResult();
-		 ms.setTipo_mov_saldo(tms);
-                 
-		 //BUSCO CONDUCTOR
-		 Viaje v=pv.getViaje();
-		 Cliente conductor=v.getConductor();
-		 //LE DESCUENCTO LA COMISION POR ESE PASAJERO Q RECIBIO
-		 float saldo=conductor.getSaldo();
-		 conductor.setSaldo(saldo-cc.getMonto());
-                 
-		 //le cambio el estado al PV por comision cobrada
-         pv.getComision().setEstado(EstadoComisionCobrada.pagado);
+                if(cc.getEstado().equals(EstadoComisionCobrada.pendiente)){
+                
+                    //CREO EL MOVIMIENTO SALDO
+                    MovimientoSaldo ms=new MovimientoSaldo();
+                    java.util.Date utilDate = new java.util.Date();
+                    java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
+                    ms.setFecha(fecha);
+                    ms.setComision_cobrada(cc);
+                    ms.setMonto(cc.getMonto());
+                    ms.setPago(null);
+                    Query qry = entitymanager.createNamedQuery("TipoMovSaldo.SearchById");
+                    qry.setParameter("id",1);
+                    TipoMovSaldo tms= (TipoMovSaldo) qry.getSingleResult();
+                    ms.setTipo_mov_saldo(tms);
+                    
+                    cc.setfecha(new Timestamp((new java.util.Date()).getTime()));
+                    //BUSCO CONDUCTOR
+                    Viaje v=pv.getViaje();
+                    Cliente conductor=v.getConductor();
+                    //LE DESCUENCTO LA COMISION POR ESE PASAJERO Q RECIBIO
+                    float saldo=conductor.getSaldo();
+                    conductor.setSaldo(saldo-cc.getMonto());
 
-        try{
-        	this.entitymanager.persist(ms);
-        	this.entitymanager.getTransaction().commit();
-        }catch(Exception e){
-        	e.printStackTrace();
-        }
+                    //le cambio el estado al PV por comision cobrada
+                   pv.getComision().setEstado(EstadoComisionCobrada.pagado);
+                   try{
+                        this.entitymanager.persist(ms);
+                        this.entitymanager.getTransaction().commit();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                                
+                }else{
+                    if(cc.getEstado().equals(EstadoComisionCobrada.desestimada)){
+                        throw new ExceptionViajesCompartidos("ERROR: NO SE PUEDE COBRAR UNA COMISION DESESTIMADA");
+                    }
+                    if(cc.getEstado().equals(EstadoComisionCobrada.pagado)){
+                        throw new ExceptionViajesCompartidos("ERROR: LA COMISION YA FUE PAGADA");
+                    }
+                    if(cc.getEstado().equals(EstadoComisionCobrada.vencido)){
+                        throw new ExceptionViajesCompartidos("ERROR: LA COMISION ESTA VENCIDA");
+                    }
+                }
+        
 		return true;
 	}
 	

@@ -706,7 +706,7 @@ public class DAOViajes extends DataAccesObject {
 		comisionCobrada.setMovimiento_saldo(null);
 		comisionCobrada.setPasajero_viaje(null);
 		comisionCobrada.setEstado(EstadoComisionCobrada.informativa);		//significa que se guarda solo para saber cuanto le dijimos q le ibamos a cobrar cuando se postulo
-		
+		comisionCobrada.setfecha(new Timestamp((new java.util.Date()).getTime()));
 		//le asigno la comision al pasajero
 		pasajero.setComision(comisionCobrada);
 		this.entitymanager.persist(comisionCobrada);
@@ -1040,6 +1040,7 @@ public class DAOViajes extends DataAccesObject {
 		calificacion.setConductor(viaje.getConductor());
 		
 		pasajero.getComision().setEstado(EstadoComisionCobrada.pendiente);
+                pasajero.getComision().setfecha(new Timestamp((new java.util.Date()).getTime()));
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE ACEPTADO
 		Notificacion notificacion= new Notificacion();
 		notificacion.setCliente(cliente);
@@ -1112,6 +1113,7 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.getTransaction().begin();
 		pasajero.setEstado(EstadoPasajeroViaje.rechazado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
+                pasajero.getComision().setfecha(new Timestamp((new java.util.Date()).getTime())); 
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE RECHAZADO
 		Notificacion notificacion= new Notificacion();
 		notificacion.setCliente(cliente);
@@ -1321,7 +1323,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		pasajero.setEstado(EstadoPasajeroViaje.cancelado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
-
+                pasajero.getComision().setfecha(new Timestamp((new java.util.Date()).getTime()));
 		//SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL CONDUCTOR, SOBRE QUE EL PASAJERO CANCELO SU PARTICIPACION
 		Notificacion notificacion= new Notificacion();
 		notificacion.setCliente(viaje.getConductor());

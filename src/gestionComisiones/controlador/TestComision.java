@@ -51,7 +51,7 @@ public class TestComision extends TestCase{
         }
         
   @Test
-		public void testCobrarComisionCorrecto(){
+		public void testCobrarComisionCorrecto() throws ExceptionViajesCompartidos{
 			//datos del vehiculo y cliente, para crear el vehiculo
 			JSONObject json= crearVehiculo();
 			try {
