@@ -21,6 +21,8 @@ import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 
 import javax.persistence.Persistence;
@@ -42,17 +44,16 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;*/
 
 public class DAOViajes extends DataAccesObject {
-	static boolean existeScheduler = false;
+	static PlanificadorEstadoViaje planifEstadoViaje = null;
 
     public DAOViajes(){
     	super();
  	
     	synchronized (DAOViajes.class) {
-			if (!existeScheduler) {
-				SchedulerViajes.setDao(this);
-				SchedulerViajes.iniciar();
+			if (DAOViajes.planifEstadoViaje == null) {
+				DAOViajes.planifEstadoViaje = new PlanificadorEstadoViaje (this);
+				DAOViajes.planifEstadoViaje.iniciar();
 			}
-			existeScheduler = true;
 		}
     }
     
@@ -292,7 +293,7 @@ public class DAOViajes extends DataAccesObject {
 			
 			try{
 	    		this.entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje);
+	    		this.planifEstadoViaje.nuevaTarea (new TareaIniciarViaje (this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -313,9 +314,9 @@ public class DAOViajes extends DataAccesObject {
 		}
 
 		try{
-    		this.entitymanager.getTransaction( ).commit( );	
-			SchedulerViajes.nuevoViaje(viaje);
-                        this.notificarSeguidores(viaje.getId_viaje(), "modificado");
+		this.entitymanager.getTransaction( ).commit( );
+		this.planifEstadoViaje.nuevaTarea (new TareaIniciarViaje (this, viaje));
+		this.notificarSeguidores(viaje.getId_viaje(), "modificado");
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -498,7 +499,7 @@ public class DAOViajes extends DataAccesObject {
 			try{	//SI EL VIAJE TIENE VUELTA, GUARDO EL PRIMER VIAJE EN LA BD
 				this.entitymanager.persist(viaje);
 	    		entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje);
+				this.planifEstadoViaje.nuevaTarea(new TareaIniciarViaje(this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -510,7 +511,7 @@ public class DAOViajes extends DataAccesObject {
 			viaje_vuelta.setAsientos_disponibles(cantidad_asientos_vuelta);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje_vuelta);
+				this.planifEstadoViaje.nuevaTarea(new TareaIniciarViaje(this,viaje_vuelta));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -520,7 +521,7 @@ public class DAOViajes extends DataAccesObject {
 			this.entitymanager.persist(viaje);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje);
+				this.planifEstadoViaje.nuevaTarea(new TareaIniciarViaje(this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -870,8 +871,9 @@ public class DAOViajes extends DataAccesObject {
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		this.entitymanager.getTransaction().begin();
 		actualizado = viaje.actualizarEstado();
+		EstadoViaje estadoActual = viaje.getEstado();
 		
-		if (actualizado) {
+		if (actualizado && estadoActual == EstadoViaje.iniciado) {
 			// Notificar al conductor 
                         System.out.println(viaje.getNombre_amigable());
                         String nombre_destino = viaje.getDestino().getNombre();
@@ -896,6 +898,14 @@ public class DAOViajes extends DataAccesObject {
 				}
 			}
 	
+		} else if (actualizado && estadoActual == EstadoViaje.finalizado) {
+			Notificacion notificacion = new Notificacion();
+			notificacion.setCliente(viaje.getConductor());
+			notificacion.setEstado(EstadoNotificacion.no_leido);
+			notificacion.setFecha(viaje.getFecha_inicio()); 
+			notificacion.setTexto ("Su viaje <<" + viaje.getNombre_amigable() + ">> con destino a " + viaje.getDestino().getNombre()+" se ha marcado como finalizado.");
+			notificacion.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
+			this.entitymanager.persist(notificacion);		
 		}
 		
 		this.entitymanager.getTransaction().commit();
@@ -2131,5 +2141,19 @@ public class DAOViajes extends DataAccesObject {
            
             return precio;
         }
+        
+        //by fede
+          public List<Cliente> getPasajerosOrdenadosPorReputacion(Viaje viaje){
+            List<Cliente> lista_ordenada = new ArrayList<Cliente>();
+            lista_ordenada = viaje.getPasajerosTodosComoListCliente();
+            Collections.sort(lista_ordenada, new Comparator<Cliente>(){
+
+			@Override
+			public int compare(Cliente c1, Cliente c2) {
+				return c2.getReputacion().compareTo(c1.getReputacion());
+			}
+            });
+            return lista_ordenada;        
+            }
                 
 }
