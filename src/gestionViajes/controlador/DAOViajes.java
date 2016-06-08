@@ -806,7 +806,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		String conductor = (String) busqueda.get("conductor");
 		boolean b_conductor=false;
-		if(conductor!=null){
+		if ( (conductor!=null) && !(conductor.equals("")) ){
 			b_conductor=true;
 		}
 		
@@ -860,6 +860,25 @@ public class DAOViajes extends DataAccesObject {
 			}else{
 				q.setParameter("estado1", EstadoViaje.no_iniciado);
 			}
+		}
+		//agregado fede -> si puso conductor solo le devuelvo esos
+                 
+                 
+                 if(b_conductor){
+                       
+                        DAOAdministracionUsuarios daousr = new DAOAdministracionUsuarios();
+                        Cliente cliente_conductor = (Cliente) daousr.buscarUsuarioPorNombre(conductor);
+                        if(cliente_conductor==null){
+                            throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
+                        }
+						for(int i=0;i<viajes.size();i++){
+                            if(viajes.get(i).getConductor().getId_usuario()!=cliente_conductor.getId_usuario()){
+                                viajes.remove(i);
+                            }
+                        }
+                        daousr.cerrarConexiones();
+                        daousr=null;
+                        
 		}
 		List<Viaje> viajes= q.getResultList();
 		return viajes;
