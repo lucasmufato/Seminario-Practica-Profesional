@@ -42,17 +42,16 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;*/
 
 public class DAOViajes extends DataAccesObject {
-	static boolean existeScheduler = false;
+	static PlanificadorEstadoViaje planifEstadoViaje = null;
 
     public DAOViajes(){
     	super();
  	
     	synchronized (DAOViajes.class) {
-			if (!existeScheduler) {
-				SchedulerViajes.setDao(this);
-				SchedulerViajes.iniciar();
+			if (DAOViajes.planifEstadoViaje == null) {
+				DAOViajes.planifEstadoViaje = new PlanificadorEstadoViaje (this);
+				DAOViajes.planifEstadoViaje.iniciar();
 			}
-			existeScheduler = true;
 		}
     }
     
@@ -292,7 +291,7 @@ public class DAOViajes extends DataAccesObject {
 			
 			try{
 	    		this.entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje);
+	    		this.planifEstadoViaje.nuevaTarea (new TareaEstadoViaje (this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -313,9 +312,9 @@ public class DAOViajes extends DataAccesObject {
 		}
 
 		try{
-    		this.entitymanager.getTransaction( ).commit( );	
-			SchedulerViajes.nuevoViaje(viaje);
-                        this.notificarSeguidores(viaje.getId_viaje(), "modificado");
+		this.entitymanager.getTransaction( ).commit( );
+		this.planifEstadoViaje.nuevaTarea (new TareaEstadoViaje (this, viaje));
+		this.notificarSeguidores(viaje.getId_viaje(), "modificado");
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -498,7 +497,7 @@ public class DAOViajes extends DataAccesObject {
 			try{	//SI EL VIAJE TIENE VUELTA, GUARDO EL PRIMER VIAJE EN LA BD
 				this.entitymanager.persist(viaje);
 	    		entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje);
+				this.planifEstadoViaje.nuevaTarea(new TareaEstadoViaje(this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -510,7 +509,7 @@ public class DAOViajes extends DataAccesObject {
 			viaje_vuelta.setAsientos_disponibles(cantidad_asientos_vuelta);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje_vuelta);
+				this.planifEstadoViaje.nuevaTarea(new TareaEstadoViaje(this,viaje_vuelta));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -520,7 +519,7 @@ public class DAOViajes extends DataAccesObject {
 			this.entitymanager.persist(viaje);
 			try{
 	    		entitymanager.getTransaction( ).commit( );	
-				SchedulerViajes.nuevoViaje(viaje);
+				this.planifEstadoViaje.nuevaTarea(new TareaEstadoViaje(this, viaje));
 	    	}catch(RollbackException e){
 	    		String error= ManejadorErrores.parsearRollback(e);
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
