@@ -17,6 +17,7 @@ import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionPuntos.controlador.DAOPuntos;
 import gestionPuntos.modelo.Calificacion;
 import gestionPuntos.modelo.EstadoCalificacion;
+import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 
@@ -863,7 +864,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		//agregado fede -> si puso conductor solo le devuelvo esos
                  
-                 
+                 List<Viaje> viajes= q.getResultList();
                  if(b_conductor){
                        
                         DAOAdministracionUsuarios daousr = new DAOAdministracionUsuarios();
@@ -880,7 +881,7 @@ public class DAOViajes extends DataAccesObject {
                         daousr=null;
                         
 		}
-		List<Viaje> viajes= q.getResultList();
+		
 		return viajes;
 	}
 
