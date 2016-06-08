@@ -21,6 +21,8 @@ import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 
 import javax.persistence.Persistence;
@@ -2131,5 +2133,19 @@ public class DAOViajes extends DataAccesObject {
            
             return precio;
         }
+        
+        //by fede
+          public List<Cliente> getPasajerosOrdenadosPorReputacion(Viaje viaje){
+            List<Cliente> lista_ordenada = new ArrayList<Cliente>();
+            lista_ordenada = viaje.getPasajerosTodosComoListCliente();
+            Collections.sort(lista_ordenada, new Comparator<Cliente>(){
+
+			@Override
+			public int compare(Cliente c1, Cliente c2) {
+				return c2.getReputacion().compareTo(c1.getReputacion());
+			}
+            });
+            return lista_ordenada;        
+            }
                 
 }
