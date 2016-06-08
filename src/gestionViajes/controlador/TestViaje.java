@@ -47,7 +47,13 @@ public class TestViaje extends TestCase {
 		this.daoviajes.vaciarTabla("Vehiculo");
         this.daoviajes.vaciarTabla("Notificacion");
 	}
-
+	
+	@Test
+	public void testquery() {
+		String query = "";
+		//pruena para probar querys
+	}
+	
 	@Test
 	public void testNuevoViajeCorrectoSINVUELTA() {
 		//test q envie un json correcto y tendria q andar bien
