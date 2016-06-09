@@ -94,9 +94,9 @@ INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("V", "Bosque/Arbustos");
 
 INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
+	("0", "Iniciado"),
+	("1", "No iniciado"),
 	("2", "Finalizado"),
-	("0", "No iniciado"),
-	("1", "Iniciado"),
 	("3", "Cancelado");
 	
 INSERT INTO ESTADO_COMISION(id_estado_comision, nombre_estado) VALUES
@@ -194,13 +194,13 @@ INSERT INTO TIPO_MOV_PUNTOS(id_tipo_mov_puntos,descripcion) VALUES (3,"Sanción"
 -- dml para reportes de juan
 /*
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (5, 'pruebaReporte1', '3', '1', '2016-06-07 23:00:00', '2016-06-07 22:00:00', NULL, NULL, '1', '5', '2016-05-16', NULL, '50');
+VALUES (5, 'pruebaReporte1', '3', '0', '2016-06-07 23:00:00', '2016-06-07 22:00:00', NULL, NULL, '1', '5', '2016-05-16', NULL, '50');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (6, 'pruebaReporte2', '6', '1', '2016-06-07 23:10:00', '2016-06-07 22:00:00', NULL, NULL, '3', '6', '2015-12-16', NULL, '40');
+VALUES (6, 'pruebaReporte2', '6', '0', '2016-06-07 23:10:00', '2016-06-07 22:00:00', NULL, NULL, '3', '6', '2015-12-16', NULL, '40');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (7, 'pruebaReporte3', '1', '1', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '2', '5', '2016-05-01', NULL, '40000');
+VALUES (7, 'pruebaReporte3', '1', '0', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '2', '5', '2016-05-01', NULL, '40000');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (8, 'pruebaReporte4', '3', '1', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '4', '6', '2016-05-01', NULL, '5');
+VALUES (8, 'pruebaReporte4', '3', '0', '2016-06-07 23:02:00', '2016-06-07 22:02:00', NULL, NULL, '4', '6', '2016-05-01', NULL, '5');
 
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (10,1,"prueba_parareporte1","parareporte1", "reporte1@mail.com","usuario para participar en viajes","A","C");
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (11,1,"prueba_parareporte2","parareporte2", "reporte2@mail.com","usuario para participar en viajes","A","C");
@@ -272,13 +272,13 @@ UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='
 UPDATE `seminario`.`comision` SET `fecha_fin`='2016-06-08' WHERE `id_comision`='7';
 
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (9, 'pruebaReporte1', '3', '1', '2016-06-07 23:00:00', '2016-12-07 22:00:00', NULL, NULL, '1', '5', '2016-05-16', NULL, '50');
+VALUES (9, 'pruebaReporte1', '3', '0', '2016-06-07 23:00:00', '2016-12-07 22:00:00', NULL, NULL, '1', '5', '2016-05-16', NULL, '50');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (10, 'pruebaReporte2', '6', '1', '2016-06-07 23:10:00', '2016-12-07 22:00:00', NULL, NULL, '3', '6', '2015-12-16', NULL, '40');
+VALUES (10, 'pruebaReporte2', '6', '0', '2016-06-07 23:10:00', '2016-12-07 22:00:00', NULL, NULL, '3', '6', '2015-12-16', NULL, '40');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (11, 'pruebaReporte3', '1', '1', '2016-06-07 23:02:00', '2016-12-07 22:02:00', NULL, NULL, '2', '5', '2016-05-01', NULL, '40000');
+VALUES (11, 'pruebaReporte3', '1', '0', '2016-06-07 23:02:00', '2016-12-07 22:02:00', NULL, NULL, '2', '5', '2016-05-01', NULL, '40000');
 INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fecha_inicio, fecha_alta, fecha_finalizacion, fecha_cancelacion, id_vehiculo, id_cliente, fecha_inicio_maneja, viaje_complementario, precio)
-VALUES (12, 'pruebaReporte4', '3', '1', '2016-06-07 23:02:00', '2016-12-07 22:02:00', NULL, NULL, '4', '6', '2016-05-01', NULL, '5');
+VALUES (12, 'pruebaReporte4', '3', '0', '2016-06-07 23:02:00', '2016-12-07 22:02:00', NULL, NULL, '4', '6', '2016-05-01', NULL, '5');
 
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal)
 VALUES ('9', '3430988', '0', '10','1'), ('9', '3433781', '0', '10','2'), ('9', '3429980', '0', '0','3');

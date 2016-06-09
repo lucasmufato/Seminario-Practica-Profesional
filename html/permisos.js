@@ -107,7 +107,8 @@ permisosData.makeListDropdown = function(rol){
 				"<li><a href='/mis_vehiculos.html'>Mis vehículos</a></li>";
 	} else if (rol == "super_usuario"){
 		html += "<li><a href='/abm.html'>Administrar usuarios</a></li>"
-			+"<li><a href='/reportes/viajes.html'>Reporte de viajes</a></li>";
+			+"<li><a href='/reportes/viajes.html'>Reporte de viajes</a></li>"
+			+"<li><a href='/reportes/comisiones.html'>Reporte de comisiones</a></li>";
 	}
 
 	html += "<li role='separator' class='divider'></li>"+
