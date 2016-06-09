@@ -221,40 +221,43 @@ public class DAOComisiones extends DataAccesObject {
 			this.entitymanager.getTransaction().rollback();
         }
                 
-		this.entitymanager.getTransaction( ).begin( );
-		ComisionCobrada cc=pv.getComision();
+		
+		ComisionCobrada cc=this.entitymanager.merge(pv.getComision());
                 if(cc.getEstado().equals(EstadoComisionCobrada.pendiente)){
-                
+                    //BUSCO CONDUCTOR
+                    
+                    this.entitymanager.getTransaction( ).begin( );
+                    pv = this.entitymanager.merge(pv);
+                    Viaje v=pv.getViaje();
+                    Cliente conductor=this.entitymanager.merge(v.getConductor());
                     //CREO EL MOVIMIENTO SALDO
                     MovimientoSaldo ms=new MovimientoSaldo();
                     java.util.Date utilDate = new java.util.Date();
                     java.sql.Date fecha = new java.sql.Date(utilDate.getTime());
+                    ms.setCliente(conductor);
                     ms.setFecha(fecha);
                     ms.setComision_cobrada(cc);
                     ms.setMonto(cc.getMonto());
                     ms.setPago(null);
-                    ms.setCliente(pv.getViaje().getConductor());
                     Query qry = entitymanager.createNamedQuery("TipoMovSaldo.SearchById");
                     qry.setParameter("id",1);
                     TipoMovSaldo tms= (TipoMovSaldo) qry.getSingleResult();
                     ms.setTipo_mov_saldo(tms);
-                    
+                    //enlazo a la CC con el MS anterior
                     cc.setfecha(new Timestamp((new java.util.Date()).getTime()));
-                    //BUSCO CONDUCTOR
-                    Viaje v=pv.getViaje();
-                    Cliente conductor=v.getConductor();
+                    cc.setMovimiento_saldo(ms);                    
                     //LE DESCUENCTO LA COMISION POR ESE PASAJERO Q RECIBIO
                     float saldo=conductor.getSaldo();
-                    conductor.setSaldo(saldo-cc.getMonto());
-
+                    conductor.setSaldo(saldo-cc.getMonto());                    
                     //le cambio el estado al PV por comision cobrada
-                   pv.getComision().setEstado(EstadoComisionCobrada.pagado);
-                   try{
+                    pv.getComision().setEstado(EstadoComisionCobrada.pagado);
+                     try{
                         this.entitymanager.persist(ms);
                         this.entitymanager.getTransaction().commit();
                     }catch(Exception e){
                         e.printStackTrace();
                     }
+                    
                                 
                 }else{
                     if(cc.getEstado().equals(EstadoComisionCobrada.desestimada)){
