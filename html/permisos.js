@@ -87,9 +87,7 @@ permisosData.cargarSidebarPermisos = function(){
 					for (permiso in permisosData.permisosp){
 						var nombrePermiso=permisosData.permisosp[permiso]["nombre_permiso"];
 						var estadoPermiso=permisosData.permisosp[permiso]["estado"];
-						if (nombrePermiso && estadoPermiso=="A"){
-							permisosFlags[nombrePermiso] = true;
-						}
+						permisosFlags[nombrePermiso] = nombrePermiso && estadoPermiso=="A";
 					}
 				}
 				var html = Mustache.render(template,permisosFlags);
