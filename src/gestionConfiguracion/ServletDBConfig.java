@@ -10,10 +10,11 @@ import java.io.IOException;
 import org.json.simple.JSONObject;
 
 
-class ServletDBConfig extends HttpServlet {
+public class ServletDBConfig extends HttpServlet {
 
 	// Asegurate de que este objeto tenga exclusion mutua
 	private EstadoCfg estado;
+	private Thread demonio = null;
 
 	@Override
 	public void init () {
@@ -28,7 +29,7 @@ class ServletDBConfig extends HttpServlet {
 		response.setHeader("Content-Type", "application/json; charset=UTF-8");
 
 		synchronized (this.estado) {
-			writer.print(this.estado.toJSON());
+			writer.println(this.estado.toJSON());
 		}
 	}
 
@@ -55,11 +56,17 @@ class ServletDBConfig extends HttpServlet {
 			salida.put("result", true);
 
 			// Iniciar thread que va a hacer todo
+			demonio = new Thread (new ConfiguradorThread (cfg, mode.equals("crear"), this));
+			demonio.start();
 
+			salida.put("result", true);
 		} else {
 			salida.put("result", false);
 			salida.put("msg", "El servidor ya esta configurado");
+			
 		}
+
+		writer.println(salida);
 	}
 
 	private boolean yaConfigurado() {

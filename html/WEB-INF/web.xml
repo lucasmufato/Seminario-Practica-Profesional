@@ -80,4 +80,13 @@
         <url-pattern>/comisiones</url-pattern>
     </servlet-mapping>
 
+	<servlet>
+        <servlet-name>dbconfig</servlet-name>
+        <servlet-class>gestionConfiguracion.ServletDBConfig</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dbconfig</servlet-name>
+        <url-pattern>/dbconfig</url-pattern>
+    </servlet-mapping>
+
 </web-app>

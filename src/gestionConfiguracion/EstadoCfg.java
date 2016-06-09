@@ -1,6 +1,6 @@
 package gestionConfiguracion;
 
-import otros.JSONable;
+import org.json.simple.JSONObject;
 
 /* Esta clase representa el estado del proceso de configuracion */
 
@@ -50,17 +50,20 @@ class EstadoCfg {
 		this.step = 0;
 	}
 
-	public String toJSON() {
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+	
 		String estadoStr;
 		switch(this.estado) {
-			case NO_INICIADO: estadoStr = "\"no_iniciado\""; break;
-			case TRABAJANDO: estadoStr = "\"trabajando\""; break;
-			case COMPLETO: estadoStr = "\"completo\""; break;
-			case FALLO: estadoStr = "\"fallo\""; break;
-			default: return "\"\"";
+			case NO_INICIADO: estadoStr = "no_iniciado"; break;
+			case TRABAJANDO: estadoStr = "trabajando"; break;
+			case COMPLETO: estadoStr = "completo"; break;
+			case FALLO: estadoStr = "fallo"; break;
+			default: estadoStr = null;
 		}
-		return "{estado: " + estadoStr + ", step: " + this.step + "}";
-		
+		json.put("estado", estadoStr);
+		json.put("step", this.step);
+		return json;
 	}
 
 }
