@@ -24,6 +24,13 @@ public abstract class DataAccesObject {
     	this.entitymanager = emfactory.createEntityManager( );
 	}
 	
+	//metodo para probar querys
+	public List ejecutarNamedQuery(String query, Object parametro){
+		Query q2 = entitymanager.createNamedQuery(query);
+	    q2.setParameter("parametro", parametro);
+	    return q2.getResultList();
+	}
+	
 	public  Object buscarPorClaveCandidataCompuesta(String nombre_clase, Object claveCandidata1, Object claveCandidata2) {
 		try{
 			Query q2 = entitymanager.createNamedQuery(nombre_clase+".ClaveCandidateCompuesta");
@@ -174,8 +181,6 @@ public abstract class DataAccesObject {
 	
 	//otro que busca por clave primaria, pero en este caso ya sabes la clave primaria
 	public Object buscarPorPrimaryKey(Object clase, Object primaryKey){
-
-
 		if(clase==null || primaryKey==null){
 			return null;
 		}else{

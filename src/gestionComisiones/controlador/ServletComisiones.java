@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,81 +13,275 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import gestionComisiones.modelo.Comision;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.controlador.DAONotificaciones;
-import gestionComisiones.controlador.DAOComisiones;
-
 import gestionUsuarios.modelo.Cliente;
-import gestionUsuarios.modelo.Notificacion;
-import gestionViajes.modelo.Vehiculo;
 import otros.AccessManager;
 import otros.ExceptionViajesCompartidos;
 
 public class ServletComisiones extends HttpServlet {
-	
-	protected DAOComisiones daoComisiones;
+	private static final long serialVersionUID = 1L;
+	protected DAOComisiones daocomisiones;
 	protected DAOAdministracionUsuarios daoUsuarios;
 	protected DAONotificaciones daoNotificaciones;
-
-	@Override
-	public void init() {
-		daoComisiones=new DAOComisiones();
+	
+	public void init() throws ServletException {
+		daocomisiones = new DAOComisiones();
 		daoUsuarios=new DAOAdministracionUsuarios();
 		daoNotificaciones=new DAONotificaciones();
+		
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doPost (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
 		PrintWriter writer = response.getWriter();
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
-		
+
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Type", "application/json; charset=UTF-8");
 		
-		if (entity != null && entity.equals("saldo")) {
+		if (entity != null && entity.equals ("comision")) {
+			if (action != null && action.equals ("new")) {
+				respuesta = this.nuevo_comision (request);
+			}else if (action != null && action.equals("edit")) {
+				respuesta = this.modificar_comision (request);
+			}else if (action != null && action.equals("finalizar")){
+				respuesta = this.finalizar_comision (request);
+			}
+		}else if (entity != null && entity.equals("saldo")) {
 			if (action != null && action.equals ("consultar")) {
 				respuesta = this.consultarSaldo(request);
 			}
-		} else {
+		}else {
 			respuesta = new JSONObject();
 			respuesta.put ("result", false);
 			respuesta.put ("msg", "No implementado");
 		}
+		
 		respuesta.put("entity", entity);
 		respuesta.put("action", action);
 
 		writer.println (respuesta);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
 		PrintWriter writer = response.getWriter();
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
-		
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Type", "application/json; charset=UTF-8");
-		
-		if (entity != null && entity.equals("saldo")) {
+
+		if (entity != null && entity.equals ("comision")) {
+			if (action != null && action.equals("todos")) {
+				respuesta = this.todosComisiones (request);
+			}else if(action != null && action.equals("vigentes")){
+				respuesta = this.comisionesVigentes (request);
+			}else if(action != null && action.equals("Novigentes")){
+				respuesta = this.comisionesNoVigentes (request);
+			}
+		} else if (entity != null && entity.equals("saldo")) {
 			if (action != null && action.equals ("cargar")) {
 				respuesta = this.cargarSaldo(request);
 			}
-		} else {
+		}else {
 			respuesta = new JSONObject();
 			respuesta.put ("result", false);
 			respuesta.put ("msg", "No implementado");
 		}
+		
 		respuesta.put("entity", entity);
 		respuesta.put("action", action);
 
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject comisionesNoVigentes(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		List<Comision> listacomisiones = this.daocomisiones.getComisionesNOVigentes();
+		JSONArray comisiones = new JSONArray();
+		for (Comision c : listacomisiones){
+			comisiones.add(c.toJSON());
+		}
+				
+		respuesta.put("result", true);
+		respuesta.put("msg", "Postulantes cargados");
+		respuesta.put("comisiones", comisiones);
+				
+		return respuesta;
+		
+	}
 
+	@SuppressWarnings("unchecked")
+	private JSONObject comisionesVigentes(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		List<Comision> listacomisiones = this.daocomisiones.getComisionesVigentes();
+		JSONArray comisiones = new JSONArray();
+		for (Comision c : listacomisiones){
+			comisiones.add(c.toJSON());
+		}
+				
+		respuesta.put("result", true);
+		respuesta.put("msg", "Postulantes cargados");
+		respuesta.put("comisiones", comisiones);
+				
+		return respuesta;
+	}
 
+	@SuppressWarnings("unchecked")
+	private JSONObject todosComisiones(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+		
+		List<Comision> listacomisiones = this.daocomisiones.getTodasLasComisiones();
+		JSONArray comisiones = new JSONArray();
+		for (Comision c : listacomisiones){
+			comisiones.add(c.toJSON());
+		}
+				
+		respuesta.put("result", true);
+		respuesta.put("msg", "Postulantes cargados");
+		respuesta.put("comisiones", comisiones);
+				
+		return respuesta;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject finalizar_comision(HttpServletRequest request) {
+		ArrayList<String> err = new ArrayList<String>();
+		JSONObject salida = new JSONObject();
+		Integer id_comision=null;
+		try {
+			id_comision = Integer.parseInt(request.getParameter("id_comision"));
+		} catch (Exception e) {
+			err.add("id_comision no es valido");
+		}
+		if(err.size() > 0) {
+			salida.put("result", false);
+			salida.put("msg", err);
+			return salida;
+		}
+		try {
+			this.daocomisiones.FinalizarComision(id_comision);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			return salida;
+		}
+		salida.put("result", true);
+		salida.put("msg", "Se ha finalizado la comision");
+		return salida;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject modificar_comision(HttpServletRequest request) {
+		ArrayList<String> err = new ArrayList<String>();
+		Integer limite_inferior=null, limite_superior=null,id_comision=null;
+		Float precio=null;
+		JSONObject salida = new JSONObject();
+		JSONObject params = new JSONObject();
+
+		try {
+			limite_inferior = Integer.parseInt(request.getParameter("limite_inferior"));
+		} catch (Exception e) {
+			err.add("limite_inferior no es valido");
+		}
+		try {
+			limite_superior = Integer.parseInt(request.getParameter("limite_superior"));
+		} catch (Exception e) {
+			err.add("limite_superior no es valido");
+		}
+		try {
+			precio = Float.parseFloat(request.getParameter("precio"));
+		} catch (Exception e) {
+			err.add("precio no es valido");
+		}
+		try {
+			id_comision = Integer.parseInt(request.getParameter("id_comision"));
+		} catch (Exception e) {
+			err.add("id_comision no es valido");
+		}
+		
+		if(err.size() > 0) {
+			salida.put("result", false);
+			salida.put("msg", err);
+			return salida;
+		}
+		
+		params.put("limite_inferior", limite_inferior);
+		params.put("limite_superior", limite_superior);
+		params.put("id_comision", id_comision);
+		params.put("precio", precio);
+		
+		try {
+			this.daocomisiones.modificarComision(params);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			return salida;
+		}
+		salida.put("result", true);
+		salida.put("msg", "Se ha modificado la comision");
+		return salida;
+	}
+	
+
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject nuevo_comision(HttpServletRequest request) {
+		ArrayList<String> err = new ArrayList<String>();
+		Integer limite_inferior=null, limite_superior=null;
+		Float precio=null;
+		JSONObject salida = new JSONObject();
+		JSONObject params = new JSONObject();
+		//SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		try {
+			limite_inferior = Integer.parseInt(request.getParameter("limite_inferior"));
+		} catch (Exception e) {
+			err.add("limite_inferior no es valido");
+		}
+		try {
+			limite_superior = Integer.parseInt(request.getParameter("limite_superior"));
+		} catch (Exception e) {
+			err.add("limite_superior no es valido");
+		}
+		try {
+			precio = Float.parseFloat(request.getParameter("precio"));
+		} catch (Exception e) {
+			err.add("precio no es valido");
+		}
+		
+		if(err.size() > 0) {
+			salida.put("result", false);
+			salida.put("msg", err);
+			return salida;
+		}
+		
+		params.put("limite_inferior", limite_inferior);
+		params.put("limite_superior", limite_superior);
+		params.put("precio", precio);
+		
+		try {
+			this.daocomisiones.nuevaComision(params);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			return salida;
+		}
+		salida.put("result", true);
+		salida.put("msg", "Se ha creado la comision");
+		return salida;
+	}
+	
+	@SuppressWarnings("unchecked")
 	private JSONObject consultarSaldo(HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
 		String username;
@@ -116,6 +311,7 @@ public class ServletComisiones extends HttpServlet {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	private JSONObject cargarSaldo(HttpServletRequest request) {
 		/* Esto en realidad tendria que crear una factura y ponerle estado pendiente de pago, pero como todavia no implementamos ningun medio de pago vamos a hacer que se cargue directamente */
 		JSONObject salida = new JSONObject();
@@ -131,7 +327,7 @@ public class ServletComisiones extends HttpServlet {
 				throw new ExceptionViajesCompartidos("El usuario con el que ha iniciado sesion no es un cliente");
 			}
 			monto = Integer.parseInt(request.getParameter("monto"));
-			daoComisiones.sumarSaldo (cliente.getId_usuario(), monto);
+			daocomisiones.sumarSaldo (cliente.getId_usuario(), monto);
 		} catch (Exception e) {
 			salida.put("result", false);
 			salida.put("msg", e.getMessage());

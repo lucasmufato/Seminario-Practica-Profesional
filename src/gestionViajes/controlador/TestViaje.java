@@ -1,10 +1,6 @@
 package gestionViajes.controlador;
 
 import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
-import gestionViajes.controlador.*;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
@@ -16,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import gestionComisiones.modelo.EstadoComisionCobrada;
-import gestionPuntos.controlador.DAOPuntos;
 import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.*;
 import junit.framework.TestCase;
@@ -52,7 +47,13 @@ public class TestViaje extends TestCase {
 		this.daoviajes.vaciarTabla("Vehiculo");
         this.daoviajes.vaciarTabla("Notificacion");
 	}
-
+	
+	@Test
+	public void testquery() {
+		String query = "";
+		//pruena para probar querys
+	}
+	
 	@Test
 	public void testNuevoViajeCorrectoSINVUELTA() {
 		//test q envie un json correcto y tendria q andar bien

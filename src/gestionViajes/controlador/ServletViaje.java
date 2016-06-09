@@ -1,8 +1,6 @@
 package gestionViajes.controlador;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,6 +120,7 @@ public class ServletViaje extends HttpServlet {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
@@ -150,6 +148,7 @@ public class ServletViaje extends HttpServlet {
 	
 	//----------------------------------------------COMENTARIOS---------------------------------------------------------------------//
 
+	@SuppressWarnings("unchecked")
 	private JSONObject nuevo_comentario(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -191,6 +190,7 @@ public class ServletViaje extends HttpServlet {
 
 //----------------------------------------------CALIFICACIONES---------------------------------------------------------------------//
 
+	@SuppressWarnings("unchecked")
 	private JSONObject listar_calificaciones(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -352,6 +352,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONObject nueva_calificacion(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 
@@ -525,6 +526,7 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject modificar_viaje(HttpServletRequest request) {
 		int id_viaje=-1, id_origen=-1, id_destino=-1, id_conductor=-1;
 		JSONArray id_intermedios=null;
@@ -629,6 +631,7 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject cancelar_viaje(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 
@@ -799,6 +802,7 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONObject participar_viaje(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		JSONObject postulacion = new JSONObject();
@@ -875,6 +879,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject cancelar_participacion(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 
@@ -913,6 +918,7 @@ public class ServletViaje extends HttpServlet {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONObject ver_postulantes(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 
@@ -960,6 +966,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject cargarPostulante(PasajeroViaje pv) {
 		JSONObject postulante = new JSONObject();
 		Cliente c = pv.getCliente();
@@ -980,6 +987,7 @@ public class ServletViaje extends HttpServlet {
 		return postulante;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject aceptar_rechazar_postulante(HttpServletRequest request){
 		JSONObject respuesta = new JSONObject();
 		
@@ -1041,6 +1049,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONObject finalizarViaje(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 
@@ -1085,6 +1094,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject ver_mis_viajes (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
 		try {
@@ -1128,6 +1138,7 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject buscar_viaje (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
 		List<Viaje> resultados;
@@ -1211,6 +1222,7 @@ public class ServletViaje extends HttpServlet {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	private JSONObject dejar_de_seguir(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1244,6 +1256,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONObject seguir_viaje(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1280,6 +1293,7 @@ public class ServletViaje extends HttpServlet {
 	
 	//----------------------------------------------VEHICULOS----------------------------------------------------------------------//
 	
+	@SuppressWarnings({ "unchecked", "unchecked" })
 	public JSONObject nuevo_vehiculo (HttpServletRequest request) {
 		JSONObject salida = new JSONObject();
 		JSONObject params = new JSONObject();
@@ -1335,6 +1349,7 @@ public class ServletViaje extends HttpServlet {
 		return lista;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject listar_vehiculos(HttpServletRequest request) {
 		JSONObject salida = new JSONObject ();
 		JSONArray json_vehiculos = new JSONArray();
@@ -1375,6 +1390,7 @@ public class ServletViaje extends HttpServlet {
 		return salida;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject verUnVehiculo(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1442,6 +1458,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject modificarVehiculo(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1497,6 +1514,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject eliminarVehiculo(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1563,6 +1581,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject asignarVehiculoCliente(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1617,6 +1636,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject desasignarVehiculoCliente(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		
@@ -1661,6 +1681,7 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONObject modificarImagenVehiculo(HttpServletRequest request) {
 		JSONObject respuesta = new JSONObject();
 		

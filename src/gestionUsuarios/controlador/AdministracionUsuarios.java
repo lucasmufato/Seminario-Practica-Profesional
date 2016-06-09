@@ -2,6 +2,8 @@ package gestionUsuarios.controlador;
 import java.io.*;
 
 import gestionUsuarios.modelo.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import otros.*;
 
 import javax.servlet.*;
@@ -58,20 +60,44 @@ public class AdministracionUsuarios extends HttpServlet {
 			}
 		} else if (action.equals("delete")) {
 			if (entity.equals("persona")) {
-				out = deletePersona(request);
+                            try {
+                                out = deletePersona(request);
+                            } catch (ExceptionViajesCompartidos ex) {
+                                Logger.getLogger(AdministracionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 			} else if (entity.equals("usuario")) {
-				out = deleteUsuario(request);
+                            try {
+                                out = deleteUsuario(request);
+                            } catch (ExceptionViajesCompartidos ex) {
+                                Logger.getLogger(AdministracionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 			} else if (entity.equals("rol")) {
-				out = deleteRol(request);
+                            try {
+                                out = deleteRol(request);
+                            } catch (ExceptionViajesCompartidos ex) {
+                                Logger.getLogger(AdministracionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 			} else if (entity.equals("permiso")) {
-				out = deletePermiso(request);
+                            try {
+                                out = deletePermiso(request);
+                            } catch (ExceptionViajesCompartidos ex) {
+                                Logger.getLogger(AdministracionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 			}
 		} else if (action.equals("assignRol") && entity.equals("usuario")) {
-			out = assignRol(request);
+                    try {
+                        out = assignRol(request);
+                    } catch (ExceptionViajesCompartidos ex) {
+                        Logger.getLogger(AdministracionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 		} else if (action.equals("removeRol") && entity.equals("usuario")) {
 			out = removeRol(request);
 		} else if (action.equals("assignPermiso") && entity.equals("rol")) {
-			out = assignPermiso(request);
+                    try {
+                        out = assignPermiso(request);
+                    } catch (ExceptionViajesCompartidos ex) {
+                        Logger.getLogger(AdministracionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 		} else if (action.equals("revokePermiso") && entity.equals("rol")) {
 			out = revokePermiso(request);
 		} else if (action.equals("get_permisos")){
@@ -362,7 +388,7 @@ public class AdministracionUsuarios extends HttpServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private JSONObject deletePersona (HttpServletRequest request) {
+	private JSONObject deletePersona (HttpServletRequest request) throws ExceptionViajesCompartidos {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
 		if (dao.darDeBaja(id,"Persona")) {
@@ -376,7 +402,7 @@ public class AdministracionUsuarios extends HttpServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private JSONObject deleteUsuario (HttpServletRequest request) {
+	private JSONObject deleteUsuario (HttpServletRequest request) throws ExceptionViajesCompartidos {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
 		if (id == 0) {
@@ -393,7 +419,7 @@ public class AdministracionUsuarios extends HttpServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private JSONObject deleteRol (HttpServletRequest request) {
+	private JSONObject deleteRol (HttpServletRequest request) throws ExceptionViajesCompartidos {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
 		if (id == 0) {
@@ -410,7 +436,7 @@ public class AdministracionUsuarios extends HttpServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private JSONObject deletePermiso (HttpServletRequest request) {
+	private JSONObject deletePermiso (HttpServletRequest request) throws ExceptionViajesCompartidos {
 		JSONObject salida = new JSONObject ();
 		int id = Integer.parseInt (request.getParameter("id"));
 		if (dao.darDeBaja(id,"Permiso")) {
@@ -424,7 +450,7 @@ public class AdministracionUsuarios extends HttpServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private JSONObject assignRol (HttpServletRequest request) {
+	private JSONObject assignRol (HttpServletRequest request) throws ExceptionViajesCompartidos {
 		JSONObject salida = new JSONObject ();
 		int id_usuario = Integer.parseInt (request.getParameter("id_usuario"));
 		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
@@ -488,7 +514,7 @@ public class AdministracionUsuarios extends HttpServlet {
 	}	
 
 	@SuppressWarnings("unchecked")
-	private JSONObject assignPermiso (HttpServletRequest request) {
+	private JSONObject assignPermiso (HttpServletRequest request) throws ExceptionViajesCompartidos {
 		JSONObject salida = new JSONObject ();
 		int id_rol = Integer.parseInt (request.getParameter("id_rol"));
 		int id_permiso = Integer.parseInt (request.getParameter("id_permiso"));
