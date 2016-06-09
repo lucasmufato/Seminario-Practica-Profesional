@@ -87,6 +87,8 @@ public class ServletComisiones extends HttpServlet {
 		} else if (entity != null && entity.equals("saldo")) {
 			if (action != null && action.equals ("cargar")) {
 				respuesta = this.cargarSaldo(request);
+			} else if (action != null && action.equals ("consultar")) {
+				respuesta = this.consultarSaldo(request);
 			}
 		}else {
 			respuesta = new JSONObject();
