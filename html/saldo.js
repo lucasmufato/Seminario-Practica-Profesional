@@ -81,7 +81,7 @@ var showMovSaldo = function(movSaldo){
 
       tr = document.createElement ('TR');
       tr.appendChild (getTd (elem.fecha));
-      tr.appendChild (getTd (elem.tipo_mov));
+      tr.appendChild (getTd (elem.tipo));
       tr.appendChild (getTd (elem.monto));
 
       var thistr = tr;
