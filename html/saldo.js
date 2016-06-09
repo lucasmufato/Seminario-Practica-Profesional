@@ -1,7 +1,5 @@
-var movSaldo = [];
-
-window.onload = function(){
-  consultar_saldo();
+window.onload=function() {
+	consultar_saldo();
   cargarMovSaldo();
 }
 
@@ -13,26 +11,54 @@ var consultar_saldo = function() {
 
 	var onsuccess = function(recibido) {
 		actualizarSaldo(recibido.saldo);
-	  $(".loadingScreen").fadeOut();
+		$(".loadingScreen").fadeOut();
 	}
 
 	vc.peticionAjax("/comisiones", sendData, "GET", onsuccess);
 }
 
+var actualizarSaldo = function(saldo) {
+	$("#saldo_actual").text("$ "+saldo.toFixed(2));
+}
+
+var enviarCarga = function () {
+	var monto = $("input[name=monto_cargar]").val();
+	var sendData = {
+		entity: "saldo",
+		action: "cargar",
+		monto: monto
+	};
+	var onsuccess = function(recibido) {
+		if(recibido.msg) {
+			vc.ventana_mensaje(recibido.msg, "Carga exitosa", "success");
+		}
+		consultar_saldo();
+	}
+
+	vc.peticionAjax("/comisiones", sendData, "POST", onsuccess);
+}
+
+// movimientos de saldo
 var cargarMovSaldo = function(){
+  /*
   movsaldo = [{
     fecha:"22/04/1025",
     tipo_mov:"a",
     monto:"500"
   }];
-  showMovSaldo();
+  */
+  var sendData = {
+    entity:"saldo",
+    action:"movimientos"
+  }
+  var onsuccess = function(json){
+    showMovSaldo(json.mov_saldo);
+  }
+  vc.peticionAjax("/comisiones", sendData, "POST", onsuccess);
+
 }
 
-var actualizarSaldo = function(saldo) {
-	$("#saldo-actual").text("$ "+saldo.toFixed(2));
-}
-
-var showMovSaldo = function(){
+var showMovSaldo = function(movSaldo){
   var tbody = $('#table-mov-saldo tbody')[0];
   var tr;
 

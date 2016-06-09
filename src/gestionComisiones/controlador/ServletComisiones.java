@@ -14,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import gestionComisiones.modelo.Comision;
+import gestionComisiones.modelo.MovimientoSaldo;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.controlador.DAONotificaciones;
 import gestionUsuarios.modelo.Cliente;
@@ -53,8 +54,10 @@ public class ServletComisiones extends HttpServlet {
 				respuesta = this.finalizar_comision (request);
 			}
 		}else if (entity != null && entity.equals("saldo")) {
-			if (action != null && action.equals ("consultar")) {
-				respuesta = this.consultarSaldo(request);
+			if (action != null && action.equals ("cargar")) {
+				respuesta = this.cargarSaldo(request);
+			} else if (action != null && action.equals ("movimientos")) {
+				respuesta = this.movimientosSaldo(request);
 			}
 		}else {
 			respuesta = new JSONObject();
@@ -294,7 +297,7 @@ public class ServletComisiones extends HttpServlet {
 				throw new ExceptionViajesCompartidos("No ha iniciado sesion como usuario valido");
 			}
 			Cliente cliente = daoUsuarios.clientePorNombre(username);
-			if (cliente == null) {
+			if (cliente == null && cliente.isActivo()) {
 				throw new ExceptionViajesCompartidos("El usuario con el que ha iniciado sesion no es un cliente");
 			}
 			// Si no hacemos refresh no se actualiza hasta que reiniciemos el tomcat
@@ -312,6 +315,38 @@ public class ServletComisiones extends HttpServlet {
 		return salida;
 	}
 
+	private JSONObject movimientosSaldo(HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		String username = null;
+		Cliente cliente = null;
+		try {
+			username = AccessManager.nombreUsuario(request);
+			if (username == null) {
+				throw new ExceptionViajesCompartidos("No ha iniciado sesion como usuario valido");
+			}
+			cliente = daoUsuarios.clientePorNombre(username);
+			if (cliente == null && cliente.isActivo()) {
+				throw new ExceptionViajesCompartidos("El usuario con el que ha iniciado sesion no es un cliente");
+			}
+			// Si no hacemos refresh no se actualiza hasta que reiniciemos el tomcat
+			daoUsuarios.refresh(cliente);
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			salida.put("redirect", "/login.html");
+			return salida;
+		}
+
+		List<MovimientoSaldo> lista = daocomisiones.getMovimientosSaldo(cliente.getId_usuario());
+		JSONArray movimientos = new JSONArray();
+		for (MovimientoSaldo ms : lista){
+			movimientos.add(ms.toJSON());
+		}
+		
+		salida.put ("result", true);
+		salida.put ("mov_saldo", movimientos);
+		return salida;
+	}
 
 	@SuppressWarnings("unchecked")
 	private JSONObject cargarSaldo(HttpServletRequest request) {

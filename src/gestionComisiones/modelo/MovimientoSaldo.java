@@ -18,7 +18,12 @@ import javax.persistence.Table;
 
 import gestionPuntos.modelo.TipoSancion;
 import gestionUsuarios.modelo.Cliente;
+
 import javax.persistence.NamedQuery;
+
+import org.json.simple.JSONObject;
+
+import otros.JSONable;
 
 @NamedQueries({
     	@NamedQuery(name="MovSaldo.PorCliente",query="SELECT ms FROM MovimientoSaldo ms WHERE  ms.cliente= :cliente"),//agregada por fede
@@ -26,7 +31,7 @@ import javax.persistence.NamedQuery;
 })
 @Entity
 @Table(name="MOVIMIENTO_SALDO")
-public class MovimientoSaldo {
+public class MovimientoSaldo implements JSONable{
 	
 	@Id
 	@Column(nullable=false,name="ID_MOVIMIENTO_SALDO")
@@ -114,5 +119,26 @@ public class MovimientoSaldo {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	@Override
+	public void SetJSONObject(JSONObject json) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("fecha", (this.getFecha() != null)? this.getFecha().toString().toString(): null);
+		json.put("tipo", this.getTipo_mov_saldo().descripcion);
+		json.put("monto", this.getMonto());
+		return json;
+	}
+
+	@Override
+	public Object getPrimaryKey() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
