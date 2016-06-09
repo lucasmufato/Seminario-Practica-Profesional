@@ -36,7 +36,9 @@ import otros.JSONable;
 	@NamedQuery(name="Viaje.SearchByCliente",query="SELECT v FROM Viaje v WHERE EXISTS (SELECT m FROM Maneja m WHERE v.conductor_vehiculo=m AND m.cliente= :cliente) OR EXISTS (SELECT p FROM PasajeroViaje p WHERE p.viaje=v AND p.cliente= :cliente) ORDER BY v.fecha_inicio DESC"),
 	@NamedQuery(name="Viaje.todos",query="SELECT v FROM Viaje v"),
 	@NamedQuery(name="Viaje.noIniciadosAtrasados",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= CURRENT_TIMESTAMP"),
-	@NamedQuery(name="Viaje.inicianAntes",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= :tiempo")
+	@NamedQuery(name="Viaje.inicianAntes",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= :tiempo"),
+        @NamedQuery(name="Viaje.PorVehiculo",query="SELECT vj FROM Viaje vj WHERE EXISTS (SELECT m FROM Maneja m WHERE EXISTS (SELECT ve FROM Vehiculo ve WHERE (m.viajes= vj AND m.vehiculo=ve AND ve.id_vehiculo=:id_vehiculo)))"),
+
 })
 
 @Entity
