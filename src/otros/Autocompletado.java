@@ -66,6 +66,7 @@ public class Autocompletado extends HttpServlet {
 				if (cliente.isActivo()){
 					JSONObject item = new JSONObject();
 					item.put("id", cliente.getId_usuario());
+					item.put("nombre_usuario", cliente.getNombre_usuario());
 					item.put("name", cliente.getNombre_usuario() + " - " + cliente.getEmail());
 					encontrados.add(item);
 				}

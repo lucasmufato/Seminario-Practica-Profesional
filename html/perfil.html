@@ -7,11 +7,13 @@
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="css/magicsuggest.css" />
 	<link rel="stylesheet" href="perfil.css">
 
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+	<script type="text/javascript" src="js/magicsuggest-min.js"></script>
 	<script type="text/javascript" src="js/mustache.js"></script>
 	<script type="text/javascript" src="perfil.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -113,8 +115,8 @@
 							</div>
 							{{#usuario_logueado.es_perfil_propio}}
 							<div align="center">
-								<button class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span> Puntos</button>
-								<button class="btn btn-success"><span class="glyphicon glyphicon-piggy-bank"></span> Saldo</button>
+								<a class="btn btn-success" href="/puntos.html"><span class="glyphicon glyphicon-screenshot"></span> Puntos</a>
+								<a class="btn btn-success" href="/saldo.html"><span class="glyphicon glyphicon-piggy-bank"></span> Saldo</a>
 							</div>
 							{{/usuario_logueado.es_perfil_propio}}
 	            		</div>
@@ -277,6 +279,7 @@
 			  <li><a href="/home.html">Home</a></li>
 			  <li class="active">Perfil</li>
 			</ol>
+				<button class="btn btn-success btn-xs" onclick="activarBuscarCliente();"><span class="glyphicon glyphicon-search"></span> Buscar cliente</button>
 			<header>
 				<h3 class="text-center  bg-primary ">Perfil</h3>
 			</header>
@@ -322,7 +325,28 @@
 			</div><!-- .modal-dialog -->
 		</div><!-- .modal -->
     </main>
-
+		<div id="modal-buscar-cliente" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-primary">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" onclick="closeModal('buscar-cliente')">&times;</button>
+						<h3 class="dialog-title">Buscar Cliente</h3>
+					</div><!-- modal-header -->
+					<div class="modal-body">
+						<form id="form-alta-viaje" onsubmit="return false">
+							<div class="form-group">
+								<label for="cliente" class="control-label">Ingrese cliente:</label>
+								<input type="text" class="form-control conductores-input" id="cliente" name="cliente" placeholder="Cliente"></input>
+							</div>
+						</form>
+					</div><!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" onclick="closeModal('buscar-cliente');"> Cerrar</button>
+						<button type="button" class="btn btn-success" onclick="buscarCliente();"><span class="glyphicon glyphicon-eye-open"></span> Ver perfil</button>
+					</div><!-- .modal-footer -->
+				</div><!-- .modal-content -->
+			</div><!-- .modal-dialog -->
+		</div><!-- .modal -->
 </div>
 
 </body>

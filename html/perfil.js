@@ -43,10 +43,28 @@ var loadData = function() {
 		}
 	});
 }
-
+var magic = {};
 var initUI = function(){
 	loadData();
 	$('[data-toggle="tooltip"]').tooltip();
+		magic.inputCliente = $('form input[name=cliente]').magicSuggest({
+			method: 'GET',
+			data: '/autocompletado',
+			mode: 'remote',
+			allowFreeEntries: false,
+			selectFirst: true,
+			maxSelection: 1,
+			hideTrigger: true,
+			placeholder: 'Buscar Cliente',
+			noSuggestionText: 'No hay sugerencias',
+			minChars: 3,
+			maxSelectionRenderer: function(){},
+			minCharsRenderer: function() {},
+			valueField: 'nombre_usuario',
+			dataUrlParams: {
+				entity: "cliente"
+			}
+		});
 }
 
 window.onload=initUI;
@@ -213,6 +231,18 @@ var modificarPerfilCliente = function(){
 
 }
 
+// BUSCAR cliente
+
+var activarBuscarCliente = function(){
+	magic.inputCliente.clear();
+	$('#modal-buscar-cliente').modal('show');
+}
+var buscarCliente = function(){
+	var cliente = magic.inputCliente.getValue();
+	if (cliente.length){
+		window.location="/perfil.html?usuario="+cliente;
+	}
+}
 //validaciones//
 
 var esValido = function(){
