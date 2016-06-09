@@ -1,71 +1,54 @@
 window.onload=function() {
-	consultar_saldo();
-  cargarMovSaldo();
+	consultar_puntos();
+  cargarMovPuntos();
 }
 
-var consultar_saldo = function() {
+var consultar_puntos = function() {
 	var sendData = {
-		entity: "saldo",
+		entity: "puntos",
 		action: "consultar"
 	};
 
 	var onsuccess = function(recibido) {
-		actualizarSaldo(recibido.saldo);
+		actualizarPuntos(recibido.puntos);
 		$(".loadingScreen").fadeOut();
 	}
 
-	vc.peticionAjax("/comisiones", sendData, "GET", onsuccess);
+	//vc.peticionAjax("/puntos", sendData, "GET", onsuccess);
 }
 
-var actualizarSaldo = function(saldo) {
-	$("#saldo_actual").text("$ "+saldo.toFixed(2));
+var actualizarPuntos = function(puntos) {
+	$("#puntos_actual").text("$ "+puntos.toFixed(2));
 }
 
-var enviarCarga = function () {
-	var monto = $("input[name=monto_cargar]").val();
-	var sendData = {
-		entity: "saldo",
-		action: "cargar",
-		monto: monto
-	};
-	var onsuccess = function(recibido) {
-		if(recibido.msg) {
-			vc.ventana_mensaje(recibido.msg, "Carga exitosa", "success");
-		}
-		consultar_saldo();
-	}
-
-	vc.peticionAjax("/comisiones", sendData, "POST", onsuccess);
-}
-
-// movimientos de saldo
-var cargarMovSaldo = function(){
+// movimientos de Puntos
+var cargarMovPuntos = function(){
   /*
-  movsaldo = [{
+  movPuntos = [{
     fecha:"22/04/1025",
     tipo:"a",
     monto:"500"
   }];
   */
   var sendData = {
-    entity:"saldo",
+    entity:"puntos",
     action:"movimientos"
   }
   var onsuccess = function(json){
-    showMovSaldo(json.mov_saldo);
+    showMovPuntos(json.mov_puntos);
   }
-  vc.peticionAjax("/comisiones", sendData, "POST", onsuccess);
+  //vc.peticionAjax("/puntos", sendData, "POST", onsuccess);
 
 }
 
-var showMovSaldo = function(movSaldo){
-  var tbody = $('#table-mov-saldo tbody')[0];
+var showMovPuntos = function(movPuntos){
+  var tbody = $('#table-mov-puntos tbody')[0];
   var tr;
 
 
   tbody.innerHTML = '';
 
-  if (!movSaldo || !movSaldo.length){
+  if (!movPuntos || !movPuntos.length){
     var td;
 
     tr = document.createElement ('TR');
@@ -77,7 +60,7 @@ var showMovSaldo = function(movSaldo){
     tbody.appendChild (tr);
     tr.appendChild (td);
   }
-  movSaldo.forEach(function (elem) {
+  movPuntos.forEach(function (elem) {
 
       tr = document.createElement ('TR');
       tr.appendChild (getTd (elem.fecha));
