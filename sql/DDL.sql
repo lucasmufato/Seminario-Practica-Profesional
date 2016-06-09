@@ -358,11 +358,12 @@ CREATE TABLE MOVIMIENTO_SALDO(
     id_comision_cobrada int(11) default null,
     id_pago int(11) default null,
     tipo int(11) NOT NULL,
-    
+    id_cliente int(11) not null,
     PRIMARY KEY(id_movimiento_saldo),
     FOREIGN KEY (id_comision_cobrada) REFERENCES comision_cobrada (id_comision_cobrada) ON DELETE CASCADE,
     FOREIGN KEY (id_pago) REFERENCES pago (id_pago) ON DELETE CASCADE,
     FOREIGN KEY (tipo) REFERENCES tipo_mov_saldo (id_tipo_mov_saldo) ON DELETE CASCADE
+	FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario)
 );
 
 CREATE TABLE COMENTARIO_VIAJE(

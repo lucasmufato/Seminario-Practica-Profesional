@@ -16,9 +16,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import gestionUsuarios.modelo.Cliente;
+import javax.persistence.NamedQuery;
 
 @NamedQueries({
-	
+	@NamedQuery(name="MovimientoPuntos.PorCiente",query="SELECT mp FROM MovimientoPuntos mp WHERE mp.cliente= :cliente")
+
 })
 @Entity
 @Table(name="movimiento_puntos")

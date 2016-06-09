@@ -2,10 +2,14 @@ package gestionPuntos.controlador;
 
 import gestionPuntos.controlador.*;
 import gestionPuntos.controlador.*;
+import gestionPuntos.controlador.*;
+import gestionPuntos.controlador.*;
 import gestionComisiones.controlador.*;
 import gestionComisiones.controlador.*;
 import gestionComisiones.modelo.EstadoComisionCobrada;
+import gestionComisiones.modelo.MovimientoSaldo;
 import gestionComisiones.modelo.Pago;
+import gestionPuntos.modelo.MovimientoPuntos;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.Cliente;
 import gestionUsuarios.modelo.Persona;
@@ -38,7 +42,23 @@ public class TestPuntos extends TestCase{
 	protected DAOAdministracionUsuarios daoAdmUsu = new DAOAdministracionUsuarios();
         protected DAOPuntos daopuntos = new DAOPuntos();
         
-        @Test
+        
+        
+        
+        @Test 
+        public void testGetMovimientosSaldoPorPuntos(){
+            List<MovimientoPuntos> lista = this.daopuntos.getMovimientoPuntos(2);
+            for (int i=0;i<lista.size();i++){
+                System.out.print("Cliente-"+lista.get(i).getCliente().getNombre_usuario().toString());
+                System.out.print("fecha-"+lista.get(i).getFecha().toString());
+                System.out.print("monto-"+lista.get(i).getMonto().toString());
+                System.out.println("tipo-"+lista.get(i).getTipo_mov_puntos().getDescripcion().toString());
+                //System.out.print("chofer-"+lista.get(i).getComision_cobrada().getPasajero_viaje().getViaje().getConductor().getNombre_usuario());
+                
+                }
+            }
+        
+      /*  @Test
         public void testcrearBeneficio() throws ExceptionViajesCompartidos{
             Sponsor sponsor = nuevoSponsor();
             JSONObject json_beneficio = new JSONObject();
@@ -102,15 +122,13 @@ public class TestPuntos extends TestCase{
             json.put("persona",persona );
             json.put("sponsor",sp);            
             
-            try {
-				this.daoAdmUsu.nuevoSponsor(json);
-			} catch (ExceptionViajesCompartidos e) {
-				fail(e.getMessage());
-			}
+            this.daoAdmUsu.nuevoSponsor(json);
             Sponsor sp_recuperado = (Sponsor) this.daoAdmUsu.buscarPorClaveCandidata("Sponsor", "juan_cardona_sponsor");
 
         return sp_recuperado;
-        }
+        }*/
+        
+        
         
         
         

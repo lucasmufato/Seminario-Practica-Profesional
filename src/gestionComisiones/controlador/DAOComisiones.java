@@ -18,6 +18,7 @@ import gestionComisiones.modelo.TipoMovSaldo;
 import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.PasajeroViaje;
 import gestionViajes.modelo.Viaje;
+import java.util.ArrayList;
 import otros.DataAccesObject;
 import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
@@ -232,6 +233,7 @@ public class DAOComisiones extends DataAccesObject {
                     ms.setComision_cobrada(cc);
                     ms.setMonto(cc.getMonto());
                     ms.setPago(null);
+                    ms.setCliente(pv.getViaje().getConductor());
                     Query qry = entitymanager.createNamedQuery("TipoMovSaldo.SearchById");
                     qry.setParameter("id",1);
                     TipoMovSaldo tms= (TipoMovSaldo) qry.getSingleResult();
@@ -304,6 +306,7 @@ public class DAOComisiones extends DataAccesObject {
 		 ms.setFecha(fecha);
 		 ms.setMonto(monto);
 		 ms.setPago(p);
+                 ms.setCliente(cliente);
 		 Query qry = entitymanager.createNamedQuery("TipoMovSaldo.SearchById");
 		 qry.setParameter("id",2);
 		 TipoMovSaldo tms= (TipoMovSaldo) qry.getSingleResult();
@@ -327,4 +330,14 @@ public class DAOComisiones extends DataAccesObject {
 		float saldo=cliente.getSaldo();
 	return saldo;
 	}
+        
+        public List<MovimientoSaldo> getMovimientosSaldo(int id_cliente){
+            List<MovimientoSaldo> lista_movimientos_saldo = new ArrayList();
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+            Query qry = this.entitymanager.createNamedQuery("MovSaldo.PorCliente");
+            qry.setParameter("cliente", cliente);
+            lista_movimientos_saldo = qry.getResultList();
+            return lista_movimientos_saldo;
+        }
+        
 }

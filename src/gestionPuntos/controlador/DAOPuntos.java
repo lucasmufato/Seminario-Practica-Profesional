@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 
 import static java.time.Instant.now;
+import java.util.ArrayList;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -560,7 +561,8 @@ public class DAOPuntos extends DataAccesObject {
  		Integer reputacion_nueva;
  		Integer reputacion = cliente.getReputacion();
  		reputacion_nueva =(Integer) (reputacion + calificacion)/2;	//no es un promedio, es peor
- 		return reputacion_nueva;
+ 		this.entitymanager.refresh(cliente);
+                return reputacion_nueva;
  	}
  	
  	public TipoMovimientoPuntos getTipoMovimientoPuntos(String descripcion){
@@ -590,4 +592,16 @@ public class DAOPuntos extends DataAccesObject {
         return diferencia;
         
         }
+        
+        
+        public List<MovimientoPuntos> getMovimientoPuntos(int id_cliente){
+            List<MovimientoPuntos> lista_mov_puntos = new ArrayList();
+            Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
+            Query qry = this.entitymanager.createNamedQuery("MovimientoPuntos.PorCiente");
+            qry.setParameter("cliente", cliente);
+            lista_mov_puntos = qry.getResultList();
+            return lista_mov_puntos;        
+        }
+        
+        
 }

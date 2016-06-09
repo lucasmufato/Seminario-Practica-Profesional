@@ -17,9 +17,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import gestionPuntos.modelo.TipoSancion;
+import gestionUsuarios.modelo.Cliente;
+import javax.persistence.NamedQuery;
 
 @NamedQueries({
-	
+    	@NamedQuery(name="MovSaldo.PorCliente",query="SELECT ms FROM MovimientoSaldo ms WHERE  ms.cliente= :cliente"),//agregada por fede
+
 })
 @Entity
 @Table(name="MOVIMIENTO_SALDO")
@@ -49,6 +52,10 @@ public class MovimientoSaldo {
 	@ManyToOne(cascade=CascadeType.PERSIST)	
 	protected TipoMovSaldo tipo;
 	
+        @JoinColumn(name="ID_CLIENTE")
+	@ManyToOne(cascade=CascadeType.PERSIST)	
+	protected Cliente cliente;
+        
 	public MovimientoSaldo(){
 		
 	}
@@ -101,5 +108,11 @@ public class MovimientoSaldo {
 		this.tipo = tipo_mov_saldo;
 	}
 	
-	
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
 }
