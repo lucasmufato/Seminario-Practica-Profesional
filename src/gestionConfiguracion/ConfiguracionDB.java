@@ -1,6 +1,7 @@
 package gestionConfiguracion;
 
-class ConfiguracionDB {
+public class ConfiguracionDB {
+	////jdbc:mysql://localhost:3306/seminario
 	public String host="";
 	public String dbname="";
 	public String username="";

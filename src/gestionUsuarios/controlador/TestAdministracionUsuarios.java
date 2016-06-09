@@ -103,7 +103,11 @@ public class TestAdministracionUsuarios extends TestCase {
             json.put("sponsor",sp);
             
             
-            this.daoAdmUsu.nuevoSponsor(json);
+            try {
+				this.daoAdmUsu.nuevoSponsor(json);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
             boolean bandera = false;
             Sponsor sp_recuperado = (Sponsor) this.daoAdmUsu.buscarPorClaveCandidata("Sponsor", "juan_cardona_sponsor");
             if ( (sp_recuperado.getNombre_usuario().equals("juan_cardona_sponsor")) && (sp_recuperado.getRubro().equals("Informática")) ){

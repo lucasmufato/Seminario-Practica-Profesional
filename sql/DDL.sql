@@ -388,4 +388,3 @@ CREATE TABLE SEGUIDOR_VIAJE(
     FOREIGN KEY (id_cliente) REFERENCES cliente (id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_viaje) REFERENCES viaje (id_viaje) ON DELETE CASCADE
 );
-

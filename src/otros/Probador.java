@@ -8,18 +8,17 @@ import gestionUsuarios.controlador.*;
 import gestionComisiones.controlador.*;
 import gestionViajes.modelo.*;
 import gestionComisiones.modelo.*;
+import gestionConfiguracion.ConfiguracionDB;
+import gestionConfiguracion.EjecutadorQuery;
 import gestionUsuarios.modelo.*;
-import gestionPuntos.modelo.*;
 
 
-
-@SuppressWarnings("unused")
 public class Probador {
 	
-	DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
+	protected DAOAdministracionUsuarios dao= null;//new DAOAdministracionUsuarios();
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
+		/*
 		Probador p = new Probador();
 		p.menu();
 		//para que cree los .class
@@ -35,6 +34,33 @@ public class Probador {
 		Permiso permiso= new Permiso();
 		PermisoRol pr= new PermisoRol();
 		Cliente c= new Cliente();
+		*/
+		EjecutadorQuery exe = new EjecutadorQuery();
+		ConfiguracionDB conf = new ConfiguracionDB();
+		//creo la configuracion
+		//jdbc:mysql://localhost:3306/seminario
+		conf.host="localhost";
+		conf.dbname="seminario";
+		conf.port=3306;
+		conf.password="root";
+		conf.username="root";
+		exe.setConfiguracion(conf);
+		if(!exe.conectarse()){
+			System.out.println("no me pude conectar!");
+		}
+		if(!exe.ejecutarArchivo("DDL.sql")){
+			System.out.println("no pude ejecutar el archivo");
+		}
+		if(!exe.ejecutarArchivo("DML.sql")){
+			System.out.println("no pude ejecutar el archivo");
+		}
+		if(!exe.ejecutarArchivo("DML_geonames.sql")){
+			System.out.println("no pude ejecutar el archivo");
+		}
+		
+		if(!exe.desconectarse()){
+			System.out.println("no me pude desconectar");
+		}
 
 	}	
 	
@@ -46,7 +72,7 @@ public class Probador {
 	
 		//probarDAOUsuarioConPersona();		//funca 
 		//probarDAOselectAll();		//funca, hay q pasarle el .class.getSimpleName() y te tira devuelve la lista con los resultados
-		probarDAOselectAllJSON();	//funca, al contrario que el metodo anterior, este devuelve un arreglo de JSONObject
+		//probarDAOselectAllJSON();	//funca, al contrario que el metodo anterior, este devuelve un arreglo de JSONObject
 		//DAOpersistir();		//funca con todos, por ahi no con usuario a menos que ya tenga una persona asociada
 		//DAOActualizar();		//funcaS seguro con clases q implementan JSONable
 		//DAOasignarRolAUsuario(); //funca, tiene q ser un ROL y un USUARIO que estan con estado='a'
@@ -89,7 +115,6 @@ public class Probador {
 		try {
 			b = dao.nuevoCliente(persona,cliente);
 		} catch (ExceptionViajesCompartidos e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -108,7 +133,11 @@ public class Probador {
 		c.setPassword("jajaja");
 		c.setPuntos(5);
 		c.setReputacion(5);
-		dao.persistirUsuarioConPersona(c,1); //se puede usar este metodo por que el cliente es un usuario (cliente hereda de usuario)
+		try {
+			dao.persistirUsuarioConPersona(c,1);
+		} catch (ExceptionViajesCompartidos e) {
+			e.printStackTrace();
+		} //se puede usar este metodo por que el cliente es un usuario (cliente hereda de usuario)
 	}
 	
 	@SuppressWarnings("unused")
@@ -213,12 +242,20 @@ public class Probador {
 
 	public void DAOAsignarPermisoARol() throws ExceptionViajesCompartidos{
 												//id_rol, id_permiso
-	    System.out.println(dao.asignarPermisoARol(1,1));
+	    try {
+			System.out.println(dao.asignarPermisoARol(1,1));
+		} catch (ExceptionViajesCompartidos e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void DAOasignarRolAUsuario() throws ExceptionViajesCompartidos{
 
-	    System.out.println(dao.asignarRolAUsuario(4, 1));
+	    try {
+			System.out.println(dao.asignarRolAUsuario(4, 1));
+		} catch (ExceptionViajesCompartidos e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void DAOEliminarClaveCompuesta() throws ExceptionViajesCompartidos{
@@ -269,6 +306,10 @@ public class Probador {
 		Usuario u= new Usuario();
 		u.setEmail("segundouser@yo");
 		u.setNombre_usuario("segundouser");
-		System.out.println(dao.persistirUsuarioConPersona(u,9));
+		try {
+			System.out.println(dao.persistirUsuarioConPersona(u,9));
+		} catch (ExceptionViajesCompartidos e) {
+			e.printStackTrace();
+		}
 	}
 }
