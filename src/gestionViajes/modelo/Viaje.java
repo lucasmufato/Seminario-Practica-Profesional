@@ -38,6 +38,7 @@ import otros.JSONable;
 	@NamedQuery(name="Viaje.noIniciadosAtrasados",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= CURRENT_TIMESTAMP"),
 	@NamedQuery(name="Viaje.inicianAntes",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.no_iniciado AND v.fecha_inicio <= :tiempo"),
         @NamedQuery(name="Viaje.PorVehiculo",query="SELECT vj FROM Viaje vj WHERE EXISTS (SELECT m FROM Maneja m WHERE EXISTS (SELECT ve FROM Vehiculo ve WHERE (m.viajes= vj AND m.vehiculo=ve AND ve.id_vehiculo=:id_vehiculo)))"),
+	@NamedQuery(name="Viaje.iniciadosAntes",query="SELECT v FROM Viaje v WHERE v.estado=gestionViajes.modelo.EstadoViaje.iniciado AND v.fecha_inicio <= :tiempo")
 
 })
 

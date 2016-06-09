@@ -46,6 +46,7 @@ import com.google.maps.model.TravelMode;*/
 
 public class DAOViajes extends DataAccesObject {
 	static PlanificadorEstadoViaje planifEstadoViaje = null;
+	static PlanificadorFinalizarViaje planifFinViaje = null;
 
     public DAOViajes(){
     	super();
@@ -54,6 +55,10 @@ public class DAOViajes extends DataAccesObject {
 			if (DAOViajes.planifEstadoViaje == null) {
 				DAOViajes.planifEstadoViaje = new PlanificadorEstadoViaje (this);
 				DAOViajes.planifEstadoViaje.iniciar();
+			}
+			if (DAOViajes.planifFinViaje == null) {
+				DAOViajes.planifFinViaje = new PlanificadorFinalizarViaje (this);
+				DAOViajes.planifFinViaje.iniciar();
 			}
 		}
     }
@@ -999,6 +1004,30 @@ public class DAOViajes extends DataAccesObject {
 		qry.setParameter("tiempo", new Timestamp(new java.util.Date().getTime() + tiempo));
 		return (List<Viaje>)qry.getResultList();
 	}
+
+	//by pablo
+	public List<Viaje> listarViajesNoFinalizadosAtrasados() {
+		return listarViajesProximosAFinalizar(0);
+	}
+
+	//by pablo
+	public List<Viaje> listarViajesProximosAFinalizar(long tiempo){
+		Query qry = entitymanager.createNamedQuery("Viaje.IniciadosAntes");
+		List<Viaje> resultado_busqueda;
+		List<Viaje> atrasados = new ArrayList<Viaje>();
+		Timestamp limite = new Timestamp (new java.util.Date().getTime() + tiempo);
+
+		/* Buscamos viajes iniciados hace mas de 4 horas */
+		qry.setParameter("tiempo", new Timestamp (new java.util.Date().getTime() - 4*60*60*1000));
+		resultado_busqueda=(List<Viaje>)qry.getResultList();
+		for (Viaje viaje: resultado_busqueda) {
+			if(viaje.getFecha_autofinalizar().compareTo(limite) <= 0) {
+				atrasados.add (viaje);
+			}
+		}
+		return atrasados;
+	}
+
 
 	//by jasmin y luz
 	public boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
