@@ -53,7 +53,9 @@ INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estad
 	(19, "desasignar_conductores","Desasignar conductores","Permite desasignar conductores a un vehiculo","A"),
 
 	(20, "cargar_saldo", "Cargar saldo", "Permite cargar saldo", "A"),
-	(21, "acceder_mis_vehiculos", "Acceder a 'Mis vehiculos'", "Permite acceder a listado 'Mis vehiculos'", "A");
+	(21, "acceder_mis_vehiculos", "Acceder a 'Mis vehiculos'", "Permite acceder a listado 'Mis vehiculos'", "A"),
+
+	(22, "administrar_comisiones", "Administrar comisiones", "Permite Alta/Baja/Modificacion de comisiones", "A");
 
 INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
 	(1,1,CURRENT_DATE),
@@ -77,7 +79,8 @@ INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
 	(18,2,CURRENT_DATE),
 	(19,2,CURRENT_DATE),
 	(20,2,CURRENT_DATE),
-	(21,2,CURRENT_DATE);
+	(21,2,CURRENT_DATE),
+	(22,1,CURRENT_DATE);
 
 INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("A", "Ciudad/Estado/Región"),

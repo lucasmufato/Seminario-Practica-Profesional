@@ -88,23 +88,7 @@ permisosData.cargarSidebarPermisos = function(){
 						var nombrePermiso=permisosData.permisosp[permiso]["nombre_permiso"];
 						var estadoPermiso=permisosData.permisosp[permiso]["estado"];
 						if (nombrePermiso && estadoPermiso=="A"){
-							if (nombrePermiso == "administrar_usuarios"){
-								permisosFlags.administrar_usuarios = true;
-							} else if (nombrePermiso == "generar_reportes") {
-								permisosFlags.generar_reportes = true;
-							} else if (nombrePermiso == "acceder_perfil") {
-								permisosFlags.acceder_perfil = true;
-							} else if (nombrePermiso == "crear_viajes") {
-								permisosFlags.crear_viajes = true;
-							} else if (nombrePermiso == "buscar_viajes") {
-								permisosFlags.buscar_viajes = true;
-							} else if (nombrePermiso == "acceder_mis_viajes") {
-								permisosFlags.acceder_mis_viajes = true;
-							} else if (nombrePermiso == "cargar_saldo") {
-								permisosFlags.cargar_saldo = true;
-							} else if (nombrePermiso == "acceder_mis_vehiculos") {
-								permisosFlags.acceder_mis_vehiculos = true;
-							}
+							permisosFlags[nombrePermiso] = true;
 						}
 					}
 				}
