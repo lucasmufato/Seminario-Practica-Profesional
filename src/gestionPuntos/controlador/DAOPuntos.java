@@ -583,15 +583,11 @@ public class DAOPuntos extends DataAccesObject {
                 long mins = (totalSecs / 60) % 60;
                 long secs = totalSecs % 60;
 
-                if (hours > 0){
+                
                     diferencia = (double)diferencia + hours+(mins/60d);
-                }else{
-                    if (mins > 0){
-                        diferencia = (double)(mins/60d);   
-
-
-                    }
-                }
+               
+                
         return diferencia;
+        
         }
 }
