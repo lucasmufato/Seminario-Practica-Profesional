@@ -57,7 +57,7 @@ public class TestAdministracionUsuarios extends TestCase {
 	}
 	
 	@Test
-        public void testNuevoSponsor(){
+        public void testNuevoSponsor() throws ExceptionViajesCompartidos{
             
             //Lo malo es que no puedo hacer BORRAR TABLAS porque sino borro usuarios!!!
             //Por FK no puedo vaciar sponsor.

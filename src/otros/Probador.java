@@ -100,7 +100,7 @@ public class Probador {
 		c.SetJSONObject(json);
 	}
 	
-	public void DAOCliente(){
+	public void DAOCliente() throws ExceptionViajesCompartidos{
 		System.out.println("creando cliente");
 		Cliente c= new Cliente();
 		c.setNombre_usuario("CLiente");
@@ -211,12 +211,12 @@ public class Probador {
 		
 	}
 
-	public void DAOAsignarPermisoARol(){
+	public void DAOAsignarPermisoARol() throws ExceptionViajesCompartidos{
 												//id_rol, id_permiso
 	    System.out.println(dao.asignarPermisoARol(1,1));
 	}
 	
-	public void DAOasignarRolAUsuario(){
+	public void DAOasignarRolAUsuario() throws ExceptionViajesCompartidos{
 
 	    System.out.println(dao.asignarRolAUsuario(4, 1));
 	}
@@ -265,7 +265,7 @@ public class Probador {
 	}	
 	
 	@SuppressWarnings("unused")
-	private void probarDAOUsuarioConPersona(){
+	private void probarDAOUsuarioConPersona() throws ExceptionViajesCompartidos{
 		Usuario u= new Usuario();
 		u.setEmail("segundouser@yo");
 		u.setNombre_usuario("segundouser");

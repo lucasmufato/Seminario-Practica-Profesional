@@ -1892,7 +1892,7 @@ public class DAOViajes extends DataAccesObject {
             this.entitymanager.getTransaction().begin();
 
             Notificacion notif = new Notificacion();
-            if(cliente!=conductor){ //si no es el conductor, lo notifico al conductor
+            if(cliente.getId_usuario()!=conductor.getId_usuario()){ //si no es el conductor, lo notifico al conductor
                 //notificacion para el chofer
                 
                     notif.setCliente(conductor);
@@ -1907,7 +1907,7 @@ public class DAOViajes extends DataAccesObject {
                     //TO DO Set LINK!!
                 //fin notif
             }else{
-                if(cliente==conductor){ //si comenta el conductor, le aviso a los pasajeros
+                if(cliente.getId_usuario()==conductor.getId_usuario()){ //si comenta el conductor, le aviso a los pasajeros
                     try{
                         this.entitymanager.persist(cv); //persisto el comentario y los notifico a todos
                         this.entitymanager.getTransaction().commit();

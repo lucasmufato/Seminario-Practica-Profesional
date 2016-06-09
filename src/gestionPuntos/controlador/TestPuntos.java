@@ -39,7 +39,7 @@ public class TestPuntos extends TestCase{
         protected DAOPuntos daopuntos = new DAOPuntos();
         
         @Test
-        public void testcrearBeneficio(){
+        public void testcrearBeneficio() throws ExceptionViajesCompartidos{
             Sponsor sponsor = nuevoSponsor();
             JSONObject json_beneficio = new JSONObject();
             json_beneficio.put("nombre_usuario", "juan_cardona_sponsor");
@@ -60,7 +60,7 @@ public class TestPuntos extends TestCase{
         
         //-------------------------------------------------------------------------------//
 	@SuppressWarnings("unchecked")
-        public Sponsor nuevoSponsor(){
+        public Sponsor nuevoSponsor() throws ExceptionViajesCompartidos{
             
             
             Persona p = (Persona) this.daoAdmUsu.buscarPorPrimaryKey(new Persona(), 2);
