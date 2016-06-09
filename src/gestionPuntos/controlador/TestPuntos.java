@@ -102,7 +102,11 @@ public class TestPuntos extends TestCase{
             json.put("persona",persona );
             json.put("sponsor",sp);            
             
-            this.daoAdmUsu.nuevoSponsor(json);
+            try {
+				this.daoAdmUsu.nuevoSponsor(json);
+			} catch (ExceptionViajesCompartidos e) {
+				fail(e.getMessage());
+			}
             Sponsor sp_recuperado = (Sponsor) this.daoAdmUsu.buscarPorClaveCandidata("Sponsor", "juan_cardona_sponsor");
 
         return sp_recuperado;
