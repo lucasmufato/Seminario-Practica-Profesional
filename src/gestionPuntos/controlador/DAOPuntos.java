@@ -570,4 +570,28 @@ public class DAOPuntos extends DataAccesObject {
 	    tipo = (TipoMovimientoPuntos) q2.getSingleResult();
  		return tipo;
  	}
+        
+        public double diferenciaTimestampsParaVehiculos(Timestamp salida_viaje, Timestamp cancelacion){
+        
+        double diferencia = 0;        
+        long long_salida = salida_viaje.getTime();
+        long long_cancelacion = cancelacion.getTime();
+        long long_diferencia = long_salida - long_cancelacion;
+        
+                long totalSecs = long_diferencia/1000;
+                long hours = (totalSecs / 3600);
+                long mins = (totalSecs / 60) % 60;
+                long secs = totalSecs % 60;
+
+                if (hours > 0){
+                    diferencia = (double)diferencia + hours+(mins/60d);
+                }else{
+                    if (mins > 0){
+                        diferencia = (double)(mins/60d);   
+
+
+                    }
+                }
+        return diferencia;
+        }
 }
