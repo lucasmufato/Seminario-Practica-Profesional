@@ -42,6 +42,7 @@ $(document).ready(function(){
     	maxView: 2,
 		autoclose: true,
     	todayBtn: true,
+			endDate: new Date(),
 		clearBtn: true,
 	});
 

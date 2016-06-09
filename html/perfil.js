@@ -55,7 +55,7 @@ var initUI = function(){
 			selectFirst: true,
 			maxSelection: 1,
 			hideTrigger: true,
-			placeholder: 'Buscar Cliente',
+			placeholder: 'Buscar usuario',
 			noSuggestionText: 'No hay sugerencias',
 			minChars: 3,
 			maxSelectionRenderer: function(){},
@@ -107,6 +107,7 @@ function setearEventos(){
 			maxView: 2,
 		autoclose: true,
 			todayBtn: true,
+			endDate: new Date(),
 		clearBtn: true,
 	});
 
