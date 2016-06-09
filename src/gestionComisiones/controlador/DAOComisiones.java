@@ -168,7 +168,7 @@ public class DAOComisiones extends DataAccesObject {
 		if(precio<=0){
 			throw new ExceptionViajesCompartidos("ERROR: EL PRECIO NO PUEDE SER NEGATIVO");
 		}
-		Integer id_comision = (Integer) datos.get("comision");
+		Integer id_comision = (Integer) datos.get("id_comision");
 		if(id_comision==null){
 			throw new ExceptionViajesCompartidos("ERROR: FALTA LA COMISION A MODIFICAR");
 		}

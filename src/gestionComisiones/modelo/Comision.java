@@ -131,7 +131,14 @@ public class Comision implements JSONable {
 
 	@Override
 	public JSONObject toJSON() {
-		return null;
+		JSONObject json = new JSONObject();
+		json.put("id_comision", this.id_comision);
+		json.put("limite_inferior", this.limite_inferior);
+		json.put("limite_superior", this.limite_superior);
+		json.put("precio", this.precio);
+		json.put("fecha_inicio", ((this.fecha_inicio != null)? this.fecha_inicio.toString(): null));
+		json.put("fecha_fin", ((this.fecha_fin != null)? this.fecha_fin.toString(): null));
+		return json;
 	}
 
 	@Override

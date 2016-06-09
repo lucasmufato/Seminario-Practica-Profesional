@@ -53,14 +53,14 @@
 	background-color: #ecf0f1;
 }
 
-.tabSection header {
+.tabSection header, header.titulo {
 	background-color: #303F9F;
 	color: white;
 	margin-bottom: 1%;
 	margin-top: 0px;
 }
 
-.tabSection header h3 {
+.tabSection header h3, header.titulo h3 {
 	text-align: center;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
