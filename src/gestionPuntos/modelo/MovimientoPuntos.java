@@ -15,7 +15,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.json.simple.JSONObject;
+
 import gestionUsuarios.modelo.Cliente;
+import otros.JSONable;
+
 import javax.persistence.NamedQuery;
 
 @NamedQueries({
@@ -25,7 +29,7 @@ import javax.persistence.NamedQuery;
 @Entity
 @Table(name="movimiento_puntos")
 
-public class MovimientoPuntos {
+public class MovimientoPuntos implements JSONable{
 	
 	@Id
 	@Column(nullable=false,name="ID_MOVIMIENTOS_PUNTOS")
@@ -94,6 +98,27 @@ public class MovimientoPuntos {
 
 	public void setTipo_mov_puntos(TipoMovimientoPuntos tipo_mov_puntos) {
 		this.tipo_mov_puntos = tipo_mov_puntos;
+	}
+
+	@Override
+	public void SetJSONObject(JSONObject json) {
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("id", this.id_movimiento_puntos);
+		json.put("monto", this.monto);
+		json.put("cliente", this.cliente.getNombre_usuario());
+		json.put("fecha", (this.fecha != null)? this.fecha.toString().toString(): null);
+		json.put("tipo_mov_punto", this.tipo_mov_puntos.getId_tipo_mov_puntos());
+		return json;
+	}
+
+	@Override
+	public Object getPrimaryKey() {
+		return null;
 	}
 	
 }
