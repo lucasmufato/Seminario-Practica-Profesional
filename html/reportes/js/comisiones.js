@@ -31,29 +31,30 @@ window.onload= function(){
 
 var generarReporte = function(){
 	var data = {};
-	data.id_desde = $("#reportForm input[name=iddesde]").val();
-	data.id_hasta = $("#reportForm input[name=idhasta]").val();
+	data.id_viaje_desde = $("#reportForm input[name=id-viaje-desde]").val();
+	data.id_viaje_hasta = $("#reportForm input[name=id-viaje-hasta]").val();
+	data.id_comision_desde = $("#reportForm input[name=id-comision-desde]").val();
+	data.id_comision_hasta = $("#reportForm input[name=id-comision-hasta]").val();
 	var fecha_desde = $("#reportForm input[name=fechadesde]").val();
 	data.fecha_desde = (fecha_desde)? vc.fechaAMD(fecha_desde) : fecha_desde;
 	var fecha_hasta = $("#reportForm input[name=fechahasta]").val();
 	data.fecha_hasta  = (fecha_hasta)? vc.fechaAMD(fecha_hasta) : fecha_hasta;
-	data.precio_desde = $("#reportForm input[name=preciodesde]").val();
-	data.precio_hasta = $("#reportForm input[name=preciohasta]").val();
+	data.monto_desde = $("#reportForm input[name=monto-desde]").val();
+	data.monto_hasta = $("#reportForm input[name=monto-hasta]").val();
 	data.km_desde = $("#reportForm input[name=kmdesde]").val();
 	data.km_hasta = $("#reportForm input[name=kmhasta]").val();
-	data.pasajeros_desde = $("#reportForm input[name=pasajerosdesde]").val();
-	data.pasajeros_hasta = $("#reportForm input[name=pasajeroshasta]").val();
 	data.conductor = $("#reportForm input[name=conductor]").val();
 	data.estado = $("#reportForm select[name=estado]").val();
 
 	var sendData = {
-		action: "reporte_viajes",
+		action: "reporte_comisiones",
 		data: data
 	};
 	var onsuccess = function(jsonData){
 		$(".loadingScreen").fadeOut();
 			window.open(jsonData.link,"_blank");
 	}
+	//console.log("mando", data);
 	$(".loadingScreen").fadeIn();
 	vc.peticionAjax("/reportes",sendData,"POST",onsuccess);
 }

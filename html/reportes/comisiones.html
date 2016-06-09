@@ -4,12 +4,12 @@
 	<title>Reporte de viajes</title>
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="/common.css" />
-	<link rel="stylesheet" href="/reportes/css/viajes.css" />
+	<link rel="stylesheet" href="/reportes/css/comisiones.css" />
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
 
-	<script type="text/javascript" src="/reportes/js/viajes.js"></script>
+	<script type="text/javascript" src="/reportes/js/comisiones.js"></script>
 	<script type="text/javascript" src="/jquery.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/navegacion.js"></script>
@@ -23,25 +23,41 @@
 		<div class="container-fluid">
 			<ul class="breadcrumb">
 			  <li><a href="/home.html">Home</a></li>
-			  <li class="active">Reporte de viajes</li>
+			  <li class="active">Reporte de comisiones</li>
 			</ul>
 			<form class="form-horizontal" id="reportForm" onsubmit="generarReporte(); return false">
 				<header class="bg-primary">
-					<h3 class="pull-center">Reporte de Viajes</h3>
+					<h3 class="pull-center">Reporte de Comisiones</h3>
 				</header>
 				<div class="form-group">
-					<label for="iddesde" class="control-label col-md-3">Id viaje desde:</label>
+					<label for="id-viaje-desde" class="control-label col-md-3">Id viaje desde:</label>
 					<div class="col-md-3">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-triangle-top"></span></span>
-							<input type="number" class="form-control" min="0" step="1" name="iddesde" placeholder="Id viaje desde">
+							<input type="number" class="form-control" min="0" step="1" name="id-viaje-desde" placeholder="Id viaje desde">
 						</div>
 					</div>
-					<label for="idhasta" class="control-label col-md-2">Id viaje hasta:</label>
+					<label for="id-viaje-hasta" class="control-label col-md-2">Id viaje hasta:</label>
 					<div class="col-md-3">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
-							<input type="number" class="form-control" min="0" step="1" name="idhasta" placeholder="Id viaje hasta">
+							<input type="number" class="form-control" min="0" step="1" name="id-viaje-hasta" placeholder="Id viaje hasta">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id-comision-desde" class="control-label col-md-3">Id comisión desde:</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<span class="input-group-addon"><span class="glyphicon glyphicon-triangle-top"></span></span>
+							<input type="number" class="form-control" min="0" step="1" name="id-comision-desde" placeholder="Id comision desde">
+						</div>
+					</div>
+					<label for="id-comision-hasta" class="control-label col-md-2">Id comisión hasta:</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<span class="input-group-addon"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
+							<input type="number" class="form-control" min="0" step="1" name="id-comision-hasta" placeholder="Id comisión hasta">
 						</div>
 					</div>
 				</div>
@@ -62,50 +78,34 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="preciodesde" class="control-label col-md-3">Precio mínimo:</label>
+					<label for="monto-desde" class="control-label col-md-3">Monto mínimo:</label>
 					<div class="col-md-3">
 						<div class="input-group">
 							<span class="input-group-addon "> <span class="glyphicon glyphicon-usd"></span></span>
-							<input type="number" class="form-control" min="0" step="0.01" name="preciodesde"  placeholder="Precio Mínimo" id="preciodesde">
+							<input type="number" class="form-control" min="0" step="0.01" name="monto-desde"  placeholder="Monto Mínimo" id="monto-desde">
 						</div>
 					</div>
-					<label for="preciohasta" class="control-label col-md-2">Precio máximo:</label>
+					<label for="monto-hasta" class="control-label col-md-2">Monto máximo:</label>
 					<div class="col-md-3">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
-							<input type="number" class="form-control" min="0" step="0.01" placeholder="Precio Máximo" name="preciohasta" id="preciohasta">
+							<input type="number" class="form-control" min="0" step="0.01" placeholder="Monto Máximo" name="monto-hasta" id="monto-hasta">
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="kmdesde" class="control-label col-md-3">Km Mínimo:</label>
+					<label for="kmdesde" class="control-label col-md-3">Kms Mínimo:</label>
 					<div class="col-md-3">
 						<div class="input-group">
 							<span class="input-group-addon "> <span class="glyphicon glyphicon-scale"></span></span>
 							<input type="number" class="form-control" min="0" step="0.01" name="kmdesde"  placeholder="Km Mínimo" id="kmdesde">
 						</div>
 					</div>
-					<label for="kmhasta" class="control-label col-md-2">Km Máximo:</label>
+					<label for="kmhasta" class="control-label col-md-2">Kms Máximo:</label>
 					<div class="col-md-3">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-scale"></span></span>
 							<input type="number" class="form-control" min="0" step="0.01" placeholder="Km Máximo" name="kmhasta" id="kmhasta">
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="pasajerosdesde" class="control-label col-md-3">Pasajeros Mínimo:</label>
-					<div class="col-md-3">
-						<div class="input-group">
-							<span class="input-group-addon "> <span class="glyphicon glyphicon-user"></span></span>
-							<input type="number" class="form-control" min="0" step="1" name="pasajerosdesde"  placeholder="Pasajeros desde" id="pasajerosdesde">
-						</div>
-					</div>
-					<label for="pasajeroshasta" class="control-label col-md-2">Pasajeros Máximo:</label>
-					<div class="col-md-3">
-						<div class="input-group">
-							<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-							<input type="number" class="form-control" min="0" step="1" placeholder="Pasajeros hasta" name="pasajeroshasta" id="pasajeroshasta">
 						</div>
 					</div>
 				</div>
@@ -123,10 +123,11 @@
 							<span class="input-group-addon"><span class="glyphicon glyphicon-adjust"></span></span>
 							<select type="text" class="form-control" name="estado" placeholder="Estado">
 								<option value="">Todos</option>
-								<option value="0">Iniciado</option>
-								<option value="1">No iniciado</option>
-								<option value="2">Finalizado</option>
-								<option value="3">Cancelado</option>
+								<option value="0">Pendiente</option>
+								<option value="1">Pagado</option>
+								<option value="2">Vencido</option>
+								<option value="3">Informativa</option>
+								<option value="4">Desestimada</option>
 							</select>
 						</div>
 					</div>
