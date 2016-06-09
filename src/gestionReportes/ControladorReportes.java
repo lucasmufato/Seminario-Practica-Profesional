@@ -135,6 +135,8 @@ public class ControladorReportes extends HttpServlet {
 		java.sql.Date fecha_hasta = parsearFecha(request.getParameter("data[fecha_hasta]"));
 		Double km_desde = parsearDouble(request.getParameter("data[km_desde]"));
 		Double km_hasta = parsearDouble(request.getParameter("data[km_hasta]"));
+		Integer asientos_desde = parsearInteger(request.getParameter("data[asientos_desde]"));
+		Integer asientos_hasta = parsearInteger(request.getParameter("data[asientos_hasta]"));
 		java.math.BigDecimal monto_desde = parsearBigDecimal(request.getParameter("data[monto_desde]"));
 		java.math.BigDecimal monto_hasta = parsearBigDecimal(request.getParameter("data[monto_hasta]"));
 
@@ -150,6 +152,8 @@ public class ControladorReportes extends HttpServlet {
 		parameters.put("monto_hasta", monto_hasta);
 		parameters.put("km_desde", km_desde);
 		parameters.put("km_hasta", km_hasta);
+		parameters.put("asientos_desde", asientos_desde);
+		parameters.put("asientos_hasta", asientos_hasta);
 
 		JasperPrint jasperPrint = this.fillReporte(reportFileName, parameters);
 		if (jasperPrint == null){

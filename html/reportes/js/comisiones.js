@@ -45,7 +45,8 @@ var generarReporte = function(){
 	data.km_hasta = $("#reportForm input[name=kmhasta]").val();
 	data.conductor = $("#reportForm input[name=conductor]").val();
 	data.estado = $("#reportForm select[name=estado]").val();
-
+	data.asientos_desde = $("#reportForm input[name=asientos-desde]").val();
+	data.asientos_hasta = $("#reportForm input[name=asientos-hasta]").val();
 	var sendData = {
 		action: "reporte_comisiones",
 		data: data

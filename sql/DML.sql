@@ -55,7 +55,7 @@ INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estad
 	(20, "cargar_saldo", "Cargar saldo", "Permite cargar saldo", "A"),
 	(21, "acceder_mis_vehiculos", "Acceder a 'Mis vehiculos'", "Permite acceder a listado 'Mis vehiculos'", "A"),
 
-	(22, "administrar_comisiones", "Administrar comisiones", "Permite Alta/Baja/Modificacion de comisiones", "A");
+	(22, "administrar_comisiones", "Administrar comisiones", "Permite Alta/Baja/Modificacion de comisiones", "A"),
 	(23, "acceder_puntos", "Acceder a 'puntos'", "Permite ver puntos actuales y los movimientos", "A");
 	
 INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
