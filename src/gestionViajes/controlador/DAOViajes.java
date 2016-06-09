@@ -485,13 +485,14 @@ public class DAOViajes extends DataAccesObject {
 		ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
 		float saldo_necesario = cc.getMonto();
 		float saldo_cliente = cliente.getSaldo();
-        daocomisiones.cerrarConexiones();		//hay que cerrar el dao
-        daocomisiones=null;
+                daocomisiones.cerrarConexiones();		//hay que cerrar el dao
+                daocomisiones=null;
 		if(saldo_necesario>saldo_cliente){
 			throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
 		}
-		   //fin saldo                       
-                
+		   //fin saldo
+                double distancia_origen_destino = this.distanciaEntreLocalidades(viaje.getOrigen(), viaje.getDestino());
+                this.autoTieneViaje(maneja, viaje.getFecha_inicio(), distancia_origen_destino);
              
 		//si el viaje tiene marcado que es de ida y vuelta, le digo al viaje q cree la vuelta y le paso los datos de la misma
 		vuelta=(JSONObject) datos.get("vuelta");
@@ -2175,5 +2176,37 @@ public class DAOViajes extends DataAccesObject {
             });
             return lista_ordenada;        
             }
-                
+               
+          
+          //by fede
+          public boolean autoTieneViaje(Maneja maneja, Timestamp fecha_hora_viaje, double kms_viaje) throws ExceptionViajesCompartidos{
+              DAOPuntos daopuntos = new DAOPuntos();
+              Vehiculo vehiculo =  maneja.getVehiculo();
+              
+              Query qry = this.entitymanager.createNamedQuery("Viaje.PorVehiculo");
+              qry.setParameter("id_vehiculo", vehiculo.getId_vehiculo());
+              List<Viaje> lista_viajes = qry.getResultList();
+              for(int i=0;i<lista_viajes.size();i++){
+                  Timestamp fecha_hora_viaje_recuperado = lista_viajes.get(i).getFecha_inicio();
+                  double diferencia = daopuntos.diferenciaTimestampsParaVehiculos(fecha_hora_viaje, fecha_hora_viaje_recuperado);
+                    if(diferencia>=0){//si el viaje a crear es posterior al que recupero
+                        double kms_viaje_recuperado = this.distanciaEntreLocalidades(lista_viajes.get(i).getDestino(),lista_viajes.get(i).getOrigen());
+                        if(diferencia < (kms_viaje_recuperado/100) ){ //supongo
+                            throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO TIENE VIAJES EN SIMULTANEO (O CERCANO) AL VIAJE QUE INTENTA CREAR");
+                        }                   
+                        
+                    }else{ //si el viaje que creo es anterior al que miro
+                        
+                        if(Math.abs(diferencia) < (kms_viaje/100) ){ //supongo
+                            throw new ExceptionViajesCompartidos("ERROR: EL VEHICULO TIENE VIAJES EN SIMULTANEO (O CERCANO) AL VIAJE QUE INTENTA CREAR");
+                        }  
+                    
+                    }
+                        
+                  }
+                  
+                  
+              
+              return false;
+          }
 }
