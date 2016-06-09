@@ -710,7 +710,8 @@ public class DAOViajes extends DataAccesObject {
 		if(comisionCobrada==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO SE PUDO RECUPERAR LA COMISION A COBRAR");
 		}
-		
+		float monto_nuevo = (comisionCobrada.getMonto()) * (pasajero.getNro_asientos());
+                comisionCobrada.setMonto(monto_nuevo);
 		comisionCobrada.setMovimiento_saldo(null);
 		comisionCobrada.setPasajero_viaje(null);
 		comisionCobrada.setEstado(EstadoComisionCobrada.informativa);		//significa que se guarda solo para saber cuanto le dijimos q le ibamos a cobrar cuando se postulo
