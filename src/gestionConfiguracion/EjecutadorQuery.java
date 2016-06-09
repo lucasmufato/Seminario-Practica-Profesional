@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 public class EjecutadorQuery {
@@ -17,6 +19,18 @@ public class EjecutadorQuery {
 	
 	public EjecutadorQuery(){
 		this.conectado=false;
+	}
+	
+	public ResultSet ejecutarQuery(String query){
+		 Statement stmt = null;
+		 try {
+			 stmt = this.conn.createStatement();
+			 ResultSet rs = stmt.executeQuery(query);
+			 return rs;
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+			 return null;
+		 }
 	}
 	
 	public boolean conectarse(){
@@ -36,8 +50,14 @@ public class EjecutadorQuery {
 	    	DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
 	    	//jdbc:mysql://localhost:3306/seminario
 			conn = DriverManager.getConnection("jdbc:mysql://"+this.configuracion.host+":"+this.configuracion.port
-					+"/"+this.configuracion.dbname,
-					this.configuracion.username,this.configuracion.password);
+					+"/"+this.configuracion.dbname //+"?max_allowed_packet=25000000000" no estaria funcando
+					,this.configuracion.username,this.configuracion.password);
+			this.ejecutarQuery("set global max_allowed_packet=99999999");
+			ResultSet r = this.ejecutarQuery("show variables like 'max_allowed_packet'");
+			System.out.println("resultado de cambiar variable global: ");
+			r.next();
+			System.out.print (r.getString(1) +"  ");
+			System.out.println (r.getInt(2) );
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -60,7 +80,7 @@ public class EjecutadorQuery {
 	}
 	
 	public boolean ejecutarArchivo(String archivo){
-		ScriptRunner runner = new ScriptRunner(this.conn,false , false);
+		ScriptRunner runner = new ScriptRunner(this.conn,false , true);
 		try {
 			runner.runScript(new BufferedReader(new FileReader(archivo)));
 		} catch (FileNotFoundException e) {

@@ -26,18 +26,21 @@ public class TestEjecutadorQuery {
 			System.out.println("no pude ejecutar el archivo");
 		}
 		System.out.println("DDL.sql ejecutado con exito");
-		System.out.println("ingrese algo para ejecutar DML.sql");
-		s.nextLine();
-		if(!exe.ejecutarArchivo("DML.sql")){
-			System.out.println("no pude ejecutar el archivo");
-		}
-		System.out.println("DML.sql ejecutado con exito");
+		
 		System.out.println("ingrese algo para ejecutar DML_geonames.sql");
 		s.nextLine();
 		if(!exe.ejecutarArchivo("DML_geonames.sql")){
 			System.out.println("no pude ejecutar el archivo");
 		}
 		System.out.println("DML_geonames.sql ejecutado con exito");
+		
+		System.out.println("ingrese algo para ejecutar DML.sql");
+		s.nextLine();
+		if(!exe.ejecutarArchivo("DML.sql")){
+			System.out.println("no pude ejecutar el archivo");
+		}
+		System.out.println("DML.sql ejecutado con exito");
+		
 		System.out.println("desconectando a la BD");
 		if(!exe.desconectarse()){
 			System.out.println("no me pude desconectar");
