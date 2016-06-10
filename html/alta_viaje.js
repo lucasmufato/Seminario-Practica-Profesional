@@ -16,7 +16,7 @@ initMapa = function() {
 		drawingControl: false,
 		zoom: 4
 	});
-	
+
 	mapData.directionsService = new google.maps.DirectionsService();
 	mapData.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	mapData.directionsDisplay.setMap (mapData.map);
@@ -35,7 +35,7 @@ puntosRecorrido = function(){
 	}
 	return devolver;
 }
-	
+
 redibujar = function() {
 	/* Quitar marcadores antiguos del mapa */
 	mapData.marcadores.forEach(function(item) {
@@ -54,7 +54,7 @@ redibujar = function() {
 		return null;
 	}
 	recorrido.forEach(function(item) {
-	
+
 		mapData.marcadores.push (new google.maps.Marker({
 			position: {
 				lat: item.lat,
@@ -89,7 +89,7 @@ pedirRuta = function () {
 		travelMode:google.maps.TravelMode.DRIVING,
 		waypoints: listarPuntosIntermedios()
 	};
-	
+
   mapData.directionsService.route(solicitud, function(result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       mapData.directionsDisplay.setDirections(result);
@@ -103,6 +103,8 @@ validar = function () {
 }
 
 enviarForm = function ()  {
+	// CIERRO EL MODAL DE comisiones
+	closeModal("confirmar-viaje");
 	if (validar()) {
 
 		var sendData = {
@@ -137,7 +139,7 @@ enviarForm = function ()  {
 		};
 
 		vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
-	} 
+	}
 
 	return false;
 }
@@ -207,10 +209,10 @@ getSelectedVehiculo = function() {
 				encontrado = v;
 			}
 		})
-	} 
-	
+	}
+
 	return encontrado;
-	
+
 }
 
 window.onload = function () {
@@ -315,4 +317,29 @@ window.onload = function () {
 	$('.loadingScreen').fadeOut();
 }
 
+// COMISION ESTIMADA DEL VIAJE POR TRAMO Y PASAJERO
+var activarConfirmarViaje = function(){
+	cargarComisiones();
+	return false;
+}
+var cargarComisiones = function(){
+	var sendData = {
+		entity:"viaje",
+		action:"informar_comision",
+		origen: magic.inputOrigen.getValue()[0],
+		destino: magic.inputDestino.getValue()[0],
+		intermedios: magic.inputIntermedios.getValue()
+	}
+	var onsuccess = function(json){
+		comisiones = json.comisiones;
+		var template = $("#comisiones-template").html();
+		var html = Mustache.render(template,json);
+		$("#comisiones").html(html);
+		$("#modal-confirmar-viaje").modal("show");
+	}
+	vc.peticionAjax("/viajes", sendData, "POST", onsuccess);
+}
 
+var closeModal = function (name) {
+	$('#modal-' + name).modal('hide');
+}

@@ -78,6 +78,8 @@ public class ServletViaje extends HttpServlet {
 				respuesta = this.seguir_viaje (request);
 			} else if (action != null && action.equals("dejar_de_seguir")) {
 				respuesta = this.dejar_de_seguir (request);
+			} else if (action != null && action.equals("informar_comision")) {
+				respuesta = this.informarComision (request);
 			}
 		} else if (entity != null && entity.equals ("vehiculo")) {
 			if (action != null && action.equals ("new")) {
@@ -118,7 +120,6 @@ public class ServletViaje extends HttpServlet {
 		System.out.println (respuesta);
 		writer.println (respuesta);
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -914,8 +915,53 @@ public class ServletViaje extends HttpServlet {
 		return respuesta;
 	}
 
-	public JSONObject comision_por_recorrido(Integer id_localidad_subida, Integer id_localidad_bajada, Integer id_viaje){
-		return null;
+	private JSONObject informarComision(HttpServletRequest request) {
+		JSONObject respuesta = new JSONObject();
+
+		// Chequeo que usuario es cliente
+		if (!this.usuarioEsClienteValido(request)){
+			respuesta.put("result", false);
+			respuesta.put("redirect", "/home.html");
+			return respuesta;
+		}
+		ArrayList<Integer> localidades=new ArrayList<>();
+		try {
+			Integer origen = Integer.parseInt(request.getParameter("origen"));
+			localidades.add(origen);
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Origen no válido");
+			return respuesta;
+		} try {
+			String[] locs = request.getParameterValues("intermedios[]");
+			if (locs != null) {
+				for (String loc : locs) {
+					localidades.add(Integer.parseInt(loc));
+				}
+			}
+		} catch (NumberFormatException e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Punto intermédio no es válido");
+			return respuesta;
+		} try {
+			Integer destino = Integer.parseInt(request.getParameter("destino"));
+			localidades.add(destino);
+		} catch (Exception e) {
+			respuesta.put("result", false);
+			respuesta.put("msg", "Destino no válido");
+			return respuesta;
+		} 
+		
+		JSONArray comisionRecorrido = daoViajes.comisionPorRecorrido(localidades);
+		if (comisionRecorrido==null){
+			respuesta.put("result", false);
+			respuesta.put("msg", "Error al cargar valor de comisiones");
+			return respuesta;
+		}
+		respuesta.put("result", true);
+		respuesta.put("comisiones", comisionRecorrido);
+		respuesta.put("msg", "Las comisiones se han cargado correctamente");
+		return respuesta;
 	}
 
 	@SuppressWarnings("unchecked")

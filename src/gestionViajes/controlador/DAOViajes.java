@@ -2172,8 +2172,21 @@ public class DAOViajes extends DataAccesObject {
             }//fin for
             return true;
         }
-        
-        public float informarPrecioTramo (int id_localidad1, int id_localidad2) throws ExceptionViajesCompartidos{
+		public JSONArray comisionPorRecorrido(ArrayList<Integer> localidades) {
+			Localidad l1,l2 = null;
+			JSONArray recorrido = new JSONArray();
+			for (int i=0; i<localidades.size()-1;i++){
+				JSONObject tramo = new JSONObject();
+				l1=(Localidad) this.buscarPorPrimaryKey(new Localidad(), localidades.get(i));
+				l2=(Localidad) this.buscarPorPrimaryKey(new Localidad(), localidades.get(i+1));
+				tramo.put("origen", l1.toJSON());
+				tramo.put("destino", l2.toJSON());
+				tramo.put("comision", this.informarPrecioTramo(l1.getId(), l2.getId()));
+				recorrido.add(tramo);
+			}
+			return recorrido;
+		}
+        public float informarPrecioTramo (int id_localidad1, int id_localidad2){
             float precio = 0;
             Localidad localidad1 = (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_localidad1);
             Localidad localidad2 = (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_localidad2);

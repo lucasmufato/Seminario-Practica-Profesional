@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="/css/magicsuggest.css" />
 	<link rel="stylesheet" href="/common.css" />
 	<link rel="stylesheet" href="/alta_viaje.css" />
-	
+
 	<script type="text/javascript" src="/jquery.js"></script>
 	<script type="text/javascript" src=""></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
@@ -19,6 +19,18 @@
 	<script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2P6zmQmOyESf872DSdZgYam9PMJnzwg&callback=initMapa"></script>
 	<script type="text/javascript" src="/alta_viaje.js"></script>
 	<script type="text/javascript" src="/navegacion.js"></script>
+
+	<script id="comisiones-template"  type="text/template">
+		{{#comisiones}}
+		<p>
+				<span class="label label-primary">{{origen.nombre}}</span>
+				<span class="glyphicon glyphicon-arrow-right"></span>
+				<span class="label label-primary">{{destino.nombre}}</span>
+				<span class="glyphicon ">=</span>
+				<span class="label label-success"><span class="glyphicon glyphicon-usd"></span> {{comision}}</span>
+		</p>
+		{{/comisiones}}
+	</script>
 </head>
 <body>
 	<div class="loadingScreen"></div>
@@ -28,7 +40,7 @@
 			  <li><a href="/home.html">Home</a></li>
 			  <li class="active">Crear Viaje</li>
 			</ol>
-			<form id="form-alta-viaje" onsubmit="return enviarForm()" class="form-horizontal">
+			<form id="form-alta-viaje" onsubmit="return activarConfirmarViaje()" class="form-horizontal">
 				<header class="bg-primary"><h3 class="pull-center">Crear Viaje</h3></header>
 				<div class="form-group">
 					<div class="col-md-6">
@@ -39,9 +51,9 @@
 					</div>
 					<div class="col-md-6">
 						<label for="vehiculo" class="control-label col-md-4">Vehículo:</label>
-						<div class="col-md-8">	
+						<div class="col-md-8">
 							<select class="form-control" name="vehiculo" id="vehiculo">
-							</select>			
+							</select>
 						</div>
 					</div>
 				</div>
@@ -83,7 +95,7 @@
 							<select class="form-control" name="tipo_viaje" id="tipo">
 								<option value="ida">Solo ida</option>
 								<option value="ida_vuelta">Ida y Vuelta</option>
-							</select>		
+							</select>
 						</div>
 					</div>
 					<div class="col-md-12">
@@ -109,7 +121,7 @@
 						<label for="asientos-ida" class="control-label col-md-4">Asientos libres:</label>
 						<div class="col-md-8">
 							<select class="form-control" name="asientos-ida" id="asientos">
-							</select>		
+							</select>
 						</div>
 					</div>
 				</div>
@@ -138,12 +150,12 @@
 						<label for="asientos-vuelta" class="control-label col-md-4">Asientos libres:</label>
 						<div class="col-md-8">
 							<select class="form-control" name="asientos-vuelta" id="asientos">
-							</select>		
+							</select>
 						</div>
 					</div>
 				</div>
 
-			
+
 				<div class="form-group">
 					<div class="col-xs-offset-7 col-sm-offset-9 col-md-offset-10">
 						<button class="btn btn-primary" id="boton" ><span class="glyphicon glyphicon-road"></span> Crear</button>
@@ -152,6 +164,30 @@
 
 			</form>
     	</div>
+
+			<div id="modal-confirmar-viaje" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content panel-success">
+						<div class="modal-header panel-heading">
+							<button type="button" class="close" onclick="closeModal('confirmar-viaje')">&times;</button>
+							<h3 class="dialog-title"> Confirmar Viaje</h3>
+						</div><!-- modal-header -->
+						<div class="modal-body">
+							<div id="confirmar-viaje-message" class="">
+								<p>Comisión a abonar por pasajero segun los tramos seleccionados: </p>
+							</div>
+							<div id="comisiones" class="text-center">
+								<!-- Generado dinamicamente-->
+							</div>
+							<p><small>No se le cobrara comisión en caso de no existir pasajeros inscriptos a su viaje en el momento de finalizado el viaje.</small></p>
+						</div><!-- modal-body -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" onclick="closeModal('confirmar-viaje');"> Cerrar</button>
+							<button type="button" class="btn btn-primary" onclick="enviarForm()"><span class="glyphicon glyphicon-road"></span> Confirmar viaje</button>
+						</div><!-- .modal-footer -->
+					</div><!-- .modal-content -->
+				</div><!-- .modal-dialog -->
+			</div><!-- .modal -->
 	</main>
-</body>	
+</body>
 </html>
