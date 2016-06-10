@@ -15,18 +15,23 @@ import org.json.simple.JSONObject;
 
 import gestionPuntos.modelo.MovimientoPuntos;
 import gestionPuntos.modelo.TipoMovimientoPuntos;
+import gestionUsuarios.controlador.DAOAdministracionUsuarios;
+import gestionUsuarios.modelo.Cliente;
+import otros.AccessManager;
 import otros.ExceptionViajesCompartidos;
 
 public class ServletPuntos extends HttpServlet  {
 	private static final long serialVersionUID = 1L;
 	protected DAOPuntos daopuntos;
+	protected DAOAdministracionUsuarios daoUsuarios;
 	
 	public void init() throws ServletException {
 		daopuntos= new DAOPuntos();
+		daoUsuarios=new DAOAdministracionUsuarios();
 	}
 	
 	@Override
-	public void doPost (HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
 		PrintWriter writer = response.getWriter();
 		String action = request.getParameter("action");
@@ -35,6 +40,16 @@ public class ServletPuntos extends HttpServlet  {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Type", "application/json; charset=UTF-8");
 		
+		if (entity != null && entity.equals ("puntos")) {
+			if (action != null && action.equals ("consultar")) {
+				respuesta = this.consultarPuntos (request);
+			}
+		}else {
+			respuesta = new JSONObject();
+			respuesta.put ("result", false);
+			respuesta.put ("msg", "No implementado");
+		}
+		
 		respuesta.put("entity", entity);
 		respuesta.put("action", action);
 		
@@ -42,18 +57,19 @@ public class ServletPuntos extends HttpServlet  {
 		writer.println (respuesta);
 	}
 	
-	public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doPost (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject respuesta = new JSONObject();
 		PrintWriter writer = response.getWriter();
 		String action = request.getParameter("action");
 		String entity = request.getParameter("entity");
 		
-		if (entity != null && entity.equals ("tipoMovimientoPuntos")) {
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Type", "application/json; charset=UTF-8");
+		
+		if (entity != null && entity.equals ("puntos")) {
 			if (action != null && action.equals("todos")) {
 				respuesta = this.tipoMovimientoPuntos (request);
-			}
-		}else if(entity != null && entity.equals ("movimientoPuntos")){
-			if (action != null && action.equals("porId")) {
+			} else if (action != null && action.equals("movimientos")) {
 				respuesta = this.movimientoPuntos (request);
 			}
 		}else {
@@ -91,30 +107,56 @@ public class ServletPuntos extends HttpServlet  {
 		return salida;
 	}
 
+	
+	private JSONObject consultarPuntos(HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		String username;
+		int puntos;
+		try {
+			username = AccessManager.nombreUsuario(request);
+			if (username == null) {
+				throw new ExceptionViajesCompartidos("No ha iniciado sesion como usuario valido");
+			}
+			Cliente cliente = daoUsuarios.clientePorNombre(username);
+			if (cliente == null && cliente.isActivo()) {
+				throw new ExceptionViajesCompartidos("El usuario con el que ha iniciado sesion no es un cliente");
+			}
+			// Si no hacemos refresh no se actualiza hasta que reiniciemos el tomcat
+			daoUsuarios.refresh(cliente);
+			puntos = cliente.getPuntos();
+		} catch (Exception e) {
+			salida.put("result", false);
+			salida.put("msg", e.getMessage());
+			salida.put("redirect", "/home.html");
+			return salida;
+		}
+
+		salida.put ("result", true);
+		salida.put("puntos", puntos);
+		return salida;
+	}
+
+	
 	private JSONObject movimientoPuntos(HttpServletRequest request) {
 		
-		ArrayList<String> err = new ArrayList<String>();
 		JSONObject salida = new JSONObject();
-		Integer id_cliente=null;
-		try {
-			id_cliente = Integer.parseInt( request.getParameter("descripcion") );
-		} catch (Exception e) {
-			err.add("id_comision no es valido");
-		}
-		if(err.size() > 0) {
+		
+		Integer id_cliente=AccessManager.getIdUsuario(request);
+				
+		List<MovimientoPuntos> movimientos =this.daopuntos.getMovimientoPuntos(id_cliente);
+		if (movimientos == null){
 			salida.put("result", false);
-			salida.put("msg", err);
+			salida.put("msg","Error al cargar sus movimientos de puntos");
 			return salida;
 		}
 		
-		List<MovimientoPuntos> movimientos =this.daopuntos.getMovimientoPuntos(id_cliente);
 		JSONArray array = new JSONArray();
 		for(MovimientoPuntos mp: movimientos){
 			array.add(mp.toJSON());
 		}
 		
 		salida.put("result", true);
-		salida.put("MovimientosPuntos", array);
+		salida.put("mov_puntos", array);
 		return salida;
 	}
 }

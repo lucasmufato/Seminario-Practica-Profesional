@@ -113,6 +113,7 @@ public class MovimientoPuntos implements JSONable{
 		json.put("cliente", this.cliente.getNombre_usuario());
 		json.put("fecha", (this.fecha != null)? this.fecha.toString().toString(): null);
 		json.put("tipo_mov_punto", this.tipo_mov_puntos.getId_tipo_mov_puntos());
+		json.put("descripcion", this.tipo_mov_puntos.getDescripcion());
 		return json;
 	}
 

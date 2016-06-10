@@ -34,7 +34,7 @@
         <servlet-name>autocompletado</servlet-name>
         <url-pattern>/autocompletado</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>viajes</servlet-name>
         <servlet-class>gestionViajes.controlador.ServletViaje</servlet-class>
@@ -43,7 +43,7 @@
         <servlet-name>viajes</servlet-name>
         <url-pattern>/viajes</url-pattern>
     </servlet-mapping>
-	
+
 	<servlet>
         <servlet-name>perfil</servlet-name>
         <servlet-class>gestionUsuarios.controlador.Perfil</servlet-class>
@@ -52,7 +52,7 @@
         <servlet-name>perfil</servlet-name>
         <url-pattern>/perfil</url-pattern>
     </servlet-mapping>
-	
+
 	<servlet>
         <servlet-name>reportes</servlet-name>
         <servlet-class>gestionReportes.ControladorReportes</servlet-class>
@@ -61,7 +61,7 @@
         <servlet-name>reportes</servlet-name>
         <url-pattern>/reportes</url-pattern>
     </servlet-mapping>
-	
+
 	<servlet>
         <servlet-name>notificaciones</servlet-name>
         <servlet-class>gestionUsuarios.controlador.ServletNotificaciones</servlet-class>
@@ -79,7 +79,14 @@
         <servlet-name>comisiones</servlet-name>
         <url-pattern>/comisiones</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>puntos</servlet-name>
+        <servlet-class>gestionPuntos.controlador.ServletPuntos</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>puntos</servlet-name>
+        <url-pattern>/puntos</url-pattern>
+    </servlet-mapping>
 	<servlet>
         <servlet-name>dbconfig</servlet-name>
         <servlet-class>gestionConfiguracion.ServletDBConfig</servlet-class>

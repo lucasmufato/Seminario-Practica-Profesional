@@ -14,22 +14,15 @@ var consultar_puntos = function() {
 		$(".loadingScreen").fadeOut();
 	}
 
-	//vc.peticionAjax("/puntos", sendData, "GET", onsuccess);
+	vc.peticionAjax("/puntos", sendData, "GET", onsuccess);
 }
 
 var actualizarPuntos = function(puntos) {
-	$("#puntos_actual").text("$ "+puntos.toFixed(2));
+	$("#puntos_actual").text(puntos);
 }
 
 // movimientos de Puntos
 var cargarMovPuntos = function(){
-  /*
-  movPuntos = [{
-    fecha:"22/04/1025",
-    tipo:"a",
-    monto:"500"
-  }];
-  */
   var sendData = {
     entity:"puntos",
     action:"movimientos"
@@ -37,7 +30,7 @@ var cargarMovPuntos = function(){
   var onsuccess = function(json){
     showMovPuntos(json.mov_puntos);
   }
-  //vc.peticionAjax("/puntos", sendData, "POST", onsuccess);
+  vc.peticionAjax("/puntos", sendData, "POST", onsuccess);
 
 }
 
@@ -53,7 +46,7 @@ var showMovPuntos = function(movPuntos){
 
     tr = document.createElement ('TR');
     td = document.createElement ('TD');
-    td.setAttribute ('colspan', 3);
+    td.setAttribute ('colspan', 2);
     td.textContent = "No hay resultados para la busqueda";
     td.className = "warning";
 
@@ -64,7 +57,7 @@ var showMovPuntos = function(movPuntos){
 
       tr = document.createElement ('TR');
       tr.appendChild (getTd (elem.fecha));
-      tr.appendChild (getTd (elem.tipo));
+      tr.appendChild (getTd (elem.descripcion));
       tr.appendChild (getTd (elem.monto));
 
       var thistr = tr;
