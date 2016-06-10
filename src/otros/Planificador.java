@@ -63,7 +63,7 @@ public abstract class Planificador implements Runnable {
 		if(tiempo == null || tiempo.compareTo(new Date ()) <= 0) {
 			// Si la tarea no tiene tiempo asignado o bien el tiempo es en el pasado, ejecutarla inmediatamente
 			this.ejecutor.ejecutar(tarea);
-		} else if (tiempo.compareTo(proximaPlanificacion) <= 0){
+		} else if (proximaPlanificacion != null && tiempo.compareTo(proximaPlanificacion) <= 0){
 			// Si la tarea deberia ejecutarse antes de la proxima corrida del planificador, programarla
 			this.ejecutor.programarTarea(tarea);
 		}

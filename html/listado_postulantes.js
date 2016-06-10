@@ -81,6 +81,7 @@ var cargarPostulantes = function(){
 		elem.color_panel = colorPanel(elem.estado_postulacion);
 		elem.reputacion_stars = reputacionStars(elem.reputacion);
 		elem.foto_revisada = elem.foto || "/img/perfil/default.png";
+		elem.comision_tramo = Number(elem.comision_tramo).toFixed(2);
 		if (elem.es_pendiente = elem.estado_postulacion == "postulado"){
 			htmlPendientes += Mustache.render(template, elem);
 		}else{

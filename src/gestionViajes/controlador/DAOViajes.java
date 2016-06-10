@@ -696,10 +696,11 @@ public class DAOViajes extends DataAccesObject {
 		}
 		pasajero.setNro_asientos(nro_asientos);
 		
-		Double km = viaje.calcularKM(localidad_subida,localidad_bajada);
+		//Double km = viaje.calcularKM(localidad_subida,localidad_bajada);
+		Double km = this.distanciaEntreLocalidades(localidad_subida, localidad_bajada);
 		pasajero.setKilometros(km);
 		pasajero.setComision(null);
-		
+
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
 		
 		DAOComisiones daocomision= new DAOComisiones();
@@ -710,7 +711,7 @@ public class DAOViajes extends DataAccesObject {
 		if(comisionCobrada==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO SE PUDO RECUPERAR LA COMISION A COBRAR");
 		}
-		float monto_nuevo = (comisionCobrada.getMonto()) * (pasajero.getNro_asientos());
+		Float monto_nuevo = (comisionCobrada.getMonto()) * ((Integer)(pasajero.getNro_asientos())).floatValue();
                 comisionCobrada.setMonto(monto_nuevo);
 		comisionCobrada.setMovimiento_saldo(null);
 		comisionCobrada.setPasajero_viaje(null);

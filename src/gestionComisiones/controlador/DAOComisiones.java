@@ -18,7 +18,9 @@ import gestionComisiones.modelo.TipoMovSaldo;
 import gestionUsuarios.modelo.Cliente;
 import gestionViajes.modelo.PasajeroViaje;
 import gestionViajes.modelo.Viaje;
+
 import java.util.ArrayList;
+
 import otros.DataAccesObject;
 import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
