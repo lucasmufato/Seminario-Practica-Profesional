@@ -105,6 +105,7 @@ public class DAOComisiones extends DataAccesObject {
 		
 		try{
     		this.entitymanager.getTransaction( ).commit( );	
+                 this.entitymanager.refresh(comision);
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -179,8 +180,8 @@ public class DAOComisiones extends DataAccesObject {
 		}
 		
 		if(this.entitymanager.getTransaction().isActive()){
-            this.entitymanager.getTransaction().rollback();
-        }
+                    this.entitymanager.getTransaction().rollback();
+                }
 		this.entitymanager.getTransaction().begin();
 		
 		comision.setLimite_inferior(limite_inferior);
@@ -188,11 +189,12 @@ public class DAOComisiones extends DataAccesObject {
 		comision.setPrecio(precio);		
 		
 		try{
-    		this.entitymanager.getTransaction( ).commit( );	
-    	}catch(RollbackException e){
-    		String error= ManejadorErrores.parsearRollback(e);
-    		throw new ExceptionViajesCompartidos("ERROR: "+error);
-    	}
+                    this.entitymanager.getTransaction( ).commit( );	
+                    this.entitymanager.refresh(comision);
+                }catch(RollbackException e){
+                    String error= ManejadorErrores.parsearRollback(e);
+                    throw new ExceptionViajesCompartidos("ERROR: "+error);
+                }
 		
 		return true;
 	}
