@@ -178,7 +178,9 @@ public class DAOComisiones extends DataAccesObject {
 		if(comision==null){
 			throw new ExceptionViajesCompartidos("ERROR: LA COMISION NO EXISTE EN EL SISTEMA");
 		}
-		
+		if(comision.getComisiones_cobradas().size()>0){
+			throw new ExceptionViajesCompartidos("ERROR: NO SE PUEDE MODIFICAR UNA COMISION QUE TIENE COMISIONES COBRADAS ASOCIADAS");
+		}
 		if(this.entitymanager.getTransaction().isActive()){
                     this.entitymanager.getTransaction().rollback();
                 }
