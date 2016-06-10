@@ -43,7 +43,7 @@ data.loadData = function() {
 			data.usuario_logueado = jsonData.usuario_logueado;
 			data.comentarios = jsonData.comentarios;
 
-			if(jsonData.recargar_en != undefined) {
+			if(jsonData.recargar_en != undefined && jsonData.recargar_en > 0) {
 				window.setTimeout(data.loadData, jsonData.recargar_en);
 			}
 			configurarUi();
