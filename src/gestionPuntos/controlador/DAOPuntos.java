@@ -193,7 +193,7 @@ public class DAOPuntos extends DataAccesObject {
         long long_cancelacion = cancelacion.getTime();
         long long_diferencia = long_salida - long_cancelacion;
         if(long_diferencia<0){
-            diferencia= 0.000001;
+            diferencia= 0.01;
         }else{
                 long totalSecs = long_diferencia/1000;
                 long hours = (totalSecs / 3600);
