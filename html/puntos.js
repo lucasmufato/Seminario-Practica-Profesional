@@ -46,7 +46,7 @@ var showMovPuntos = function(movPuntos){
 
     tr = document.createElement ('TR');
     td = document.createElement ('TD');
-    td.setAttribute ('colspan', 2);
+    td.setAttribute ('colspan', 3);
     td.textContent = "No hay resultados para la busqueda";
     td.className = "warning";
 

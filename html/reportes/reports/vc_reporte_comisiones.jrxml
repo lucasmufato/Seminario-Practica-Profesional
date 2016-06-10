@@ -140,14 +140,14 @@
 				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="e1d3487e-407c-4bee-84f8-59aa1c31c319"/>
 			</line>
 			<staticText>
-				<reportElement mode="Opaque" x="1" y="0" width="56" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="5aa54663-cd51-4397-a81b-c4a8a9140e8b"/>
+				<reportElement mode="Opaque" x="1" y="0" width="66" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="5aa54663-cd51-4397-a81b-c4a8a9140e8b"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Comisión]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="57" y="0" width="110" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="606b671e-b8c2-4795-81d0-6fd44c29203b"/>
+				<reportElement mode="Opaque" x="67" y="0" width="100" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="606b671e-b8c2-4795-81d0-6fd44c29203b"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -204,14 +204,14 @@
 				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="03a46b0e-1440-4238-a44b-fa5fd49c5c9a"/>
 			</line>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="1" y="0" width="56" height="20" uuid="eeea11b0-d900-490f-9430-a6ff5ec5f175"/>
+				<reportElement x="1" y="0" width="66" height="20" uuid="eeea11b0-d900-490f-9430-a6ff5ec5f175"/>
 				<textElement textAlignment="Center">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Comision}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="57" y="0" width="110" height="20" uuid="f05c2d0d-18a3-4875-8965-2e8d7ef8452d"/>
+				<reportElement x="67" y="0" width="100" height="20" uuid="f05c2d0d-18a3-4875-8965-2e8d7ef8452d"/>
 				<textElement textAlignment="Center">
 					<font size="11"/>
 				</textElement>
