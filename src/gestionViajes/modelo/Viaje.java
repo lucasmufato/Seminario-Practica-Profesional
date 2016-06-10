@@ -24,6 +24,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 import gestionUsuarios.modelo.Cliente;
+
 import javax.persistence.NamedQuery;
 
 import otros.ExceptionViajesCompartidos;
@@ -136,13 +137,14 @@ public class Viaje implements JSONable {
 		Double distancia=0.0;
 		
 		while(!encontrado){
-			if ( this.localidades.get(index).getLocalidad()==localidad_subida ){
+
+			if ( this.localidades.get(index).getLocalidad().id_localidad == localidad_subida.id_localidad ){
 				entremedio=true;
 			}
 			if(entremedio){	//si estoy entre la localidad de subida y la de bajada cuento los KMs
 				distancia+=this.localidades.get(index).kms_a_localidad_siguiente;
 			}
-			if (this.localidades.get(index).getLocalidad() == localidad_bajada){
+			if (this.localidades.get(index).getLocalidad().id_localidad == localidad_bajada.id_localidad){
 				entremedio=false;
 				encontrado=true;
 			}

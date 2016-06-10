@@ -1030,7 +1030,12 @@ public class ServletViaje extends HttpServlet {
 		postulante.put("nombres", p.getNombres());
 		postulante.put("telefono", p.getTelefono());
 		postulante.put("mail", c.getEmail());
+		postulante.put("comision_tramo", String.valueOf(pv.getComision().getMonto()));
 		
+		System.out.println("");
+		System.out.println(pv.getComision().getMonto());
+		System.out.println("");
+
 		return postulante;
 	}
 
