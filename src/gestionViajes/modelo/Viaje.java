@@ -462,7 +462,7 @@ public class Viaje implements JSONable {
 		JSONArray disponibilidad_asientos = new JSONArray();
 		for (LocalidadViaje locviaje: locs) {
 			recorrido.add (locviaje.getLocalidad().getId());
-			disponibilidad_asientos.add (this.getAsientos_disponibles() - locviaje.getCantidad_pasajeros() -1);
+			disponibilidad_asientos.add (this.getAsientos_disponibles() - locviaje.getCantidad_pasajeros());
 		}
 
 		// WARNING: recorrido debe tener al menos dos puntos o va a fallar
