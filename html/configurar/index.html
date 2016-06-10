@@ -13,7 +13,6 @@
 
 <body>
 
-	<div class="loadingScreen"></div>
 	<div class="col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10">
 
 		<div class="panel panel-primary" id="panel_db">
@@ -105,8 +104,8 @@
 		  <div class="panel-footer clearfix">
 			<div class="btn-group pull-right" role="group">
 				<p></p>
-			  <button class="btn btn-default" type="submit" onclick="paso1()"><span class="glyphicon glyphicon-step-backward"></span> Volver</button>
-			  <button id="button_paso3" class="btn btn-success" type="submit" onclick="paso3()"><span class="glyphicon glyphicon-step-forward"></span> Siguiente</button>
+			  <button id="buttonVolverAPaso1" class="btn btn-default" type="submit" onclick="paso1()"><span class="glyphicon glyphicon-step-backward"></span> Volver</button>
+			  <button id="buttonSiguienteAPaso3" id="button_paso3" class="btn btn-success" type="button" onclick="paso3()" disabled><span class="glyphicon glyphicon-step-forward"></span> Siguiente</button>
 			</div>
 		  </div>
 		</div>
@@ -135,7 +134,7 @@
 		  </div>
 		  <div class="panel-footer clearfix">
 			<div class="btn-group pull-right" role="group">
-			  <button class="btn btn-default" type="submit" onclick="paso2()"><span class="glyphicon glyphicon-step-backward"></span> Volver</button>
+			  <button class="btn btn-default" type="button" onclick="paso2()"><span class="glyphicon glyphicon-step-backward"></span> Volver</button>
 			  <button id="button_paso4" class="btn btn-success" type="submit" onclick="paso4()"><span class="glyphicon glyphicon-step-forward"></span> Siguiente</button>
 			</div>
 		  </div>
@@ -165,8 +164,8 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-success">
-					<button type="button" class="close" onclick="closeModal('Success')">&times;</button>
-					<h3 class="dialog-title"> Éxito!</h3>
+					<button type="button" class="close" onclick="$('#modalSuccess').modal('hide')">&times;</button>
+					<h3 class="dialog-title"> Configuracion exitosa!</h3>
 				</div><!-- modal-header -->
 				<div class="modal-body">
 					<div id="successMessage">
@@ -175,7 +174,7 @@
 				</div><!-- modal-body -->
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-success" onclick="ingresarLogin();"><span class="glyphicon glyphicon-ok"></span> Ingresar</button>
+					<button type="button" class="btn btn-success" onclick="window.location='/login.html'"><span class="glyphicon glyphicon-ok"></span> Ingresar</button>
 				</div><!-- .modal-footer -->
 			</div><!-- .modal-content -->
 		</div><!-- .modal-dialog -->

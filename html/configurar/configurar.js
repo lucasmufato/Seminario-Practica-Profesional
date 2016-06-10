@@ -1,3 +1,5 @@
+configuracionExitosa=false;
+
 window.onload=function() {
 	$('#panel_db').hide();
 	$('#panel_progreso').hide();
@@ -9,8 +11,20 @@ comprobar_configuracion = function() {
 	// Esta funcion deberia enviar una query al servidor para preguntarle si ya esta configurado
 	// Si no esta configurado muestra el panel de configuracion
 	// Si ya esta configurado muestra el cartel "ya esta configurado" y redirije al index
-	$('.loadingScreen').fadeOut();
-	paso1();
+	$.ajax({
+		url: '/dbconfig',
+		method: 'POST',
+		data: {action: "esta_configurado"},
+		dataType: 'json',
+		success: function(recv) {
+			if (recv.configurado) {
+				configuracionExitosa=true;
+				cartel_exito();
+			} else {
+				paso1();
+			}
+		}
+	});
 }
 
 paso1 = function() {
@@ -23,7 +37,16 @@ paso1 = function() {
 paso2 = function() {
 	// Esta funcion tiene que mandar los datos ingresados en el formulario al servlet y mostrar el panel de progreso
 	// El panel de progreso tiene que actualizarse cada cierto tiempo para mostrar los cambios
+
+	if (configuracionExitosa) {
+		$('#panel_db').hide();
+		$('#panel_adminpass').hide();
+		$('#panel_progreso').show();
+		return null;
+	}
 	
+	$("#buttonVolverAPaso1").prop("disabled", false);
+	$("#buttonSiguienteAPaso3").prop("disabled", true);
 	$("#progressbar_instalacion").removeClass("progress-bar-success");
 	$("#progressbar_instalacion").removeClass("progress-bar-danger");
 	$("#progressbar_instalacion").removeClass("active");
@@ -31,6 +54,7 @@ paso2 = function() {
 	relojitos(0);
 
 	var sendData = {
+		action: 'configurar',
 		host: $('input[name=db_host]').val(),
 		port: $('input[name=db_port]').val(),
 		username: $('input[name=db_username]').val(),
@@ -47,6 +71,7 @@ paso2 = function() {
 		dataType: 'json',
 		success: function(recv) {
 			if (recv.result) {
+				llave_pass = recv.llave;
 				$('#panel_db').hide();
 				$('#panel_adminpass').hide();
 				$('#panel_progreso').show();
@@ -65,6 +90,38 @@ paso3 = function() {
 	$('#panel_db').hide();
 	$('#panel_progreso').hide();
 	$('#panel_adminpass').show();
+}
+
+paso4 = function() {
+	var pass = $('#adminpass').val();
+
+	if (pass.length < 6) {
+		$('#errorMessage').html('La contrase&ntilde;a introducida es demasiado corta.<br>Ingrese una contrase&ntilde;a de al menos 6 caracteres');
+		$('#modalError').modal('show');
+		return null;
+	}
+
+	var sendData = 
+
+	$.ajax({
+		url: '/dbconfig',
+		method: 'POST',
+		data: {
+			action: 'set_password',
+			password: pass,
+			llave: llave_pass
+		},
+		dataType: 'json',
+		success: function(recv) {
+			if (recv.result) {
+				$('#panel_adminpass').hide();
+				cartel_exito();
+			} else {
+				$('#errorMessage').html(recv.msg);
+				$('#modalError').modal('show');
+			}
+		}
+	});
 }
 
 comprobar_estado = function() {
@@ -98,6 +155,9 @@ comprobar_estado = function() {
 					pb.addClass("progress-bar-success");
 					pb.removeClass("active");
 					pb.css({width: "100%"});
+					$("#buttonVolverAPaso1").prop("disabled", true);
+					$("#buttonSiguienteAPaso3").prop("disabled", false);
+					configuracionExitosa=true;
 					relojitos(5);
 					break;
 				case "fallo":
@@ -127,4 +187,9 @@ relojitos = function (step, err) {
 			item.className="glyphicon glyphicon-hourglass";
 		}
 	}
+}
+
+cartel_exito = function() {
+	$('#successMessage').html("El servidor fue configurado correctamente <br>Ya puede ingresar al sistema con un usuario y una contrase&ntilde;a");
+	$('#modalSuccess').modal('show');
 }

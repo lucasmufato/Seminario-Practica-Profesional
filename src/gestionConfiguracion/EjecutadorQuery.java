@@ -33,6 +33,18 @@ public class EjecutadorQuery {
 			 return null;
 		 }
 	}
+
+	public boolean ejecutarStatement(String query){
+		 Statement stmt = null;
+		 try {
+			 stmt = this.conn.createStatement();
+			 boolean rs = stmt.execute(query);
+			 return rs;
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+			 return false;
+		 }
+	}
 	
 	public boolean conectarse(){
 		return conectarse(false);
