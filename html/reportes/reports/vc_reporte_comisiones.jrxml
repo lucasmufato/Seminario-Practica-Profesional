@@ -70,7 +70,7 @@
             and (Comision <= $P!{id_comision_hasta} or $P!{id_comision_hasta} is null)
             and (Fecha >= "$P!{fecha_desde}"  or "$P!{fecha_desde}" = "null")
             and (Fecha <= "$P!{fecha_hasta}" or "$P!{fecha_hasta}" = "null")
-            and (LOWER(Conductor) LIKE LOWER("%$P!{conductor}%"))
+            and (LOWER(Conductor) = LOWER("$P!{conductor}")  or "$P!{conductor}" = "")
             and (Estado LIKE "$P!{estado}%")
             and (Km >= $P!{km_desde} or $P!{km_desde} is null)
             and (Km <= $P!{km_hasta} or $P!{km_hasta} is null)

@@ -7,14 +7,16 @@
 	<link rel="stylesheet" href="/reportes/css/comisiones.css" />
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="/css/magicsuggest.css" />
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
 
-	<script type="text/javascript" src="/reportes/js/comisiones.js"></script>
 	<script type="text/javascript" src="/jquery.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/navegacion.js"></script>
 	<script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="/js/locales/bootstrap-datetimepicker.es.js"></script>
+	<script type="text/javascript" src="/reportes/js/comisiones.js"></script>
+	<script type="text/javascript" src="/js/magicsuggest-min.js"></script>
+	<script type="text/javascript" src="/navegacion.js"></script>
 </head>
 
 <body>
@@ -29,6 +31,22 @@
 				<header class="bg-primary">
 					<h3 class="pull-center">Reporte de Comisiones</h3>
 				</header>
+				<div class="form-group">
+					<label for="fechadesde" class="control-label col-md-3">Fecha desde:</label>
+					<div class="col-md-3">
+						<div class="input-group date form_date">
+							<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
+							<input type="text" class="form-control" name="fechadesde"  placeholder="Fecha desde" id="fechadesde">
+						</div>
+					</div>
+					<label for="fechahasta" class="control-label col-md-2">Fecha hasta:</label>
+					<div class="col-md-3">
+						<div class="input-group date form_date">
+							<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>
+							<input type="text" class="form-control" placeholder="Fecha hasta" name="fechahasta" id="fechahasta">
+						</div>
+					</div>
+				</div>
 				<div class="form-group">
 					<label for="id-viaje-desde" class="control-label col-md-3">Id viaje desde:</label>
 					<div class="col-md-3">
@@ -58,22 +76,6 @@
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span></span>
 							<input type="number" class="form-control" min="0" step="1" name="id-comision-hasta" placeholder="Id comisión hasta">
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="fechadesde" class="control-label col-md-3">Fecha desde:</label>
-					<div class="col-md-3">
-						<div class="input-group date form_date">
-							<span class="input-group-addon " onclick="$('#fechadesde').datetimepicker('show');"> <span class="glyphicon glyphicon-calendar"></span></span>
-							<input type="text" class="form-control" name="fechadesde"  placeholder="Fecha desde" id="fechadesde">
-						</div>
-					</div>
-					<label for="fechahasta" class="control-label col-md-2">Fecha hasta:</label>
-					<div class="col-md-3">
-						<div class="input-group date form_date">
-							<span class="input-group-addon" onclick="$('#fechahasta').datetimepicker('show');"><span class="glyphicon glyphicon-calendar"></span></span>
-							<input type="text" class="form-control" placeholder="Fecha hasta" name="fechahasta" id="fechahasta">
 						</div>
 					</div>
 				</div>

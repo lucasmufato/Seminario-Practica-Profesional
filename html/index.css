@@ -9,7 +9,7 @@ body {
   justify-content: center;
   align-items: center;
   background-image: url("img/index/fondo1.jpg");
-  background-size: cover;  
+  background-size: cover;
   background-repeat:no-repeat;
   background-position:center;
   background-attachment: fixed;
@@ -21,7 +21,7 @@ body {
   width:100%;
 }
 button{
-  height:50px;
+  height:80px;
   width:50%;
 }
 .botones{

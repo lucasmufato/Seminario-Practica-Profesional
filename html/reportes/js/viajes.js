@@ -26,6 +26,24 @@ window.onload= function(){
     	todayBtn: true,
 		clearBtn: true,
 	});
+	inputConductor = $('#reportForm input[name=conductor]').magicSuggest({
+		method: 'GET',
+		data: '/autocompletado',
+		mode: 'remote',
+		allowFreeEntries: false,
+		selectFirst: true,
+		maxSelection: 1,
+		hideTrigger: true,
+		placeholder: 'Conductor',
+		noSuggestionText: 'No hay sugerencias',
+		minChars: 3,
+		maxSelectionRenderer: function(){},
+		minCharsRenderer: function() {},
+		valueField: 'nombre_usuario',
+		dataUrlParams: {
+			entity: "cliente"
+		}
+	});
 }
 
 
@@ -43,7 +61,7 @@ var generarReporte = function(){
 	data.km_hasta = $("#reportForm input[name=kmhasta]").val();
 	data.pasajeros_desde = $("#reportForm input[name=pasajerosdesde]").val();
 	data.pasajeros_hasta = $("#reportForm input[name=pasajeroshasta]").val();
-	data.conductor = $("#reportForm input[name=conductor]").val();
+	data.conductor = (inputConductor.getValue()[0]==undefined)? "" : inputConductor.getValue()[0];
 	data.estado = $("#reportForm select[name=estado]").val();
 
 	var sendData = {

@@ -112,7 +112,9 @@ actualizarTabla = function() {
 	$("#tableComisiones tbody").html("");
 	comisiones.forEach(function(cm) {
 		var tr = document.createElement("TR");
-		tr.appendChild(cTD(cm.fecha_inicio));
+		var fechaLocal = cm.fecha_inicio.replace(/-/g, '\/').split(" ")[0].split("/").reverse().join("/");
+		//tr.appendChild(cTD(cm.fecha_inicio));
+		tr.appendChild(cTD(fechaLocal));
 		tr.appendChild(cTD(cm.limite_inferior));
 		tr.appendChild(cTD(cm.limite_superior));
 		tr.appendChild(cTD("$"+cm.precio));

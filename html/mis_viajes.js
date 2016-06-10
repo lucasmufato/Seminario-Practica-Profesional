@@ -99,7 +99,6 @@ var filterer = function(item){
 
 	rctFechaDesde = (rctFechaDesde === "")? "" : new Date(Date.parse(vc.fechaAMD(rctFechaDesde).split(" ").join("T")));
 	rctFechaHasta = (rctFechaHasta === "")? "" : new Date(Date.parse(vc.fechaAMD(rctFechaHasta).split(" ").join("T")));
-	console.log("hola", rctFechaDesde,rctFechaHasta);
 	var destinoNormalizado = omitirAcentos(item.destino.toLowerCase());
 	var origenNormalizado = omitirAcentos(item.origen.toLowerCase());
 	var conductorNormalizado = omitirAcentos(item.conductor.toLowerCase());
@@ -114,7 +113,6 @@ var filterer = function(item){
 	}
 
 	var fecha = new Date (Date.parse(item.fecha_inicio.split(" ").join("T")));
-	//console.log(fecha,item.fecha_inicio);
 
 	return (esLocalidad)
 			&& (conductorNormalizado.contains(rctConductor))
