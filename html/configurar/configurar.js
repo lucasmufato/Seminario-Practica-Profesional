@@ -45,11 +45,16 @@ paso2 = function() {
 		method: 'POST',
 		data: sendData,
 		dataType: 'json',
-		success: function() {
-			$('#panel_db').hide();
-			$('#panel_adminpass').hide();
-			$('#panel_progreso').show();
-			window.setTimeout(comprobar_estado, 1000);
+		success: function(recv) {
+			if (recv.result) {
+				$('#panel_db').hide();
+				$('#panel_adminpass').hide();
+				$('#panel_progreso').show();
+				window.setTimeout(comprobar_estado, 1000);
+			} else {
+				$('#errorMessage').html(recv.msg);
+				$('#modalError').modal('show');
+			}
 		}
 	});
 	

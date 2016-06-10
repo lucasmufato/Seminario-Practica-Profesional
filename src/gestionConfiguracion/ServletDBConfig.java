@@ -1,5 +1,6 @@
 package gestionConfiguracion;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +72,9 @@ public class ServletDBConfig extends HttpServlet {
 
 	private boolean yaConfigurado() {
 		// Devuelve true si ya esta configurado.
-		File persxml = new File ("persistence.xml");
+		ServletContext context = this.getServletConfig().getServletContext();
+		String configFile = context.getRealPath ("/WEB-INF/classes/META-INF/persistence.xml");
+		File persxml = new File (configFile);
 
 		if (persxml.exists()) {
 			synchronized (this.estado) {
