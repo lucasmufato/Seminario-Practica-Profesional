@@ -1,4 +1,4 @@
-section, aside {
+section, aside, #volver {
 	font-size: 12px;
 	font-family: 'Open Sans', sans-serif;
 }
@@ -18,7 +18,7 @@ section, aside {
 }
 .articles article {
 	padding: 0em 4em 1em 4em;
-	border-bottom: 0.1em solid #000;
+	border-bottom: 0.1em solid #D32F2F;
 }
 .articles article:last-child {
 	border-bottom: none;
@@ -62,4 +62,8 @@ a {
 	text-decoration: none;
 	padding: 0 0.3em 0 0.3em;
 	color: #ecf0f1;
+}
+#volver {
+	background: #D32F2F;
+	padding: 0.8em;
 }
