@@ -418,20 +418,22 @@ public class Viaje implements JSONable {
 	public boolean actualizarEstado() {
 		Timestamp now = new Timestamp((new java.util.Date()).getTime());
 		if (
+			(this.estado == EstadoViaje.iniciado || this.estado == EstadoViaje.no_iniciado ) 
+			&& (this.fecha_finalizacion == null)
+			&& (this.getFecha_autofinalizar().compareTo(now) <= 0)
+		) {
+			this.setEstado(EstadoViaje.finalizado);
+			return true;
+		}  else if (
 			(this.estado == EstadoViaje.no_iniciado) 
 			&& (this.fecha_inicio != null)
 			&& (this.fecha_inicio.compareTo(now) <= 0)
 		) {
 			this.setEstado(EstadoViaje.iniciado);
 			return true;
-		} else if (
-			(this.estado == EstadoViaje.iniciado) 
-			&& (this.fecha_finalizacion == null)
-			&& (this.getFecha_autofinalizar().compareTo(now) <= 0)
-		) {
-			this.setEstado(EstadoViaje.finalizado);
-			return true;
-		} 
+		}
+
+
 		return false;
 	}
 	
