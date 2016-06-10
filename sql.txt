@@ -1,0 +1,2 @@
+Movi el directorio "sql" adentro de "html" para poder ejecutar los scripts desde un servlet.
+
