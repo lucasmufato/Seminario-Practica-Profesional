@@ -8,7 +8,7 @@ data.comentarios = [];
 data.usuario_logueado = {};
 
 var sendAjax = function(sendData,callback){
-	console.log("mando: ",sendData);
+	//console.log("mando: ",sendData);
 	$.ajax({
 		url: '/viajes',
 		dataType: 'json',
@@ -153,7 +153,6 @@ var listarPuntosIntermedios = function () {
 ////fin carga mapa///
 
 var simular = function(json){
-	console.log("id: ",json.id);
 	data.viaje = {
 		id: data.viaje.id ,
 		nombre_amigable: "Un alto viaje",
@@ -431,7 +430,7 @@ var enviarComentario = function(){
 	var onsuccess = function(jsonData){
 		data.loadData();
 	}
-	console.log("mando: ",sendData);
+	//console.log("mando: ",sendData);
 	vc.peticionAjax("/viajes",sendData,"POST",onsuccess);
 }
 
@@ -686,7 +685,6 @@ var cancelarParticipacion = function(){
 		es_seguidor: false,
 		es_finalizo: false,
 		ha_calificado: false*/
-		console.log(data.usuario_logueado);
 	if (data.usuario_logueado.es_postulado){
 		confirmarCancelacion();
 	}else if (data.usuario_logueado.es_aceptado){

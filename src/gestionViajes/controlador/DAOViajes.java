@@ -2207,18 +2207,18 @@ public class DAOViajes extends DataAccesObject {
         }
         
         //by fede
-          public List<Cliente> getPasajerosOrdenadosPorReputacion(Viaje viaje){
-            List<Cliente> lista_ordenada = new ArrayList<Cliente>();
-            lista_ordenada = viaje.getPasajerosTodosComoListCliente();
-            Collections.sort(lista_ordenada, new Comparator<Cliente>(){
+          public List<PasajeroViaje> getPasajerosOrdenadosPorReputacion(int idViaje){
+            List<PasajeroViaje> lista_ordenada = new ArrayList<PasajeroViaje>();
+            lista_ordenada = this.listarPasajerosPorViaje(idViaje);
+            Collections.sort(lista_ordenada, new Comparator<PasajeroViaje>(){
 
 			@Override
-			public int compare(Cliente c1, Cliente c2) {
-				return c2.getReputacion().compareTo(c1.getReputacion());
+			public int compare(PasajeroViaje pv1, PasajeroViaje pv2) {
+				return pv2.getCliente().getReputacion().compareTo(pv1.getCliente().getReputacion());
 			}
             });
             return lista_ordenada;        
-            }
+          }
                
           
           //by fede

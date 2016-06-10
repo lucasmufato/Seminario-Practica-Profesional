@@ -997,7 +997,8 @@ public class ServletViaje extends HttpServlet {
 		}
 		
 		// Tomo postulantes
-		List<PasajeroViaje> listaPasajeros = daoViajes.listarPasajerosPorViaje(idViaje);
+		//List<PasajeroViaje> listaPasajeros = daoViajes.listarPasajerosPorViaje(idViaje);
+		List<PasajeroViaje> listaPasajeros = daoViajes.getPasajerosOrdenadosPorReputacion(idViaje);
 		
 		//En el arreglo que devuelvo cargo json con la data que precisa la web
 		JSONArray postulantes = new JSONArray();
