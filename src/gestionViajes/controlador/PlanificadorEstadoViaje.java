@@ -23,6 +23,10 @@ class PlanificadorEstadoViaje extends Planificador {
 			tareas.add(new TareaIniciarViaje (this.dao, viaje));
 		}
 
+		for (Viaje viaje: dao.listarViajesNoFinalizadosAtrasados()) {
+			tareas.add(new TareaFinalizarViaje (this.dao, viaje));
+		}
+
 		if (tareas.size() > 0) {
 			System.out.println("[PLANIFICADOR]: Se encontraron "+ tareas.size()+" viajes atrasados");
 		}
@@ -41,8 +45,13 @@ class PlanificadorEstadoViaje extends Planificador {
 			tareas.add (tarea);
 		}
 
+		for (Viaje viaje: dao.listarViajesProximosAFinalizar(milisecs)) {
+			tarea = new TareaFinalizarViaje(this.dao, viaje);
+			tareas.add (tarea);
+		}
+
 		if (tareas.size() > 0) {
-			System.out.println("[PLANIFICADOR]: En los proximos "+milisecs/1000+" segundos se iniciaran "+ tareas.size()+" viajes");
+			System.out.println("[PLANIFICADOR]: En los proximos "+milisecs/1000+" segundos se iniciaran/finalizaran "+ tareas.size()+" viajes");
 		}
 
 		return tareas;

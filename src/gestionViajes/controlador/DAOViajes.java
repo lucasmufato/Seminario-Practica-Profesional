@@ -46,7 +46,6 @@ import com.google.maps.model.TravelMode;*/
 
 public class DAOViajes extends DataAccesObject {
 	static PlanificadorEstadoViaje planifEstadoViaje = null;
-	static PlanificadorFinalizarViaje planifFinViaje = null;
 
     public DAOViajes(){
     	super();
@@ -55,10 +54,6 @@ public class DAOViajes extends DataAccesObject {
 			if (DAOViajes.planifEstadoViaje == null) {
 				DAOViajes.planifEstadoViaje = new PlanificadorEstadoViaje (this);
 				DAOViajes.planifEstadoViaje.iniciar();
-			}
-			if (DAOViajes.planifFinViaje == null) {
-				DAOViajes.planifFinViaje = new PlanificadorFinalizarViaje (this);
-				DAOViajes.planifFinViaje.iniciar();
 			}
 		}
     }
