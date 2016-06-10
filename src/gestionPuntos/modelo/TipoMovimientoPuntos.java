@@ -15,13 +15,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.json.simple.JSONObject;
+
+import otros.JSONable;
+
 @NamedQueries({
 	@NamedQuery(name="TipoMovimientoPuntos.PorDescripcion",query="SELECT tmp FROM TipoMovimientoPuntos tmp WHERE tmp.descripcion LIKE :descripcion")
 		
 })
 @Entity
 @Table(name="TIPO_MOV_PUNTOS")
-public class TipoMovimientoPuntos {
+public class TipoMovimientoPuntos implements JSONable{
 	
 	@Id
 	@Column(nullable=false,name="ID_TIPO_MOV_PUNTOS")
@@ -56,5 +60,23 @@ public class TipoMovimientoPuntos {
 
 	public void setMovimientos(List<MovimientoPuntos> movimientos) {
 		this.movimientos = movimientos;
+	}
+
+	@Override
+	public void SetJSONObject(JSONObject json) {		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("id", this.id_tipo_mov_puntos);
+		json.put("descripcion", this.descripcion);
+		return json;
+	}
+
+	@Override
+	public Object getPrimaryKey() {
+		return null;
 	}
 }
