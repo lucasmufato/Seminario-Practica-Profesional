@@ -1,3 +1,5 @@
+SET NAMES utf8;
+
 CREATE TABLE PERSONA (
 	id_persona INTEGER AUTO_INCREMENT,
 	nombres VARCHAR(60) NOT NULL,
@@ -87,7 +89,6 @@ CREATE TABLE PERMISO_ROL (
 	FOREIGN KEY (id_rol) REFERENCES ROL (id_rol)
 
 );
-/*
 CREATE TABLE LOCALIDAD (
 	id_localidad INTEGER NOT NULL,
 	nombre VARCHAR (200),
@@ -112,7 +113,6 @@ CREATE TABLE LOCALIDAD (
 
 	PRIMARY KEY (id_localidad)
 );
-*/
 
 CREATE TABLE LOCALIDAD_CLASIFICACION (
 	codigo CHAR(1),
@@ -193,16 +193,6 @@ CREATE TABLE LOCALIDAD_VIAJE (
 	FOREIGN KEY (id_viaje) REFERENCES VIAJE (id_viaje) ON DELETE CASCADE,
 	FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad) ON DELETE CASCADE
 );
-
-/*	esta tabla desaparece, no descomentar
-CREATE TABLE PRECIO_COMISION(
-	id_comision int(11) NOT NULL AUTO_INCREMENT,
-	MONTO float NOT NULL,
-	FECHA_DESDE date NOT NULL,
-    FECHA_HASTA date,
-	PRIMARY KEY (id_comision, fecha_desde)
-);
-*/
 
 CREATE TABLE COMISION (
 	id_comision Int(11) NOT NULL AUTO_INCREMENT,

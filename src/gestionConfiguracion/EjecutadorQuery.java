@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 
 public class EjecutadorQuery {
@@ -34,6 +35,10 @@ public class EjecutadorQuery {
 	}
 	
 	public boolean conectarse(){
+		return conectarse(false);
+	}
+
+	public boolean conectarse(boolean crear_db){
 		if(this.configuracion==null){
 			return false;
 		}
@@ -49,8 +54,8 @@ public class EjecutadorQuery {
 	    try {
 	    	DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
 	    	//jdbc:mysql://localhost:3306/seminario
-			conn = DriverManager.getConnection("jdbc:mysql://"+this.configuracion.host+":"+this.configuracion.port
-					+"/"+this.configuracion.dbname //+"?max_allowed_packet=25000000000" no estaria funcando
+			conn = DriverManager.getConnection("jdbc:mysql://"+this.configuracion.host+":"+this.configuracion.port +"/"+(crear_db?"":this.configuracion.dbname) //+"?max_allowed_packet=25000000000" no estaria funcando
+			+"?characterEncoding=utf8"
 					,this.configuracion.username,this.configuracion.password);
 			this.ejecutarQuery("set global max_allowed_packet=99999999");
 			ResultSet r = this.ejecutarQuery("show variables like 'max_allowed_packet'");
@@ -58,6 +63,10 @@ public class EjecutadorQuery {
 			r.next();
 			System.out.print (r.getString(1) +"  ");
 			System.out.println (r.getInt(2) );
+			if(crear_db){
+				this.conectado = this.crearDB();
+				return this.conectado;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -77,6 +86,18 @@ public class EjecutadorQuery {
 			}
 		}
 		return true;
+	}
+
+	public boolean crearDB() {
+		try {
+			conn.createStatement().execute("CREATE DATABASE "+configuracion.dbname);
+			conn.createStatement().execute("ALTER DATABASE "+configuracion.dbname+" CHARSET=utf8");
+			conn.createStatement().execute("USE "+configuracion.dbname);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public boolean ejecutarArchivo(String archivo){

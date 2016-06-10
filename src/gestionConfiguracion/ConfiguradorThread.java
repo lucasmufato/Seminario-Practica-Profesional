@@ -22,6 +22,9 @@ class ConfiguradorThread implements Runnable {
 	@Override
 	public void run () {
 		boolean continuar = true;
+		EjecutadorQuery ejecutor = null;
+		ServletContext context = servlet.getServletConfig().getServletContext();
+
 		servlet.setEstadoCfg(this.estado);
 
 		this.estado.setEstado(EstadoCfg.TRABAJANDO);
@@ -32,45 +35,73 @@ class ConfiguradorThread implements Runnable {
 			servlet.setEstadoCfg(this.estado);
 		} else {
 			this.estado.setEstado(EstadoCfg.FALLO);
+			servlet.setEstadoCfg(this.estado);
 			continuar = false;
 		}
 
 		//Paso 2: Conectarse a base de datos
 		if(continuar) {
-			this.estado.stepUp();
-			servlet.setEstadoCfg(this.estado);
-		} else {
-			this.estado.setEstado(EstadoCfg.FALLO);
-			continuar = false;
+			ejecutor = new EjecutadorQuery();
+			ejecutor.setConfiguracion(this.config);
+			if (ejecutor.conectarse(createSchema)) {
+				this.estado.stepUp();
+				servlet.setEstadoCfg(this.estado);
+			} else {
+				this.estado.setEstado(EstadoCfg.FALLO);
+				servlet.setEstadoCfg(this.estado);
+				continuar = false;
+			}
 		}
 
 		//Paso 3: Crear tablas en base de datos
 		if(continuar) {
-			this.estado.stepUp();
-			servlet.setEstadoCfg(this.estado);
-		} else {
-			this.estado.setEstado(EstadoCfg.FALLO);
-			continuar = false;
+			String ddl = context.getRealPath ("/sql/DDL.sql");
+			if(ejecutor.ejecutarArchivo(ddl)){
+				this.estado.stepUp();
+				servlet.setEstadoCfg(this.estado);
+			} else {
+				this.estado.setEstado(EstadoCfg.FALLO);
+				servlet.setEstadoCfg(this.estado);
+				continuar = false;
+			}
 		}
 
-		//Paso 4: Cargar datos iniciales
+		//Paso 4: Cargar informacion geografica
 		if(continuar) {
-			this.estado.stepUp();
-			servlet.setEstadoCfg(this.estado);
-		} else {
-			this.estado.setEstado(EstadoCfg.FALLO);
-			continuar = false;
+			String dml_geo = context.getRealPath ("/sql/DML_geonames.sql");
+			if(ejecutor.ejecutarArchivo(dml_geo)) {
+				this.estado.stepUp();
+				servlet.setEstadoCfg(this.estado);
+			} else {
+				this.estado.setEstado(EstadoCfg.FALLO);
+				servlet.setEstadoCfg(this.estado);
+				continuar = false;
+			}
 		}
 
-		//Paso 5: Cargar informacion geografica
+		//Paso 5: Cargar datos iniciales
 		if(continuar) {
-			this.estado.stepUp();
-			servlet.setEstadoCfg(this.estado);
-		} else {
-			this.estado.setEstado(EstadoCfg.FALLO);
-			continuar = false;
+			String dml = context.getRealPath ("/sql/DML.sql");
+			if(ejecutor.ejecutarArchivo(dml)) {
+				this.estado.stepUp();
+				servlet.setEstadoCfg(this.estado);
+			} else {
+				this.estado.setEstado(EstadoCfg.FALLO);
+				servlet.setEstadoCfg(this.estado);
+				continuar = false;
+			}
 		}
 
+		// Completo
+		if(continuar) {
+			this.estado.setEstado(EstadoCfg.COMPLETO);
+			servlet.setEstadoCfg(this.estado);
+		}
+
+		// Cerramos la conexion a la base de datos si es necesario
+		if (ejecutor != null && ejecutor.isConectado()) {
+			ejecutor.desconectarse();
+		}
 		// Si fallo en algun paso, eliminamos el archivo de configuracion
 		if(this.estado.getEstado() == EstadoCfg.FALLO) {
 			this.eliminarPersistenceXML();
