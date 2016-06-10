@@ -137,14 +137,14 @@ public class Viaje implements JSONable {
 		Double distancia=0.0;
 		
 		while(!encontrado){
-
-			if ( this.localidades.get(index).getLocalidad().id_localidad == localidad_subida.id_localidad ){
+			if ( this.localidades.get(index).getLocalidad().getId()==localidad_subida.getId() ){
 				entremedio=true;
 			}
 			if(entremedio){	//si estoy entre la localidad de subida y la de bajada cuento los KMs
 				distancia+=this.localidades.get(index).kms_a_localidad_siguiente;
 			}
-			if (this.localidades.get(index).getLocalidad().id_localidad == localidad_bajada.id_localidad){
+			
+			if (this.localidades.get(index).getLocalidad().getId() == localidad_bajada.getId()){
 				entremedio=false;
 				encontrado=true;
 			}
@@ -153,13 +153,6 @@ public class Viaje implements JSONable {
 		
 		return distancia;
 	}
-	
-	public List<Localidad> devolver_recorrido_desde_hasta(Localidad desde, Localidad hasta){
-		// TODO
-		return null;
-	}
-	
-
 	
 	//by mufa
 	public List<Localidad> recuperarOrigenYDestino(){

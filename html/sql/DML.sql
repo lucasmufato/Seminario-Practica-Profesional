@@ -8,9 +8,9 @@ INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, de
 -- UPDATE USUARIO SET id_usuario=0 WHERE nombre_usuario="administrador";
 
 -- CREO UNOS USUARIOS PARA HACER PRUEBAS EN EL SISTEMA Y QUE ANDEN PARA TODOS
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_conductor","conductor", "conductor@mail.com","usuario para hacer viajes","A","C");
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero1","pasajero1", "pasajero1@mail.com","usuario para participar en viajes","A","C");
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero2","pasajero2", "pasajero2@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"lucasmufato","mufato", "mufato@mail.com","usuario para hacer viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"federicoretamal","retamal", "retamal@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"juancardona","cardona", "cardona@mail.com","usuario para participar en viajes","A","C");
 
 -- este metodo le da al user administrador el rol super_usuario
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, CURRENT_DATE);
@@ -117,7 +117,7 @@ INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_na
 VALUES (NULL, "Juan", "Cardona", "1", "36072559", "1992-09-23", "M", "25 de mayo, 1168", "2323-15-609065", "Hayq ue ponerle personas a los usuarios o se rompe el pobrecito perfil, sepan entender", "A");
 -- USUARIO Nro 5:
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo)
-VALUES (NULL,2,"juan23","juan23", "juan23@hotmail.com","usuario para participar en viajes","A","C");
+VALUES (NULL,2,"pablocabrera","cabrera", "cabrera@hotmail.com","usuario para participar en viajes","A","C");
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
 
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo)
@@ -134,7 +134,7 @@ INSERT INTO VIAJE (id_viaje, nombre_amigable, asientos_disponibles, estado, fech
 VALUES (NULL, 'viaje', '2', '2', '2016-04-12 00:00:00', '2016-03-10 00:00:00','2016-04-13 00:00:00', NULL, '2', '5', '2016-05-01', NULL, '25');
 -- USUARIO Nro 6:
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo)
-VALUES (NULL,2,"usuario","usuario", "usuario@usuario.us",NULL,"A","C");
+VALUES (NULL,2,"jasminpaolino","paolino", "paolino@usuario.us",NULL,"A","C");
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo)
 VALUES (6,default,default,null,null,100000);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (6, 2, CURRENT_DATE);
@@ -160,9 +160,9 @@ VALUES ('3', '3430987', '0', '10','1'), ('3', '3433780', '0', '10','2'), ('3', '
 INSERT INTO LOCALIDAD_VIAJE (id_viaje, id_localidad, cantidad_pasajeroS, kms_a_localidad_siguiente,ordinal)
 VALUES ('4', '3430977', '0', '5','1'), ('4', '3430978', '0', '5','2'), ('4', '3430979', '0', '0','3');
 
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero7","pasajero7", "pasajero7@mail.com","usuario para participar en viajes","A","C");
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero8","pasajero8", "pasajero8@mail.com","usuario para participar en viajes","A","C");
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"prueba_pasajero9","pasajero9", "pasajero9@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"luzbarcena","barcena", "barcena@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"micaelaguerrero","guerrero", "guerrero@mail.com","usuario para participar en viajes","A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,1,"matiasmedrano","medrano", "medrano@mail.com","usuario para participar en viajes","A","C");
 
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (7, 2, CURRENT_DATE);
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (8, 2, CURRENT_DATE);
