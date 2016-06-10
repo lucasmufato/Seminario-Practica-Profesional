@@ -2,6 +2,7 @@ package gestionUsuarios.modelo;
 
 import java.math.BigInteger;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -228,7 +229,16 @@ public class Persona implements JSONable {
 		this.apellidos=(String)json.get("apellidos");
 		this.tipo_doc=Integer.parseInt(json.get("tipo_doc").toString());
 		this.nro_doc=new BigInteger(json.get("nro_doc").toString());
-		this.fecha_nacimiento=(Date)json.get("fecha_nacimiento");
+		String fn=(String)json.get("fecha_nacimiento");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date parsed=null;
+		try {
+			parsed = format.parse(fn);
+		} catch (ParseException e) {
+			//this.fecha_nacimiento=null;
+			e.printStackTrace();
+		}
+        this.fecha_nacimiento = new java.sql.Date(parsed.getTime());
 		String sexo=(String) json.get("estado");
 		if(sexo!=null){
 			this.estado= json.get("estado").toString().charAt(0);

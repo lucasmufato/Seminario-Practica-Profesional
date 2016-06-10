@@ -80,7 +80,7 @@ var showMovSaldo = function(movSaldo){
   movSaldo.forEach(function (elem) {
 
       tr = document.createElement ('TR');
-      tr.appendChild (getTd (elem.fecha));
+      tr.appendChild (getTd (vc.toFechaLocal(elem.fecha)));
       tr.appendChild (getTd (elem.tipo));
       tr.appendChild (getTd (elem.monto));
 

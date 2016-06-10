@@ -56,7 +56,7 @@ var showMovPuntos = function(movPuntos){
   movPuntos.forEach(function (elem) {
 
       tr = document.createElement ('TR');
-      tr.appendChild (getTd (elem.fecha));
+      tr.appendChild (getTd (vc.toFechaLocal(elem.fecha)));
       tr.appendChild (getTd (elem.descripcion));
       tr.appendChild (getTd (elem.monto));
 

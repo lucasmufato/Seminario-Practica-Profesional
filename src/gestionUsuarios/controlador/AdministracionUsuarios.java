@@ -2,8 +2,10 @@ package gestionUsuarios.controlador;
 import java.io.*;
 
 import gestionUsuarios.modelo.*;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import otros.*;
 
 import javax.servlet.*;
@@ -288,8 +290,7 @@ public class AdministracionUsuarios extends HttpServlet {
 		recibido.put("email", request.getParameter("email"));
 		recibido.put("descripcion", request.getParameter("descripcion"));
 		recibido.put("estado", (request.getParameter("estado")));
-		recibido.put("tipo", "U");
-
+		recibido.put("tipo", "U".charAt(0));
 		usuario = new Usuario (recibido);
 		if (request.getParameter("action").equals("new")) {
 			try {

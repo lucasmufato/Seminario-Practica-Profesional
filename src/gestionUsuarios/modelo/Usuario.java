@@ -76,6 +76,10 @@ public class Usuario implements JSONable {
 		this.email= (String) json.get("email");
 		this.descripcion= (String) json.get("descripcion");
 		this.estado= json.get("estado").toString().charAt(0);
+		System.out.println("");
+		System.out.println(json.get("tipo").toString().charAt(0));
+		System.out.println("");
+		this.tipo = json.get("tipo").toString().charAt(0);
 	}
 	
 	public void asignarRol(Rol r){
@@ -212,7 +216,13 @@ public class Usuario implements JSONable {
 		}else{
 			this.estado=null;
 		}
-		this.tipo= json.get("tipo").toString().charAt(0);
+		String tipo = (String)json.get("tipo");
+		if(tipo!=null){
+			this.tipo= json.get("tipo").toString().charAt(0);
+		}else{
+			this.tipo=null;
+		}
+		//this.tipo= json.get("tipo").toString().charAt(0);
 	}
 
 	@Override

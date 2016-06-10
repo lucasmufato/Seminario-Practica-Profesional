@@ -159,10 +159,22 @@ public class Cliente extends Usuario implements JSONable {
 		}else{
 			this.estado=null;
 		}
-		this.reputacion =(Integer) json.get("reputacion");
-		this.puntos= (Integer) json.get("puntos");
-		this.foto= (String) json.get("foto");
-		this.foto_registro= (String) json.get("foto_registro");
+		Integer reputacion = (Integer) json.get("reputacion");
+		if (reputacion!=null){
+			this.reputacion =reputacion;
+		}
+		Integer puntos = (Integer) json.get("puntos");
+		if (puntos != null){
+			this.puntos= puntos;
+		}
+		String foto = (String) json.get("foto");
+		if (foto != null){
+			this.foto= foto;
+		}
+		String foto_registro = (String) json.get("foto_registro");
+		if (foto_registro != null){
+			this.foto_registro= foto;
+		}
 		this.tipo='C';
 	}
 
