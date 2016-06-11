@@ -52,9 +52,9 @@
 		cc.id_comision_cobrada AS Comision,
 		cc.fecha AS Fecha,
 		u.nombre_usuario AS Conductor,
-        pv.kilometros AS Km,
+        ROUND(pv.kilometros,2) AS Km,
         pv.nro_asientos AS Asientos,
-		cc.monto AS monto,
+		ROUND(cc.monto,2) AS monto,
 		ec.nombre_estado AS Estado
 	FROM
 		VIAJE v
@@ -103,6 +103,10 @@
 	<field name="Estado" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<variable name="monto_total" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{monto}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
 	<background>
 		<band/>
 	</background>
@@ -179,7 +183,7 @@
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Monto total]]></text>
+				<text><![CDATA[Monto]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="491" y="0" width="65" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="355ac9f9-83f4-45a4-aef6-c93fa947feb2"/>
@@ -243,7 +247,7 @@
 				<textElement textAlignment="Center">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["\$"+$F{monto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="491" y="0" width="65" height="20" uuid="07a95b1d-52b3-40ae-b080-1f0c6abb6bc7"/>
@@ -282,6 +286,21 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band/>
+		<band height="30">
+			<textField>
+				<reportElement x="491" y="10" width="65" height="20" backcolor="#FFFFFF" uuid="647da121-d354-4d89-a043-68c5f46461af"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["\$"+$V{monto_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="421" y="10" width="70" height="20" forecolor="#006699" backcolor="#FFFFFF" uuid="09640a1c-4911-4f2c-8dea-abd97cf35580"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto total:]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>

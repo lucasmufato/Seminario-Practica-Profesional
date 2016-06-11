@@ -135,42 +135,42 @@ WHERE (Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null)
 				<text><![CDATA[Id]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="42" y="0" width="79" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="dd728929-eeb2-4109-b505-b6d904d85f39"/>
+				<reportElement mode="Opaque" x="42" y="0" width="96" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="dd728929-eeb2-4109-b505-b6d904d85f39"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Conductor]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="121" y="0" width="116" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="b7b30564-bb44-4aad-990b-34b4070a190b"/>
+				<reportElement mode="Opaque" x="138" y="0" width="116" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="b7b30564-bb44-4aad-990b-34b4070a190b"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Inicio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="237" y="0" width="79" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="324749d6-d99a-4443-bd3d-2558df9ad4a1"/>
+				<reportElement mode="Opaque" x="254" y="0" width="79" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="324749d6-d99a-4443-bd3d-2558df9ad4a1"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Estado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="316" y="0" width="96" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="0f098766-a014-4623-9346-0aaf4bf4fbaa"/>
+				<reportElement mode="Opaque" x="333" y="0" width="64" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="0f098766-a014-4623-9346-0aaf4bf4fbaa"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[KMs recorridos]]></text>
+				<text><![CDATA[KMs]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="412" y="0" width="92" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="09b153ea-a7a2-4355-bd7e-d453997bf525"/>
+				<reportElement mode="Opaque" x="397" y="0" width="92" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="09b153ea-a7a2-4355-bd7e-d453997bf525"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[N° pasajeros postulados]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="504" y="0" width="49" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="ed764c17-5f30-4258-b4f0-ebca5e378be6"/>
+				<reportElement mode="Opaque" x="489" y="0" width="64" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="ed764c17-5f30-4258-b4f0-ebca5e378be6"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
@@ -191,46 +191,46 @@ WHERE (Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null)
 				<textFieldExpression><![CDATA[$F{Id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="42" y="0" width="79" height="20" uuid="c32f7fa8-9b5b-4359-b71d-210ec798e54a"/>
+				<reportElement x="42" y="0" width="96" height="20" uuid="c32f7fa8-9b5b-4359-b71d-210ec798e54a"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Conductor}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="121" y="0" width="116" height="20" uuid="ffedd2b9-b8f3-4e51-8ad4-9e052f92c8c6"/>
+				<reportElement x="138" y="0" width="116" height="20" uuid="ffedd2b9-b8f3-4e51-8ad4-9e052f92c8c6"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Inicio}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="237" y="0" width="79" height="20" uuid="1e5e1624-fe3e-4be3-aa00-36161da07aeb"/>
+				<reportElement x="254" y="0" width="79" height="20" uuid="1e5e1624-fe3e-4be3-aa00-36161da07aeb"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Estado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="316" y="0" width="96" height="20" uuid="debfe799-25f9-4ab0-99fe-0b62e096b135"/>
+				<reportElement x="333" y="0" width="64" height="20" uuid="debfe799-25f9-4ab0-99fe-0b62e096b135"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{km}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="412" y="0" width="92" height="20" uuid="57e259b2-ccd2-4e8b-8c4e-b15c88df0802"/>
+				<reportElement x="397" y="0" width="92" height="20" uuid="57e259b2-ccd2-4e8b-8c4e-b15c88df0802"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pasajeros}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="504" y="0" width="49" height="20" uuid="85accada-56ac-4bb0-ac2f-ab0d4d4af26b"/>
+				<reportElement x="489" y="0" width="64" height="20" uuid="85accada-56ac-4bb0-ac2f-ab0d4d4af26b"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{Precio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["\$"+$F{Precio}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
