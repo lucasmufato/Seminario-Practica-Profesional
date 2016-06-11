@@ -211,7 +211,7 @@ public abstract class DataAccesObject {
 		}
 		
 	}
-	public Connection getConnection() throws ExceptionViajesCompartidos{
+	public Connection getConnection(){
     	if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
 		}
@@ -220,8 +220,7 @@ public abstract class DataAccesObject {
     	try{
     		entitymanager.getTransaction( ).commit( );	
     	}catch(RollbackException e){
-    		String error= ManejadorErrores.parsearRollback(e);
-    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    		return null;
     	}
     	return c;
 	}

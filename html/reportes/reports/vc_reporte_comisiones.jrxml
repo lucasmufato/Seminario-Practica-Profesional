@@ -78,6 +78,7 @@
             and (monto <= $P!{monto_hasta} or $P!{monto_hasta} is null)
             and (Asientos >= $P!{asientos_desde} or $P!{asientos_desde} is null)
             and (Asientos <= $P!{asientos_hasta} or $P!{asientos_hasta} is null)
+    GROUP BY reporte.Comision
     ORDER BY reporte.Comision, reporte.Viaje
 ;]]>
 	</queryString>
@@ -103,7 +104,7 @@
 	<field name="Estado" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<variable name="monto_total" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
+	<variable name="monto_total" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{monto}]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>

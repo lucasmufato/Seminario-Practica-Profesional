@@ -317,12 +317,8 @@ public class ControladorReportes extends HttpServlet {
 
 		JasperPrint jasperPrint;
 		DAOReportes dao = new DAOReportes();
-		Connection conexion;
-		try {
-			conexion = dao.getConnection();
-		} catch (ExceptionViajesCompartidos e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		Connection conexion = dao.getConnection();
+		if (conexion==null){
 			return null;
 		}
 		try {
