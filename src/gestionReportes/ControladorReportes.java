@@ -14,6 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -313,7 +316,15 @@ public class ControladorReportes extends HttpServlet {
 	private JasperPrint fillReporte(String reportFileName, Map<String, Object> parameters) {
 
 		JasperPrint jasperPrint;
-		Connection conexion = this.getConexion();
+		DAOReportes dao = new DAOReportes();
+		Connection conexion;
+		try {
+			conexion = dao.getConnection();
+		} catch (ExceptionViajesCompartidos e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
 		try {
 			jasperPrint = JasperFillManager.fillReport(
 				reportFileName, 
@@ -323,10 +334,9 @@ public class ControladorReportes extends HttpServlet {
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			this.cerrarConexion(conexion);
 			return null;
 		}
-		this.cerrarConexion(conexion);
+		//dao.cerrarConexion(conexion);
 		return jasperPrint;
 	}
 
@@ -342,34 +352,5 @@ public class ControladorReportes extends HttpServlet {
 
 	public void destroy()
 	{
-	}
-	
-	private Connection getConexion(){
-		Connection connection = null;
-		
-		try {
-			// CARGAR CLASES DEL DRIVER EN MEMORIA
-			Class.forName("com.mysql.jdbc.Driver");
-
-			// ESTABLECE CONEXION
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/seminario", "root", "root");
-			
-		} catch(SQLException se){
-			//Manejo de errores para JDBC
-			System.err.println("En Excepcion de JDBC");
-			se.printStackTrace();
-		} catch(Exception e){
-		    //Manejo de errores para Class.forName
-			System.err.println("En Excepcion de Class.forName");
-		    e.printStackTrace();
-		} finally {
-			return connection;
-		}
-	}
-	private void cerrarConexion(Connection connection){
-		if (connection != null){ 
-			try {connection.close();} 
-			catch (SQLException e) {e.printStackTrace();}
-		}
 	}
 }

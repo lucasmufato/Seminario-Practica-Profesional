@@ -1,5 +1,6 @@
 package otros;
 
+import java.sql.Connection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -210,7 +211,21 @@ public abstract class DataAccesObject {
 		}
 		
 	}
-	
+	public Connection getConnection() throws ExceptionViajesCompartidos{
+    	if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+		this.entitymanager.getTransaction().begin();
+		Connection c = this.entitymanager.unwrap(java.sql.Connection.class);
+    	try{
+    		entitymanager.getTransaction( ).commit( );	
+    	}catch(RollbackException e){
+    		String error= ManejadorErrores.parsearRollback(e);
+    		throw new ExceptionViajesCompartidos("ERROR: "+error);
+    	}
+    	return c;
+	}
+
 	// Recarga los datos de un objeto desde la base de datos
 	public void refresh(Object entidad) {
 		entitymanager.refresh(entidad);
