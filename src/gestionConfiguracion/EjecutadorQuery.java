@@ -2,7 +2,8 @@ package gestionConfiguracion;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -115,7 +116,7 @@ public class EjecutadorQuery {
 	public boolean ejecutarArchivo(String archivo){
 		ScriptRunner runner = new ScriptRunner(this.conn,false , true);
 		try {
-			runner.runScript(new BufferedReader(new FileReader(archivo)));
+			runner.runScript(new BufferedReader(new InputStreamReader(new FileInputStream(archivo), "UTF-8")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;
