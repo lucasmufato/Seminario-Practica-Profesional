@@ -129,13 +129,17 @@ public class ServletDBConfig extends HttpServlet {
 		String configFile = context.getRealPath ("/WEB-INF/classes/META-INF/persistence.xml");
 		File persxml = new File (configFile);
 
-		if (persxml.exists()) {
-			synchronized (this.estado) {
-				estado.setEstado (EstadoCfg.COMPLETO);
-				estado.setStep (6); // Ultimo paso
+		try {
+			if (persxml.exists() && persxml.length()>1) {
+				synchronized (this.estado) {
+					estado.setEstado (EstadoCfg.COMPLETO);
+					estado.setStep (6); // Ultimo paso
+				}
+				return true;
+			} else {
+				return false;
 			}
-			return true;
-		} else {
+		} catch (Exception e) {
 			return false;
 		}
 	}

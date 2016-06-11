@@ -102,9 +102,9 @@ class ConfiguradorThread implements Runnable {
 		if (ejecutor != null && ejecutor.isConectado()) {
 			ejecutor.desconectarse();
 		}
-		// Si fallo en algun paso, eliminamos el archivo de configuracion
+		// Si fallo en algun paso, vaciamos el archivo de configuracion
 		if(this.estado.getEstado() == EstadoCfg.FALLO) {
-			this.eliminarPersistenceXML();
+			this.vaciarPersistenceXML();
 		}
 	}
 
@@ -133,12 +133,13 @@ class ConfiguradorThread implements Runnable {
 		return true;
 	}
 
-	private boolean eliminarPersistenceXML() {
+	private boolean vaciarPersistenceXML() {
 		try {
 			ServletContext context = servlet.getServletConfig().getServletContext();
 			String path = context.getRealPath ("/WEB-INF/classes/META-INF/persistence.xml");
 			File f = new File(path);
 			f.delete();
+			f.createNewFile();
 		} catch (Exception e) {
 			return false;
 		}
