@@ -43,7 +43,7 @@ data.loadData = function() {
 			data.usuario_logueado = jsonData.usuario_logueado;
 			data.comentarios = jsonData.comentarios;
 
-			if(jsonData.recargar_en != undefined && jsonData.recargar_en > 0) {
+			if(jsonData.recargar_en != undefined) {
 				window.setTimeout(data.loadData, jsonData.recargar_en);
 			}
 			configurarUi();
@@ -170,6 +170,8 @@ var simular = function(json){
 	data.conductor = {
 		nombre_usuario: "Juanc23",
 		reputacion: "3",
+		mail:"juan322@hotmail.com",
+		telefono:"02323 011 423377",
 		foto: "upload/foto.jpg",
 		foto_registro: "upload/foto_reg.jpg"
 	};
@@ -229,6 +231,7 @@ var simular = function(json){
 var configurarUi = function(){
 
 	 $("#message-text").val("");
+  ocultarDataPrivadaConductor();
 
 	var esConductor = data.usuario_logueado.es_conductor;
 	var esAceptado = data.usuario_logueado.es_aceptado;
@@ -258,6 +261,7 @@ var configurarUi = function(){
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
 		$("#botonera-cliente").hide();
 		if (esConductor){
+			mostrarDataPrivadaConductor();
 			$("#botonera-conductor").show();
 			$("#botonera-pasajero").hide();
 			if (data.viaje.cantidad_pasajeros_calificables > 0 || data.viaje.cantidad_pasajeros_postulados > 0){
@@ -283,6 +287,7 @@ var configurarUi = function(){
 				}
 			}
 		}else if (esAceptado){
+			mostrarDataPrivadaConductor();
 			$("#botonera-conductor").hide();
 			$("#botonera-pasajero").show();
 			$("#btnCalificar").hide();
@@ -324,6 +329,7 @@ var configurarUi = function(){
 		$("#botonera-cliente").hide();
 		$("#btnCalificar").hide();
 		$("#btnViajeFinalizado").hide();
+		ocultarDataPrivadaConductor();
 	} else if(estado == "Iniciado"){
 
 	} else if(estado == "No iniciado"){
@@ -333,9 +339,20 @@ var configurarUi = function(){
 		$("#botonera-conductor").hide();
 		$("#botonera-pasajero").hide();
 		$("#botonera-cliente").hide();
+		ocultarDataPrivadaConductor();
 	}
 }
 
+var mostrarDataPrivadaConductor = function(){
+	$("#telefono-conductor").text(data.conductor.telefono);
+	$("#mail-conductor").text(data.conductor.mail);
+	$("#telefono-conductor").show();
+	$("#mail-conductor").show();
+}
+var ocultarDataPrivadaConductor = function(){
+	 $("#mail-conductor").hide();
+	 $("#telefono-conductor").hide();
+}
 var cargarVehiculo = function(){
 	$("#panel-foto-vehiculo a").attr('href',data.vehiculo.foto || "/img/perfil/sin_imagen.jpg");
 	$("#panel-foto-vehiculo img").attr('src',data.vehiculo.foto || "/img/perfil/sin_imagen.jpg");
@@ -401,7 +418,7 @@ var cargarConductor = function(){
 	$("#panel-foto-conductor img").attr('src',data.conductor.foto || "/img/perfil/default.png");
 	$("#panel-foto-registro a").attr('href',data.conductor.foto_registro || "/img/perfil/sin_registro.jpg");
 	$("#panel-foto-registro img").attr('src',data.conductor.foto_registro || "/img/perfil/sin_registro.jpg");
-	$("#reputacion").text(reputacionStars(data.conductor.reputacion));;
+	$("#reputacion").text(reputacionStars(data.conductor.reputacion));
 	$("#nombreConductor").text(data.conductor.nombre_usuario);
 	$("#nombreConductor").attr('href',"/perfil.html?usuario="+data.conductor.nombre_usuario);
 }
