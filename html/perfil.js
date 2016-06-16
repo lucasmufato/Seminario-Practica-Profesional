@@ -80,7 +80,7 @@ var cargarPerfil = function(){
 		data.cliente.reputacion_stars =  reputacionStars(data.cliente.reputacion);
 	}
 	data.persona.tipo_doc_string = tipoDocString(data.persona.tipo_doc);
-	data.persona.fecha_revisada = vc.toFechaLocal(data.persona.fecha_nacimiento.replace(/-/g, '\/')).split(" ")[0];
+	data.persona.fecha_revisada = data.persona.fecha_nacimiento.replace(/-/g, '\/').split("/").reverse().join("/");//vc.toFechaLocal(data.persona.fecha_nacimiento.replace(/-/g, '\/')).split(" ")[0];
 	data.persona.esM = data.persona.sexo == "M";
 	data.persona.esF = data.persona.sexo == "F";
 	data.persona.esO = data.persona.sexo == "O";
