@@ -85,6 +85,7 @@ var cargarPostulantes = function(){
 		if (elem.es_pendiente = elem.estado_postulacion == "postulado"){
 			htmlPendientes += Mustache.render(template, elem);
 		}else{
+			elem.es_rechazado = elem.estado_postulacion=="rechazado";
 			htmlNoPendientes += Mustache.render(template, elem);
 		}
 	});
