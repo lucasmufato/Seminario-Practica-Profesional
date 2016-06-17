@@ -7,11 +7,15 @@ INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, de
 
 -- CREO LAS PERSONAS DE LOS USUARIOS
 -- persona 2 Jasmin
- INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Jasmin", "Paolino", "1", "36718455", "1992-10-28", "F", "Pastorini, 2470", "011-15-33922364", NULL, "A");
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Jasmin", "Paolino", "1", "36718455", "1992-10-28", "F", "Pastorini, 2470", "011-15-33922364", NULL, "A");
+-- persona 3 Luz
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Luz", "Bárcena", "1", "36600140", "1991-08-24", "F", "15, 773", "02227-15-488021", NULL, "A");
 
 -- CREO UNOS USUARIOS PARA HACER PRUEBAS EN EL SISTEMA Y QUE ANDEN PARA TODOS
 -- usuario 2 Jasmin
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,2,"jasminp","jasmin123", "jasmin-p@hotmail.es",NUll,"A","C");
+-- usuario 3 Luz
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,3,"luzbarcena","barcena", "mluzbarcena@gmail.com",NUll,"A","C");
 
 -- este metodo le da al user administrador el rol super_usuario
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, CURRENT_DATE);
@@ -19,11 +23,14 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, C
 -- LES ASIGNO A LOS USUARIO Q CREO PARA LAS PRUEBAS EL ROL DE CLIENTE
 -- Jasmin
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (2, 2, CURRENT_DATE);
+-- Luz
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (3, 2, CURRENT_DATE);
 
 -- LOS CREO COMO CLIENTES A ESTOS MISMOS USUARIOS
 -- Jasmin
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (2,default,default,NULL,NULL,1000);
-
+-- Luz
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (3,default,default,NULL,NULL,1000);
 
 
 -- agrego permisos de funcional
