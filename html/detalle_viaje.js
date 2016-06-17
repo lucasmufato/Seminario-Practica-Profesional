@@ -256,7 +256,7 @@ var configurarUi = function(){
 	if(esAceptado) {$('#infomsg-pasajero-aceptado').show();}
 	if(esRechazado) {$('#infomsg-pasajero-rechazado').show();}
 	if(esFinalizo) {$('#infomsg-pasajero-finalizo').show();}
-	if(!haCalificado && ((esConductor && estado=="Finalizado") || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
+	if(!haCalificado && ((esConductor && estado=="Finalizado" && data.viaje.cantidad_pasajeros_calificables>0) || esFinalizo)) {$('#infomsg-calificacion-pendiente').show();}
 
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
 		$("#botonera-cliente").hide();
@@ -633,7 +633,7 @@ var esTramoValido = function(){
 	var indexOrigen = data.viaje.recorrido.indexOf(origen);
 	var indexDestino = data.viaje.recorrido.indexOf(destino);
 	if (indexOrigen >= indexDestino){
-		var msg = "Puntos de subida y bajada son incompatibles con el recorrido de este viaje";
+		var msg = "Tramo no válido para este viaje";
 		var panel = "#panel-error-tramo";
 		var elemento = "select[name=origenPasajero],select[name=destinoPasajero]";
 		customAlert(panel,elemento,msg);
@@ -705,17 +705,15 @@ var cancelarParticipacion = function(){
 	if (data.usuario_logueado.es_postulado){
 		confirmarCancelacion();
 	}else if (data.usuario_logueado.es_aceptado){
-		var msg = "Usted ha sido aceptado por el conductor"
-		+ " para participar de este viaje."
-		+" Por lo tanto, al confirmar esta acción usted podría ser sancionado"
-		+" y perder su cuenta temporalmente."
+		var title = "¿Confirma cancelación?";
+		var msg = "Al confirmar esta acción usted podría ser sancionado con puntos.";
 		var btn = document.createElement("BUTTON");
 		btn.className="btn btn-danger dinamico";
 		btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
 		btn.name = "confirmarCancelacion";
 		btn.onclick=confirmarCancelacion;
 		modalButton(modalName,btn);
-		modalMessage(modalName,msg);
+		modalMessage(modalName,msg,title);
 	}
 }
 var modificarViaje = function(){
@@ -742,15 +740,16 @@ var cancelarViaje = function(){
 		}
 		sendAjax(sendJson,onsuccess);
 	}
-	var msg = "Al presionar en 'Confirmar Cancelación' usted podría recibir una sanción"
-		+" en caso de que existieran pasajeros inscriptos al viaje."
+	var title = "¿Confirma cancelación?";
+	var msg = "Al confirmar esta acción usted podría recibir una sanción de puntos"
+		+" si existieran pasajeros aceptados.";
 	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-danger dinamico";
 	btn.innerHTML = '<span class="glyphicon glyphicon-remove"></span> Confirmar cancelación';
 	btn.name = "confirmarCancelacion";
 	btn.onclick=confirmarCancelacion;
 	modalButton(modalName,btn);
-	modalMessage(modalName,msg);
+	modalMessage(modalName,msg,title);
 }
 
 var verPostulantes = function(){
@@ -787,14 +786,15 @@ var viajeFinalizado = function(){
 		}
 		sendAjax(sendJson,onsuccess);
 	}
-	var msg = "Al presionar en 'Confirmar finalización' usted da por completada su participación en el viaje y podrá realizar la correspondiente calificación. Esta acción no se puede deshacer."
+	var title = "¿Finaliza su participación en el viaje?";
+	var msg = " Esta acción no se puede deshacer.";
 	var btn = document.createElement("BUTTON");
 	btn.className="btn btn-success dinamico";
 	btn.innerHTML = 'Confirmar finalización';
 	btn.name = "confirmarFinalizacion";
 	btn.onclick=confirmarFinalizacion;
 	modalButton(modalName,btn);
-	modalMessage(modalName,msg);
+	modalMessage(modalName,msg,title);
 }
 
 var customAlert = function(panel,elemento,msg){
