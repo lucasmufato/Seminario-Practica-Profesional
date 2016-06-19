@@ -38,6 +38,8 @@ public class ServletNotificaciones extends HttpServlet {
 		if (entity != null && entity.equals ("notificaciones")) {
 			if (action != null && action.equals("ver_no_leidas")) {
 				respuesta = this.verNoLeidas(request);
+			} else if (action != null && action.equals("ver_todas")) {
+				respuesta = this.verTodas(request);
 			} else if (action != null && action.equals("cantidad_no_leidas")) {
 				respuesta = this.verCantidadNoLeidas(request);
 			}
@@ -86,6 +88,28 @@ public class ServletNotificaciones extends HttpServlet {
 		Integer idCliente = AccessManager.getIdUsuario(request);
 		try {
 			List<Notificacion> notificaciones = daoNotificaciones.getNotificacionesNoLeidas(idCliente);
+			for (Notificacion notificacion: notificaciones) {
+				json_notificacion = notificacion.toJSON();
+				json_notificaciones.add (json_notificacion);
+			}
+			salida.put("notificaciones", json_notificaciones);
+		} catch (ExceptionViajesCompartidos e) {
+			salida.put("result", false);
+			salida.put("msg", "Error interno del servidor: ");
+			e.printStackTrace();
+			return salida;
+		}
+		salida.put("result", true);
+		return salida;
+	}
+
+	private JSONObject verTodas(HttpServletRequest request) {
+		JSONObject salida = new JSONObject();
+		JSONArray json_notificaciones = new JSONArray();
+		JSONObject json_notificacion;
+		Integer idCliente = AccessManager.getIdUsuario(request);
+		try {
+			List<Notificacion> notificaciones = daoNotificaciones.getNotificaciones(idCliente);
 			for (Notificacion notificacion: notificaciones) {
 				json_notificacion = notificacion.toJSON();
 				json_notificaciones.add (json_notificacion);

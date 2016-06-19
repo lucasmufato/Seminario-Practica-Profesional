@@ -72,8 +72,8 @@ var comprobarNotificaciones = function() {
 		success: function (recieved) {
 			if (recieved.cantidad) {
 				$('#cantidad_notificaciones').text(recieved.cantidad);
-				$('#boton_notificaciones').show();
-				window.setTimeout(comprobarNotificaciones, 60000);
+				//$('#boton_notificaciones').show();
+				window.setTimeout(comprobarNotificaciones, 10000);
 			}
 		}
 	});

@@ -9,7 +9,7 @@ var cargarNotificaciones = function() {
 
 	var sendData = {
 		entity: 'notificaciones',
-		action: 'ver_no_leidas'
+		action: 'ver_todas'
 	};
 
 	vc.peticionAjax("/notificaciones", sendData, "GET", onsuccess);

@@ -19,9 +19,9 @@ import org.json.simple.JSONObject;
 import otros.JSONable;
 
 @NamedQueries({
-	@NamedQuery(name="Notificacion.todos",query="SELECT n FROM Notificacion n"),
-	@NamedQuery(name="Notificacion.porUsuario",query="SELECT n FROM Notificacion n where n.cliente= :id_cliente"),
-	@NamedQuery(name="Notificacion.NoLeidasPorUsuario",query="SELECT n FROM Notificacion n where (n.cliente= :id_cliente) AND (n.estado= gestionUsuarios.modelo.EstadoNotificacion.no_leido)"),
+	@NamedQuery(name="Notificacion.todos",query="SELECT n FROM Notificacion n ORDER BY n.fecha DESC"),
+	@NamedQuery(name="Notificacion.porUsuario",query="SELECT n FROM Notificacion n where n.cliente= :id_cliente ORDER BY n.fecha DESC"),
+	@NamedQuery(name="Notificacion.NoLeidasPorUsuario",query="SELECT n FROM Notificacion n where (n.cliente= :id_cliente) AND (n.estado= gestionUsuarios.modelo.EstadoNotificacion.no_leido) ORDER BY n.fecha DESC"),
 	@NamedQuery(name="Notificacion.cantidadNoLeidaPorUsuario",query="SELECT COUNT(n.id_notificacion) FROM Notificacion n where (n.cliente= :id_cliente) AND (n.estado= gestionUsuarios.modelo.EstadoNotificacion.no_leido)"),
 	@NamedQuery(name="Notificacion.SearchById",query="SELECT n FROM Notificacion n WHERE n.id_notificacion = :id"),
 })
