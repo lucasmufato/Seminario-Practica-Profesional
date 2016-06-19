@@ -493,7 +493,7 @@ public class DAOViajes extends DataAccesObject {
 		ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
 		float saldo_necesario = cc.getMonto();
 		float saldo_cliente = cliente.getSaldo();
-                daocomisiones.cerrarConexiones();		//hay que cerrar el dao
+                //daocomisiones.cerrarConexiones();		//habia que cerrar el dao. Ahora ya no, el dao es singleton
                 daocomisiones=null;
 		if(saldo_necesario>saldo_cliente){
 			throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
@@ -708,7 +708,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		DAOComisiones daocomision= DAOComisiones.getInstance();
 		ComisionCobrada comisionCobrada =this.entitymanager.merge( daocomision.nuevaComisionCobrada(km) );	
-		daocomision.cerrarConexiones();
+		//daocomision.cerrarConexiones(); El dao ahora es singleton
 		daocomision=null;
 		
 		if(comisionCobrada==null){
@@ -766,8 +766,8 @@ public class DAOViajes extends DataAccesObject {
 		Double km = viaje.calcularKM(inicio,destino);
 		DAOComisiones daocomision= DAOComisiones.getInstance();
 		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);
-		daocomision.cerrarConexiones();
-		daocomision=null;
+		//daocomision.cerrarConexiones(); Esto ya no es necesario, ahora el DAO es singleton
+		//daocomision=null;
 		return comisionCobrada.getMonto();
 	}
 	
@@ -888,7 +888,7 @@ public class DAOViajes extends DataAccesObject {
                                 viajes.remove(i);
                             }
                         }
-                        daousr.cerrarConexiones();
+                        //daousr.cerrarConexiones(); El dao ahora es singleton
                         daousr=null;
                         
 		}
@@ -1342,7 +1342,7 @@ public class DAOViajes extends DataAccesObject {
 				daocomisiones.cobrarComision(pv);
 			}
 		}
-		daocomisiones.cerrarConexiones();
+		//daocomisiones.cerrarConexiones(); el dao ahora es singleton
 		daocomisiones=null;
 		return true;
 	}       
