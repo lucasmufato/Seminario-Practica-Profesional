@@ -26,9 +26,18 @@ import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
 
 public class DAOComisiones extends DataAccesObject {
+	private static DAOComisiones instance = null;
 
-	public DAOComisiones() {
+	private DAOComisiones() {
 		super();
+	}
+
+	public static DAOComisiones getInstance() {
+		if (DAOComisiones.instance == null) {
+			DAOComisiones.instance = new DAOComisiones();
+		}
+		return DAOComisiones.instance;
+		
 	}
 	
 	//by mufa

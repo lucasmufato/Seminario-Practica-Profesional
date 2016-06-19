@@ -17,7 +17,7 @@ public class AccessManager {
 	}
 	
 	public static boolean hasRol(HttpServletRequest request, String nombreRol){
-		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
+		DAOAdministracionUsuarios dao= DAOAdministracionUsuarios.getInstance();
 		if (EstaLogueado(request)) {
 			JSONArray roles = dao.NombreRolUsuario(nombreUsuario(request));
 			return tieneValor(roles,"nombre_rol",nombreRol);
@@ -26,7 +26,7 @@ public class AccessManager {
 	}
 	
 	public static boolean HasPermiso(HttpServletRequest request, String nombrePermiso) {
-		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
+		DAOAdministracionUsuarios dao= DAOAdministracionUsuarios.getInstance();
 		System.out.println("En AccessManager - HasPermiso");
 		//esta logueado?
 		if (EstaLogueado(request)) {
@@ -62,7 +62,7 @@ public class AccessManager {
 	}
 
 	public static int getIdUsuario(HttpServletRequest request) {
-		DAOAdministracionUsuarios dao= new DAOAdministracionUsuarios();
+		DAOAdministracionUsuarios dao= DAOAdministracionUsuarios.getInstance();
 		Usuario usuario = (Usuario) dao.buscarPorClaveCandidata("Usuario", nombreUsuario(request));
 		return usuario.getId_usuario();
 	}

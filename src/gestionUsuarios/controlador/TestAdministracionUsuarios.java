@@ -21,8 +21,8 @@ import org.junit.Before;
 import otros.ExceptionViajesCompartidos;
 
 public class TestAdministracionUsuarios extends TestCase {
-	protected DAONotificaciones dao = new DAONotificaciones();
-	protected DAOAdministracionUsuarios daoAdmUsu = new DAOAdministracionUsuarios();
+	protected DAONotificaciones dao = DAONotificaciones.getInstance();
+	protected DAOAdministracionUsuarios daoAdmUsu = DAOAdministracionUsuarios.getInstance();
         
         
 	

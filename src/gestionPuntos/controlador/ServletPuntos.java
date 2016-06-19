@@ -26,8 +26,8 @@ public class ServletPuntos extends HttpServlet  {
 	protected DAOAdministracionUsuarios daoUsuarios;
 	
 	public void init() throws ServletException {
-		daopuntos= new DAOPuntos();
-		daoUsuarios=new DAOAdministracionUsuarios();
+		daopuntos= DAOPuntos.getInstance();
+		daoUsuarios=DAOAdministracionUsuarios.getInstance();
 	}
 	
 	@Override

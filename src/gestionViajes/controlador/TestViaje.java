@@ -19,7 +19,7 @@ import otros.ExceptionViajesCompartidos;
 
 public class TestViaje extends TestCase {
 
-	protected DAOViajes daoviajes = new DAOViajes();
+	protected DAOViajes daoviajes = DAOViajes.getInstance();
         	
 	//ESTOY SIGUIENDO EL TUTORIAL DE http://www.tutorialspoint.com/junit/index.htm
 	//VAN A TENER Q AGREGAR LA LIBRERIA JUint 4, que contiene:

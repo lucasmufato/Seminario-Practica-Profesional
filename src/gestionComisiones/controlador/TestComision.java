@@ -28,8 +28,8 @@ import org.junit.Test;
 
 public class TestComision extends TestCase{
     
-    protected DAOViajes daoviajes = new DAOViajes();
-	protected DAOComisiones daocomisiones = new DAOComisiones();
+    protected DAOViajes daoviajes = DAOViajes.getInstance();
+	protected DAOComisiones daocomisiones = DAOComisiones.getInstance();
 	
 		
             

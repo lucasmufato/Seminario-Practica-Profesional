@@ -30,12 +30,22 @@ import otros.ExceptionViajesCompartidos;
 import otros.ManejadorErrores;
 
 public class DAOPuntos extends DataAccesObject {
+	private static DAOPuntos instance = null;
+
 	//vacio por ahora
 	private float alfa = (float) 1.5;
 	private float beta = (float) 2.5;
       
-	public DAOPuntos(){
+	private DAOPuntos(){
 		super();
+	}
+
+	public static DAOPuntos getInstance() {
+		if(DAOPuntos.instance == null) {
+			DAOPuntos.instance = new DAOPuntos();
+		}
+		return DAOPuntos.instance;
+		
 	}
         
 	public Calificacion getCalificacionPorPasajeroConductor(PasajeroViaje pv, Cliente c){
@@ -146,7 +156,7 @@ public class DAOPuntos extends DataAccesObject {
     public double calculcarDescuentoPuntos(Integer id_viaje, Integer id_cliente){
         double puntos=0;
            Timestamp actual= new Timestamp((new java.util.Date()).getTime());
-           DAOViajes daoviajes = new DAOViajes();           
+           DAOViajes daoviajes = DAOViajes.getInstance();           
            Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
            Timestamp salida_viaje = viaje.getFecha_inicio();
            //Formula

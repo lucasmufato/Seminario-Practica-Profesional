@@ -15,7 +15,7 @@ import gestionUsuarios.modelo.*;
 
 public class Probador {
 	
-	protected DAOAdministracionUsuarios dao= null;//new DAOAdministracionUsuarios();
+	protected DAOAdministracionUsuarios dao= null;//DAOAdministracionUsuarios.getInstance();
 	
 	public static void main(String[] args) {
 		/*

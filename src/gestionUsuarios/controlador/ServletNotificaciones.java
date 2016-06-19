@@ -24,7 +24,7 @@ public class ServletNotificaciones extends HttpServlet {
 
 	@Override
 	public void init() {
-		daoNotificaciones=new DAONotificaciones();
+		daoNotificaciones=DAONotificaciones.getInstance();
 	}
 
 	@Override

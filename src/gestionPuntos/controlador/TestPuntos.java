@@ -37,10 +37,10 @@ import org.junit.Test;
 
 public class TestPuntos extends TestCase{
     
-        protected DAOViajes daoviajes = new DAOViajes();
-	protected DAOComisiones daocomisiones = new DAOComisiones();
-	protected DAOAdministracionUsuarios daoAdmUsu = new DAOAdministracionUsuarios();
-        protected DAOPuntos daopuntos = new DAOPuntos();
+        protected DAOViajes daoviajes = DAOViajes.getInstance();
+	protected DAOComisiones daocomisiones = DAOComisiones.getInstance();
+	protected DAOAdministracionUsuarios daoAdmUsu = DAOAdministracionUsuarios.getInstance();
+        protected DAOPuntos daopuntos = DAOPuntos.getInstance();
         
         
         

@@ -34,9 +34,9 @@ public class ServletViaje extends HttpServlet {
 	protected DAOPuntos daoPuntos;
 
 	public void init() throws ServletException {
-		daoUsuarios = new DAOAdministracionUsuarios();
-		daoViajes = new DAOViajes();
-		daoPuntos = new DAOPuntos();
+		daoUsuarios = DAOAdministracionUsuarios.getInstance();
+		daoViajes = DAOViajes.getInstance();
+		daoPuntos = DAOPuntos.getInstance();
 	}
 	
 	@Override

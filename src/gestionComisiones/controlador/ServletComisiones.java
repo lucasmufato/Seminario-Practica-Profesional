@@ -28,9 +28,9 @@ public class ServletComisiones extends HttpServlet {
 	protected DAONotificaciones daoNotificaciones;
 	
 	public void init() throws ServletException {
-		daocomisiones = new DAOComisiones();
-		daoUsuarios=new DAOAdministracionUsuarios();
-		daoNotificaciones=new DAONotificaciones();
+		daocomisiones = DAOComisiones.getInstance();
+		daoUsuarios=DAOAdministracionUsuarios.getInstance();
+		daoNotificaciones=DAONotificaciones.getInstance();
 		
 	}
 	

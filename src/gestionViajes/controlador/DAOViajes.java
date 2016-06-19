@@ -46,8 +46,9 @@ import com.google.maps.model.TravelMode;*/
 
 public class DAOViajes extends DataAccesObject {
 	static PlanificadorEstadoViaje planifEstadoViaje = null;
+	static DAOViajes instance = null;
 
-    public DAOViajes(){
+    private DAOViajes(){
     	super();
  	
     	synchronized (DAOViajes.class) {
@@ -56,7 +57,14 @@ public class DAOViajes extends DataAccesObject {
 				DAOViajes.planifEstadoViaje.iniciar();
 			}
 		}
-    }
+	}
+
+	public static DAOViajes getInstance () {
+		if(DAOViajes.instance == null) {
+			DAOViajes.instance = new DAOViajes();
+		}
+		return DAOViajes.instance;
+	}
     
     //by mufa
     public boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{	//tiene tests
@@ -481,7 +489,7 @@ public class DAOViajes extends DataAccesObject {
 		//TODO verificar que el cliente tenga salgo para hacer crear el viaje
 		//calculo saldo necesario (by fede)
 		Double distancia_origen_primerpunto = lista_localidad_viaje.get(0).getKms_a_localidad_siguiente() ;
-		DAOComisiones daocomisiones = new DAOComisiones();
+		DAOComisiones daocomisiones = DAOComisiones.getInstance();
 		ComisionCobrada cc = daocomisiones.nuevaComisionCobrada(distancia_origen_primerpunto);
 		float saldo_necesario = cc.getMonto();
 		float saldo_cliente = cliente.getSaldo();
@@ -698,7 +706,7 @@ public class DAOViajes extends DataAccesObject {
 
 		viaje.aniadir_pasajeroViaje(pasajero, localidad_subida, localidad_bajada);
 		
-		DAOComisiones daocomision= new DAOComisiones();
+		DAOComisiones daocomision= DAOComisiones.getInstance();
 		ComisionCobrada comisionCobrada =this.entitymanager.merge( daocomision.nuevaComisionCobrada(km) );	
 		daocomision.cerrarConexiones();
 		daocomision=null;
@@ -756,7 +764,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: LAS LOCALIDADES NO EXISTEN O NO ESTAN EN ORDEN");
 		}
 		Double km = viaje.calcularKM(inicio,destino);
-		DAOComisiones daocomision= new DAOComisiones();
+		DAOComisiones daocomision= DAOComisiones.getInstance();
 		ComisionCobrada comisionCobrada = daocomision.nuevaComisionCobrada(km);
 		daocomision.cerrarConexiones();
 		daocomision=null;
@@ -870,7 +878,7 @@ public class DAOViajes extends DataAccesObject {
                  List<Viaje> viajes= q.getResultList();
                  if(b_conductor){
                        
-                        DAOAdministracionUsuarios daousr = new DAOAdministracionUsuarios();
+                        DAOAdministracionUsuarios daousr = DAOAdministracionUsuarios.getInstance();
                         Cliente cliente_conductor = (Cliente) daousr.buscarUsuarioPorNombre(conductor);
                         if(cliente_conductor==null){
                             throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
@@ -1328,7 +1336,7 @@ public class DAOViajes extends DataAccesObject {
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
 		//cobro la comision de cada pasajero
-		DAOComisiones daocomisiones = new DAOComisiones();
+		DAOComisiones daocomisiones = DAOComisiones.getInstance();
 		for(PasajeroViaje pv: viaje.getPasajeros()){
 			if(pv.getEstado()==EstadoPasajeroViaje.aceptado || pv.getEstado()==EstadoPasajeroViaje.finalizo_viaje){
 				daocomisiones.cobrarComision(pv);
@@ -1394,7 +1402,7 @@ public class DAOViajes extends DataAccesObject {
 		this.entitymanager.persist(notificacion);
 		try{
                     entitymanager.getTransaction( ).commit( );
-                    DAOPuntos daopuntos = new DAOPuntos();
+                    DAOPuntos daopuntos = DAOPuntos.getInstance();
                     boolean bandera= false;
                     Calendar calendar = Calendar.getInstance();
                     Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
@@ -1832,7 +1840,7 @@ public class DAOViajes extends DataAccesObject {
                     Calendar calendar = Calendar.getInstance();
                     Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
                     viaje.setFecha_cancelacion(currentTimestamp);
-                    DAOPuntos daopuntos = new DAOPuntos();
+                    DAOPuntos daopuntos = DAOPuntos.getInstance();
                     try{
                         entitymanager.getTransaction( ).commit( );
                         //Ya cancele el viaje, ahora cancelo a los Pasajeros sin sancionarlos
@@ -2219,7 +2227,7 @@ public class DAOViajes extends DataAccesObject {
           
           //by fede
           public boolean autoTieneViaje(Maneja maneja, Timestamp fecha_hora_viaje, double kms_viaje) throws ExceptionViajesCompartidos{
-                DAOPuntos daopuntos = new DAOPuntos();
+                DAOPuntos daopuntos = DAOPuntos.getInstance();
                 Vehiculo vehiculo =  maneja.getVehiculo();
 
                 Query qry = this.entitymanager.createNamedQuery("Viaje.PorVehiculo");

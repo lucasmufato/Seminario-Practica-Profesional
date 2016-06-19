@@ -316,7 +316,7 @@ public class ControladorReportes extends HttpServlet {
 	private JasperPrint fillReporte(String reportFileName, Map<String, Object> parameters) {
 
 		JasperPrint jasperPrint;
-		DAOReportes dao = new DAOReportes();
+		DAOReportes dao = DAOReportes.getInstance();
 		Connection conexion = dao.getConnection();
 		if (conexion==null){
 			return null;

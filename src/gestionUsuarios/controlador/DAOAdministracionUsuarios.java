@@ -21,12 +21,21 @@ import otros.*;
 
 @SuppressWarnings("unused")
 public class DAOAdministracionUsuarios extends DataAccesObject {
+	private static DAOAdministracionUsuarios instance = null;
     
-    public DAOAdministracionUsuarios(){
+    private DAOAdministracionUsuarios(){
     	super();
     	emfactory= Persistence.createEntityManagerFactory( "Viajes Compartidos" ); 
     	entitymanager = emfactory.createEntityManager( );
     }
+
+	public static DAOAdministracionUsuarios getInstance() {
+		if (DAOAdministracionUsuarios.instance == null) {
+			DAOAdministracionUsuarios.instance = new DAOAdministracionUsuarios();
+		}
+			return DAOAdministracionUsuarios.instance;
+	}
+    
     
     //-------------------------------------------------------------para la parte de administracion de usuarios------------------------------   
     

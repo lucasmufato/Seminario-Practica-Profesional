@@ -11,8 +11,17 @@ import java.util.List;
 import javax.persistence.Query;
 
 public class DAONotificaciones extends DataAccesObject {
-	public DAONotificaciones () {
+	private static DAONotificaciones instance = null;
+
+	private DAONotificaciones () {
 		super();
+	}
+
+	public static DAONotificaciones getInstance() {
+		if (DAONotificaciones.instance == null) {
+			DAONotificaciones.instance = new DAONotificaciones();
+		}
+			return DAONotificaciones.instance;
 	}
 
 	public void marcarLeida(int idNotificacion) {

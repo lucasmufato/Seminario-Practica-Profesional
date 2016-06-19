@@ -22,7 +22,7 @@ public class Perfil extends HttpServlet {
 
 	public void init() throws ServletException
 	{
-		dao= new DAOAdministracionUsuarios();
+		dao= DAOAdministracionUsuarios.getInstance();
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
