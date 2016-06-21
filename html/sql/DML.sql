@@ -12,14 +12,18 @@ INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_na
 INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Luz", "Bárcena", "1", "36600140", "1991-08-24", "F", "15, 773", "02227-15-488021", NULL, "A");
 -- persona 4 fede
 INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Federico", "Retamal", "1", "35525238", "1991-02-05", "M", "Sarmiento 1153", "1166071845", NULL, "A");
-
+-- persona 5 lucas
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Lucas", "Mufato", "1", "35942784", "1992-04-11", "M", "Dr. Muñiz 1482", "0232315606525", NULL, "A");
 -- CREO UNOS USUARIOS PARA HACER PRUEBAS EN EL SISTEMA Y QUE ANDEN PARA TODOS
+
 -- usuario 2 Jasmin
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,2,"jasminp","jasmin123", "jasmin-p@hotmail.es",NUll,"A","C");
 -- usuario 3 Luz
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,3,"luzbarcena","barcena", "mluzbarcena@gmail.com",NUll,"A","C");
 -- usuario 4 fede
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,4,"federicoretamal","retamal", "reta.atlas@gmail.com",NUll,"A","C");
+-- usuario 5 Lucas
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,5,"lucasmufato","mufato", "l.mufato@gmail.com",NUll,"A","C");
 
 -- este metodo le da al user administrador el rol super_usuario
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, CURRENT_DATE);
@@ -31,6 +35,8 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (2, 2, C
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (3, 2, CURRENT_DATE);
 -- Fede
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (4, 2, CURRENT_DATE);
+-- lucas
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
 -- LOS CREO COMO CLIENTES A ESTOS MISMOS USUARIOS
 -- Jasmin
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (2,default,default,NULL,NULL,1000);
@@ -38,8 +44,10 @@ INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VAL
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (3,default,default,NULL,NULL,1000);
 -- Fede
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (4,default,default,NULL,NULL,1000);
-
+-- lucas
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (5,default,default,NULL,NULL,1000);
 -- agrego permisos de funcional
+
 INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES
 	(1, "administrar_usuarios","Administrar usuarios","Permite Alta/Baja/Modificacion de usuarios","A"),
 	(2, "generar_reportes", "Generar reportes", "Permite generar reportes", "A"),
@@ -192,15 +200,11 @@ INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (2,"D
 INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (3,"Sanción por Cancelación de viaje con Pasajeros",0);
 INSERT INTO TIPO_SANCION (id_tipo_sancion,descripcion,dias_sancion) VALUES (4,"Sanción por Cancelación tardía de participación en viaje",0);
 -- completarlas
+-- comision por viajes corto, medio y largo
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(1,0,100,0.15,CURRENT_DATE,NULL);
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(2,100,500,0.13,CURRENT_DATE,NULL);
+INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(3,500,100000,0.10,CURRENT_DATE,NULL);
 
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(1,0,20,4,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(2,20,50,6,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(3,50,100,8,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(4,100,250,15,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(5,250,500,25,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(6,500,1000,40,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(7,1000,2000,80,CURRENT_DATE,NULL);
-INSERT INTO comision (ID_COMISION,LIMITE_INFERIOR,LIMITE_SUPERIOR,PRECIO,FECHA_INICIO,FECHA_FIN) VALUES(8,2000,10000,150,CURRENT_DATE,NULL);
 
 INSERT INTO TIPO_MOV_SALDO(id_tipo_mov_saldo,descripcion) VALUES (1,"Cobro de comisión por viaje");
 INSERT INTO TIPO_MOV_SALDO(id_tipo_mov_saldo,descripcion) VALUES (2,"Acreditación de saldo por pago");
