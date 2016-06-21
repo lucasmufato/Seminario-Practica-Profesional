@@ -2,28 +2,33 @@ SET NAMES utf8;
 INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (1, "super_usuario", "Super Usuario", "Este usuario tiene todos los privilegios", "A");
 INSERT INTO ROL (id_rol, nombre_rol, nombre_amigable, descripcion, estado) VALUES (2, "cliente", "Cliente", "Este usuario es cliente", "A");
 
-INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Admin", "Admin", "1", "33111311", "1992-09-25", "O", "Lavalle, 123", "011-15-422123", NULL, "A");
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (1, "Admin", "Admin", "1", "33111311", "1992-09-25", "O", "Lavalle, 123", "011-15-422123", NULL, "A");
 INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL, 1, "administrador", "adminpass0", "admin@localhost", "Usuario administrador", "A","U");
 
 -- CREO LAS PERSONAS DE LOS USUARIOS
 -- persona 2 Jasmin
-INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Jasmin", "Paolino", "1", "36718455", "1992-10-28", "F", "Pastorini, 2470", "011-15-33922364", NULL, "A");
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (2, "Jasmin", "Paolino", "1", "36718455", "1992-10-28", "F", "Pastorini, 2470", "011-15-33922364", NULL, "A");
 -- persona 3 Luz
-INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Luz", "Bárcena", "1", "36600140", "1991-08-24", "F", "15, 773", "02227-15-488021", NULL, "A");
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (3, "Luz", "Bárcena", "1", "36600140", "1991-08-24", "F", "15, 773", "02227-15-488021", NULL, "A");
 -- persona 4 fede
-INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Federico", "Retamal", "1", "35525238", "1991-02-05", "M", "Sarmiento 1153", "1166071845", NULL, "A");
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (4, "Federico", "Retamal", "1", "35525238", "1991-02-05", "M", "Sarmiento, 1153", "11-66071845", NULL, "A");
 -- persona 5 lucas
-INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (NULL, "Lucas", "Mufato", "1", "35942784", "1992-04-11", "M", "Dr. Muñiz 1482", "0232315606525", NULL, "A");
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (5, "Lucas", "Mufato", "1", "35942784", "1992-04-11", "M", "Dr. Muñiz, 1482", "02323-15-606525", NULL, "A");
+-- persona 5 Juan
+INSERT INTO PERSONA (id_persona, nombres, apellidos, tipo_doc, nro_doc, fecha_nacimiento, sexo, domicilio, telefono, descripcion, estado) VALUES (6, "Juan", "Cardona", "1", "36072559", "1992-09-23", "M", "25 de mayo, 1168", "02323-15-609065", NULL, "A");
+
 -- CREO UNOS USUARIOS PARA HACER PRUEBAS EN EL SISTEMA Y QUE ANDEN PARA TODOS
 
 -- usuario 2 Jasmin
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,2,"jasminp","jasmin123", "jasmin-p@hotmail.es",NUll,"A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (2,2,"jasminp","jasmin123", "jasmin-p@hotmail.es",NUll,"A","C");
 -- usuario 3 Luz
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,3,"luzbarcena","barcena", "mluzbarcena@gmail.com",NUll,"A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (3,3,"luzbarcena","barcena", "mluzbarcena@gmail.com",NUll,"A","C");
 -- usuario 4 fede
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,4,"federicoretamal","retamal", "reta.atlas@gmail.com",NUll,"A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (4,4,"federicoretamal","retamal", "reta.atlas@gmail.com",NUll,"A","C");
 -- usuario 5 Lucas
-INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (NULL,5,"lucasmufato","mufato", "l.mufato@gmail.com",NUll,"A","C");
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (5,5,"lucasmufato","mufato", "l.mufato@gmail.com",NUll,"A","C");
+-- usuario 5 Juan
+INSERT INTO USUARIO (id_usuario, id_persona, nombre_usuario, password, email, descripcion, estado,tipo) VALUES (6,6,"juancardona","cardona", "juancruz.23@hotmail.com",NUll,"A","C");
 
 -- este metodo le da al user administrador el rol super_usuario
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (1, 1, CURRENT_DATE);
@@ -37,6 +42,9 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (3, 2, C
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (4, 2, CURRENT_DATE);
 -- lucas
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
+-- juan
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
+
 -- LOS CREO COMO CLIENTES A ESTOS MISMOS USUARIOS
 -- Jasmin
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (2,default,default,NULL,NULL,1000);
@@ -46,6 +54,9 @@ INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VAL
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (4,default,default,NULL,NULL,1000);
 -- lucas
 INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (5,default,default,NULL,NULL,1000);
+-- juan
+INSERT INTO CLIENTE (id_usuario,puntos,reputacion, foto_registro,foto,saldo) VALUES (6,default,default,NULL,NULL,1000);
+
 -- agrego permisos de funcional
 
 INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estado ) VALUES
@@ -106,7 +117,6 @@ INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
 	(21,2,CURRENT_DATE),
 	(22,1,CURRENT_DATE),
 	(23,2,CURRENT_DATE),
-	(24,1,CURRENT_DATE),
 	(24,2,CURRENT_DATE);
 
 INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
