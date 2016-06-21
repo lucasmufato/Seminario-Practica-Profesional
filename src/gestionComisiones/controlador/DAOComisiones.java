@@ -226,7 +226,9 @@ public class DAOComisiones extends DataAccesObject {
 				throw new ExceptionViajesCompartidos("ERROR: NO SE PUDO RECUPERAR LA COMISION PARA: "+km+" Kms");
 			}
 			cc.setComision(comision);
-			cc.setMonto( comision.getPrecio() );
+			//TODO linea nueva con precio del km x Km 
+			Float monto= comision.getPrecio() * km.floatValue();
+			cc.setMonto( monto );
 			return cc;
 	}
 	

@@ -1,9 +1,6 @@
 package gestionViajes.controlador;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +13,6 @@ import gestionComisiones.modelo.ComisionCobrada;
 import gestionComisiones.modelo.EstadoComisionCobrada;
 import gestionPuntos.controlador.DAOPuntos;
 import gestionPuntos.modelo.Calificacion;
-import gestionPuntos.modelo.EstadoCalificacion;
 import gestionUsuarios.controlador.DAOAdministracionUsuarios;
 import gestionUsuarios.modelo.*;
 import gestionViajes.modelo.*;
@@ -24,9 +20,7 @@ import gestionViajes.modelo.*;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
@@ -694,7 +688,7 @@ public class DAOViajes extends DataAccesObject {
 			nro_asientos=1;
 		}else{
 			if(nro_asientos<1 || nro_asientos>viaje.getAsientos_disponibles()){
-				throw new ExceptionViajesCompartidos("ERROR: LA CANTIDAD DE ASIENTOS NO PUEDE SER MAYOR A LA DEL VEHICULO O MENOR QUE 1");
+				throw new ExceptionViajesCompartidos("ERROR: LA CANTIDAD DE ASIENTOS NO PUEDE SER MAYOR A LA DEL VEHICULO");
 			}
 		}
 		pasajero.setNro_asientos(nro_asientos);
