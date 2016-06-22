@@ -47,7 +47,9 @@ INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (4, 2, C
 -- lucas
 INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
 -- juan
-INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (5, 2, CURRENT_DATE);
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (6, 2, CURRENT_DATE);
+-- pablo
+INSERT INTO USUARIO_ROL (id_usuario, id_rol, fecha_modificacion) VALUES (7, 2, CURRENT_DATE);
 
 -- LOS CREO COMO CLIENTES A ESTOS MISMOS USUARIOS
 -- Jasmin
