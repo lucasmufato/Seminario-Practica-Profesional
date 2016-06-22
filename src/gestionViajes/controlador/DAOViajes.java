@@ -2185,23 +2185,20 @@ public class DAOViajes extends DataAccesObject {
 			return recorrido;
 		}
         public float informarPrecioTramo (int id_localidad1, int id_localidad2){
-            float precio = 0;
             Localidad localidad1 = (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_localidad1);
             Localidad localidad2 = (Localidad) this.buscarPorPrimaryKey(new Localidad(), id_localidad2);
             
-            double distancia = this.distanciaEntreLocalidades(localidad1, localidad2);
+            Double distancia = this.distanciaEntreLocalidades(localidad1, localidad2);
             
             Query qry2 = this.entitymanager.createNamedQuery("Comision.PrecioPorKM");
             qry2.setParameter("km", distancia);
-            Comision comision = null;
-            comision = (Comision) qry2.getSingleResult();
-                
+            Comision comision = (Comision) qry2.getSingleResult();
+            Float monto = comision.getPrecio() * distancia.floatValue();	//retocado por lucas TODO 
+            monto = (float) (Math.round(monto * 100.0) / 100.0);	
                 //if(comision==null){
                 //    throw new ExceptionViajesCompartidos("ERROR: NO SE PUDO RECUPERAR LA COMISION");
 		//}
-            precio = comision.getPrecio();         
-           
-            return precio;
+            return monto;
         }
         
         //by fede
