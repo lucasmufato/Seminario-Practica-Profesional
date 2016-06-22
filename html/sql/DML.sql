@@ -138,7 +138,7 @@ INSERT INTO ESTADO_VIAJE(id_estado_viaje, nombre_estado) VALUES
 	
 INSERT INTO ESTADO_COMISION(id_estado_comision, nombre_estado) VALUES
 	("0", "Pendiente"),
-	("1", "Pagado"),
+	("1", "Debitado"),
 	("2", "Vencido"),
 	("3", "Informativa"),
 	("4", "Desestimada");

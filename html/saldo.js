@@ -80,9 +80,9 @@ var showMovSaldo = function(movSaldo){
   movSaldo.forEach(function (elem) {
 
       tr = document.createElement ('TR');
-      tr.appendChild (getTd (vc.toFechaLocal(elem.fecha)));
+      tr.appendChild (getTd (elem.fecha.replace(/-/g, '\/').split("/").reverse().join("/")));
       tr.appendChild (getTd (elem.tipo));
-      tr.appendChild (getTd (elem.monto));
+      tr.appendChild (getTd (elem.monto.toFixed(2)));
 
       var thistr = tr;
       tr.onclick = function () {

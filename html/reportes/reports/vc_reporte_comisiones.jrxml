@@ -120,9 +120,9 @@
 					<imageExpression><![CDATA["vc.png"]]></imageExpression>
 				</image>
 				<staticText>
-					<reportElement x="121" y="20" width="321" height="43" forecolor="#FFFFFF" uuid="87de7a2d-b90a-4271-988c-d77f00d308e6"/>
+					<reportElement x="121" y="39" width="179" height="24" forecolor="#FFFFFF" uuid="87de7a2d-b90a-4271-988c-d77f00d308e6"/>
 					<textElement>
-						<font size="34" isBold="true"/>
+						<font size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Viajes Compartidos]]></text>
 				</staticText>
@@ -296,7 +296,7 @@
 				<textFieldExpression><![CDATA["\$"+$V{monto_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="421" y="10" width="70" height="20" forecolor="#006699" backcolor="#FFFFFF" uuid="09640a1c-4911-4f2c-8dea-abd97cf35580"/>
+				<reportElement mode="Opaque" x="357" y="10" width="134" height="20" forecolor="#006699" backcolor="#FFFFFF" uuid="09640a1c-4911-4f2c-8dea-abd97cf35580"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
