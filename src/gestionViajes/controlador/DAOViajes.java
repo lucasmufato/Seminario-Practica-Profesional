@@ -61,7 +61,7 @@ public class DAOViajes extends DataAccesObject {
 	}
     
     //by mufa
-    public boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{	//tiene tests
+    public synchronized boolean NuevoVehiculo(JSONObject datos) throws ExceptionViajesCompartidos{	//tiene tests
     	
     	/* estructura del JSON datos:
     	 * { "CONDUCTOR": ID_USUARIO,
@@ -162,7 +162,7 @@ public class DAOViajes extends DataAccesObject {
 	
     //by juan
 	//practicamente un copiar y pegar de nuevoViaje
-	public void modificarViaje(JSONObject datos) throws ExceptionViajesCompartidos {
+	public synchronized void modificarViaje(JSONObject datos) throws ExceptionViajesCompartidos {
 		JSONObject viajeJson= (JSONObject) datos.get("viaje");
 		Integer id_cliente= (Integer) datos.get("cliente");
 		Cliente cliente= (Cliente)this.buscarPorPrimaryKey(new Cliente(), id_cliente);
@@ -328,7 +328,7 @@ public class DAOViajes extends DataAccesObject {
 	
 	//by mufa
 	@SuppressWarnings("unused")
-	public boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {		//tiene tests
+	public synchronized boolean nuevoViaje(JSONObject datos) throws ExceptionViajesCompartidos {		//tiene tests
 		/*
 		EL JSON QUE RECIBE EL METODO TENDRIA LA SIGUIENTE FORMA:
 		 { "LOCALIDADES": {"ORIGEN":"ID_LOCALIDAD","INTERMEDIO":ID_LOCALIDAD,.....,"DESTINO":ID_LOCALIDAD},
@@ -617,7 +617,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean Cliente_se_postula_en_viaje(JSONObject json) throws ExceptionViajesCompartidos{// tiene test
+	public synchronized boolean Cliente_se_postula_en_viaje(JSONObject json) throws ExceptionViajesCompartidos{// tiene test
 		/*
 		 * JSON{
 		 * "CLIENTE":ID_CLIENTE,
@@ -749,7 +749,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 
 	//by mufa
-	public float comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje) throws ExceptionViajesCompartidos{	//tiene test
+	public synchronized float comision_por_recorrido(Localidad inicio, Localidad destino, Integer id_viaje) throws ExceptionViajesCompartidos{	//tiene test
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: VIAJE NO ENCONTRADO");
@@ -891,7 +891,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 
 	//by pablo
-	public boolean actualizarEstadoViaje(Integer id_viaje) {
+	public synchronized boolean actualizarEstadoViaje(Integer id_viaje) {
 		boolean actualizado = false;
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		this.entitymanager.getTransaction().begin();
@@ -1029,7 +1029,7 @@ public class DAOViajes extends DataAccesObject {
 
 
 	//by jasmin y luz
-	public boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
+	public synchronized boolean aceptarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
 		Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if (viaje == null) {
 			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
@@ -1147,7 +1147,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 
 	//by mufa
-	public boolean rechazarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
+	public synchronized boolean rechazarPasajero(Integer id_cliente_postulante, Integer id_viaje) throws ExceptionViajesCompartidos {
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
@@ -1206,7 +1206,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	// by mufa
-	public boolean clienteNoManejaVehiculo(Integer id_cliente, Integer id_vehiculo) throws ExceptionViajesCompartidos{
+	public synchronized boolean clienteNoManejaVehiculo(Integer id_cliente, Integer id_vehiculo) throws ExceptionViajesCompartidos{
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
@@ -1260,7 +1260,7 @@ public class DAOViajes extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{
+	public synchronized boolean finalizarViaje(Integer id_cliente, Integer id_viaje) throws ExceptionViajesCompartidos{
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);
 		if(cliente==null){
 			throw new ExceptionViajesCompartidos("ERROR: NO EXISTE EL CLIENTE");
@@ -1304,7 +1304,7 @@ public class DAOViajes extends DataAccesObject {
 		return true;
 	}
 
-	private boolean finalizarViaje(Viaje viaje) throws ExceptionViajesCompartidos {
+	private synchronized boolean finalizarViaje(Viaje viaje) throws ExceptionViajesCompartidos {
 		//entro a este metodo solo si quiero finalizar un viaje y soy el conductor
 		//este metodo es llamado por el otro finalizar viaje
 		
@@ -1342,7 +1342,7 @@ public class DAOViajes extends DataAccesObject {
 	}       
         
         //by fede
-        public boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
+        public synchronized boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
             //Verificaciones varias
         Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
@@ -1410,7 +1410,7 @@ public class DAOViajes extends DataAccesObject {
         }
         
         //by juan
-    	public boolean subirFotoVehiculo(JSONObject foto) throws ExceptionViajesCompartidos {
+    	public synchronized boolean subirFotoVehiculo(JSONObject foto) throws ExceptionViajesCompartidos {
     		int idVehiculo;
     		try{
     			idVehiculo = Integer.parseInt(foto.get("vehiculo").toString());
@@ -1466,7 +1466,7 @@ public class DAOViajes extends DataAccesObject {
     	}
     	
     	//by juan
-		public boolean modificarVehiculo(JSONObject json) throws ExceptionViajesCompartidos {
+		public synchronized boolean modificarVehiculo(JSONObject json) throws ExceptionViajesCompartidos {
     		int idVehiculo;
     		try{
     			idVehiculo = Integer.parseInt(json.get("id").toString());
@@ -1530,7 +1530,7 @@ public class DAOViajes extends DataAccesObject {
 
 		//by juan
 		//Funcion que pone el estado del vehiculo en inactivo
-		public boolean desactivarVehiculo(Vehiculo v, int id_conductor_modifica) throws ExceptionViajesCompartidos {
+		public synchronized boolean desactivarVehiculo(Vehiculo v, int id_conductor_modifica) throws ExceptionViajesCompartidos {
 			
     		if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
@@ -1577,7 +1577,7 @@ public class DAOViajes extends DataAccesObject {
 
 		// by juan
 		//Funcion que desactiva todas las relaciones de maneja existentes segun el vehiculo dado
-		public boolean desactivarManeja(Vehiculo v) throws ExceptionViajesCompartidos {
+		public synchronized boolean desactivarManeja(Vehiculo v) throws ExceptionViajesCompartidos {
     		if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
     		}
@@ -1659,7 +1659,7 @@ public class DAOViajes extends DataAccesObject {
 		//by juan
 		// recibe una lista de id de conductores y el id de un vehiculo.
 		//Se le asignan esos conductores al vehiculo
-		public boolean asignarConductoresVehiculo(int idVehiculo,
+		public synchronized boolean asignarConductoresVehiculo(int idVehiculo,
 				ArrayList<Cliente> listaConductores) throws ExceptionViajesCompartidos {
 			
 			// verifico que vehiculo existe en sistema
@@ -1705,7 +1705,7 @@ public class DAOViajes extends DataAccesObject {
 		
 
         //es el mismo metodo que usa juan pero con unas correcciones
-        public boolean asignarConductoresVehiculo2(int idVehiculo,
+        public synchronized boolean asignarConductoresVehiculo2(int idVehiculo,
 				int id_conductor_modifica, String[] conductores) throws ExceptionViajesCompartidos {
 			
 			// verifico que vehiculo existe en sistema
@@ -1761,7 +1761,7 @@ public class DAOViajes extends DataAccesObject {
 		
 		//by juan
 		// desactiva conductor a vehiculo (agarro el maneja y le mando una fecha al null de fechafin)
-		public boolean desasignarConductor(int idVehiculo, int idConductor, int id_conductor_modifica) throws ExceptionViajesCompartidos {
+		public synchronized boolean desasignarConductor(int idVehiculo, int idConductor, int id_conductor_modifica) throws ExceptionViajesCompartidos {
 			Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
 			if (v==null){
         		throw new ExceptionViajesCompartidos("El vehiculo no se encuentra en el sistema");
@@ -1811,7 +1811,7 @@ public class DAOViajes extends DataAccesObject {
 		}	
                 
         //by fede
-        public boolean cancelarViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
+        public synchronized boolean cancelarViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
             //Verificaciones varias
             if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
@@ -1894,7 +1894,7 @@ public class DAOViajes extends DataAccesObject {
         }
         
         //by fede
-        public boolean dejarComentarioEnViaje(JSONObject json) throws ExceptionViajesCompartidos{
+        public synchronized boolean dejarComentarioEnViaje(JSONObject json) throws ExceptionViajesCompartidos{
             if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
             }
@@ -1971,7 +1971,7 @@ public class DAOViajes extends DataAccesObject {
             return true;
         }
         
-        public List<ComentarioViaje> getComentariosViaje(int id_viaje) throws ExceptionViajesCompartidos{
+        public synchronized List<ComentarioViaje> getComentariosViaje(int id_viaje) throws ExceptionViajesCompartidos{
             List<ComentarioViaje> lista = new ArrayList<ComentarioViaje>();
             Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
             if(viaje==null){
@@ -1983,7 +1983,7 @@ public class DAOViajes extends DataAccesObject {
             return lista;
         }
 		
-        public boolean seguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
+        public synchronized boolean seguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
             if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
             }
@@ -2045,7 +2045,7 @@ public class DAOViajes extends DataAccesObject {
             return true;
 			
 		}
-		public boolean dejarDeSeguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
+		public synchronized boolean dejarDeSeguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
             if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
             }
@@ -2120,7 +2120,7 @@ public class DAOViajes extends DataAccesObject {
         }
         
         
-        public boolean notificarSeguidores (int id_viaje, String motivo) throws ExceptionViajesCompartidos{
+        public synchronized boolean notificarSeguidores (int id_viaje, String motivo) throws ExceptionViajesCompartidos{
             if(this.entitymanager.getTransaction().isActive()){
     			this.entitymanager.getTransaction().rollback();
             }

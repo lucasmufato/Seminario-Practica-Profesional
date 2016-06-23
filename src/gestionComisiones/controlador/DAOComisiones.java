@@ -41,7 +41,7 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean nuevaComision(JSONObject datos) throws ExceptionViajesCompartidos{
+	public synchronized boolean nuevaComision(JSONObject datos) throws ExceptionViajesCompartidos{
 		/*
 		 * datos que recibo:
 		 * {
@@ -101,7 +101,7 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean FinalizarComision(Integer id_comision) throws ExceptionViajesCompartidos{
+	public synchronized boolean FinalizarComision(Integer id_comision) throws ExceptionViajesCompartidos{
 		Comision comision = (Comision) this.buscarPorPrimaryKey(new Comision(), id_comision);
 		if(comision==null){
 			throw new ExceptionViajesCompartidos("ERROR: LA COMISION NO EXISTE");
@@ -144,7 +144,7 @@ public class DAOComisiones extends DataAccesObject {
 		return this.selectAll("Comision");
 	}
 	
-	public boolean modificarComision(JSONObject datos) throws ExceptionViajesCompartidos{
+	public synchronized boolean modificarComision(JSONObject datos) throws ExceptionViajesCompartidos{
 		/*
 		 * datos que recibo:
 		 * {
@@ -213,7 +213,7 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//retocado por mufa
-	public ComisionCobrada nuevaComisionCobrada(Double km) throws ExceptionViajesCompartidos{
+	public synchronized ComisionCobrada nuevaComisionCobrada(Double km) throws ExceptionViajesCompartidos{
             if(this.entitymanager.getTransaction().isActive()){
                 this.entitymanager.getTransaction().rollback();
             }
@@ -234,7 +234,7 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by jasmin?
-	public boolean cobrarComision(PasajeroViaje pv) throws ExceptionViajesCompartidos{
+	public synchronized boolean cobrarComision(PasajeroViaje pv) throws ExceptionViajesCompartidos{
 		if(this.entitymanager.getTransaction().isActive()){
 			this.entitymanager.getTransaction().rollback();
         }
@@ -293,7 +293,7 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	
-	public boolean sumarSaldo(int id_cliente,float monto){
+	public synchronized boolean sumarSaldo(int id_cliente,float monto){
             
         if(this.entitymanager.getTransaction().isActive()){
         	this.entitymanager.getTransaction().rollback();
