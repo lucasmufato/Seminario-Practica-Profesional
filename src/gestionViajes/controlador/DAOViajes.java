@@ -2168,7 +2168,8 @@ public class DAOViajes extends DataAccesObject {
                 qry.setParameter("id_vehiculo", vehiculo.getId_vehiculo());
                 List<Viaje> lista_viajes = qry.getResultList();
                 for(int i=0;i<lista_viajes.size();i++){
-                    if(!lista_viajes.get(i).getEstado().equals(EstadoViaje.cancelado)){
+                	EstadoViaje estadoviaje=lista_viajes.get(i).getEstado();
+                    if(! (estadoviaje.equals(EstadoViaje.cancelado) || estadoviaje.equals(EstadoViaje.finalizado)) ){
                     Timestamp fecha_hora_viaje_recuperado = lista_viajes.get(i).getFecha_inicio();
                     double diferencia = daopuntos.diferenciaTimestampsParaVehiculos(fecha_hora_viaje, fecha_hora_viaje_recuperado);
                         if(diferencia>=0){//si el viaje a crear es posterior al que recupero
