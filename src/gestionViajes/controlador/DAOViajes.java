@@ -894,6 +894,9 @@ public class DAOViajes extends DataAccesObject {
 	public synchronized boolean actualizarEstadoViaje(Integer id_viaje) {
 		boolean actualizado = false;
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if (viaje == null) {
+			return false;
+		}
 		this.entitymanager.getTransaction().begin();
 		actualizado = viaje.actualizarEstado();
 		EstadoViaje estadoActual = viaje.getEstado();
