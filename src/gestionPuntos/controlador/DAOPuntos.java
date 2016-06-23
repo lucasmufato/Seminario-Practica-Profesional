@@ -49,10 +49,16 @@ public class DAOPuntos extends DataAccesObject {
 	}
         
 	public Calificacion getCalificacionPorPasajeroConductor(PasajeroViaje pv, Cliente c){
-		Query q = this.entitymanager.createNamedQuery("Calificacion.ClaveCandidateCompuesta");
-		q.setParameter("cc1", pv);
-		q.setParameter("cc2", c);
-		return (Calificacion) q.getSingleResult();
+		try {
+			Query q = this.entitymanager.createNamedQuery("Calificacion.ClaveCandidateCompuesta");
+			Calificacion calif;
+			q.setParameter("cc1", pv);
+			q.setParameter("cc2", c);
+			calif = (Calificacion) q.getSingleResult();
+			return calif;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
     //byfede    
