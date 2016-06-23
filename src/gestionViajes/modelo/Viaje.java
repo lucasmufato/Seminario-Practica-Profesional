@@ -445,6 +445,7 @@ public class Viaje implements JSONable {
 	public void SetJSONObject(JSONObject json) {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject toJSON() {
 		JSONObject json_viaje = new JSONObject();
@@ -503,7 +504,13 @@ public class Viaje implements JSONable {
 		if(n!=null){
 			mi_vuelta.setNombre_amigable(n);
 		}else{
-			mi_vuelta.setNombre_amigable(this.nombre_amigable+"_vuelta");
+			if(this.nombre_amigable.length()<=23){
+				mi_vuelta.setNombre_amigable(this.nombre_amigable+"_vuelta");
+			}else if(this.nombre_amigable.length()<=28){
+				mi_vuelta.setNombre_amigable(this.nombre_amigable+"_V");
+			}else{
+				mi_vuelta.setNombre_amigable(this.nombre_amigable);
+			}	
 		}
 		Timestamp f= (Timestamp) vuelta.get("fecha_inicio");
 		if(f!=null){

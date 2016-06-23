@@ -42,15 +42,16 @@ public class DAOViajes extends DataAccesObject {
 	static PlanificadorEstadoViaje planifEstadoViaje = null;
 	static DAOViajes instance = null;
 
-    private DAOViajes(){
+    public DAOViajes(){		//lo cambio para poder hacer una prueba(Lucas)
     	super();
- 	
+    	
     	synchronized (DAOViajes.class) {
 			if (DAOViajes.planifEstadoViaje == null) {
 				DAOViajes.planifEstadoViaje = new PlanificadorEstadoViaje (this);
 				DAOViajes.planifEstadoViaje.iniciar();
 			}
 		}
+		
 	}
 
 	public static DAOViajes getInstance () {
@@ -894,11 +895,14 @@ public class DAOViajes extends DataAccesObject {
 	public boolean actualizarEstadoViaje(Integer id_viaje) {
 		boolean actualizado = false;
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
+		if(viaje==null){			//TODO chequeo agregado por lucas, por si entran al detalle viaje desde el url que no explote el metodo
+			return false;
+		}
 		this.entitymanager.getTransaction().begin();
 		actualizado = viaje.actualizarEstado();
 		EstadoViaje estadoActual = viaje.getEstado();
 		
-		if (actualizado && estadoActual == EstadoViaje.iniciado) {
+		if (actualizado && estadoActual == EstadoViaje.iniciado) {		//si le cambie el estado al viaje y lo pase a iniciado
 			// Notificar al conductor 
                         System.out.println(viaje.getNombre_amigable());
                         String nombre_destino = viaje.getDestino().getNombre();
@@ -923,7 +927,7 @@ public class DAOViajes extends DataAccesObject {
 				}
 			}
 	
-		} else if (actualizado && estadoActual == EstadoViaje.finalizado) {
+		} else if (actualizado && estadoActual == EstadoViaje.finalizado) {		//si le cambie el estado al viaje y lo pase a finalizado
 			Notificacion notificacion = new Notificacion();
 			notificacion.setCliente(viaje.getConductor());
 			notificacion.setEstado(EstadoNotificacion.no_leido);
