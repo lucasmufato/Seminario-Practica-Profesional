@@ -81,10 +81,7 @@ public class DAOViajes extends DataAccesObject {
     		throw new ExceptionViajesCompartidos("ERROR: EXISTE UN VEHICULO CON ESA PATENTE");
     	}
     	
-    	if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
     	vehiculo = new Vehiculo();
     	Integer anio= (Integer)datos_vehiculo.get("anio");
     	if(anio==null){
@@ -187,10 +184,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
 		}
 		
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		//pongo quien es el conductor del viaje y en q vehiculo
 		Maneja maneja= this.getManejaActivoPorVehiculoConductor(vehiculo, cliente);
 		viaje.setConductor_vehiculo(maneja);
@@ -303,7 +297,7 @@ public class DAOViajes extends DataAccesObject {
 	    	}
 			//
 			//creo recorrido nuevo
-			entitymanager.getTransaction().begin();
+			iniciarTransaccion();
 
 			viaje.crearRecorrido(recorrido);
 			
@@ -357,10 +351,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO MANEJA ESE VEHICULO");
 		}
 		
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		//pongo quien es el conductor del viaje y en q vehiculo
 		Maneja maneja= this.getManejaActivoPorVehiculoConductor(vehiculo, cliente);
 		Viaje viaje= new Viaje();
@@ -509,7 +500,7 @@ public class DAOViajes extends DataAccesObject {
 	    		throw new ExceptionViajesCompartidos("ERROR: "+error);
 	    	}
 			//HAGO OTRA TRANSACCION, Y AHI LE DIGO AL VIAJE Q CREE SU VUELTA, Y LO GUARDO EN LA BD (EL NUEVO VIAJE SE GUARDA POR PERSIST EN CASCADA)
-			entitymanager.getTransaction().begin();
+			iniciarTransaccion();
 			Viaje viaje_vuelta = viaje.crearTuVuelta(vuelta);
 			viaje_vuelta.setPrecio(precio_vuelta);
 			viaje_vuelta.setAsientos_disponibles(cantidad_asientos_vuelta);
@@ -659,10 +650,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: LA LOCALIDAD DE SUBIDA ESTA DESPUES QUE LA DE BAJADA");
 		}
 		
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 	
 		PasajeroViaje pasajero=(PasajeroViaje) viaje.recuperar_pasajeroViaje_por_cliente(cliente);
 		//si el pasajero no estaba en el viaje lo creo, si estaba lo modifico a menos q este en aceptado/finalizo/ausente
@@ -726,7 +714,7 @@ public class DAOViajes extends DataAccesObject {
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
     	}
 		//hago un guardado anterior por que no puedo vincular doblemente al pasajero con la calificacion y a la calificacion con el pasajero
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		
 		//creo la notificacion que le va a llegar al conductor de ese viaje, informandole que tiene un postulante
 		Notificacion notificacion= new Notificacion();
@@ -892,12 +880,13 @@ public class DAOViajes extends DataAccesObject {
 
 	//by pablo
 	public synchronized boolean actualizarEstadoViaje(Integer id_viaje) {
+
 		boolean actualizado = false;
 		Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if (viaje == null) {
 			return false;
 		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		actualizado = viaje.actualizarEstado();
 		EstadoViaje estadoActual = viaje.getEstado();
 		
@@ -1072,10 +1061,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: NO HAY SUFICIENTES ASIENTOS DISPONIBLES PARA EL TRAMO");
 		}*/ 
 		//ACEPTAR
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		pasajero.setEstado(EstadoPasajeroViaje.aceptado);
 		i = 0;
 		while (lista.get(i) != subida) {//WHILE HASTA QUE ENCUENTRA LA LOCALIDAD DE SUBIDA Y TENGO LA POSICION CON I
@@ -1119,10 +1105,7 @@ public class DAOViajes extends DataAccesObject {
 		 	throw new ExceptionViajesCompartidos("ERROR: "+error);
 		}
 		
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		pasajero.setCalificacion(calificacion);
 		this.entitymanager.persist(calificacion);
 		try{
@@ -1139,7 +1122,7 @@ public class DAOViajes extends DataAccesObject {
 			for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
 				seguidor = lista_seguidores.get(j);
 				if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
-					this.entitymanager.getTransaction().begin();
+					this.iniciarTransaccion();
 					seguidor.setEstado("I".charAt(0));
 					this.entitymanager.getTransaction().commit();
 				}// deja de ser seguidor
@@ -1169,10 +1152,7 @@ public class DAOViajes extends DataAccesObject {
 		if(pasajero.getEstado()!=EstadoPasajeroViaje.postulado){	//no podria rechazar a un cliente que ya acepte
 			throw new ExceptionViajesCompartidos("ERROR: SOLO PODES RECHAZAR A UN PASAJERO CUYO ESTADO SEA POSTULADO");
 		}
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		pasajero.setEstado(EstadoPasajeroViaje.rechazado);
 		pasajero.getComision().setEstado(EstadoComisionCobrada.desestimada);
                 pasajero.getComision().setfecha(new Timestamp((new java.util.Date()).getTime())); 
@@ -1199,7 +1179,7 @@ public class DAOViajes extends DataAccesObject {
 			for(int j=0;j<lista_seguidores.size();j++){ //reviso si es seguidor el que acepte
 				seguidor = lista_seguidores.get(j);
 				if(seguidor.getCliente().getId_usuario() == id_cliente_postulante){
-					this.entitymanager.getTransaction().begin();
+					this.iniciarTransaccion();
 					seguidor.setEstado("I".charAt(0));
 					this.entitymanager.getTransaction().commit();
 				}// deja de ser seguidor
@@ -1225,10 +1205,7 @@ public class DAOViajes extends DataAccesObject {
 		if(maneja.getFecha_fin()!=null){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO PODIA MANEJAR EL VEHICULO");
 		}
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		maneja.setFecha_fin( new Timestamp((new java.util.Date()).getTime()) );
 		try{
     		entitymanager.getTransaction( ).commit( );	
@@ -1292,10 +1269,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		
 		//GUARDO EL CAMBIO DE ESTADO
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		pv.setEstado(EstadoPasajeroViaje.finalizo_viaje);
 		try{
     		entitymanager.getTransaction( ).commit( );	
@@ -1311,10 +1285,7 @@ public class DAOViajes extends DataAccesObject {
 		//entro a este metodo solo si quiero finalizar un viaje y soy el conductor
 		//este metodo es llamado por el otro finalizar viaje
 		
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-		}
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		viaje.setEstado(EstadoViaje.finalizado);
 		viaje.setFecha_finalizacion(new Timestamp((new java.util.Date()).getTime()) );
 		
@@ -1345,7 +1316,7 @@ public class DAOViajes extends DataAccesObject {
 	}       
         
         //by fede
-        public synchronized boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
+    public synchronized boolean cancelarParticipacionEnViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
             //Verificaciones varias
         Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
@@ -1369,7 +1340,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: USTED FUE RECHAZADO POR EL CHOFER");
 		}
                 //Fin verificaciones. Ahora busco el tramo.
-                this.entitymanager.getTransaction().begin();
+                this.iniciarTransaccion();
                 LocalidadViaje subida = pasajero.getLocalidad_subida();
                 LocalidadViaje bajada = pasajero.getLocalidad_bajada();
                 List<LocalidadViaje> lista = viaje.getLocalidades();
@@ -1413,7 +1384,7 @@ public class DAOViajes extends DataAccesObject {
         }
         
         //by juan
-    	public synchronized boolean subirFotoVehiculo(JSONObject foto) throws ExceptionViajesCompartidos {
+    	public synchronized boolean subirFotoVehiculo(JSONObject foto) throws ExceptionViajesCompartidos {  
     		int idVehiculo;
     		try{
     			idVehiculo = Integer.parseInt(foto.get("vehiculo").toString());
@@ -1426,10 +1397,7 @@ public class DAOViajes extends DataAccesObject {
         	}
         	
     		//GUARDO EL CAMBIO DE FOTO
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
 			v.setFoto(foto.get("imagen").toString());
 			this.entitymanager.persist(v);
     		try{
@@ -1449,7 +1417,7 @@ public class DAOViajes extends DataAccesObject {
                         
                         try{ //lo notifico uno por uno
                         
-                            this.entitymanager.getTransaction().begin();
+                            this.iniciarTransaccion();
                             Notificacion notificacion = new Notificacion();
                             notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado la foto del vehículo con patente: <<"+v.getPatente()+">>");
                             notificacion.setEstado(EstadoNotificacion.no_leido);
@@ -1469,7 +1437,7 @@ public class DAOViajes extends DataAccesObject {
     	}
     	
     	//by juan
-		public synchronized boolean modificarVehiculo(JSONObject json) throws ExceptionViajesCompartidos {
+		public synchronized boolean modificarVehiculo(JSONObject json) throws ExceptionViajesCompartidos {  
     		int idVehiculo;
     		try{
     			idVehiculo = Integer.parseInt(json.get("id").toString());
@@ -1481,10 +1449,7 @@ public class DAOViajes extends DataAccesObject {
     			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
         	}
         	
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
 			v.setAire_acondicionado(json.get("aire").toString().charAt(0));
 			v.setAnio(Integer.parseInt(json.get("anio").toString()));
 			v.setCantidad_asientos(Integer.parseInt(json.get("asientos").toString()));
@@ -1509,7 +1474,7 @@ public class DAOViajes extends DataAccesObject {
 
                             try{ //lo notifico uno por uno
 
-                                this.entitymanager.getTransaction().begin();
+                                this.iniciarTransaccion();
                                 Notificacion notificacion = new Notificacion();
                                 notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado el vehículo con patente: <<"+v.getPatente()+">>");
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
@@ -1535,11 +1500,8 @@ public class DAOViajes extends DataAccesObject {
 		//Funcion que pone el estado del vehiculo en inactivo
 		public synchronized boolean desactivarVehiculo(Vehiculo v, int id_conductor_modifica) throws ExceptionViajesCompartidos {
 			
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
     		
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
 			v.setEstado("I".charAt(0));
 			this.entitymanager.persist(v);
     		try{
@@ -1559,7 +1521,7 @@ public class DAOViajes extends DataAccesObject {
         	// notifico uno por uno (si esta activo) 
         	for (int i=0;i< conductoresActivos.size();i++){
         		if ( conductoresActivos.get(i).isActivo() ){
-        			this.entitymanager.getTransaction().begin();            			
+        			this.iniciarTransaccion();            			
                                 Notificacion notificacion = new Notificacion();
                                 notificacion.setTexto("El vehículo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
                                 notificacion.setCliente(conductoresActivos.get(i));
@@ -1581,10 +1543,7 @@ public class DAOViajes extends DataAccesObject {
 		// by juan
 		//Funcion que desactiva todas las relaciones de maneja existentes segun el vehiculo dado
 		public synchronized boolean desactivarManeja(Vehiculo v) throws ExceptionViajesCompartidos {
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
 
 			List<Maneja> lista = this.getManejaPorVehiculo(v);
 			for (Maneja m : lista){
@@ -1671,10 +1630,7 @@ public class DAOViajes extends DataAccesObject {
     			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
         	}
 			
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
         	
         	// Tomo los conductores activos de ese vehiculo
         	List<Cliente> conductoresActivos = v.getConductoresActivos();
@@ -1717,10 +1673,7 @@ public class DAOViajes extends DataAccesObject {
     			throw new ExceptionViajesCompartidos("El vehiculo no existe en el sistema");
         	}
 			
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
     		
         	ArrayList<Cliente> listaConductores = new ArrayList<Cliente>();
     		if (conductores != null) {
@@ -1777,10 +1730,7 @@ public class DAOViajes extends DataAccesObject {
         		throw new ExceptionViajesCompartidos("El Conductor no tiene asignado este vehï¿½culo");
 			}
 						
-    		if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-    		}
-    		this.entitymanager.getTransaction().begin();
+    		this.iniciarTransaccion();
 			Cliente conductor_modifica = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_conductor_modifica);
 			List<Maneja> listaManeja = this.getManejaPorVehiculoConductor(v, c);
 			for (Maneja m : listaManeja) {
@@ -1815,10 +1765,8 @@ public class DAOViajes extends DataAccesObject {
                 
         //by fede
         public synchronized boolean cancelarViaje(Integer id_viaje,Integer id_cliente ) throws ExceptionViajesCompartidos {
+        	this.limpiarTransacciones();
             //Verificaciones varias
-            if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-            }
             Viaje viaje= (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
 		if(viaje==null){
 			throw new ExceptionViajesCompartidos("ERROR: EL VIAJE NO EXISTE");
@@ -1832,7 +1780,7 @@ public class DAOViajes extends DataAccesObject {
 		}
                 Cliente chofer = viaje.getConductor();
                 if(chofer.equals(cliente)){ //si es el chofer quien cancela
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     viaje.setEstado(EstadoViaje.cancelado);
                     Calendar calendar = Calendar.getInstance();
                     Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
@@ -1851,7 +1799,7 @@ public class DAOViajes extends DataAccesObject {
                         }
                         id_viaje = viaje.getId_viaje();
                         for(int i=0; i<lista.size();i++){
-                            this.entitymanager.getTransaction().begin();
+                            this.iniciarTransaccion();
                             boolean bandera= false;
                             currentTimestamp.setYear(1000);//seteo aÃ±o para que no los sancione
                             PasajeroViaje pasajero = lista.get(i);
@@ -1860,7 +1808,7 @@ public class DAOViajes extends DataAccesObject {
                             int id_cliente_pas = pasajero.getCliente().getId_usuario();
                             //bandera = daopuntos.evaluarSancion(id_cliente_pas, id_viaje, currentTimestamp);
                             //SE CREA LA NOTIFICACION QUE LE VA A LLEGAR AL PASAJERO, SOBRE QUE FUE Cancelado
-                            //this.entitymanager.getTransaction().begin();
+                            //this.iniciarTransaccion();
                             Notificacion notificacion= new Notificacion();
                             notificacion.setCliente(pasajero.getCliente()); 
                             notificacion.setEstado(EstadoNotificacion.no_leido);
@@ -1898,9 +1846,7 @@ public class DAOViajes extends DataAccesObject {
         
         //by fede
         public synchronized boolean dejarComentarioEnViaje(JSONObject json) throws ExceptionViajesCompartidos{
-            if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-            }
+           this.limpiarTransacciones();
             
             
             ComentarioViaje cv = new ComentarioViaje();
@@ -1920,7 +1866,7 @@ public class DAOViajes extends DataAccesObject {
             java.util.Date utilDate = new java.util.Date();
             java.sql.Timestamp fecha = new Timestamp(utilDate.getTime());
             cv.setFecha(fecha);
-            this.entitymanager.getTransaction().begin();
+            this.iniciarTransaccion();
 
             Notificacion notif = new Notificacion();
             if(cliente.getId_usuario()!=conductor.getId_usuario()){ //si no es el conductor, lo notifico al conductor
@@ -1950,7 +1896,7 @@ public class DAOViajes extends DataAccesObject {
                             
                                 if( (!notificados.contains(clienteANotificar))){ //si no lo notifique, lo notifico ahora   
                                     Notificacion notificacion = new Notificacion(); 
-                                    this.entitymanager.getTransaction().begin();
+                                    this.iniciarTransaccion();
                                                                        
                                     notificacion.setEstado(EstadoNotificacion.no_leido);
                                     notificacion.setCliente(clienteANotificar);
@@ -1987,9 +1933,7 @@ public class DAOViajes extends DataAccesObject {
         }
 		
         public synchronized boolean seguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
-            if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-            }
+            this.limpiarTransacciones();
             
             Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), idUsuario);
             if(cliente==null){
@@ -2013,7 +1957,7 @@ public class DAOViajes extends DataAccesObject {
                 throw new ExceptionViajesCompartidos("Usted ya es seguidor de este viaje");
             }
 
-            this.entitymanager.getTransaction().begin();
+            this.iniciarTransaccion();
             sv.setCliente(cliente);
             sv.setEstado("A".charAt(0));
             sv.setViaje(viaje);    		
@@ -2049,9 +1993,7 @@ public class DAOViajes extends DataAccesObject {
 			
 		}
 		public synchronized boolean dejarDeSeguirViaje(int idViaje, int idUsuario) throws ExceptionViajesCompartidos {
-            if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-            }
+            this.limpiarTransacciones();
             
             Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), idUsuario);
             if(cliente==null){
@@ -2073,7 +2015,7 @@ public class DAOViajes extends DataAccesObject {
             
             if (sv == null || !sv.isActivo()) throw new ExceptionViajesCompartidos("ERROR: Usted no es seguidor de este viaje");
             
-            this.entitymanager.getTransaction().begin();
+            this.iniciarTransaccion();
             sv.setEstado("I".charAt(0));
             java.util.Date utilDate = new java.util.Date();
             java.sql.Timestamp fecha = new Timestamp(utilDate.getTime());
@@ -2124,9 +2066,7 @@ public class DAOViajes extends DataAccesObject {
         
         
         public synchronized boolean notificarSeguidores (int id_viaje, String motivo) throws ExceptionViajesCompartidos{
-            if(this.entitymanager.getTransaction().isActive()){
-    			this.entitymanager.getTransaction().rollback();
-            }
+            this.limpiarTransacciones();
             
             String motivo_notificacion = null;
             if(motivo.equals("cancelado")){
@@ -2153,7 +2093,7 @@ public class DAOViajes extends DataAccesObject {
                 
                 if(lista_seguidores.get(i).isActivo()){
                     Cliente cliente_notificarlo = lista_seguidores.get(i).getCliente();
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     Notificacion notificacion = new Notificacion();
                     notificacion.setEstado(EstadoNotificacion.no_leido);
                     notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));

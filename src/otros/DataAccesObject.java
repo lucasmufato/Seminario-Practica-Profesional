@@ -229,4 +229,15 @@ public abstract class DataAccesObject {
 	public void refresh(Object entidad) {
 		entitymanager.refresh(entidad);
 	}
+
+	public void limpiarTransacciones() {
+    	if(this.entitymanager.getTransaction().isActive()){
+			this.entitymanager.getTransaction().rollback();
+		}
+	}
+
+	public void iniciarTransaccion() {
+		this.limpiarTransacciones();
+		this.entitymanager.getTransaction().begin();
+	}
 }

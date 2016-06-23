@@ -61,10 +61,7 @@ public class DAOPuntos extends DataAccesObject {
         //System.out.println("Entro a DAOPUNTOS Con:\n IdCli:"+id_cliente+"\n IdViaje:"+id_viaje+"\n Time:"+fechaYHoraCancelacion+"");
         double descuento = this.calculcarDescuentoPuntos(id_viaje, id_cliente);
         if(descuento!=0){ //sanciono si cancelo tarde 
-            if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-            }
-            this.entitymanager.getTransaction( ).begin( );
+            this.iniciarTransaccion( );
             MovimientoPuntos mov = new MovimientoPuntos();
             Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);         
             mov.setCliente(cliente);
@@ -135,10 +132,10 @@ public class DAOPuntos extends DataAccesObject {
             try{    this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction( ).commit( );
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     this.entitymanager.persist(sancion);
                     this.entitymanager.getTransaction( ).commit( );
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     this.entitymanager.persist(sancion_dias);
                     this.entitymanager.getTransaction( ).commit( );
                     boolean bandera = this.actualizarPuntosCliente(descuento_int, cliente.getId_usuario());
@@ -229,10 +226,7 @@ public class DAOPuntos extends DataAccesObject {
     // by fede
     public synchronized boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
         
-        if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-        }
-        this.entitymanager.getTransaction( ).begin( );
+        this.iniciarTransaccion( );
         Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);     
         Integer puntos_cuenta = cliente.getPuntos();
         puntos_cuenta  = puntos_cuenta + (int)monto;
@@ -251,10 +245,7 @@ public class DAOPuntos extends DataAccesObject {
  public synchronized boolean sancionarChofer(int id_viaje, int id_chofer,int aceptados) throws ExceptionViajesCompartidos{
         //formula
         // puntos = (CantPas * 50 ) + (1/hsfaltan * beta)
-        if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-            }
-        this.entitymanager.getTransaction().begin();
+        this.iniciarTransaccion();
         Viaje viaje = new Viaje();
         Integer id_viaje2 = id_viaje;
         viaje = (Viaje) this.buscarPorPrimaryKey(viaje, id_viaje);
@@ -338,11 +329,11 @@ public class DAOPuntos extends DataAccesObject {
                     this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction().commit();
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     this.entitymanager.persist(sancion);
                      this.entitymanager.persist(sancion_dias);
                     this.entitymanager.getTransaction().commit();
-                    //this.entitymanager.getTransaction().begin();
+                    //this.iniciarTransaccion();
                    
                    // this.entitymanager.getTransaction().commit();
                     //this.entitymanager.getTransaction( ).commit( );
@@ -398,10 +389,7 @@ public class DAOPuntos extends DataAccesObject {
  		Calificacion calificacion;
  		PasajeroViaje pasajeroviaje;
  		
- 		if(this.entitymanager.getTransaction().isActive()){
-            this.entitymanager.getTransaction().rollback();
-        }
- 		this.entitymanager.getTransaction().begin();
+ 		this.iniciarTransaccion();
  		Notificacion notificacion = new Notificacion();
  		if(cliente.equals(viaje.getConductor())){ 
  			//si soy el conductor, necesito saber a q pasajero puntuo
@@ -540,7 +528,7 @@ public class DAOPuntos extends DataAccesObject {
  		beneficio.setProducto((String) json.get("producto"));
  		beneficio.setFecha_caduca((Date) json.get("fecha_caduca"));
  		try{
- 			this.entitymanager.getTransaction().begin(); 
+ 			this.iniciarTransaccion(); 
  			this.entitymanager.persist(beneficio);
  			this.entitymanager.getTransaction().commit();
                 

@@ -25,7 +25,7 @@ public class DAONotificaciones extends DataAccesObject {
 	}
 
 	public synchronized void marcarLeida(int idNotificacion) {
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		Notificacion notificacion =(Notificacion) this.buscarPorPrimaryKey(new Notificacion(), idNotificacion);
 		notificacion.setEstado(EstadoNotificacion.leido);
 		this.entitymanager.getTransaction().commit();
@@ -85,7 +85,7 @@ public class DAONotificaciones extends DataAccesObject {
     	if(cliente == null){
 			throw new ExceptionViajesCompartidos("ERROR: EL CLIENTE NO EXISTE");
 		}
-    	this.entitymanager.getTransaction().begin();
+    	this.iniciarTransaccion();
     	for(Integer i:lista_id_notificaciones){
     		Notificacion n=(Notificacion) this.buscarPorPrimaryKey(new Notificacion(), i);
     		n.setEstado(EstadoNotificacion.leido);
