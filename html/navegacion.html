@@ -11,6 +11,38 @@
 			$('body').toggleClass("sidebar-on");
 		}
 	</script>
+	<script id="navbar-navegacion-template" type="text/template">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle pull-left collapsed glyphicon glyphicon-menu-hamburger" onclick="toggleSidebar()">
+				</button>
+				<a class="navbar-brand" href="/home.html"><span class="glyphicon glyphicon-home"></span> Viajes compartidos</a>
+				{{#acceder_notificaciones}}
+				<a id="boton_notificaciones" class="navbar-brand pull-right" href="/notificaciones.html" title="Ver notificaciones"> <span class="glyphicon glyphicon-bell"><span id="cantidad_notificaciones"></span></span></a>
+				{{/acceder_notificaciones}}
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+		<!--<a href="/login" class=" navbar-right btn"><span class="glyphicon glyphicon-off"></span> Salir</a>-->
+				<ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="dropdown-usuario"></span> <span class="caret"></span></a>
+			<ul class="dropdown-menu" id="dropdown-menu">
+				<!--ESTO LO SOBRE ESCRIBE PERMISOS.JS-->
+				{{#acceder_perfil}}
+				<li><a href="/perfil.html">Mi perfil</a></li>
+				{{/acceder_perfil}}
+				{{#acceder_mis_viajes}}
+				<li><a href="/mis_viajes.html">Mis viajes</a></li>
+				{{/acceder_mis_viajes}}
+				{{#acceder_mis_vehiculos}}
+				<li><a href="/mis_vehiculos.html">Mis vehículos</a></li>
+				{{/acceder_mis_vehiculos}}
+				<li role="separator" class="divider"></li>
+				<li><a href="/login"><span class="glyphicon glyphicon-off"></span> Salir</a></li>
+			</ul>
+		</li>
+				</ul>
+			</div><!--/.nav-collapse -->
+	</script>
 	<script id="botonera-sidebar-template" type="text/template">
 		<hr>
 		<div class="btn-group-vertical col-xs-12">
@@ -75,31 +107,8 @@
 
 <body>
     <nav id="common-navbar" class="navbar navbar-fixed-top" id="commonbar">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle pull-left collapsed glyphicon glyphicon-menu-hamburger" onclick="toggleSidebar()">
-          </button>
-          <a class="navbar-brand" href="/home.html"><span class="glyphicon glyphicon-home"></span> Viajes compartidos</a>
-          <a id="boton_notificaciones" class="navbar-brand pull-right" href="/notificaciones.html" title="Ver notificaciones"> <span class="glyphicon glyphicon-bell"><span id="cantidad_notificaciones"></span></span></a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-			<!--<a href="/login" class=" navbar-right btn"><span class="glyphicon glyphicon-off"></span> Salir</a>-->
-          <ul class="nav navbar-nav navbar-right">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="dropdown-usuario"></span> <span class="caret"></span></a>
-				<ul class="dropdown-menu" id="dropdown-menu">
-					<!--ESTO LO SOBRE ESCRIBE PERMISOS.JS-->
-					<li><a href="/perfil.html">Mi perfil</a></li>
-					<li><a href="/mis_viajes.html">Mis viajes</a></li>
-					<li><a href="/mis_vehiculos.html">Mis vehículos</a></li>
-					<li role="separator" class="divider"></li>
-					<li><a href="/login"><span class="glyphicon glyphicon-off"></span> Salir</a></li>
-				</ul>
-			</li>
-          </ul>
-        </div><!--/.nav-collapse -->
-
-
+      <div class="container" id="navbar-dinamico">
+				<!-- NAVBAR GENERADA DINAMICAMENTE SEGUN PERMISOS-->
       </div><!-- /.container -->
     </nav><!-- /.navbar -->
 

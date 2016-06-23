@@ -23,7 +23,7 @@ import otros.JSONable;
 import javax.persistence.NamedQuery;
 
 @NamedQueries({
-	@NamedQuery(name="MovimientoPuntos.PorCiente",query="SELECT mp FROM MovimientoPuntos mp WHERE mp.cliente= :cliente")
+	@NamedQuery(name="MovimientoPuntos.PorCiente",query="SELECT mp FROM MovimientoPuntos mp WHERE mp.cliente= :cliente ORDER BY mp.fecha DESC")
 
 })
 @Entity

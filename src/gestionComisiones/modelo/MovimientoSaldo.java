@@ -26,7 +26,7 @@ import org.json.simple.JSONObject;
 import otros.JSONable;
 
 @NamedQueries({
-    	@NamedQuery(name="MovSaldo.PorCliente",query="SELECT ms FROM MovimientoSaldo ms WHERE  ms.cliente= :cliente"),//agregada por fede
+    	@NamedQuery(name="MovSaldo.PorCliente",query="SELECT ms FROM MovimientoSaldo ms WHERE  ms.cliente= :cliente ORDER BY ms.fecha DESC"),//agregada por fede
 
 })
 @Entity

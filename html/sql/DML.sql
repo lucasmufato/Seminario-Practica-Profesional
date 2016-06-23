@@ -97,7 +97,8 @@ INSERT INTO PERMISO (id_permiso, nombre_permiso, funcionalidad,descripcion,estad
 
 	(22, "administrar_comisiones", "Administrar comisiones", "Permite Alta/Baja/Modificacion de comisiones", "A"),
 	(23, "acceder_puntos", "Acceder a 'puntos'", "Permite ver puntos actuales y los movimientos", "A"),
-	(24, "acceder_ayuda", "Acceder a 'ayuda'", "Permite ver el manuel de ayuda para el usuario", "A");
+	(24, "acceder_ayuda", "Acceder a 'ayuda'", "Permite ver el manual de ayuda para el usuario", "A"),
+	(25, "acceder_notificaciones", "Acceder a 'notificaciones'", "Permite ver las notificaciones del usuario", "A");
 
 	
 INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
@@ -125,7 +126,8 @@ INSERT INTO PERMISO_ROL (id_permiso, id_rol, fecha_modificacion) VALUES
 	(21,2,CURRENT_DATE),
 	(22,1,CURRENT_DATE),
 	(23,2,CURRENT_DATE),
-	(24,2,CURRENT_DATE);
+	(24,2,CURRENT_DATE),
+	(25,2,CURRENT_DATE);
 
 INSERT INTO LOCALIDAD_CLASIFICACION(codigo, nombre_clase) VALUES
 	("A", "Ciudad/Estado/Región"),

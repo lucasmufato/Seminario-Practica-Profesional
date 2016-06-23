@@ -2,13 +2,7 @@ permisosData={};
 permisosData.permisosp=[];
 permisosData.usuariop={};
 permisosData.rolesp=[];
-/*
-$( document ).ready(function(){
-	console.log("cargando permisos desde document ready");
-	//permisosData.esconderFuncionalidadesPermisos();
-	//permisosData.getPermisosUsuario();
- });
-*/
+
 permisosData.iniciarScriptPermisos = function(){
 	permisosData.getPermisosUsuario();
 }
@@ -51,23 +45,9 @@ permisosData.mostrarFunciones = function(){
 	//console.log("Permisos que me traje: ",permisosData.permisosp);
 	//console.log("roles que me traje: ",permisosData.rolesp);
 	//console.log("usuario que me traje: ",permisosData.usuariop);
-	permisosData.cargarSidebarPermisos();
-	$("#dropdown-usuario").html(permisosData.usuariop.nombre_usuario+" ");
-	if (permisosData.rolesp){
-		for (var i=0; i<permisosData.rolesp.length;i++){
-			var rol = permisosData.rolesp[i].nombre_rol.toLowerCase();
-			if (rol == "cliente"){
-				  permisosData.makeListDropdown(rol);
-			}
-			if (rol == "super_usuario"){
-				  permisosData.makeListDropdown(rol);
-			}
-		}
-	}
-
+	permisosData.cargarNavbarSidebarPermisos();
 }
-
-permisosData.cargarSidebarPermisos = function(){
+permisosData.cargarNavbarSidebarPermisos = function(){
 	$.getScript( "/js/mustache.js", function() {
 		$.ajax({
 			url: '/navegacion.html',
@@ -76,12 +56,14 @@ permisosData.cargarSidebarPermisos = function(){
 				var dom = $(data);
 				var template;
 				dom.filter('script').each(function(){
+					if (this.id == "navbar-navegacion-template"){
+						templateNavbar = this.innerHTML;
+					}
 					if (this.id == "botonera-sidebar-template"){
-						template = this.innerHTML;
+						templateSidebar = this.innerHTML;
 					}
 				});
 				var permisosFlags = {};
-				console.log(permisosData.permisosp);
 				if (permisosData.permisosp){
 					var permiso=0;
 					for (permiso in permisosData.permisosp){
@@ -90,26 +72,12 @@ permisosData.cargarSidebarPermisos = function(){
 						permisosFlags[nombrePermiso] = nombrePermiso && estadoPermiso=="A";
 					}
 				}
-				var html = Mustache.render(template,permisosFlags);
-				$("#botonera-sidebar").html(html);
+				var htmlNavbar = Mustache.render(templateNavbar,permisosFlags);
+				var htmlSidebar = Mustache.render(templateSidebar,permisosFlags);
+				$("#navbar-dinamico").html(htmlNavbar);
+				$("#dropdown-usuario").html(permisosData.usuariop.nombre_usuario+" ");
+				$("#botonera-sidebar").html(htmlSidebar);
 			}
 		});
 	});
-}
-
-permisosData.makeListDropdown = function(rol){
-	var html = 	"<li><a href='/perfil.html'>Mi perfil</a></li>"
-
-	if (rol == "cliente"){
-		html += "<li><a href='/mis_viajes.html'>Mis viajes</a></li>"+
-				"<li><a href='/mis_vehiculos.html'>Mis vehículos</a></li>";
-	} else if (rol == "super_usuario"){
-		html += "<li><a href='/abm.html'>Administrar usuarios</a></li>"
-			+"<li><a href='/reportes/viajes.html'>Reporte de viajes</a></li>"
-			+"<li><a href='/reportes/comisiones.html'>Reporte de comisiones</a></li>";
-	}
-
-	html += "<li role='separator' class='divider'></li>"+
-			"<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>";
-	$("#dropdown-menu").html(html);
 }
