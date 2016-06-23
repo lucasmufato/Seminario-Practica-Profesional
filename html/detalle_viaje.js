@@ -773,12 +773,14 @@ var viajeFinalizado = function(){
 			if (jsonData.result){
 				data.loadData();
 				var msg = jsonData.msg;
-				var btn = document.createElement("BUTTON");
-				btn.className="btn btn-success dinamico";
-				btn.innerHTML = '<span class="glyphicon glyphicon-ok"></span> Calificar';
-				btn.name = "calificar";
-				btn.onclick=calificar;
-				modalButton("success",btn);
+				if(data.viaje.cantidad_pasajeros_calificables) {
+					var btn = document.createElement("BUTTON");
+					btn.className="btn btn-success dinamico";
+					btn.innerHTML = '<span class="glyphicon glyphicon-ok"></span> Calificar';
+					btn.name = "calificar";
+					btn.onclick=calificar;
+					modalButton("success",btn);
+				}
 				modalMessage("success",msg);
 			}else{
 				errorMessage(jsonData.msg);
