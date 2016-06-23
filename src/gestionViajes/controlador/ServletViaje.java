@@ -699,6 +699,10 @@ public class ServletViaje extends HttpServlet {
 			salida.put("msg", "id_viaje invalido");
 			return salida;
 		}
+		//TODO agregado por lucas
+		//llama al metodo de pablo
+		this.daoViajes.actualizarEstadoViaje(id_viaje);
+	
 		
 		daoViajes.actualizarEstadoViaje(id_viaje); //Por si no se inicio correctamente
 		viaje = daoViajes.getViajeById(id_viaje);

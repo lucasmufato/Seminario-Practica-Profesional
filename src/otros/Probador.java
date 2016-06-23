@@ -35,6 +35,7 @@ public class Probador {
 		PermisoRol pr= new PermisoRol();
 		Cliente c= new Cliente();
 		*/
+		/*
 		EjecutadorQuery exe = new EjecutadorQuery();
 		ConfiguracionDB conf = new ConfiguracionDB();
 		//creo la configuracion
@@ -61,7 +62,13 @@ public class Probador {
 		if(!exe.desconectarse()){
 			System.out.println("no me pude desconectar");
 		}
-
+	*/
+		
+		DAOViajes daov = new DAOViajes();
+		//System.out.println( daov.actualizarEstadoViaje(1) );	//viaje iniciado
+		System.out.println( daov.actualizarEstadoViaje(4) );	//viaje no iniciado (en mi caso)
+		//ServletViaje sv = new ServletViaje();
+		System.out.println("inicie el servlet");
 	}	
 	
 	public void menu(){
