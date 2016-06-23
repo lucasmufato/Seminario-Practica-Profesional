@@ -41,7 +41,7 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean nuevaComision(JSONObject datos) throws ExceptionViajesCompartidos{
+	public synchronized boolean nuevaComision(JSONObject datos) throws ExceptionViajesCompartidos{
 		/*
 		 * datos que recibo:
 		 * {
@@ -78,10 +78,7 @@ public class DAOComisiones extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: EL PRECIO NO PUEDE SER NEGATIVO");
 		}
 		
-		if(this.entitymanager.getTransaction().isActive()){
-            this.entitymanager.getTransaction().rollback();
-        }
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		
 		Comision comision = new Comision();
 		comision.setLimite_inferior(limite_inferior);
@@ -101,16 +98,13 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by mufa
-	public boolean FinalizarComision(Integer id_comision) throws ExceptionViajesCompartidos{
+	public synchronized boolean FinalizarComision(Integer id_comision) throws ExceptionViajesCompartidos{
 		Comision comision = (Comision) this.buscarPorPrimaryKey(new Comision(), id_comision);
 		if(comision==null){
 			throw new ExceptionViajesCompartidos("ERROR: LA COMISION NO EXISTE");
 		}
 		
-		if(this.entitymanager.getTransaction().isActive()){
-            this.entitymanager.getTransaction().rollback();
-        }
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		
 		comision.setFecha_fin( new Date((new java.util.Date()).getTime()) );
 		
@@ -144,7 +138,7 @@ public class DAOComisiones extends DataAccesObject {
 		return this.selectAll("Comision");
 	}
 	
-	public boolean modificarComision(JSONObject datos) throws ExceptionViajesCompartidos{
+	public synchronized boolean modificarComision(JSONObject datos) throws ExceptionViajesCompartidos{
 		/*
 		 * datos que recibo:
 		 * {
@@ -192,10 +186,7 @@ public class DAOComisiones extends DataAccesObject {
 		if(comision.getComisiones_cobradas().size()>0){
 			throw new ExceptionViajesCompartidos("ERROR: NO SE PUEDE MODIFICAR UNA COMISION QUE TIENE COMISIONES COBRADAS ASOCIADAS");
 		}
-		if(this.entitymanager.getTransaction().isActive()){
-                    this.entitymanager.getTransaction().rollback();
-                }
-		this.entitymanager.getTransaction().begin();
+		this.iniciarTransaccion();
 		
 		comision.setLimite_inferior(limite_inferior);
 		comision.setLimite_superior(limite_superior);
@@ -213,10 +204,8 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//retocado por mufa
-	public ComisionCobrada nuevaComisionCobrada(Double km) throws ExceptionViajesCompartidos{
-            if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-            }
+	public synchronized ComisionCobrada nuevaComisionCobrada(Double km) throws ExceptionViajesCompartidos{
+			this.limpiarTransacciones();
             
             ComisionCobrada cc = new ComisionCobrada();
 			Query qry = entitymanager.createNamedQuery("Comision.PrecioPorKM");
@@ -234,17 +223,15 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	//by jasmin?
-	public boolean cobrarComision(PasajeroViaje pv) throws ExceptionViajesCompartidos{
-		if(this.entitymanager.getTransaction().isActive()){
-			this.entitymanager.getTransaction().rollback();
-        }
+	public synchronized boolean cobrarComision(PasajeroViaje pv) throws ExceptionViajesCompartidos{
+		this.limpiarTransacciones();
                 
 		
 		ComisionCobrada cc=this.entitymanager.merge(pv.getComision());
                 if(cc.getEstado().equals(EstadoComisionCobrada.pendiente)){
                     //BUSCO CONDUCTOR
                     
-                    this.entitymanager.getTransaction( ).begin( );
+                    this.iniciarTransaccion( );
                     pv = this.entitymanager.merge(pv);
                     Viaje v=pv.getViaje();
                     Cliente conductor=this.entitymanager.merge(v.getConductor());
@@ -293,13 +280,10 @@ public class DAOComisiones extends DataAccesObject {
 	}
 	
 	
-	public boolean sumarSaldo(int id_cliente,float monto){
+	public synchronized boolean sumarSaldo(int id_cliente,float monto){
             
-        if(this.entitymanager.getTransaction().isActive()){
-        	this.entitymanager.getTransaction().rollback();
-        }
             
-        this.entitymanager.getTransaction( ).begin( );
+        this.iniciarTransaccion( );
 		Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente); 
 		// Esto es por las dudas
 		this.refresh(cliente);
@@ -320,7 +304,7 @@ public class DAOComisiones extends DataAccesObject {
                     e.printStackTrace();
                  }
                 
-                this.entitymanager.getTransaction().begin();
+                this.iniciarTransaccion();
 		//CREO EL MOVIMIENTO SALDO
 		 MovimientoSaldo ms=new MovimientoSaldo();
 		 ms.setComision_cobrada(null);

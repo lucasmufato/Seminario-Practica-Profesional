@@ -56,15 +56,12 @@ public class DAOPuntos extends DataAccesObject {
 	}
 	
     //byfede    
-    public boolean evaluarSancion(Integer id_cliente, Integer id_viaje, Timestamp fechaYHoraCancelacion) throws ExceptionViajesCompartidos{
+    public synchronized boolean evaluarSancion(Integer id_cliente, Integer id_viaje, Timestamp fechaYHoraCancelacion) throws ExceptionViajesCompartidos{
        
         //System.out.println("Entro a DAOPUNTOS Con:\n IdCli:"+id_cliente+"\n IdViaje:"+id_viaje+"\n Time:"+fechaYHoraCancelacion+"");
         double descuento = this.calculcarDescuentoPuntos(id_viaje, id_cliente);
         if(descuento!=0){ //sanciono si cancelo tarde 
-            if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-            }
-            this.entitymanager.getTransaction( ).begin( );
+            this.iniciarTransaccion( );
             MovimientoPuntos mov = new MovimientoPuntos();
             Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);         
             mov.setCliente(cliente);
@@ -135,10 +132,10 @@ public class DAOPuntos extends DataAccesObject {
             try{    this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction( ).commit( );
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     this.entitymanager.persist(sancion);
                     this.entitymanager.getTransaction( ).commit( );
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     this.entitymanager.persist(sancion_dias);
                     this.entitymanager.getTransaction( ).commit( );
                     boolean bandera = this.actualizarPuntosCliente(descuento_int, cliente.getId_usuario());
@@ -227,12 +224,9 @@ public class DAOPuntos extends DataAccesObject {
     }
     
     // by fede
-    public boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
+    public synchronized boolean actualizarPuntosCliente(int monto, int id_cliente) throws ExceptionViajesCompartidos{
         
-        if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-        }
-        this.entitymanager.getTransaction( ).begin( );
+        this.iniciarTransaccion( );
         Cliente cliente = (Cliente) this.buscarPorPrimaryKey(new Cliente(), id_cliente);     
         Integer puntos_cuenta = cliente.getPuntos();
         puntos_cuenta  = puntos_cuenta + (int)monto;
@@ -248,13 +242,10 @@ public class DAOPuntos extends DataAccesObject {
     }
     
    //by fede
- public boolean sancionarChofer(int id_viaje, int id_chofer,int aceptados) throws ExceptionViajesCompartidos{
+ public synchronized boolean sancionarChofer(int id_viaje, int id_chofer,int aceptados) throws ExceptionViajesCompartidos{
         //formula
         // puntos = (CantPas * 50 ) + (1/hsfaltan * beta)
-        if(this.entitymanager.getTransaction().isActive()){
-                this.entitymanager.getTransaction().rollback();
-            }
-        this.entitymanager.getTransaction().begin();
+        this.iniciarTransaccion();
         Viaje viaje = new Viaje();
         Integer id_viaje2 = id_viaje;
         viaje = (Viaje) this.buscarPorPrimaryKey(viaje, id_viaje);
@@ -338,11 +329,11 @@ public class DAOPuntos extends DataAccesObject {
                     this.entitymanager.persist(notificacion);
                     this.entitymanager.persist(mov);
                     this.entitymanager.getTransaction().commit();
-                    this.entitymanager.getTransaction().begin();
+                    this.iniciarTransaccion();
                     this.entitymanager.persist(sancion);
                      this.entitymanager.persist(sancion_dias);
                     this.entitymanager.getTransaction().commit();
-                    //this.entitymanager.getTransaction().begin();
+                    //this.iniciarTransaccion();
                    
                    // this.entitymanager.getTransaction().commit();
                     //this.entitymanager.getTransaction( ).commit( );
@@ -355,7 +346,7 @@ public class DAOPuntos extends DataAccesObject {
     }
  	
  	//by mufa
- 	public boolean calificar(JSONObject datos) throws ExceptionViajesCompartidos{
+ 	public synchronized boolean calificar(JSONObject datos) throws ExceptionViajesCompartidos{
  		/*
  		 * Cuando el participante califica a otro usuario, te mando esta data:	
 			id_viaje: 4,
@@ -398,10 +389,7 @@ public class DAOPuntos extends DataAccesObject {
  		Calificacion calificacion;
  		PasajeroViaje pasajeroviaje;
  		
- 		if(this.entitymanager.getTransaction().isActive()){
-            this.entitymanager.getTransaction().rollback();
-        }
- 		this.entitymanager.getTransaction().begin();
+ 		this.iniciarTransaccion();
  		Notificacion notificacion = new Notificacion();
  		if(cliente.equals(viaje.getConductor())){ 
  			//si soy el conductor, necesito saber a q pasajero puntuo
@@ -528,7 +516,7 @@ public class DAOPuntos extends DataAccesObject {
  		return true;
  	}
         
- 	public boolean nuevoBeneficio(JSONObject json) throws ExceptionViajesCompartidos{
+ 	public synchronized boolean nuevoBeneficio(JSONObject json) throws ExceptionViajesCompartidos{
  		Beneficio beneficio = new Beneficio();
  		beneficio.setId_beneficio(Integer.MIN_VALUE);
  		String nombre_usuario = (String) json.get("nombre_usuario");
@@ -540,7 +528,7 @@ public class DAOPuntos extends DataAccesObject {
  		beneficio.setProducto((String) json.get("producto"));
  		beneficio.setFecha_caduca((Date) json.get("fecha_caduca"));
  		try{
- 			this.entitymanager.getTransaction().begin(); 
+ 			this.iniciarTransaccion(); 
  			this.entitymanager.persist(beneficio);
  			this.entitymanager.getTransaction().commit();
                 
@@ -566,7 +554,7 @@ public class DAOPuntos extends DataAccesObject {
  	}
  	
  	//by mufa
- 	protected Integer actualizarReputacionPorCalificacion(Integer calificacion, Cliente cliente){
+ 	protected synchronized Integer actualizarReputacionPorCalificacion(Integer calificacion, Cliente cliente){
  		//formula para recalcular la nueva reputacion
  		Integer reputacion_nueva;
  		Integer reputacion = cliente.getReputacion();

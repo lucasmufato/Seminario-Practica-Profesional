@@ -704,6 +704,7 @@ public class ServletViaje extends HttpServlet {
 		this.daoViajes.actualizarEstadoViaje(id_viaje);
 	
 		
+		daoViajes.actualizarEstadoViaje(id_viaje); //Por si no se inicio correctamente
 		viaje = daoViajes.getViajeById(id_viaje);
 		
 		if (viaje == null) {
