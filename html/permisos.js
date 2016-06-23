@@ -77,6 +77,7 @@ permisosData.cargarNavbarSidebarPermisos = function(){
 				$("#navbar-dinamico").html(htmlNavbar);
 				$("#dropdown-usuario").html(permisosData.usuariop.nombre_usuario+" ");
 				$("#botonera-sidebar").html(htmlSidebar);
+				comprobarNotificaciones();
 			}
 		});
 	});

@@ -17,7 +17,9 @@ var navegacionInit = function () {
 	$.ajax({
 		url: "/permisos.js",
 		dataType: "script",
-		success: function () { permisosData.iniciarScriptPermisos();},
+		success: function () {
+			permisosData.iniciarScriptPermisos();
+		},
 		error: function (er1, err2, err3) {
 			document.body.innerHTML = er1.responseText;
 			window.alert (err3);
