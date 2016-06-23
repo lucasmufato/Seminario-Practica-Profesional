@@ -76,8 +76,8 @@ public class DAOPuntos extends DataAccesObject {
 			calificacion.setComentario_pasajero(null);
 			calificacion.setParticipo_pasajero(null);
 			calificacion.setParticipo_conductor(null);
-			calificacion.setPasajero_viaje(pv);
-			calificacion.setConductor(c);
+			calificacion.setPasajero_viaje(this.entitymanager.merge(pv));
+			calificacion.setConductor(this.entitymanager.merge(c));
 			this.entitymanager.persist(calificacion);
 			this.entitymanager.getTransaction().commit();
 			return calificacion;
