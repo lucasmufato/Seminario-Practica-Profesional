@@ -22,6 +22,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
+import javax.persistence.NoResultException;
 
 import org.json.simple.JSONObject;
 
@@ -54,9 +55,34 @@ public class DAOPuntos extends DataAccesObject {
 			Calificacion calif;
 			q.setParameter("cc1", pv);
 			q.setParameter("cc2", c);
+			try {
 			calif = (Calificacion) q.getSingleResult();
+			} catch (NoResultException e) {
+				calif = crearCalificacion (pv, c);
+			}
 			return calif;
 		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public synchronized Calificacion crearCalificacion(PasajeroViaje pv, Cliente c) {
+		try {
+			this.iniciarTransaccion();
+			Calificacion calificacion = new Calificacion();
+			calificacion.setCalificacion_para_conductor(null);
+			calificacion.setCalificacion_para_pasajero(null);
+			calificacion.setComentario_conductor(null);
+			calificacion.setComentario_pasajero(null);
+			calificacion.setParticipo_pasajero(null);
+			calificacion.setParticipo_conductor(null);
+			calificacion.setPasajero_viaje(pv);
+			calificacion.setConductor(c);
+			this.entitymanager.persist(calificacion);
+			this.entitymanager.getTransaction().commit();
+			return calificacion;
+		} catch (Exception e) {
+			this.limpiarTransacciones();
 			return null;
 		}
 	}

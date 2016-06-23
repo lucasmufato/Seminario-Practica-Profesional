@@ -295,6 +295,9 @@ public class ServletViaje extends HttpServlet {
 				// OBTENGO CALIFICACION
 				//Calificacion calificacion = (Calificacion) daoViajes.buscarPorClaveCandidataCompuesta(Calificacion.class.getSimpleName(), pv, conductor);
 				Calificacion calificacion = daoPuntos.getCalificacionPorPasajeroConductor(pv, conductor);
+				if (calificacion == null){
+					calificacion = daoPuntos.crearCalificacion(pv, conductor);
+				}
 				System.out.println("");
 				System.out.println("es conductor");
 				System.out.println("");
@@ -303,11 +306,7 @@ public class ServletViaje extends HttpServlet {
 				System.out.println("conductor recibio:"+calificacion.getParticipo_conductor()+" pasajero recibio:"+calificacion.getParticipo_pasajero());
 				System.out.println("");
 				
-				if (calificacion == null){
-					respuesta.put("result", false);
-					respuesta.put("msg", "Error interno: la calificacion no se encuentra instanciada");
-					return respuesta;
-				}
+
 
 				// CALIFICACION DADA
 				if (calificacion.getCalificacion_para_pasajero() == null){
