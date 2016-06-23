@@ -45,7 +45,7 @@ Id,Inicio,Conductor, e.nombre_estado AS estado,km,pasajeros,precio
 FROM
     (SELECT
         v.id_viaje AS Id,
-        v.fecha_inicio AS Inicio,
+        v.fecha_alta AS Inicio,
         v.estado AS estado,
         u.nombre_usuario AS Conductor,
         km_por_viaje.km AS km,
@@ -146,7 +146,7 @@ WHERE (Id >= $P!{id_viaje_desde} or $P!{id_viaje_desde} is null)
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Inicio]]></text>
+				<text><![CDATA[Fecha alta]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="254" y="0" width="79" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="324749d6-d99a-4443-bd3d-2558df9ad4a1"/>
