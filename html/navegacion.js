@@ -200,6 +200,7 @@ vc.customAlertSuccess = function(elemento){
 		}
 	});
 	$(elemento).popover("show");
+	window.setTimeout(function(){$(elemento).popover("destroy")}, 1000);
 	$(elemento).closest("tr").removeClass('has-error').addClass('has-success');
 
 	$(elemento).focus(function(){

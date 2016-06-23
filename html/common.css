@@ -149,6 +149,7 @@ nav#common-navbar .navbar-header a {
 
 /* POP TOOLTIP*/
   .popover-error {
+      z-index: 1029;
       border: 2px dotted red;
   }
   /* Popover Header */
@@ -166,6 +167,7 @@ nav#common-navbar .navbar-header a {
 }
 
 .popover-success {
+      z-index: 1029;
       border: 2px dotted green;
   }
 .popover-content-success {
