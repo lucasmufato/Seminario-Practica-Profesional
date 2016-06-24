@@ -86,11 +86,11 @@ public class DAOViajes extends DataAccesObject {
     	vehiculo = new Vehiculo();
     	Integer anio= (Integer)datos_vehiculo.get("anio");
     	if(anio==null){
-    		throw new ExceptionViajesCompartidos("ERROR: DEBE INGRESAR EL A�O DEL VEHICULO");
+    		throw new ExceptionViajesCompartidos("ERROR: DEBE INGRESAR EL AÑO DEL VEHICULO");
     	}else{
     		System.out.println(Calendar.getInstance().get(Calendar.YEAR));
     		if(anio>(Calendar.getInstance().get(Calendar.YEAR))){
-    			throw new ExceptionViajesCompartidos("ERROR: El A�O DEL VEHICULO NO PUEDE SER MAYOR AL A�O ACTUAL");
+    			throw new ExceptionViajesCompartidos("ERROR: El AÑO DEL VEHICULO NO PUEDE SER MAYOR AL AÑO ACTUAL");
     		}
     	}
     	vehiculo.setAnio(anio);
@@ -471,7 +471,7 @@ public class DAOViajes extends DataAccesObject {
 		}
 		Integer ultimo=lista_localidad_viaje.size();
 		lista_localidad_viaje.get(ultimo-1).setKms_a_localidad_siguiente(0.0);		//a la ultima localidadViaje le pongo distancia 0
-
+		/*
 		//TODO verificar que el cliente tenga salgo para hacer crear el viaje
 		//calculo saldo necesario (by fede)
 		Double distancia_origen_primerpunto = lista_localidad_viaje.get(0).getKms_a_localidad_siguiente() ;
@@ -485,6 +485,7 @@ public class DAOViajes extends DataAccesObject {
 			throw new ExceptionViajesCompartidos("ERROR: USTED NO TIENE SALDO SUFICIENTE PARA CREAR EL VIAJE)");
 		}
 		   //fin saldo
+		   */ //comentado lo de saldo
                 double distancia_origen_destino = this.distanciaEntreLocalidades(viaje.getOrigen(), viaje.getDestino());
                 this.autoTieneViaje(maneja, viaje.getFecha_inicio(), distancia_origen_destino);
              
@@ -577,14 +578,14 @@ public class DAOViajes extends DataAccesObject {
 	//by pablo
 	protected double distanceCalculation(double point1_lat, double point1_long, double point2_lat, double point2_long) {
 	/*
-	Descripción: Cálculo de la distancia entre 2 puntos en función de su latitud/longitud
+	DescripciÃ³n: CÃ¡lculo de la distancia entre 2 puntos en funciÃ³n de su latitud/longitud
 	Autor: Rajesh Singh (2014)
 	Sito web: AssemblySys.com
 	*/
-	// Cálculo de la distancia en grados
+	// CÃ¡lculo de la distancia en grados
 	double degrees = Math.toDegrees(Math.acos((Math.sin(Math.toRadians(point1_lat))*Math.sin(Math.toRadians(point2_lat))) + (Math.cos(Math.toRadians(point1_lat))*Math.cos(Math.toRadians(point2_lat))*Math.cos(Math.toRadians(point1_long-point2_long)))));
  
-	double distance = degrees * 111.13384; // 1 grado = 111.13384 km, basándose en el diametro promedio de la Tierra (12.735 km)
+	double distance = degrees * 111.13384; // 1 grado = 111.13384 km, basÃ¡ndose en el diametro promedio de la Tierra (12.735 km)
 	return distance;
 }
 	
@@ -1391,7 +1392,7 @@ public class DAOViajes extends DataAccesObject {
     		try{
     			idVehiculo = Integer.parseInt(foto.get("vehiculo").toString());
     		}catch(Exception e){
-    			throw new ExceptionViajesCompartidos("El vehiculo no es v�lido");
+    			throw new ExceptionViajesCompartidos("El vehiculo no es vï¿½lido");
     		}
         	Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
         	if (v==null){
@@ -1421,7 +1422,7 @@ public class DAOViajes extends DataAccesObject {
                         
                             this.iniciarTransaccion();
                             Notificacion notificacion = new Notificacion();
-                            notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado la foto del veh�culo con patente: <<"+v.getPatente()+">>");
+                            notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado la foto del vehículo con patente: <<"+v.getPatente()+">>");
                             notificacion.setEstado(EstadoNotificacion.no_leido);
                             notificacion.setCliente(conductor);
                             notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo());
@@ -1444,7 +1445,7 @@ public class DAOViajes extends DataAccesObject {
     		try{
     			idVehiculo = Integer.parseInt(json.get("id").toString());
     		}catch(Exception e){
-    			throw new ExceptionViajesCompartidos("El vehiculo no es v�lido");
+    			throw new ExceptionViajesCompartidos("El vehiculo no es vï¿½lido");
     		}
         	Vehiculo v = (Vehiculo) this.buscarPorPrimaryKey(new Vehiculo(), idVehiculo);
         	if (v==null){
@@ -1478,7 +1479,7 @@ public class DAOViajes extends DataAccesObject {
 
                                 this.iniciarTransaccion();
                                 Notificacion notificacion = new Notificacion();
-                                notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado el veh�culo con patente: <<"+v.getPatente()+">>");
+                                notificacion.setTexto("El usuario <<"+conductor_modifica.getNombre_usuario()+">> ha modificado el vehículo con patente: <<"+v.getPatente()+">>");
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setCliente(conductor);
                                 notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()));
@@ -1525,7 +1526,7 @@ public class DAOViajes extends DataAccesObject {
         		if ( conductoresActivos.get(i).isActivo() ){
         			this.iniciarTransaccion();            			
                                 Notificacion notificacion = new Notificacion();
-                                notificacion.setTexto("El veh�culo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
+                                notificacion.setTexto("El vehículo con patente <<"+v.getPatente()+" >> ha sido desactivado por <<"+cliente_modifico.getNombre_usuario()+" >>");
                                 notificacion.setCliente(conductoresActivos.get(i));
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setLink("/mis_vehiculos.html");
@@ -1644,7 +1645,7 @@ public class DAOViajes extends DataAccesObject {
             			this.entitymanager.persist(conductorNuevo);
             			this.entitymanager.persist(v);
                                 Notificacion notificacion = new Notificacion();
-                                notificacion.setTexto("Usted ha sido designado como conductor del veh�culo con patente: "+ v.getPatente());
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: "+ v.getPatente());
                                 notificacion.setCliente(conductorNuevo);
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                  notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo());
@@ -1697,7 +1698,7 @@ public class DAOViajes extends DataAccesObject {
         		if (conductorNuevo.isActivo() && !conductoresActivos.contains(conductorNuevo)){
         			conductorNuevo.asignarVehiculo(v);
                                 Notificacion notificacion = new Notificacion();
-                                notificacion.setTexto("Usted ha sido designado como conductor del veh�culo con patente: <<"+ v.getPatente()+">> por el usuario: <<"+conductor_modifica.getNombre_usuario()+">>");
+                                notificacion.setTexto("Usted ha sido designado como conductor del vehículo con patente: <<"+ v.getPatente()+">> por el usuario: <<"+conductor_modifica.getNombre_usuario()+">>");
                                 notificacion.setCliente(conductorNuevo);
                                 notificacion.setEstado(EstadoNotificacion.no_leido);
                                 notificacion.setLink("/ver_vehiculo.html?id="+v.getId_vehiculo());
@@ -1729,7 +1730,7 @@ public class DAOViajes extends DataAccesObject {
         		throw new ExceptionViajesCompartidos("El Conductor no se encuentra en el sistema");
 			}
 			if (!c.puedeManejar(v)){
-        		throw new ExceptionViajesCompartidos("El Conductor no tiene asignado este veh�culo");
+        		throw new ExceptionViajesCompartidos("El Conductor no tiene asignado este vehï¿½culo");
 			}
 						
     		this.iniciarTransaccion();
@@ -1744,7 +1745,7 @@ public class DAOViajes extends DataAccesObject {
 					m.desactivar();
 					this.entitymanager.persist(m);
                                         Notificacion notificacion = new Notificacion();
-                                        notificacion.setTexto("Usted fue eliminado como conductor del veh�culo con patente: <<"+ v.getPatente()+">> por el usuario <<"+conductor_modifica.getNombre_usuario()+" >> y ya no podr� realizar viajes con el mismo");
+                                        notificacion.setTexto("Usted fue eliminado como conductor del vehículo con patente: <<"+ v.getPatente()+">> por el usuario <<"+conductor_modifica.getNombre_usuario()+" >> y ya no podrá realizar viajes con el mismo");
                                         notificacion.setCliente(m.getCliente());
                                         notificacion.setEstado(EstadoNotificacion.no_leido);
                                         notificacion.setFecha(new Timestamp((new java.util.Date()).getTime()) );
@@ -1803,7 +1804,7 @@ public class DAOViajes extends DataAccesObject {
                         for(int i=0; i<lista.size();i++){
                             this.iniciarTransaccion();
                             boolean bandera= false;
-                            currentTimestamp.setYear(1000);//seteo año para que no los sancione
+                            currentTimestamp.setYear(1000);//seteo aÃ±o para que no los sancione
                             PasajeroViaje pasajero = lista.get(i);
                             pasajero.setEstado(EstadoPasajeroViaje.cancelado);
                             //this.entitymanager.getTransaction( ).commit( );
@@ -1973,12 +1974,12 @@ public class DAOViajes extends DataAccesObject {
             notifConductor.setCliente(conductor);
             notifConductor.setEstado(EstadoNotificacion.no_leido);
             notifConductor.setFecha(new Timestamp((new java.util.Date()).getTime()));
-            notifConductor.setTexto("El usuario "+cliente.getNombre_usuario()+" est� siguiendo el viaje "+viaje.getNombre_amigable()+" en el cual usted es conductor");
+            notifConductor.setTexto("El usuario "+cliente.getNombre_usuario()+" está siguiendo el viaje "+viaje.getNombre_amigable()+" en el cual usted es conductor");
             notifConductor.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
             notifSeguidor.setCliente(cliente);
             notifSeguidor.setEstado(EstadoNotificacion.no_leido);
             notifSeguidor.setFecha(new Timestamp((new java.util.Date()).getTime()));
-            notifSeguidor.setTexto("Usted est� siguiendo el viaje "+viaje.getNombre_amigable());
+            notifSeguidor.setTexto("Usted está siguiendo el viaje "+viaje.getNombre_amigable());
             notifSeguidor.setLink ("/detalle_viaje.html?id=" + viaje.getId_viaje());
             
     		try{
@@ -2087,7 +2088,7 @@ public class DAOViajes extends DataAccesObject {
                 }
             }//fin setear motivo   
             Viaje viaje = (Viaje) this.buscarPorPrimaryKey(new Viaje(), id_viaje);
-            String texto_notificacion = "El viaje <<"+viaje.getNombre_amigable()+">> que usted segu�a "+motivo_notificacion;
+            String texto_notificacion = "El viaje <<"+viaje.getNombre_amigable()+">> que usted seguía "+motivo_notificacion;
             List<SeguidorViaje> lista_seguidores = this.getSeguidoresViaje(id_viaje);
             
             //ahora notifico a los seguidores
