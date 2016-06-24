@@ -261,7 +261,6 @@ var configurarUi = function(){
 	if (esAceptado || esPostulado || esConductor || esFinalizo){
 		$("#botonera-cliente").hide();
 		if (esConductor){
-			mostrarDataPrivadaConductor();
 			$("#botonera-conductor").show();
 			$("#botonera-pasajero").hide();
 			if (data.viaje.cantidad_pasajeros_calificables > 0 || data.viaje.cantidad_pasajeros_postulados > 0){
