@@ -51,16 +51,16 @@
 											{{#usuario_logueado.es_perfil_propio}}
 											<tr>
 												<td><strong>Contraseña:</strong></td>
-												<td><input name="pass-cliente" type="text" class="form-control validar" value="{{usuario.pass}}" disabled></td>
+												<td><input name="pass-cliente" type="text" class="form-control validar" value="{{usuario.pass}}"  maxlength="30" disabled></td>
 											</tr>
 											{{/usuario_logueado.es_perfil_propio}}
 											<tr>
 												<td><strong>Apellido:</strong></td>
-												<td><input name="apellidos-cliente" type="text" class="form-control" value="{{persona.apellidos}}" disabled></td>
+												<td><input name="apellidos-cliente" type="text" class="form-control" value="{{persona.apellidos}}"  maxlength="58" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Nombre:</strong></td>
-												<td><input name="nombres-cliente" type="text" class="form-control" value="{{persona.nombres}}" disabled></td>
+												<td><input name="nombres-cliente" type="text" class="form-control" value="{{persona.nombres}}" maxlength="58"  disabled></td>
 											</tr>
 											{{#usuario_logueado.es_perfil_propio}}
 											<tr>
@@ -83,15 +83,15 @@
 											<tr>
 												<td><strong>Domicilio:</strong></td>
 												<td>
-													<input name="domicilio-cliente" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}" disabled></td>
+													<input name="domicilio-cliente" type="text" class="form-control" placeholder="" value="{{persona.domicilio}}"  maxlength="118" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>E-mail:</strong></td>
-												<td><input name="mail-cliente" type="text" class="form-control validar" value="{{usuario.mail}}" disabled></td>
+												<td><input name="mail-cliente" type="text" class="form-control validar" value="{{usuario.mail}}"  maxlength="38" disabled></td>
 											</tr>
 											<tr>
 												<td><strong>Teléfono:</strong></td>
-												<td><input name="telefono-cliente" type="text" class="form-control" placeholder="" value="{{persona.telefono}}" disabled></td>
+												<td><input name="telefono-cliente" type="text" class="form-control" placeholder="" value="{{persona.telefono}}"  maxlength="15" disabled></td>
 											</tr>
 											{{/usuario_logueado.es_perfil_propio}}
 											<tr>

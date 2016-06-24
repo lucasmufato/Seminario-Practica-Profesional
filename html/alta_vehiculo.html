@@ -3,7 +3,7 @@
 <head>
 	<title>Viajes Compartidos</title>
 	<meta charset="utf-8" />
-	
+
 	<link rel="stylesheet" href="alta_vehiculo.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
@@ -12,7 +12,7 @@
 
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	
+
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 	<script type="text/javascript" src="alta_vehiculo.js"></script>
@@ -36,7 +36,7 @@
 					<div class="col-md-6">
 						<label for="patente" class="control-label col-md-5">Patente:</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control vc-validar" id="patente" name="patente" placeholder="Patente" pattern="([A-Z]{3}[0-9]{3})|([A-Z]{2}[0-9]{3}[A-Z]{2})" data-invalid-msg="Formato: ABC123 o AB123CD "></input>
+							<input type="text" class="form-control vc-validar" id="patente" name="patente"  maxlength="15" placeholder="Patente" pattern="([A-Z]{3}[0-9]{3})|([A-Z]{2}[0-9]{3}[A-Z]{2})" data-invalid-msg="Formato: ABC123 o AB123CD "></input>
 						</div>
 					</div>
 				</div>
@@ -79,7 +79,7 @@
 							<select class="form-control" name="aire" id="aire">
 								<option value="S">Sí</option>
 								<option value="N">No</option>
-							</select>					
+							</select>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -88,7 +88,7 @@
 							<select class="form-control" name="seguro" id="seguro">
 								<option value="S">Sí</option>
 								<option value="N">No</option>
-							</select>					
+							</select>
 						</div>
 					</div>
 				</div>
@@ -110,7 +110,7 @@
 				</div>
 			</form>
     	</div>
-		
+
 		<div id="modal-success" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content panel-success">
@@ -128,7 +128,7 @@
 				</div><!-- .modal-content -->
 			</div><!-- .modal-dialog -->
 		</div><!-- .modal -->
-		
+
 		<div id="modal-warning" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content panel-warning">
@@ -146,7 +146,7 @@
 				</div><!-- .modal-content -->
 			</div><!-- .modal-dialog -->
 		</div><!-- .modal -->
-		
+
 		<div id="modal-error" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content panel-danger">
@@ -170,5 +170,5 @@
 
 </div>
 
-</body>	
+</body>
 </html>

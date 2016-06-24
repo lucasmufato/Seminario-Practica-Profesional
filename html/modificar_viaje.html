@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="/css/magicsuggest.css" />
 	<link rel="stylesheet" href="/common.css" />
 	<link rel="stylesheet" href="/modificar_viaje.css" />
-	
+
 	<script type="text/javascript" src="/jquery.js"></script>
 	<script type="text/javascript" src=""></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
@@ -35,14 +35,14 @@
 					<div class="col-md-6">
 						<label for="nombre_amigable" class="control-label col-md-4">Nombre viaje:</label>
 						<div class="col-md-8">
-							<input type="text" class="form-control" id="nombre" name="nombre_amigable" placeholder="Nombre"></input>
+							<input type="text" class="form-control" id="nombre" name="nombre_amigable"  maxlength="23" placeholder="Nombre"></input>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="vehiculo" class="control-label col-md-4">Vehículo:</label>
-						<div class="col-md-8">	
+						<div class="col-md-8">
 							<select class="form-control" name="vehiculo" id="vehiculo">
-							</select>			
+							</select>
 						</div>
 					</div>
 				</div>
@@ -98,11 +98,11 @@
 						<label for="asientos" class="control-label col-md-4">Asientos libres:</label>
 						<div class="col-md-8">
 							<select class="form-control" name="asientos" id="asientos">
-							</select>		
+							</select>
 						</div>
 					</div>
 				</div>
-			
+
 				<div class="form-group">
 					<div class="col-xs-offset-7 col-sm-offset-9 col-md-offset-10">
 						<button class="btn btn-primary" id="boton" ><span class="glyphicon glyphicon-road"></span> Modificar</button>
@@ -112,5 +112,5 @@
 			</form>
     	</div>
 	</main>
-</body>	
+</body>
 </html>
