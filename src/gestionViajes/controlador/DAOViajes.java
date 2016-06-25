@@ -1756,8 +1756,8 @@ public class DAOViajes extends DataAccesObject {
 			
     		try{
         		entitymanager.getTransaction( ).commit( );	
-				this.entitymanager.refresh(c);
-				this.entitymanager.refresh(v);
+				this.refresh(c);
+				this.refresh(v);
         	}catch(RollbackException e){
         		String error= ManejadorErrores.parsearRollback(e);
         		throw new ExceptionViajesCompartidos("ERROR: "+error);
