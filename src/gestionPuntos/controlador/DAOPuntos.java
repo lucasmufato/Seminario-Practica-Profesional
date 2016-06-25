@@ -591,7 +591,7 @@ public class DAOPuntos extends DataAccesObject {
  		Integer reputacion_nueva;
  		Integer reputacion = cliente.getReputacion();
  		reputacion_nueva =(Integer) (reputacion + calificacion)/2;	//no es un promedio, es peor
- 		this.entitymanager.refresh(cliente);
+ 		this.refresh(cliente);
                 return reputacion_nueva;
  	}
  	

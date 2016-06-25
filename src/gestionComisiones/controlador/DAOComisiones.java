@@ -110,7 +110,7 @@ public class DAOComisiones extends DataAccesObject {
 		
 		try{
     		this.entitymanager.getTransaction( ).commit( );	
-                 this.entitymanager.refresh(comision);
+                 this.refresh(comision);
     	}catch(RollbackException e){
     		String error= ManejadorErrores.parsearRollback(e);
     		throw new ExceptionViajesCompartidos("ERROR: "+error);
@@ -194,7 +194,7 @@ public class DAOComisiones extends DataAccesObject {
 		
 		try{
                     this.entitymanager.getTransaction( ).commit( );	
-                    this.entitymanager.refresh(comision);
+                    this.refresh(comision);
                 }catch(RollbackException e){
                     String error= ManejadorErrores.parsearRollback(e);
                     throw new ExceptionViajesCompartidos("ERROR: "+error);

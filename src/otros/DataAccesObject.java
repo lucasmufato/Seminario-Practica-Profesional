@@ -227,7 +227,11 @@ public abstract class DataAccesObject {
 
 	// Recarga los datos de un objeto desde la base de datos
 	public void refresh(Object entidad) {
-		entitymanager.refresh(entidad);
+		try {
+			entitymanager.refresh(entidad);
+		} catch (Exception e) {
+			System.out.println("Se ha capturado una excepcion producida por refresh: "+e.getMessage());
+		}
 	}
 
 	public void limpiarTransacciones() {
